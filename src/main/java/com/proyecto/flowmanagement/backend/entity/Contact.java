@@ -24,6 +24,10 @@ public class Contact extends AbstractEntity implements Cloneable {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @ManyToOne
+    @JoinColumn(name = "rol_id")
+    private Rol rol;
+
     @Enumerated(EnumType.STRING)
     @NotNull
     private Contact.Status status;
@@ -71,6 +75,14 @@ public class Contact extends AbstractEntity implements Cloneable {
 
     public Company getCompany() {
         return company;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
+    }
+
+    public Rol getRol(){
+        return rol;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.ui;
 
+import com.proyecto.flowmanagement.backend.service.ContactService;
 import com.proyecto.flowmanagement.ui.views.dashboard.DashboardView;
 import com.proyecto.flowmanagement.ui.views.list.ListView;
 import com.vaadin.flow.component.applayout.AppLayout;

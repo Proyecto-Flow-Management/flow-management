@@ -2,6 +2,7 @@ package com.proyecto.flowmanagement.ui.views.list;
 
 import com.proyecto.flowmanagement.backend.entity.Company;
 import com.proyecto.flowmanagement.backend.entity.Contact;
+import com.proyecto.flowmanagement.backend.entity.Rol;
 import com.proyecto.flowmanagement.backend.service.CompanyService;
 import com.proyecto.flowmanagement.backend.service.ContactService;
 import com.proyecto.flowmanagement.ui.MainLayout;
@@ -87,15 +88,15 @@ public class ListView extends VerticalLayout {
         grid.setItems(contactService.findAll(filterText.getValue()));
     }
 
-    private void configureGrid() {
+    private void  configureGrid() {
         grid.addClassName("contact-grid");
         grid.setSizeFull();
-        grid.removeColumnByKey("company");
-        grid.setColumns("firstName", "lastName", "email", "status");
-        grid.addColumn(contact -> {
-            Company company = contact.getCompany();
-            return company == null ? "-" : company.getName();
-        }).setHeader("Company").setSortable(true);
+        grid.setColumns("firstName", "lastName");
+
+        grid.addColumn(contact-> {
+            Rol rol = contact.getRol();
+            return rol == null ? "-" : rol.getName();
+        }).setHeader("Rol").setSortable(true);
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 

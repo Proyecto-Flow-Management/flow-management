@@ -2,8 +2,10 @@ package com.proyecto.flowmanagement.backend.service;
 
 import com.proyecto.flowmanagement.backend.entity.Company;
 import com.proyecto.flowmanagement.backend.entity.Contact;
+import com.proyecto.flowmanagement.backend.entity.Rol;
 import com.proyecto.flowmanagement.backend.repository.CompanyRepository;
 import com.proyecto.flowmanagement.backend.repository.ContactRepository;
+import com.proyecto.flowmanagement.backend.repository.RolRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -18,17 +20,18 @@ import java.util.stream.Stream;
 public class ContactService {
     private static final Logger LOGGER = Logger.getLogger(ContactService.class.getName());
     private ContactRepository contactRepository;
-    private CompanyRepository companyRepository;
+    private RolRepository rolRepository;
 
     public ContactService(ContactRepository contactRepository,
-                          CompanyRepository companyRepository) {
+                          RolRepository rolRepository) {
         this.contactRepository = contactRepository;
-        this.companyRepository = companyRepository;
+        this.rolRepository = rolRepository;
     }
 
     public List<Contact> findAll() {
         return contactRepository.findAll();
     }
+
     public List<Contact> findAll(String filterText) {
         if(filterText  == null || filterText.isEmpty()){
             return contactRepository.findAll();
@@ -56,32 +59,30 @@ public class ContactService {
 
     @PostConstruct
     public void populateTestData() {
-        if (companyRepository.count() == 0) {
-            companyRepository.saveAll(
-                    Stream.of("Path-Way Electronics", "E-Tech Management", "Path-E-Tech Management")
-                            .map(Company::new)
+
+        if (rolRepository.count() == 0) {
+            rolRepository.saveAll(
+                    Stream.of("Administrator 0", "User 1")
+                            .map(name->{
+                                String[] split = name.split(" ");
+                                return new Rol(split[0],split[1]);
+                            })
                             .collect(Collectors.toList()));
         }
 
         if (contactRepository.count() == 0) {
             Random r = new Random(0);
-            List<Company> companies = companyRepository.findAll();
+            List<Rol> roles = rolRepository.findAll();
             contactRepository.saveAll(
-                    Stream.of("Gabrielle Patel", "Brian Robinson", "Eduardo Haugen",
-                            "Koen Johansen", "Alejandro Macdonald", "Angel Karlsson", "Yahir Gustavsson", "Haiden Svensson",
-                            "Emily Stewart", "Corinne Davis", "Ryann Davis", "Yurem Jackson", "Kelly Gustavsson",
-                            "Eileen Walker", "Katelyn Martin", "Israel Carlsson", "Quinn Hansson", "Makena Smith",
-                            "Danielle Watson", "Leland Harris", "Gunner Karlsen", "Jamar Olsson", "Lara Martin",
-                            "Ann Andersson", "Remington Andersson", "Rene Carlsson", "Elvis Olsen", "Solomon Olsen",
-                            "Jaydan Jackson", "Bernard Nilsen")
+                    Stream.of("Bernardo Rychtenberg 0","Marcelo Crivelli 1", "Hector Barnada 1", "Rafael Pelacchi 1")
                             .map(name -> {
                                 String[] split = name.split(" ");
                                 Contact contact = new Contact();
                                 contact.setFirstName(split[0]);
                                 contact.setLastName(split[1]);
-                                contact.setCompany(companies.get(r.nextInt(companies.size())));
+                                contact.setRol(roles.get(Integer.parseInt(split[2])));
                                 contact.setStatus(Contact.Status.values()[r.nextInt(Contact.Status.values().length)]);
-                                String email = (contact.getFirstName() + "." + contact.getLastName() + "@" + contact.getCompany().getName().replaceAll("[\\s-]", "") + ".com").toLowerCase();
+                                String email = (contact.getFirstName() + "." + contact.getLastName() + "@gmail.com").toLowerCase();
                                 contact.setEmail(email);
                                 return contact;
                             }).collect(Collectors.toList()));
