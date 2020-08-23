@@ -5,6 +5,7 @@ import com.proyecto.flowmanagement.backend.entity.Contact;
 import com.proyecto.flowmanagement.backend.entity.Rol;
 import com.proyecto.flowmanagement.backend.service.CompanyService;
 import com.proyecto.flowmanagement.backend.service.ContactService;
+import com.proyecto.flowmanagement.backend.service.RolService;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -26,15 +27,17 @@ public class ListView extends VerticalLayout {
     Grid<Contact> grid = new Grid<>(Contact.class);
     TextField filterText = new TextField();
     private ContactService contactService;
+    private RolService rolService;
 
-    public ListView(ContactService contactService, CompanyService companyService) {
+    public ListView(ContactService contactService, CompanyService companyService, RolService rolService) {
         this.contactService = contactService;
+        this.rolService = rolService;
         addClassName("list-view");
         setSizeFull();
         configureGrid();
 
 
-        form = new ContactForm(companyService.findAll());
+        form = new ContactForm(companyService.findAll(),rolService.findAll());
         form.addListener(ContactForm.SaveEvent.class, this::saveContact);
         form.addListener(ContactForm.DeleteEvent.class, this::deleteContact);
         form.addListener(ContactForm.CloseEvent.class, e -> closeEditor());

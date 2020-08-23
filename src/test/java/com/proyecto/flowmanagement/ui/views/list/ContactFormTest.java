@@ -2,6 +2,7 @@ package com.proyecto.flowmanagement.ui.views.list;
 
 import com.proyecto.flowmanagement.backend.entity.Company;
 import com.proyecto.flowmanagement.backend.entity.Contact;
+import com.proyecto.flowmanagement.backend.entity.Rol;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +13,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ContactFormTest {
     private List<Company> companies;
+    private List<Rol> roles;
+    private Rol rol1;
+    private Rol rol2;
     private Contact marcUsher;
     private Company company1;
     private Company company2;
@@ -34,7 +38,7 @@ public class ContactFormTest {
 
     @Test
     public void formFieldsPopulated() {
-        ContactForm form = new ContactForm(companies);
+        ContactForm form = new ContactForm(companies,roles);
         form.setContact(marcUsher);
         Assert.assertEquals("Marc", form.firstName.getValue());
         Assert.assertEquals("Usher", form.lastName.getValue());
@@ -45,7 +49,7 @@ public class ContactFormTest {
 
     @Test
     public void saveEventHasCorrectValues() {
-        ContactForm form = new ContactForm(companies);
+        ContactForm form = new ContactForm(companies,roles);
         Contact contact = new Contact();
         form.setContact(contact);
 
