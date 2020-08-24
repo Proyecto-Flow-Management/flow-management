@@ -45,6 +45,7 @@ public class ContactForm extends FormLayout {
         company.setItems(companies);
         rol.setItems(roles);
         company.setItemLabelGenerator(Company::getName);
+        rol.setItemLabelGenerator(Rol::getName);
 
         add(firstName,
                 lastName,

@@ -26,18 +26,4 @@ public class RolService {
                 stats.put(rol.getName(), rol.getEmployees().size()));
         return stats;
     }
-
-//    @PostConstruct
-//    public void populateTestData() {
-//
-//        if (rolRepository.count() == 0) {
-//            rolRepository.saveAll(
-//                    Stream.of("Administrator 0", "User 1")
-//                            .map(name -> {
-//                                String[] split = name.split(" ");
-//                                return new Rol(split[0], split[1]);
-//                            })
-//                            .collect(Collectors.toList()));
-//        }
-//    }
 }
