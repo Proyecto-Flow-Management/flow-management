@@ -21,7 +21,7 @@ public class RolController {
     private RolService rolService;
 
     @ApiOperation("Get all Contacts")
-    @RequestMapping("/")
+    @RequestMapping("/GetRoles")
     public List<Rol> findAll(){
         return rolService.findAll();
     }

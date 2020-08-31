@@ -1,5 +1,4 @@
 package com.proyecto.flowmanagement.backend.controller;
-
 import com.proyecto.flowmanagement.backend.entity.Contact;
 import com.proyecto.flowmanagement.backend.service.ContactService;
 import com.proyecto.flowmanagement.ui.MainLayout;
