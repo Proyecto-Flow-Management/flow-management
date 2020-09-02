@@ -6,6 +6,7 @@ import com.proyecto.flowmanagement.backend.entity.Rol;
 import com.proyecto.flowmanagement.backend.repository.CompanyRepository;
 import com.proyecto.flowmanagement.backend.repository.ContactRepository;
 import com.proyecto.flowmanagement.backend.repository.RolRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +20,8 @@ import java.util.stream.Stream;
 @Service
 public class ContactService {
     private static final Logger LOGGER = Logger.getLogger(ContactService.class.getName());
+
+    @Autowired
     private ContactRepository contactRepository;
     private RolRepository rolRepository;
     private CompanyRepository companyRepository;
