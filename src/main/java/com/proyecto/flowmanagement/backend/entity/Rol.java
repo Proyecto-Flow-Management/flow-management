@@ -10,7 +10,7 @@ import java.util.List;
 public class Rol  extends AbstractEntity {
     private String name;
     private int code;
-
+//TEST
     @OneToMany(mappedBy = "rol", fetch = FetchType.EAGER)
     private List<Contact> employees = new LinkedList<>();
 
