@@ -1,6 +1,5 @@
 package com.proyecto.flowmanagement.ui.views.list;
 
-import com.proyecto.flowmanagement.backend.entity.Company;
 import com.proyecto.flowmanagement.backend.entity.Contact;
 import com.proyecto.flowmanagement.backend.entity.Rol;
 import com.vaadin.flow.component.Component;
@@ -28,7 +27,6 @@ public class ContactForm extends FormLayout {
     TextField lastName = new TextField("Last name");
     EmailField email = new EmailField("Email");
     ComboBox<Contact.Status> status = new ComboBox<>("Status");
-    ComboBox<Company> company = new ComboBox<>("Company");
     ComboBox<Rol> rol = new ComboBox<>("Rol");
 
     Button save = new Button("Save");
@@ -37,20 +35,17 @@ public class ContactForm extends FormLayout {
 
     Binder<Contact> binder = new BeanValidationBinder<>(Contact.class);
 
-    public ContactForm(List<Company> companies, List<Rol> roles) {
+    public ContactForm(List<Rol> roles) {
         addClassName("contact-form");
 
         binder.bindInstanceFields(this);
         status.setItems(Contact.Status.values());
-        company.setItems(companies);
         rol.setItems(roles);
-        company.setItemLabelGenerator(Company::getName);
         rol.setItemLabelGenerator(Rol::getName);
 
         add(firstName,
                 lastName,
                 email,
-                company,
                 rol,
                 status,
                 createButtonsLayout());

@@ -1,9 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.list;
 
-import com.proyecto.flowmanagement.backend.entity.Company;
 import com.proyecto.flowmanagement.backend.entity.Contact;
 import com.proyecto.flowmanagement.backend.entity.Rol;
-import com.proyecto.flowmanagement.backend.service.CompanyService;
 import com.proyecto.flowmanagement.backend.service.ContactService;
 import com.proyecto.flowmanagement.backend.service.RolService;
 import com.proyecto.flowmanagement.ui.MainLayout;
@@ -29,7 +27,7 @@ public class ListView extends VerticalLayout {
     private ContactService contactService;
     private RolService rolService;
 
-    public ListView(ContactService contactService, CompanyService companyService, RolService rolService) {
+    public ListView(ContactService contactService, RolService rolService) {
         this.contactService = contactService;
         this.rolService = rolService;
         addClassName("list-view");
@@ -37,7 +35,7 @@ public class ListView extends VerticalLayout {
         configureGrid();
 
 
-        form = new ContactForm(companyService.findAll(),rolService.findAll());
+        form = new ContactForm(rolService.findAll());
         form.addListener(ContactForm.SaveEvent.class, this::saveContact);
         form.addListener(ContactForm.DeleteEvent.class, this::deleteContact);
         form.addListener(ContactForm.CloseEvent.class, e -> closeEditor());

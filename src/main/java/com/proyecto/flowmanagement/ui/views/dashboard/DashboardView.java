@@ -1,6 +1,5 @@
 package com.proyecto.flowmanagement.ui.views.dashboard;
 
-import com.proyecto.flowmanagement.backend.service.CompanyService;
 import com.proyecto.flowmanagement.backend.service.ContactService;
 import com.proyecto.flowmanagement.backend.service.RolService;
 import com.proyecto.flowmanagement.ui.MainLayout;
@@ -11,7 +10,6 @@ import com.vaadin.flow.component.charts.model.DataSeries;
 import com.vaadin.flow.component.charts.model.DataSeriesItem;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
