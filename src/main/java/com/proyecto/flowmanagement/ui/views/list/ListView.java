@@ -1,12 +1,11 @@
 package com.proyecto.flowmanagement.ui.views.list;
 
-import com.proyecto.flowmanagement.backend.entity.Company;
 import com.proyecto.flowmanagement.backend.entity.Contact;
 import com.proyecto.flowmanagement.backend.entity.Rol;
-import com.proyecto.flowmanagement.backend.service.CompanyService;
-import com.proyecto.flowmanagement.backend.service.ContactService;
-import com.proyecto.flowmanagement.backend.service.RolService;
 import com.proyecto.flowmanagement.ui.MainLayout;
+import com.proyecto.flowmanagement.ui.controllers.CompanyController;
+import com.proyecto.flowmanagement.ui.controllers.ContactController;
+import com.proyecto.flowmanagement.ui.controllers.RolController;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -26,18 +25,20 @@ public class ListView extends VerticalLayout {
     private final ContactForm form;
     Grid<Contact> grid = new Grid<>(Contact.class);
     TextField filterText = new TextField();
-    private ContactService contactService;
-    private RolService rolService;
+    private ContactController contactController;
+    private CompanyController companyController;
+    private RolController rolController;
 
-    public ListView(ContactService contactService, CompanyService companyService, RolService rolService) {
-        this.contactService = contactService;
-        this.rolService = rolService;
+    public ListView(ContactController contactController, CompanyController companyController, RolController rolController) {
+        this.contactController = contactController;
+        this.companyController = companyController;
+        this.rolController = rolController;
         addClassName("list-view");
         setSizeFull();
         configureGrid();
 
 
-        form = new ContactForm(companyService.findAll(),rolService.findAll());
+        form = new ContactForm(companyController.listCompany(), rolController.listRol());
         form.addListener(ContactForm.SaveEvent.class, this::saveContact);
         form.addListener(ContactForm.DeleteEvent.class, this::deleteContact);
         form.addListener(ContactForm.CloseEvent.class, e -> closeEditor());
@@ -52,13 +53,13 @@ public class ListView extends VerticalLayout {
     }
 
     private void deleteContact(ContactForm.DeleteEvent evt) {
-        contactService.delete(evt.getContact());
+        contactController.deleteContact(evt.getContact());
         updateList();
         closeEditor();
     }
 
     private void saveContact(ContactForm.SaveEvent evt) {
-        contactService.save(evt.getContact());
+        contactController.saveContact(evt.getContact());
         updateList();
         closeEditor();
     }
@@ -88,7 +89,7 @@ public class ListView extends VerticalLayout {
     }
 
     private void updateList() {
-        grid.setItems(contactService.findAll(filterText.getValue()));
+        grid.setItems(contactController.listContact(filterText.getValue()));
     }
 
     private void  configureGrid() {
