@@ -21,10 +21,6 @@ public class Contact extends AbstractEntity implements Cloneable {
     private String lastName = "";
 
     @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
-
-    @ManyToOne
     @JoinColumn(name = "rol_id")
     private Rol rol;
 
@@ -67,14 +63,6 @@ public class Contact extends AbstractEntity implements Cloneable {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    public Company getCompany() {
-        return company;
     }
 
     public void setRol(Rol rol) {

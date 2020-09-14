@@ -1,9 +1,7 @@
 package com.proyecto.flowmanagement.backend.service;
 
-import com.proyecto.flowmanagement.backend.entity.Company;
 import com.proyecto.flowmanagement.backend.entity.Contact;
 import com.proyecto.flowmanagement.backend.entity.Rol;
-import com.proyecto.flowmanagement.backend.repository.CompanyRepository;
 import com.proyecto.flowmanagement.backend.repository.ContactRepository;
 import com.proyecto.flowmanagement.backend.repository.RolRepository;
 import org.springframework.stereotype.Service;
@@ -21,14 +19,11 @@ public class ContactService {
     private static final Logger LOGGER = Logger.getLogger(ContactService.class.getName());
     private ContactRepository contactRepository;
     private RolRepository rolRepository;
-    private CompanyRepository companyRepository;
 
     public ContactService(ContactRepository contactRepository,
-                          RolRepository rolRepository,
-                          CompanyRepository companyRepository) {
+                          RolRepository rolRepository) {
         this.contactRepository = contactRepository;
         this.rolRepository = rolRepository;
-        this.companyRepository = companyRepository;
     }
 
     public List<Contact> findAll() {
@@ -70,13 +65,6 @@ public class ContactService {
                                 String[] split = name.split(" ");
                                 return new Rol(split[0],split[1]);
                             })
-                            .collect(Collectors.toList()));
-        }
-
-        if (companyRepository.count() == 0) {
-            companyRepository.saveAll(
-                    Stream.of("UTE", "ANTEL")
-                            .map(Company::new)
                             .collect(Collectors.toList()));
         }
 
