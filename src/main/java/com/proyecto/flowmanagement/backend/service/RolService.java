@@ -23,7 +23,7 @@ public class RolService {
     public Map<String, Integer> getStats() {
         HashMap<String, Integer> stats = new HashMap<>();
         findAll().forEach(rol ->
-                stats.put(rol.getName(), rol.getEmployees().size()));
+                stats.put(rol.getName(), 1));
         return stats;
     }
 }

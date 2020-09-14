@@ -30,12 +30,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<User> findAll(String filterText) {
-        if(filterText  == null || filterText.isEmpty()){
-            return userRepository.findAll();
-        } else {
-            return userRepository.search(filterText);
-        }
+    public User find(String filterText) {
+        return userRepository.search(filterText).get(0);
     }
 
     public long count() {

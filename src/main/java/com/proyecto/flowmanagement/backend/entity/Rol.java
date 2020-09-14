@@ -10,9 +10,6 @@ import java.util.List;
 public class Rol  extends AbstractEntity {
     private String name;
     private int code;
-//TEST
-    @OneToMany(mappedBy = "rol", fetch = FetchType.EAGER)
-    private List<User> employees = new LinkedList<>();
 
     public Rol() {
     }
@@ -33,7 +30,4 @@ public class Rol  extends AbstractEntity {
         this.name = name;
     }
 
-    public List<User> getEmployees() {
-        return employees;
-    }
 }
