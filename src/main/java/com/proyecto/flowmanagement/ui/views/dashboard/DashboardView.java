@@ -1,6 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.dashboard;
 
-import com.proyecto.flowmanagement.backend.service.ContactService;
+import com.proyecto.flowmanagement.backend.service.UserService;
 import com.proyecto.flowmanagement.backend.service.RolService;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.vaadin.flow.component.Component;
@@ -19,25 +19,25 @@ import java.util.Map;
 @Route(value = "dashboard", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout {
 
-    private final ContactService contactService;
+    private final UserService userService;
     private final RolService rolService;
 
-    public DashboardView(ContactService contactService,  RolService rolService) {
-        this.contactService = contactService;
+    public DashboardView(UserService userService, RolService rolService) {
+        this.userService = userService;
         this.rolService = rolService;
 
         addClassName("dashboard-view");
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
         add(
-                getContactStats(),
+                getUserStats(),
                 getRolesChart()
         );
     }
 
-    private Span getContactStats() {
-        Span stats = new Span(contactService.count() + " contacts.");
-        stats.addClassName("contact-stats");
+    private Span getUserStats() {
+        Span stats = new Span(userService.count() + " users.");
+        stats.addClassName("user-stats");
 
         return stats;
     }

@@ -1,6 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.list;
 
-import com.proyecto.flowmanagement.backend.entity.Contact;
+import com.proyecto.flowmanagement.backend.entity.User;
 import com.proyecto.flowmanagement.backend.entity.Rol;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
@@ -20,26 +20,26 @@ import com.vaadin.flow.shared.Registration;
 
 import java.util.List;
 
-public class ContactForm extends FormLayout {
-    private Contact contact;
+public class UserForm extends FormLayout {
+    private User user;
 
     TextField firstName = new TextField("First name");
     TextField lastName = new TextField("Last name");
     EmailField email = new EmailField("Email");
-    ComboBox<Contact.Status> status = new ComboBox<>("Status");
+    ComboBox<User.Status> status = new ComboBox<>("Status");
     ComboBox<Rol> rol = new ComboBox<>("Rol");
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
 
-    Binder<Contact> binder = new BeanValidationBinder<>(Contact.class);
+    Binder<User> binder = new BeanValidationBinder<>(User.class);
 
-    public ContactForm(List<Rol> roles) {
-        addClassName("contact-form");
+    public UserForm(List<Rol> roles) {
+        addClassName("user-form");
 
         binder.bindInstanceFields(this);
-        status.setItems(Contact.Status.values());
+        status.setItems(User.Status.values());
         rol.setItems(roles);
         rol.setItemLabelGenerator(Rol::getName);
 
@@ -51,9 +51,9 @@ public class ContactForm extends FormLayout {
                 createButtonsLayout());
     }
 
-    public void setContact(Contact contact) {
-        this.contact = contact;
-        binder.readBean(contact);
+    public void setUser(User user) {
+        this.user = user;
+        binder.readBean(user);
     }
 
     private Component createButtonsLayout() {
@@ -65,7 +65,7 @@ public class ContactForm extends FormLayout {
         close.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(click -> validateAndSave());
-        delete.addClickListener(click -> fireEvent(new DeleteEvent(this, contact)));
+        delete.addClickListener(click -> fireEvent(new DeleteEvent(this, user)));
         close.addClickListener(click -> fireEvent(new CloseEvent(this)));
 
         binder.addStatusChangeListener(evt -> save.setEnabled(binder.isValid()));
@@ -75,42 +75,42 @@ public class ContactForm extends FormLayout {
 
     private void validateAndSave() {
         try {
-            binder.writeBean(contact);
-            fireEvent(new SaveEvent(this, contact));
+            binder.writeBean(user);
+            fireEvent(new SaveEvent(this, user));
         } catch (ValidationException e) {
             e.printStackTrace();
         }
     }
 
     // Events
-    public static abstract class ContactFormEvent extends ComponentEvent<ContactForm> {
-        private Contact contact;
+    public static abstract class UserFormEvent extends ComponentEvent<UserForm> {
+        private User user;
 
-        protected ContactFormEvent(ContactForm source, Contact contact) {
+        protected UserFormEvent(UserForm source, User user) {
             super(source, false);
-            this.contact = contact;
+            this.user = user;
         }
 
-        public Contact getContact() {
-            return contact;
-        }
-    }
-
-    public static class SaveEvent extends ContactFormEvent {
-        SaveEvent(ContactForm source, Contact contact) {
-            super(source, contact);
+        public User getUser() {
+            return user;
         }
     }
 
-    public static class DeleteEvent extends ContactFormEvent {
-        DeleteEvent(ContactForm source, Contact contact) {
-            super(source, contact);
+    public static class SaveEvent extends UserFormEvent {
+        SaveEvent(UserForm source, User user) {
+            super(source, user);
+        }
+    }
+
+    public static class DeleteEvent extends UserFormEvent {
+        DeleteEvent(UserForm source, User user) {
+            super(source, user);
         }
 
     }
 
-    public static class CloseEvent extends ContactFormEvent {
-        CloseEvent(ContactForm source) {
+    public static class CloseEvent extends UserFormEvent {
+        CloseEvent(UserForm source) {
             super(source, null);
         }
     }

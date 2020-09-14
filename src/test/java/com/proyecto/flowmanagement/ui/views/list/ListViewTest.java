@@ -12,10 +12,10 @@ public class ListViewTest {
 
     @Test
     public void formShownWhenContactSelected() {
-//        Grid<Contact> grid = listView.grid;
-//        Contact firstContact = getFirstItem(grid);
+//        Grid<User> grid = listView.grid;
+//        User firstContact = getFirstItem(grid);
 //
-//        ContactForm form = listView.form;
+//        UserForm form = listView.form;
 //
 //        Assert.assertFalse(form.isVisible());
 //        grid.asSingleSelect().setValue(firstContact);
@@ -23,7 +23,7 @@ public class ListViewTest {
 //        Assert.assertEquals(firstContact.getFirstName(), form.firstName.getValue());
 //    }
 //
-//    private Contact getFirstItem(Grid<Contact> grid) {
-//        return( (ListDataProvider<Contact>) grid.getDataProvider()).getItems().iterator().next();
+//    private User getFirstItem(Grid<User> grid) {
+//        return( (ListDataProvider<User>) grid.getDataProvider()).getItems().iterator().next();
     }
 }

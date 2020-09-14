@@ -1,6 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.list;
 
-import com.proyecto.flowmanagement.backend.entity.Contact;
+import com.proyecto.flowmanagement.backend.entity.User;
 import com.proyecto.flowmanagement.backend.entity.Rol;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.controllers.CompanyController;
@@ -19,11 +19,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Route(value = "", layout = MainLayout.class)
-@PageTitle("Contacts | Flow Management")
+@PageTitle("Users | Flow Management")
 public class ListView extends VerticalLayout {
 
-    private final ContactForm form;
-    Grid<Contact> grid = new Grid<>(Contact.class);
+    private final UserForm form;
+    Grid<User> grid = new Grid<>(User.class);
     TextField filterText = new TextField();
     private ContactController contactController;
     private CompanyController companyController;
@@ -65,7 +65,7 @@ public class ListView extends VerticalLayout {
     }
 
     private void closeEditor() {
-        form.setContact(null);
+        form.setUser(null);
         form.setVisible(false);
         removeClassName("editing");
     }
@@ -76,16 +76,16 @@ public class ListView extends VerticalLayout {
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
 
-        Button addContactButton = new Button("Add contact", click -> addContact());
+        Button addUserButton = new Button("Add user", click -> addUser());
 
-        HorizontalLayout toolbar = new HorizontalLayout(filterText, addContactButton);
+        HorizontalLayout toolbar = new HorizontalLayout(filterText, addUserButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
 
-    private void addContact() {
+    private void addUser() {
         grid.asSingleSelect().clear();
-        editContact(new Contact());
+        editUser(new User());
     }
 
     private void updateList() {
@@ -93,25 +93,25 @@ public class ListView extends VerticalLayout {
     }
 
     private void  configureGrid() {
-        grid.addClassName("contact-grid");
+        grid.addClassName("user-grid");
         grid.setSizeFull();
         grid.setColumns("firstName", "lastName");
 
-        grid.addColumn(contact-> {
-            Rol rol = contact.getRol();
+        grid.addColumn(user-> {
+            Rol rol = user.getRol();
             return rol == null ? "-" : rol.getName();
         }).setHeader("Rol").setSortable(true);
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        grid.asSingleSelect().addValueChangeListener(evt -> editContact(evt.getValue()));
+        grid.asSingleSelect().addValueChangeListener(evt -> editUser(evt.getValue()));
     }
 
-    private void editContact(Contact contact) {
-        if(contact == null) {
+    private void editUser(User user) {
+        if(user == null) {
             closeEditor();
         } else {
-            form.setContact(contact);
+            form.setUser(user);
             form.setVisible(true);
             addClassName("editing");
         }

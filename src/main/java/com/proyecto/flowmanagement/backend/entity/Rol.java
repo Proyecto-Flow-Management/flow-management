@@ -12,7 +12,7 @@ public class Rol  extends AbstractEntity {
     private int code;
 //TEST
     @OneToMany(mappedBy = "rol", fetch = FetchType.EAGER)
-    private List<Contact> employees = new LinkedList<>();
+    private List<User> employees = new LinkedList<>();
 
     public Rol() {
     }
@@ -33,7 +33,7 @@ public class Rol  extends AbstractEntity {
         this.name = name;
     }
 
-    public List<Contact> getEmployees() {
+    public List<User> getEmployees() {
         return employees;
     }
 }
