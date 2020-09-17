@@ -1,4 +1,6 @@
-package com.proyecto.flowmanagement.backend.entity;
+package com.proyecto.flowmanagement.backend.persistence.entity;
+
+import com.proyecto.flowmanagement.backend.def.EStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -6,32 +8,25 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name= "user")
 public class User extends AbstractEntity implements Cloneable {
 
-    public enum Status {
-        Status1, Status2
-    }
+    @Column(name = "firstName")
+    private String firstName;
 
-    @NotNull
-    @NotEmpty
-    private String firstName = "";
-
-    @NotNull
-    @NotEmpty
-    private String lastName = "";
+    @Column(name = "lastName")
+    private String lastName;
 
     @ManyToOne
     @JoinColumn(name = "rol_id")
     private Rol rol;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
-    private User.Status status;
+    @Column(name = "status")
+    private EStatus status;
 
-    @Email
-    @NotNull
-    @NotEmpty
-    private String email = "";
+    @Column(name="email")
+    private String email;
 
     public String getEmail() {
         return email;
@@ -41,11 +36,11 @@ public class User extends AbstractEntity implements Cloneable {
         this.email = email;
     }
 
-    public Status getStatus() {
+    public EStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(EStatus status) {
         this.status = status;
     }
 

@@ -1,9 +1,11 @@
 package com.proyecto.flowmanagement.backend.service;
 
-import com.proyecto.flowmanagement.backend.entity.User;
-import com.proyecto.flowmanagement.backend.entity.Rol;
-import com.proyecto.flowmanagement.backend.repository.UserRepository;
-import com.proyecto.flowmanagement.backend.repository.RolRepository;
+import com.proyecto.flowmanagement.backend.def.EStatus;
+import com.proyecto.flowmanagement.backend.persistence.entity.User;
+import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
+import com.proyecto.flowmanagement.backend.persistence.repository.UserRepository;
+import com.proyecto.flowmanagement.backend.persistence.repository.RolRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -16,15 +18,14 @@ import java.util.stream.Stream;
 
 @Service
 public class UserService {
-    private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
-    private UserRepository userRepository;
-    private RolRepository rolRepository;
 
-    public UserService(UserRepository userRepository,
-                       RolRepository rolRepository) {
-        this.userRepository = userRepository;
-        this.rolRepository = rolRepository;
-    }
+    private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RolRepository rolRepository;
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -51,6 +52,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    // Esto saquenlo de aca!!!
     @PostConstruct
     public void populateTestData() {
 
@@ -75,7 +77,7 @@ public class UserService {
                                 user.setFirstName(split[0]);
                                 user.setLastName(split[1]);
                                 user.setRol(roles.get(Integer.parseInt(split[2])));
-                                user.setStatus(User.Status.values()[r.nextInt(User.Status.values().length)]);
+                                user.setStatus(EStatus.values()[r.nextInt(EStatus.values().length)]);
                                 String email = (user.getFirstName() + "." + user.getLastName() + "@gmail.com").toLowerCase();
                                 user.setEmail(email);
                                 return user;

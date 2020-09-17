@@ -1,6 +1,6 @@
 package com.proyecto.flowmanagement.ui.controllers;
 
-import com.proyecto.flowmanagement.backend.entity.Rol;
+import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
 import com.proyecto.flowmanagement.backend.service.RolService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +14,7 @@ import java.util.List;
 @Api(tags="Rol", description = "Rol Endpoint")
 @RequestMapping(value = "flowManagement/Rol", produces = "application/json")
 public class RolController {
+
     @Autowired
     private RolService rolService;
 
