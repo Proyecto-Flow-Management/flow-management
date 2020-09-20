@@ -35,6 +35,10 @@ public class UserService {
         return userRepository.search(filterText).get(0);
     }
 
+    public List<User> findAll(String filterText) {
+        return userRepository.search(filterText);
+    }
+
     public long count() {
         return userRepository.count();
     }

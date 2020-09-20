@@ -86,7 +86,7 @@ public class ListView extends VerticalLayout {
     }
 
     private void updateList() {
-        grid.setItems(userController.listUser(filterText.getValue()));
+        grid.setItems(userController.listUserbyFilter(filterText.getValue()));
     }
 
     private void  configureGrid() {
