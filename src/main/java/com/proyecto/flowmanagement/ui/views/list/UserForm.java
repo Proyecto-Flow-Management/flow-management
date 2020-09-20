@@ -1,7 +1,8 @@
 package com.proyecto.flowmanagement.ui.views.list;
 
-import com.proyecto.flowmanagement.backend.entity.User;
-import com.proyecto.flowmanagement.backend.entity.Rol;
+import com.proyecto.flowmanagement.backend.def.EStatus;
+import com.proyecto.flowmanagement.backend.persistence.entity.User;
+import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -26,7 +27,7 @@ public class UserForm extends FormLayout {
     TextField firstName = new TextField("First name");
     TextField lastName = new TextField("Last name");
     EmailField email = new EmailField("Email");
-    ComboBox<User.Status> status = new ComboBox<>("Status");
+    ComboBox<EStatus> status = new ComboBox<>("Status");
     ComboBox<Rol> rol = new ComboBox<>("Rol");
 
     Button save = new Button("Save");
@@ -39,7 +40,7 @@ public class UserForm extends FormLayout {
         addClassName("user-form");
 
         binder.bindInstanceFields(this);
-        status.setItems(User.Status.values());
+        status.setItems(EStatus.values());
         rol.setItems(roles);
         rol.setItemLabelGenerator(Rol::getName);
 

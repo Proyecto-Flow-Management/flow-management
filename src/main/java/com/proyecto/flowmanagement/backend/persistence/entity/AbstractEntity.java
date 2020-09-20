@@ -1,4 +1,4 @@
-package com.proyecto.flowmanagement.backend.entity;
+package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,6 +7,7 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
+
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE)
     private Long id;

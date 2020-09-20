@@ -1,7 +1,6 @@
 package com.proyecto.flowmanagement.ui.controllers;
 
-import com.proyecto.flowmanagement.backend.entity.User;
-import com.proyecto.flowmanagement.backend.service.UserService;
+import com.proyecto.flowmanagement.backend.persistence.entity.User;
 import com.proyecto.flowmanagement.backend.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

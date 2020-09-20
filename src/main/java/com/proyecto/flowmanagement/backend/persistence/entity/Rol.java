@@ -1,14 +1,17 @@
-package com.proyecto.flowmanagement.backend.entity;
+package com.proyecto.flowmanagement.backend.persistence.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import java.util.LinkedList;
-import java.util.List;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "rol")
 public class Rol  extends AbstractEntity {
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "code")
     private int code;
 
     public Rol() {

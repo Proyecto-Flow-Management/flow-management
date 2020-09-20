@@ -1,7 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.list;
 
-import com.proyecto.flowmanagement.backend.entity.User;
-import com.proyecto.flowmanagement.backend.entity.Rol;
+import com.proyecto.flowmanagement.backend.persistence.entity.User;
+import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.controllers.UserController;
 import com.proyecto.flowmanagement.ui.controllers.RolController;

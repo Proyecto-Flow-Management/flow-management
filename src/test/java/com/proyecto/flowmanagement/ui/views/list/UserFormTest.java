@@ -1,7 +1,8 @@
 package com.proyecto.flowmanagement.ui.views.list;
 
-import com.proyecto.flowmanagement.backend.entity.User;
-import com.proyecto.flowmanagement.backend.entity.Rol;
+import com.proyecto.flowmanagement.backend.def.EStatus;
+import com.proyecto.flowmanagement.backend.persistence.entity.User;
+import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,7 @@ public class UserFormTest {
         marcUsher.setFirstName("Marc");
         marcUsher.setLastName("Usher");
         marcUsher.setEmail("marc@usher.com");
-        marcUsher.setStatus(User.Status.Status1);
+        marcUsher.setStatus(EStatus.Status1);
     }
 
     @Test
@@ -31,7 +32,7 @@ public class UserFormTest {
         Assert.assertEquals("Marc", form.firstName.getValue());
         Assert.assertEquals("Usher", form.lastName.getValue());
         Assert.assertEquals("marc@usher.com", form.email.getValue());
-        Assert.assertEquals(User.Status.Status1, form.status.getValue());
+        Assert.assertEquals(EStatus.Status1, form.status.getValue());
     }
 
     @Test
@@ -43,7 +44,7 @@ public class UserFormTest {
         form.firstName.setValue("John");
         form.lastName.setValue("Doe");
         form.email.setValue("john@doe.com");
-        form.status.setValue(User.Status.Status2);
+        form.status.setValue(EStatus.Status2);
 
         AtomicReference<User> savedUserRef = new AtomicReference<>(null);
         form.addListener(UserForm.SaveEvent.class, e -> {
@@ -55,6 +56,6 @@ public class UserFormTest {
         Assert.assertEquals("John", savedUser.getFirstName());
         Assert.assertEquals("Doe", savedUser.getLastName());
         Assert.assertEquals("john@doe.com", savedUser.getEmail());
-        Assert.assertEquals(User.Status.Status2, savedUser.getStatus());
+        Assert.assertEquals(EStatus.Status2, savedUser.getStatus());
     }
 }

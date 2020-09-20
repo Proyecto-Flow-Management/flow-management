@@ -1,7 +1,8 @@
 package com.proyecto.flowmanagement.backend.service;
 
-import com.proyecto.flowmanagement.backend.entity.Rol;
-import com.proyecto.flowmanagement.backend.repository.RolRepository;
+import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
+import com.proyecto.flowmanagement.backend.persistence.repository.RolRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -10,11 +11,9 @@ import java.util.Map;
 
 @Service
 public class RolService {
-    private RolRepository rolRepository;
 
-    public RolService(RolRepository rolRepository) {
-        this.rolRepository = rolRepository;
-    }
+    @Autowired
+    private RolRepository rolRepository;
 
     public List<Rol> findAll() {
         return rolRepository.findAll();
