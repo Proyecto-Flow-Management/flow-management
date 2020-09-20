@@ -25,7 +25,9 @@ public class UserController {
     public User listUser(String filterText) {
         return userService.find(filterText);
     }
-
+    public List<User> listUserbyFilter(String filterText) {
+        return userService.findAll(filterText);
+    }
     public void deleteUser(User user){
         userService.delete(user);
     }
