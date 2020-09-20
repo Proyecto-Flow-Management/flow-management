@@ -51,37 +51,4 @@ public class UserService {
         }
         userRepository.save(user);
     }
-
-    // Esto saquenlo de aca!!!
-    @PostConstruct
-    public void populateTestData() {
-
-        if (rolRepository.count() == 0) {
-            rolRepository.saveAll(
-                    Stream.of("Administrator 0", "User 1")
-                            .map(name->{
-                                String[] split = name.split(" ");
-                                return new Rol(split[0],split[1]);
-                            })
-                            .collect(Collectors.toList()));
-        }
-
-        if (userRepository.count() == 0) {
-            Random r = new Random(0);
-            List<Rol> roles = rolRepository.findAll();
-            userRepository.saveAll(
-                    Stream.of("Bernardo Rychtenberg 0","Marcelo Crivelli 1", "Hector Barnada 1", "Rafael Pelacchi 1")
-                            .map(name -> {
-                                String[] split = name.split(" ");
-                                User user = new User();
-                                user.setFirstName(split[0]);
-                                user.setLastName(split[1]);
-                                user.setRol(roles.get(Integer.parseInt(split[2])));
-                                user.setStatus(EStatus.values()[r.nextInt(EStatus.values().length)]);
-                                String email = (user.getFirstName() + "." + user.getLastName() + "@gmail.com").toLowerCase();
-                                user.setEmail(email);
-                                return user;
-                            }).collect(Collectors.toList()));
-        }
-    }
 }
