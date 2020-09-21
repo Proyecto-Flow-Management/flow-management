@@ -1,12 +1,12 @@
 CREATE TABLE `rol` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `code` int(11) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `user` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
@@ -33,18 +33,18 @@ VALUES
 'tutor@gmail.com',
 'nombreTutor',
 'apellidoTutor',
-'Activo',
+'Status2',
 1),
 (2,
 'estudiante1@gmail.com',
 'estudiante1',
 'estudiante1',
-'Activo',
+'Status2',
 2),
 (3,
 'estudiante2@gmail.com',
 'estudiante2',
 'estudiante2',
-'Activo',
+'Status2',
 2);
 
