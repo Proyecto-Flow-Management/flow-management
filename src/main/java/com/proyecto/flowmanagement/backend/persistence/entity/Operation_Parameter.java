@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name= "operation_parameter")
-public class Operation_Parameter {
+public class Operation_Parameter extends AbstractEntity {
     @Column(name = "name")
     private String name;
 

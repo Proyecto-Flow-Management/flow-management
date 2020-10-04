@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name= "operation_type")
-public class Operation_Type {
+public class Operation_Type extends AbstractEntity {
     @Column(name = "name")
     private String name;
 

@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "component_type")
-public class Component_Type {
+public class Component_Type extends AbstractEntity {
 
     @Column(name = "name")
     private String name;

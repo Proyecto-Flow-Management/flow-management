@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name= "convertion")
-public class Convertion {
+public class Convertion extends AbstractEntity {
 
     @Column(name = "condition")
     private String condition;

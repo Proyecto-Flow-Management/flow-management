@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "component_template")
-public class Component_Template {
+public class Component_Template  extends AbstractEntity {
 
     @Column(name = "name")
     private String name;
@@ -12,7 +12,7 @@ public class Component_Template {
     @Column(name = "label")
     private String label;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "component_id")
     private Component component;
 

@@ -29,10 +29,9 @@ CREATE TABLE `component_type` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `label` varchar(255) DEFAULT NULL,
-  `parameter_id` bigint(20) NOT NULL,
+  `parameter_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_parameter_id ` (`parameter_id`),
-  CONSTRAINT `fk_parameter_id` FOREIGN KEY (`parameter_id`) REFERENCES `component_parameter` (`id`)
+  FOREIGN KEY (`parameter_id`) REFERENCES `component_parameter` (`id`)
 );
 
 CREATE TABLE `component` (
@@ -41,8 +40,7 @@ CREATE TABLE `component` (
   `label` varchar(255) DEFAULT NULL,
   `type_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_type_id ` (`type_id`),
-  CONSTRAINT `fk_type_id` FOREIGN KEY (`type_id`) REFERENCES `component_type` (`id`)
+  FOREIGN KEY (`type_id`) REFERENCES `component_type` (`id`)
 );
 
 CREATE TABLE `component_template` (
@@ -51,8 +49,7 @@ CREATE TABLE `component_template` (
   `label` varchar(255) DEFAULT NULL,
   `component_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_component_id ` (`component_id`),
-  CONSTRAINT `fk_component_id` FOREIGN KEY (`component_id`) REFERENCES `component` (`id`)
+  FOREIGN KEY (`component_id`) REFERENCES `component` (`id`)
 );
 
 
@@ -120,6 +117,48 @@ CREATE TABLE `convertion` (
   #KEY `fk_convertion_type_id` (`convertion_type_id`),
   #CONSTRAINT `fk_convertion_type_id` FOREIGN KEY (`convertion_type_id`) REFERENCES `convertion_type` (`id`),
   CONSTRAINT `fk_operation_parameter_id` FOREIGN KEY (`operation_parameter_id`) REFERENCES `operation_parameter` (`id`)
+);
+
+CREATE TABLE `step` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `label` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `guide` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `mainStepId` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`mainStepId`) REFERENCES `step` (`id`)
+);
+
+CREATE TABLE `step_template` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `step_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`step_id`) REFERENCES `step` (`id`)
+);
+
+CREATE TABLE `alternative` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `label` varchar(255) DEFAULT NULL,
+  `nextStep` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `alternative_parameter` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `alternative_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`alternative_id`) REFERENCES `alternative` (`id`)
 );
 
 
