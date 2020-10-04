@@ -1,2 +1,4 @@
-package com.proyecto.flowmanagement.backend.persistence.entity;public class Step {
+package com.proyecto.flowmanagement.backend.persistence.entity;
+
+public class Step extends AbstractEntity {
 }

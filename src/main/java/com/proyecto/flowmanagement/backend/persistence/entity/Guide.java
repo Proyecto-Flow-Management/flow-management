@@ -1,2 +1,4 @@
-package com.proyecto.flowmanagement.backend.persistence.entity;public class Guide {
+package com.proyecto.flowmanagement.backend.persistence.entity;
+
+public class Guide extends AbstractEntity {
 }
