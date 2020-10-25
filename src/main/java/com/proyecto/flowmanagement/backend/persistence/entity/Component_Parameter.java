@@ -15,11 +15,11 @@ public class Component_Parameter extends AbstractEntity {
     @Column(name = "value")
     private String value;
 
-    public Component_Parameter(String name, String label, String value) {
-        this.name = name;
-        this.label = label;
-        this.value = value;
-    }
+//    public Component_Parameter(String name, String label, String value) {
+//        this.name = name;
+//        this.label = label;
+//        this.value = value;
+//    }
 
     public String getName() {
         return name;

@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.ui;
 
 import com.proyecto.flowmanagement.ui.views.dashboard.DashboardView;
+import com.proyecto.flowmanagement.ui.views.list.ComponentParameterView;
 import com.proyecto.flowmanagement.ui.views.list.ListView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -46,7 +47,8 @@ public class MainLayout extends AppLayout {
 
         addToDrawer(new VerticalLayout(
                 listLink,
-                new RouterLink("Dashboard", DashboardView.class)
+                new RouterLink("Dashboard", DashboardView.class),
+                new RouterLink("Component Parameter", ComponentParameterView.class)
         ));
     }
 
