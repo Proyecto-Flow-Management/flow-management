@@ -2,9 +2,9 @@ package com.proyecto.flowmanagement.ui.views.list;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.User;
 import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
+import com.proyecto.flowmanagement.backend.service.Impl.RolServiceImpl;
+import com.proyecto.flowmanagement.backend.service.Impl.UserServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
-import com.proyecto.flowmanagement.ui.controllers.UserController;
-import com.proyecto.flowmanagement.ui.controllers.RolController;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -24,18 +24,19 @@ public class ListView extends VerticalLayout {
     private final UserForm form;
     Grid<User> grid = new Grid<>(User.class);
     TextField filterText = new TextField();
-    private UserController userController;
-    private RolController rolController;
 
-    public ListView(UserController userController, RolController rolController) {
-        this.userController = userController;
-        this.rolController = rolController;
+    UserServiceImpl userService;
+    RolServiceImpl rolService;
+
+    public ListView(UserServiceImpl userService, RolServiceImpl rolService) {
+        this.userService = userService;
+        this.rolService = rolService;
         addClassName("list-view");
         setSizeFull();
         configureGrid();
 
 
-        form = new UserForm(rolController.listRol());
+        form = new UserForm(rolService.findAll());
         form.addListener(UserForm.SaveEvent.class, this::saveContact);
         form.addListener(UserForm.DeleteEvent.class, this::deleteContact);
         form.addListener(UserForm.CloseEvent.class, e -> closeEditor());
@@ -50,13 +51,13 @@ public class ListView extends VerticalLayout {
     }
 
     private void deleteContact(UserForm.DeleteEvent evt) {
-        userController.deleteUser(evt.getUser());
+        userService.delete(evt.getUser());
         updateList();
         closeEditor();
     }
 
     private void saveContact(UserForm.SaveEvent evt) {
-        userController.saveUser(evt.getUser());
+        userService.save(evt.getUser());
         updateList();
         closeEditor();
     }
@@ -86,7 +87,7 @@ public class ListView extends VerticalLayout {
     }
 
     private void updateList() {
-        grid.setItems(userController.listUserbyFilter(filterText.getValue()));
+        grid.setItems(userService.findAll(filterText.getValue()));
     }
 
     private void  configureGrid() {

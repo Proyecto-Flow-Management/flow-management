@@ -1,7 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.dashboard;
 
-import com.proyecto.flowmanagement.backend.service.UserService;
-import com.proyecto.flowmanagement.backend.service.RolService;
+import com.proyecto.flowmanagement.backend.service.Impl.RolServiceImpl;
+import com.proyecto.flowmanagement.backend.service.Impl.UserServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.charts.Chart;
@@ -19,10 +19,10 @@ import java.util.Map;
 @Route(value = "dashboard", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout {
 
-    private final UserService userService;
-    private final RolService rolService;
+    private final UserServiceImpl userService;
+    private final RolServiceImpl rolService;
 
-    public DashboardView(UserService userService, RolService rolService) {
+    public DashboardView(UserServiceImpl userService, RolServiceImpl rolService) {
         this.userService = userService;
         this.rolService = rolService;
 

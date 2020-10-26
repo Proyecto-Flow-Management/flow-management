@@ -11,8 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "alternative")
-public class Alternative {
+@Table(name = "conversion")
+public class Conversion {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +25,8 @@ public class Alternative {
 	private String label;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_step", nullable = false, foreignKey = @ForeignKey(name = "FK_alternative_step"))
-	private Step step;
+	@JoinColumn(name = "id_conversion_type", nullable = false, foreignKey = @ForeignKey(name = "FK_conversion_conversion_type"))
+	private ConversionType conversionType;
 
 	public Integer getId() {
 		return id;
@@ -52,12 +52,12 @@ public class Alternative {
 		this.label = label;
 	}
 
-	public Step getStep() {
-		return step;
+	public ConversionType getConversionType() {
+		return conversionType;
 	}
 
-	public void setStep(Step step) {
-		step = step;
+	public void setConversionType(ConversionType conversionType) {
+		this.conversionType = conversionType;
 	}
-		
+
 }

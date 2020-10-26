@@ -1,2 +1,4 @@
-package com.proyecto.flowmanagement.backend.service;public interface IUserService {
+package com.proyecto.flowmanagement.backend.service;
+
+public interface IUserService {
 }

@@ -1,162 +1,77 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
-import javax.persistence.*;
+import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
-@Table(name= "operation")
-public class Operation extends AbstractEntity {
-    @Column(name = "name")
-    private String name;
+@Table(name = "operation")
+public class Operation {
 
-    @Column(name = "label")
-    private String label;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+	
+	@Column(name = "name")
+	private String name;
+	
+	@Column(name = "label")
+	private String label;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_operation_type", nullable = false, foreignKey = @ForeignKey(name = "FK_operation_operation_type"))
+	private OperationType operationType;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_guide", nullable = false, foreignKey = @ForeignKey(name = "FK_guide_operation_type"))
+	private Guide guide;
+	
+	public Integer getId() {
+		return id;
+	}
 
-    @Column(name = "visible")
-    private boolean visible;
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    @Column(name = "pre_execute")
-    private boolean preExecute;
+	public String getName() {
+		return name;
+	}
 
-    @Column(name = "comment")
-    private String comment;
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    @Column(name = "title")
-    private String title;
+	public String getLabel() {
+		return label;
+	}
 
-    @Column(name = "automatic")
-    private boolean automatic;
+	public void setLabel(String label) {
+		this.label = label;
+	}
 
-    @Column(name = "order")
-    private int order;
+	public OperationType getOperationType() {
+		return operationType;
+	}
 
-    @Column(name = "notify_alternative")
-    private boolean notifyAlternative;
+	public void setOperationType(OperationType operationType) {
+		operationType = operationType;
+	}
 
-    @Column(name = "alternative_ids")
-    private String alternativeIds;
+	public Guide getGuide() {
+		return guide;
+	}
 
-    @Column(name = "notify_operation")
-    private boolean notifyOperation;
+	public void setGuide(Guide guide) {
+		guide = guide;
+	}
 
-    @Column(name = "operation_notify_ids")
-    private String operationNotifyIds;
-
-//    @ManyToOne
-//    @JoinColumn(name = "guide_id")
-//    private Guide guideId;
-
-    @ManyToOne
-    @JoinColumn(name = "operation_type_id")
-    private Operation_Type operationType;
-
-    public Operation_Type getOperationType() {
-        return operationType;
-    }
-
-    public void setOperationType(Operation_Type operationType) {
-        this.operationType = operationType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    public boolean isPreExecute() {
-        return preExecute;
-    }
-
-    public void setPreExecute(boolean preExecute) {
-        this.preExecute = preExecute;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public boolean isAutomatic() {
-        return automatic;
-    }
-
-    public void setAutomatic(boolean automatic) {
-        this.automatic = automatic;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
-    }
-
-    public boolean isNotifyAlternative() {
-        return notifyAlternative;
-    }
-
-    public void setNotifyAlternative(boolean notifyAlternative) {
-        this.notifyAlternative = notifyAlternative;
-    }
-
-    public String getAlternativeIds() {
-        return alternativeIds;
-    }
-
-    public void setAlternativeIds(String alternativeIds) {
-        this.alternativeIds = alternativeIds;
-    }
-
-    public boolean isNotifyOperation() {
-        return notifyOperation;
-    }
-
-    public void setNotifyOperation(boolean notifyOperation) {
-        this.notifyOperation = notifyOperation;
-    }
-
-    public String getOperationNotifyIds() {
-        return operationNotifyIds;
-    }
-
-    public void setOperationNotifyIds(String operationNotifyIds) {
-        this.operationNotifyIds = operationNotifyIds;
-    }
-
-//    public Guide getGuideId() {
-//        return guideId;
-//    }
-//
-//    public void setGuideId(Guide guideId) {
-//        this.guideId = guideId;
-//    }
 }

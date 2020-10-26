@@ -1,7 +1,4 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
-
-import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -12,11 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name = "guide")
-public class Guide {
-	
+@Table(name = "alternative_parameter")
+public class AlternativeParameter {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -25,18 +20,18 @@ public class Guide {
     private String name;
 	
 	@Column(name = "label")
-	private String label;
+    private String label;
 	
-	@Column(name = "description")
-	private String description;
-  
+	@Column(name = "direction")
+    private String direction;
+	
 	@ManyToOne
-	@JoinColumn(name = "id_alternative", nullable = false, foreignKey = @ForeignKey(name = "FK_guide_alternative"))
+	@JoinColumn(name = "id_condition", nullable = false, foreignKey = @ForeignKey(name = "FK_alternative_parameter_condition"))
+	private Condition condition;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_alternative", nullable = false, foreignKey = @ForeignKey(name = "FK_alternative_parameter_alternative"))
 	private Alternative alternative;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_step", nullable = false, foreignKey = @ForeignKey(name = "FK_guide_step"))
-	private Step step;
 
 	public Integer getId() {
 		return id;
@@ -53,7 +48,7 @@ public class Guide {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 	public String getLabel() {
 		return label;
 	}
@@ -62,12 +57,20 @@ public class Guide {
 		this.label = label;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getDirection() {
+		return direction;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+
+	public Condition getCondition() {
+		return condition;
+	}
+
+	public void setCondition(Condition condition) {
+		condition = condition;
 	}
 
 	public Alternative getAlternative() {
@@ -75,15 +78,7 @@ public class Guide {
 	}
 
 	public void setAlternative(Alternative alternative) {
-		this.alternative = alternative;
+		alternative = alternative;
 	}
 
-	public Step getStep() {
-		return step;
-	}
-
-	public void setStep(Step step) {
-		this.step = step;
-	}
-    
 }
