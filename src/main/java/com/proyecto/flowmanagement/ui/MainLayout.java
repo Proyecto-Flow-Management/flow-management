@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.ui;
 
 import com.proyecto.flowmanagement.ui.views.dashboard.DashboardView;
+import com.proyecto.flowmanagement.ui.views.guide.CreateGuideView;
 import com.proyecto.flowmanagement.ui.views.list.ListView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -44,10 +45,8 @@ public class MainLayout extends AppLayout {
         RouterLink listLink = new RouterLink("List", ListView.class);
         listLink.setHighlightCondition(HighlightConditions.sameLocation());
 
-        addToDrawer(new VerticalLayout(
-                listLink,
-                new RouterLink("Dashboard", DashboardView.class)
-        ));
+        addToDrawer(new VerticalLayout(listLink,new RouterLink("Dashboard", DashboardView.class)));
+        addToDrawer(new VerticalLayout(listLink,new RouterLink("Gestionar Guias", CreateGuideView.class)));
     }
 
 

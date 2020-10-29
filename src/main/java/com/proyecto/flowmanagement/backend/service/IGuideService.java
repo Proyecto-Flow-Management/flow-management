@@ -10,5 +10,5 @@ public interface IGuideService {
 	Guide update(Guide guide);
 	List<Guide> getAll();
 	Guide getById(Integer id);
-	void delete(Integer id);
+	void delete(Guide guide);
 }

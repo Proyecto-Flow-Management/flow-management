@@ -37,8 +37,8 @@ public class GuideServiceImpl implements IGuideService {
 	}
 
 	@Override
-	public void delete(Integer id) {
-		repo.deleteById(id);
+	public void delete(Guide guide) {
+		repo.delete(guide);
 	}
 
 }

@@ -29,7 +29,7 @@ public class Step {
 	@Column(name = "nextStep")
 	private Integer nextStep;
 	
-	@ManyToOne
+	/*@ManyToOne
 	@JoinColumn(name = "id_component", nullable = false, foreignKey = @ForeignKey(name = "FK_step_component"))
 	private Component component;
 	
@@ -39,7 +39,7 @@ public class Step {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_operation", nullable = false, foreignKey = @ForeignKey(name = "FK_step_operation"))
-	private Operation operation;
+	private Operation operation;*/
 
 	public Integer getId() {
 		return id;
@@ -73,7 +73,7 @@ public class Step {
 		this.nextStep = nextStep;
 	}
 
-	public Component getComponent() {
+	/*public Component getComponent() {
 		return component;
 	}
 
@@ -95,6 +95,6 @@ public class Step {
 
 	public void setOperation(Operation operation) {
 		operation = operation;
-	}
+	}*/
 
 }

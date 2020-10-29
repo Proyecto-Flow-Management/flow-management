@@ -2,49 +2,49 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
 @Table(name = "guide")
-public class Guide {
-	
-	@Id
+public class Guide extends AbstractEntity implements Cloneable {
+
+	/*@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
+	private Integer id;*/
+
 	@Column(name = "name")
-    private String name;
-	
+	private String name;
+
 	@Column(name = "label")
 	private String label;
-	
-	@Column(name = "description")
-	private String description;
-  
-	@ManyToOne
-	@JoinColumn(name = "id_alternative", nullable = false, foreignKey = @ForeignKey(name = "FK_guide_alternative"))
-	private Alternative alternative;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_step", nullable = false, foreignKey = @ForeignKey(name = "FK_guide_step"))
-	private Step step;
 
-	public Integer getId() {
+	@Column(name = "main_step")
+	private String mainStep;
+
+	/*@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "guide_id")
+	private List<Step> steps;*/
+
+	/*@Column(name = "description")
+	private String description;*/
+
+	/*@ManyToOne
+	@JoinColumn(name = "id_alternative", nullable = false, foreignKey = @ForeignKey(name = "FK_guide_alternative"))
+	private Alternative alternative;*/
+
+	/*@ManyToOne
+	@JoinColumn(name = "id_step", nullable = false, foreignKey = @ForeignKey(name = "FK_guide_step"))
+	private Step step;*/
+
+	/*public Integer getId() {
 		return id;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
+	}*/
 
 	public String getName() {
 		return name;
@@ -62,7 +62,30 @@ public class Guide {
 		this.label = label;
 	}
 
-	public String getDescription() {
+	public String getMainStep() {
+		return mainStep;
+	}
+
+	public void setMainStep(String mainStep) {
+		this.mainStep = mainStep;
+	}
+
+	/*public List<Step> getSteps() {
+		return steps;
+	}
+
+	public void setSteps(List<Step> steps) {
+		this.steps = steps;
+	}*/
+/*public Step getStep() {
+		return step;
+	}
+
+	public void setStep(Step step) {
+		this.step = step;
+	}*/
+
+	/*public String getDescription() {
 		return description;
 	}
 
@@ -84,6 +107,6 @@ public class Guide {
 
 	public void setStep(Step step) {
 		this.step = step;
-	}
-    
+	}*/
+
 }
