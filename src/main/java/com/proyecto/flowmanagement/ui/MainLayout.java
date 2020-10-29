@@ -2,6 +2,7 @@ package com.proyecto.flowmanagement.ui;
 
 import com.proyecto.flowmanagement.ui.views.dashboard.DashboardView;
 import com.proyecto.flowmanagement.ui.views.list.ListView;
+import com.proyecto.flowmanagement.ui.views.list.StepView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -46,7 +47,8 @@ public class MainLayout extends AppLayout {
 
         addToDrawer(new VerticalLayout(
                 listLink,
-                new RouterLink("Dashboard", DashboardView.class)
+                new RouterLink("Dashboard", DashboardView.class),
+                new RouterLink("Step", StepView.class)
         ));
     }
 
