@@ -9,5 +9,5 @@ public interface IStepService {
 	Step update(Step step);
 	List<Step> getAll();
 	Step getById(Integer id);
-	void delete(Integer id);
+	void delete(Step step);
 }

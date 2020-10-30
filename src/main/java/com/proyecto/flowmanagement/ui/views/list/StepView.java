@@ -31,7 +31,6 @@ public class StepView extends VerticalLayout {
         setSizeFull();
         configureGrid();
 
-//        form = new UserForm(rolController.listRol());
         form = new StepForm();
         form.addListener(StepForm.SaveEvent.class, this::saveContact);
         form.addListener(StepForm.DeleteEvent.class, this::deleteContact);
@@ -47,7 +46,7 @@ public class StepView extends VerticalLayout {
     }
 
     private void deleteContact(StepForm.DeleteEvent evt) {
-        stepService.delete(evt.getStep().getId());
+        stepService.delete(evt.getStep());
         updateList();
         closeEditor();
     }
@@ -89,8 +88,8 @@ public class StepView extends VerticalLayout {
     private void  configureGrid() {
         grid.addClassName("step-grid");
         grid.setSizeFull();
-        grid.setColumns("label", "description");
-//        grid.setColumns("name", "label", "description");
+//        grid.setColumns("name", "label");
+//        grid.setColumns("name", "label", "nextStep");
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 

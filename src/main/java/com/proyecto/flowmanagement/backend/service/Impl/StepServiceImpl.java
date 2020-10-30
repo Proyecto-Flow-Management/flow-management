@@ -48,12 +48,8 @@ public class StepServiceImpl implements IStepService {
 	}
 
 	@Override
-	public void delete(Integer id) {
-		repo.deleteById(id);
+	public void delete(Step step) {
+		repo.delete(step);
 	}
-
-//	public void delete(Step step) {
-//		repo.delete(step);
-//	}
 
 }

@@ -48,7 +48,7 @@ public class MainLayout extends AppLayout {
         addToDrawer(new VerticalLayout(
                 listLink,
                 new RouterLink("Dashboard", DashboardView.class),
-                new RouterLink("Step", StepView.class)
+                new RouterLink("Gestion Steps", StepView.class)
         ));
     }
 

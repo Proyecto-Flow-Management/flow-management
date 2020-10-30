@@ -18,9 +18,9 @@ import com.vaadin.flow.shared.Registration;
 public class StepForm extends FormLayout {
     private Step step;
 
-//    TextField name = new TextField("Name");
+    TextField name = new TextField("Name");
     TextField label = new TextField("Label");
-    TextField description = new TextField("Description");
+    TextField nextStep = new TextField("NextStep");
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
@@ -33,8 +33,9 @@ public class StepForm extends FormLayout {
 
         binder.bindInstanceFields(this);
 
-        add(label,
-                description,
+        add(name,
+                label,
+                nextStep,
                 createButtonsLayout());
     }
 
