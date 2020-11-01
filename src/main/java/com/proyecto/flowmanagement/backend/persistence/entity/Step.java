@@ -2,15 +2,11 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "step")
@@ -18,6 +14,7 @@ public class Step {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "step_id")
 	private Integer id;
 	
 	@Column(name = "name")
@@ -28,7 +25,14 @@ public class Step {
 	
 	@Column(name = "nextStep")
 	private Integer nextStep;
-	
+
+	@ManyToMany(mappedBy = "steps")
+	private Set<Guide> guides = new HashSet<>();
+
+	/*@ManyToOne
+	@JoinColumn(name="guide_id")
+	private Guide guide;*/
+
 	/*@ManyToOne
 	@JoinColumn(name = "id_component", nullable = false, foreignKey = @ForeignKey(name = "FK_step_component"))
 	private Component component;
@@ -97,4 +101,11 @@ public class Step {
 		operation = operation;
 	}*/
 
+	public Set<Guide> getGuides() {
+		return guides;
+	}
+
+	public void setGuides(Set<Guide> guides) {
+		this.guides = guides;
+	}
 }

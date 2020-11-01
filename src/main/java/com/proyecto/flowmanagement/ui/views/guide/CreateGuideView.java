@@ -1,6 +1,8 @@
 package com.proyecto.flowmanagement.ui.views.guide;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
+import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
+import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
 import com.proyecto.flowmanagement.backend.service.Impl.StepServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
@@ -12,6 +14,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 @Component
 @Route(value = "create_guide", layout = MainLayout.class)
@@ -89,10 +93,27 @@ public class CreateGuideView extends VerticalLayout {
     private void  configureGrid() {
         grid.addClassName("guide-grid");
         grid.setSizeFull();
+        grid.setColumns("name","mainStep");
+        grid.addColumn(guide-> {
+            Set<Step> steps = guide.getSteps();
+            String txt = "";
+            for (Step step:steps
+                 ) {
+                if (txt == ""){
+                    txt = txt + step.getName();
+                }
+                else{
+                    txt = txt + " ,";
+                    txt = txt + step.getName();
+                }
+            }
+            return steps == null ? "-" : txt;
+        }).setHeader("Steps").setSortable(true);
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(evt -> editGuide(evt.getValue()));
+
     }
 
     private void editGuide(Guide guide) {

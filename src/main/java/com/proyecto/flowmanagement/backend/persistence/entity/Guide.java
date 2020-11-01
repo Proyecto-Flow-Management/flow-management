@@ -3,16 +3,17 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.*;
 
 
 @Entity
 @Table(name = "guide")
-public class Guide extends AbstractEntity implements Cloneable {
+public class Guide {
 
-	/*@Id
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;*/
+	@Column(name = "guide_id")
+	private Integer id;
 
 	@Column(name = "name")
 	private String name;
@@ -23,28 +24,36 @@ public class Guide extends AbstractEntity implements Cloneable {
 	@Column(name = "main_step")
 	private String mainStep;
 
-	/*@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@ManyToMany(cascade = {CascadeType.MERGE},fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "guide_steps",
+			joinColumns = {@JoinColumn(name = "guide_id")},
+			inverseJoinColumns = {@JoinColumn(name = "step_id")}
+	)
+	Set<Step> steps = new HashSet<>();
+
+	/*@OneToMany(fetch = FetchType.EAGER, mappedBy = "guide", cascade = CascadeType.MERGE)
+	private Collection<Step> steps;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "guide_id")
-	private List<Step> steps;*/
+	private Set<Step> steps = new LinkedHashSet<Step>();
 
-	/*@Column(name = "description")
-	private String description;*/
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "guide_id")
+	private List<Step> steps;
 
-	/*@ManyToOne
+	@ManyToOne
 	@JoinColumn(name = "id_alternative", nullable = false, foreignKey = @ForeignKey(name = "FK_guide_alternative"))
 	private Alternative alternative;*/
 
-	/*@ManyToOne
-	@JoinColumn(name = "id_step", nullable = false, foreignKey = @ForeignKey(name = "FK_guide_step"))
-	private Step step;*/
-
-	/*public Integer getId() {
+	public Integer getId() {
 		return id;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
-	}*/
+	}
 
 	public String getName() {
 		return name;
@@ -70,43 +79,11 @@ public class Guide extends AbstractEntity implements Cloneable {
 		this.mainStep = mainStep;
 	}
 
-	/*public List<Step> getSteps() {
+	public void setSteps(Set<Step> steps) {
+		this.steps = steps;
+	}
+
+	public Set<Step> getSteps() {
 		return steps;
 	}
-
-	public void setSteps(List<Step> steps) {
-		this.steps = steps;
-	}*/
-/*public Step getStep() {
-		return step;
-	}
-
-	public void setStep(Step step) {
-		this.step = step;
-	}*/
-
-	/*public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Alternative getAlternative() {
-		return alternative;
-	}
-
-	public void setAlternative(Alternative alternative) {
-		this.alternative = alternative;
-	}
-
-	public Step getStep() {
-		return step;
-	}
-
-	public void setStep(Step step) {
-		this.step = step;
-	}*/
-
 }

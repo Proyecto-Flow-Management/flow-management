@@ -11,12 +11,15 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.data.selection.MultiSelect;
 import com.vaadin.flow.shared.Registration;
+import org.vaadin.gatanaso.MultiselectComboBox;
 
 import java.util.List;
 
@@ -26,7 +29,7 @@ public class GuideForm extends FormLayout {
     TextField name = new TextField("Nombre de la Guia");
     TextField label = new TextField("Etiqueta");
     TextField mainStep = new TextField("Paso principal");
-    ComboBox<Step> step = new ComboBox<>("Step");
+    MultiselectComboBox <Step> step = new MultiselectComboBox();
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
@@ -38,6 +41,7 @@ public class GuideForm extends FormLayout {
         addClassName("guide-form");
 
         binder.bindInstanceFields(this);
+        binder.bind(step,"steps");
         step.setItems(steps);
         step.setItemLabelGenerator(Step::getName);
 
