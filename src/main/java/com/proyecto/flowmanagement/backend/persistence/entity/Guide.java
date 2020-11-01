@@ -2,24 +2,13 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
 @Table(name = "guide")
-public class Guide {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+public class Guide extends AbstractEntity {
 	
 	@Column(name = "name")
     private String name;
@@ -27,24 +16,9 @@ public class Guide {
 	@Column(name = "label")
 	private String label;
 	
-	@Column(name = "description")
-	private String description;
-  
-	@ManyToOne
-	@JoinColumn(name = "id_alternative", nullable = false, foreignKey = @ForeignKey(name = "FK_guide_alternative"))
-	private Alternative alternative;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_step", nullable = false, foreignKey = @ForeignKey(name = "FK_guide_step"))
-	private Step step;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="guide_id")
+	private List<Step> steps;
 
 	public String getName() {
 		return name;
@@ -62,28 +36,5 @@ public class Guide {
 		this.label = label;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Alternative getAlternative() {
-		return alternative;
-	}
-
-	public void setAlternative(Alternative alternative) {
-		this.alternative = alternative;
-	}
-
-	public Step getStep() {
-		return step;
-	}
-
-	public void setStep(Step step) {
-		this.step = step;
-	}
-    
+	public void setSteps(List<Step> steps){ this.steps = steps;}
 }

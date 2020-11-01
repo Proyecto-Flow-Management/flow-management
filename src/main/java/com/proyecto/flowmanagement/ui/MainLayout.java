@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.ui;
 
 import com.proyecto.flowmanagement.ui.views.dashboard.DashboardView;
+import com.proyecto.flowmanagement.ui.views.list.GuideView;
 import com.proyecto.flowmanagement.ui.views.list.ListView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -13,10 +14,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
 
-//@PWA(
-//        name = "Flow Management",
-//        shortName = "FLM"
-//)
 @CssImport("./styles/shared-styles.css")
 public class MainLayout extends AppLayout {
 
@@ -42,10 +39,12 @@ public class MainLayout extends AppLayout {
 
     private void createDrawer() {
         RouterLink listLink = new RouterLink("List", ListView.class);
+        RouterLink guideLink = new RouterLink("Guide", GuideView.class);
         listLink.setHighlightCondition(HighlightConditions.sameLocation());
 
         addToDrawer(new VerticalLayout(
                 listLink,
+                guideLink,
                 new RouterLink("Dashboard", DashboardView.class)
         ));
     }

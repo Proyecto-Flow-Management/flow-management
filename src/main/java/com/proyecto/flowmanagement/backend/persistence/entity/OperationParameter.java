@@ -12,11 +12,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "operation_parameter")
-public class OperationParameter {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
+public class OperationParameter extends AbstractEntity implements Cloneable  {
+
 	@Column(name = "name")
     private String name;
 	
@@ -29,14 +26,6 @@ public class OperationParameter {
 	@ManyToOne
 	@JoinColumn(name = "id_operation_type", nullable = false, foreignKey = @ForeignKey(name = "FK_operation_parameter_operation_type"))
 	private OperationType operationType;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
