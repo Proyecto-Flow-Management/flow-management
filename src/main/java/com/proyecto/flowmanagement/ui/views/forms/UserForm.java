@@ -1,4 +1,4 @@
-package com.proyecto.flowmanagement.ui.views.list;
+package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.def.EStatus;
 import com.proyecto.flowmanagement.backend.persistence.entity.User;

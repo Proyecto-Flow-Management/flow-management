@@ -2,52 +2,33 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "step")
-public class Step {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
+public class Step extends AbstractEntity{
+
 	@Column(name = "name")
 	private String name;
 	
 	@Column(name = "label")
 	private String label;
-	
+
 	@Column(name = "nextStep")
 	private Integer nextStep;
-	
-	@ManyToOne
+
+	/*@ManyToOne
 	@JoinColumn(name = "id_component", nullable = false, foreignKey = @ForeignKey(name = "FK_step_component"))
 	private Component component;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "id_alternative", nullable = false, foreignKey = @ForeignKey(name = "FK_step_alternative"))
 	private Alternative alternative;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "id_operation", nullable = false, foreignKey = @ForeignKey(name = "FK_step_operation"))
-	private Operation operation;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	private Operation operation;*/
 
 	public String getName() {
 		return name;
@@ -73,25 +54,25 @@ public class Step {
 		this.nextStep = nextStep;
 	}
 
-	public Component getComponent() {
+	/*public Component getComponent() {
 		return component;
-	}
+	}*/
 
 	public void setComponent(Component component) {
 		component = component;
 	}
 
-	public Alternative getAlternative() {
+	/*public Alternative getAlternative() {
 		return alternative;
-	}
+	}*/
 
 	public void setAlternative(Alternative alternative) {
 		alternative = alternative;
 	}
 
-	public Operation getOperation() {
+	/*public Operation getOperation() {
 		return operation;
-	}
+	}*/
 
 	public void setOperation(Operation operation) {
 		operation = operation;
