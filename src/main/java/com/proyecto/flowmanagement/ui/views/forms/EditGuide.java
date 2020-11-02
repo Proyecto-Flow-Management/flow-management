@@ -4,12 +4,13 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
-import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -17,15 +18,15 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.shared.Registration;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @org.springframework.stereotype.Component
-@Route(value = "CreateGuide", layout = MainLayout.class)
-@PageTitle("CreateGuide | Flow Management")
-public class GuideForm extends VerticalLayout {
+@Route(value = "EditGuide", layout = MainLayout.class)
+@PageTitle("EditGuide | Flow Management")
+public class EditGuide extends VerticalLayout {
+
     private Guide guide;
     private GuideServiceImpl guideService;
 
@@ -38,14 +39,24 @@ public class GuideForm extends VerticalLayout {
 
     Binder<Guide> binder = new BeanValidationBinder<>(Guide.class);
 
-    public GuideForm(List<Step> steps, GuideServiceImpl guideService) {
+    public EditGuide(GuideServiceImpl guideService) {
+
         addClassName("guide-form");
+
         this.guideService = guideService;
 
         binder.bindInstanceFields(this);
+
         generateStyle();
 
         add(name,label,mainStep, createButtonsLayout());
+
+        if(guideService.getAll() != null)
+        {
+            guide = guideService.getAll().get(0);
+            name.setValue(guide.getName());
+            label.setValue(guide.getLabel());
+        }
     }
 
     private Component createButtonsLayout() {
@@ -66,27 +77,10 @@ public class GuideForm extends VerticalLayout {
 
     private void validateAndSave() {
         try {
-            Guide guideNew = new Guide();
-
-            guideNew.setName(name.getValue());
-            guideNew.setLabel(label.getLabel());
-
-            Step stepOne = new Step();
-            stepOne.setLabel("Label TEST 1");
-            stepOne.setName("Name TEST 1");
-
-            Step stepTwo = new Step();
-            stepTwo.setLabel("Label TEST 2");
-            stepTwo.setName("Name TEST 2");
-
-            List<Step> stepList = new LinkedList<Step>();
-            stepList.add(stepOne);
-            stepList.add(stepTwo);
-
-            guideNew.setSteps(stepList);
-
-            guideService.add(guideNew);
-
+            guide = guideService.getAll().get(0);
+            guide.setLabel(label.getValue());
+            guide.setName(name.getValue());
+            guideService.update(guide);
             UI.getCurrent().navigate("GuideList");
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,7 +88,7 @@ public class GuideForm extends VerticalLayout {
     }
 
     public void generateStyle(){
-        setAlignItems(Alignment.CENTER);
+        setAlignItems(FlexComponent.Alignment.CENTER);
         name.setWidth("60%");
         label.setWidth("60%");
         mainStep.setWidth("60%");

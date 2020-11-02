@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Users | Flow Management")
-public class ListView extends VerticalLayout {
+public class UserList extends VerticalLayout {
 
     private final UserForm form;
     Grid<User> grid = new Grid<>(User.class);
@@ -29,7 +29,7 @@ public class ListView extends VerticalLayout {
     UserServiceImpl userService;
     RolServiceImpl rolService;
 
-    public ListView(UserServiceImpl userService, RolServiceImpl rolService) {
+    public UserList(UserServiceImpl userService, RolServiceImpl rolService) {
         this.userService = userService;
         this.rolService = rolService;
         addClassName("list-view");

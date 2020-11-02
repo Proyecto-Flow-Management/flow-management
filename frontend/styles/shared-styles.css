@@ -13,7 +13,9 @@ a[highlight] {
     font-size: 1em;
     margin: var(--lumo-space-m);
 }
-
+.v-button {
+   cursor: pointer;
+   }
 
 /* List view */
 .list-view .content {

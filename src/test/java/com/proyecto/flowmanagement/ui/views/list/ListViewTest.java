@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ListViewTest {
 
     @Autowired
-    private ListView listView;
+    private UserList listView;
 
     @Test
     public void formShownWhenContactSelected() {

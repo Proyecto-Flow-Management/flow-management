@@ -1,8 +1,8 @@
 package com.proyecto.flowmanagement.ui;
 
 import com.proyecto.flowmanagement.ui.views.dashboard.DashboardView;
-import com.proyecto.flowmanagement.ui.views.list.GuideView;
-import com.proyecto.flowmanagement.ui.views.list.ListView;
+import com.proyecto.flowmanagement.ui.views.list.GuideList;
+import com.proyecto.flowmanagement.ui.views.list.UserList;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -38,8 +38,8 @@ public class MainLayout extends AppLayout {
     }
 
     private void createDrawer() {
-        RouterLink listLink = new RouterLink("List", ListView.class);
-        RouterLink guideLink = new RouterLink("Guide", GuideView.class);
+        RouterLink listLink = new RouterLink("List", UserList.class);
+        RouterLink guideLink = new RouterLink("Guide", GuideList.class);
         listLink.setHighlightCondition(HighlightConditions.sameLocation());
 
         addToDrawer(new VerticalLayout(

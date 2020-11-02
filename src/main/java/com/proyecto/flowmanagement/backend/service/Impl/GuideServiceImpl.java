@@ -31,14 +31,13 @@ public class GuideServiceImpl implements IGuideService {
 	}
 
 	@Override
-	public Guide getById(Integer id) {
+	public Guide getById(Long id) {
 		Optional<Guide> op = repo.findById(id);
 		return op.isPresent() ? op.get() : new Guide();
 	}
 
 	@Override
-	public void delete(Integer id) {
+	public void delete(Long id) {
 		repo.deleteById(id);
 	}
-
 }

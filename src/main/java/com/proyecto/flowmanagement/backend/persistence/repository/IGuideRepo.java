@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 
-public interface IGuideRepo extends JpaRepository<Guide,Integer>{
+public interface IGuideRepo extends JpaRepository<Guide,Long>{
 
 }
