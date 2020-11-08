@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.list;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
+import com.proyecto.flowmanagement.backend.service.Impl.GuideGeneratorServiceImp;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
 import com.proyecto.flowmanagement.backend.service.Impl.StepServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
@@ -17,6 +18,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Route(value = "GuideList", layout = MainLayout.class)
 @PageTitle("Crear Guia | Flow Management")
@@ -27,6 +30,7 @@ public class GuideList extends VerticalLayout {
 
     public GuideList(GuideServiceImpl guideService) {
         this.guideService = guideService;
+        //test();
         addClassName("create-guide-view");
         setSizeFull();
         configureGrid();
@@ -45,6 +49,18 @@ public class GuideList extends VerticalLayout {
         HorizontalLayout toolbar = new HorizontalLayout(addGuideButton);
         toolbar.addClassName("toolbar");
         return toolbar;
+    }
+
+
+    public void test(){
+
+        GuideGeneratorServiceImp test = new GuideGeneratorServiceImp();
+
+        List<Guide> myGuide = guideService.getAll();
+        if (!myGuide.isEmpty())
+        {
+            test.GuidePrint(myGuide.get(0));
+        }
     }
 
     private void updateList() {
