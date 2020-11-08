@@ -17,7 +17,7 @@ public class Convertion extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "operation_parameter_id")
-    private Operation_Parameter operationParameter;
+    private OperationParameter operationParameter;
 
 //    @ManyToOne
 //    @JoinColumn(name = "convertion_type_id")
@@ -47,11 +47,11 @@ public class Convertion extends AbstractEntity {
         this.destinationUnit = destinationUnit;
     }
 
-    public Operation_Parameter getOperationParameter() {
+    public OperationParameter getOperationParameter() {
         return operationParameter;
     }
 
-    public void setOperationParameter(Operation_Parameter operationParameter) {
+    public void setOperationParameter(OperationParameter operationParameter) {
         this.operationParameter = operationParameter;
     }
 

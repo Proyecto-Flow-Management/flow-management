@@ -14,33 +14,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "operation")
-public class Operation {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+public class Operation  extends AbstractEntity{
 	
 	@Column(name = "name")
 	private String name;
 	
 	@Column(name = "label")
 	private String label;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_operation_type", nullable = false, foreignKey = @ForeignKey(name = "FK_operation_operation_type"))
-	private OperationType operationType;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_guide", nullable = false, foreignKey = @ForeignKey(name = "FK_guide_operation_type"))
-	private Guide guide;
-	
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -57,21 +37,4 @@ public class Operation {
 	public void setLabel(String label) {
 		this.label = label;
 	}
-
-	public OperationType getOperationType() {
-		return operationType;
-	}
-
-	public void setOperationType(OperationType operationType) {
-		operationType = operationType;
-	}
-
-	public Guide getGuide() {
-		return guide;
-	}
-
-	public void setGuide(Guide guide) {
-		guide = guide;
-	}
-
 }
