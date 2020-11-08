@@ -51,12 +51,6 @@ public class EditGuide extends VerticalLayout {
 
         add(name,label,mainStep, createButtonsLayout());
 
-        if(guideService.getAll() != null)
-        {
-            guide = guideService.getAll().get(0);
-            name.setValue(guide.getName());
-            label.setValue(guide.getLabel());
-        }
     }
 
     private Component createButtonsLayout() {

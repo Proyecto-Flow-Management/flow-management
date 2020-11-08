@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
+import springfox.documentation.spring.web.readers.operation.OperationReader;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,32 +11,29 @@ import java.util.List;
 public class Step extends AbstractEntity{
 
 	@Column(name = "name")
-	private String name;
+	private String text;
 	
 	@Column(name = "label")
 	private String label;
 
-	@Column(name = "nextStep")
-	private Integer nextStep;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="step_id")
+	private List<Operation> operations;
 
-	/*@ManyToOne
-	@JoinColumn(name = "id_component", nullable = false, foreignKey = @ForeignKey(name = "FK_step_component"))
-	private Component component;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="step_id")
+	private List<Alternative> alternatives;
 
-	@ManyToOne
-	@JoinColumn(name = "id_alternative", nullable = false, foreignKey = @ForeignKey(name = "FK_step_alternative"))
-	private Alternative alternative;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="step_id")
+	private List<StepDocument> stepDocuments;
 
-	@ManyToOne
-	@JoinColumn(name = "id_operation", nullable = false, foreignKey = @ForeignKey(name = "FK_step_operation"))
-	private Operation operation;*/
-
-	public String getName() {
-		return name;
+	public String getText() {
+		return text;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setText(String name) {
+		this.text = name;
 	}
 
 	public String getLabel() {
@@ -46,36 +44,24 @@ public class Step extends AbstractEntity{
 		this.label = label;
 	}
 
-	public Integer getNextStep() {
-		return nextStep;
+	public List<Alternative> getAlternatives() {return this.alternatives;}
+
+	public void setAlternative(List<Alternative> alternatives) {
+		this.alternatives = alternatives;
 	}
 
-	public void setNextStep(Integer nextStep) {
-		this.nextStep = nextStep;
+	public List<Operation> getOperations() {return this.operations;}
+
+	public void setOperation(List<Operation> operations) {
+		this.operations = operations;
 	}
 
-	/*public Component getComponent() {
-		return component;
-	}*/
-
-	public void setComponent(Component component) {
-		component = component;
+	public List<StepDocument> getDocuments() {
+		return this.stepDocuments;
 	}
 
-	/*public Alternative getAlternative() {
-		return alternative;
-	}*/
-
-	public void setAlternative(Alternative alternative) {
-		alternative = alternative;
-	}
-
-	/*public Operation getOperation() {
-		return operation;
-	}*/
-
-	public void setOperation(Operation operation) {
-		operation = operation;
+	public void setStepDocuments(List<StepDocument> stepDocuments) {
+		this.stepDocuments = stepDocuments;
 	}
 
 }

@@ -12,29 +12,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "alternative")
-public class Alternative {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+public class Alternative  extends AbstractEntity{
 	
 	@Column(name = "name")
 	private String name;
 	
 	@Column(name = "label")
 	private String label;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_step", nullable = false, foreignKey = @ForeignKey(name = "FK_alternative_step"))
-	private Step step;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -51,13 +36,4 @@ public class Alternative {
 	public void setLabel(String label) {
 		this.label = label;
 	}
-
-	public Step getStep() {
-		return step;
-	}
-
-	public void setStep(Step step) {
-		step = step;
-	}
-		
 }
