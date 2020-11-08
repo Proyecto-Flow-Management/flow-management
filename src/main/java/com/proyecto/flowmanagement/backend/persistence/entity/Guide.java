@@ -16,7 +16,7 @@ public class Guide extends AbstractEntity {
 	@Column(name = "label")
 	private String label;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name="guide_id")
 	private List<Step> steps;
 

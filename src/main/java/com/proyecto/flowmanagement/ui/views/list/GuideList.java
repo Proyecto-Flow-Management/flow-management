@@ -53,7 +53,6 @@ public class GuideList extends VerticalLayout {
 
 
     public void test(){
-
         GuideGeneratorServiceImp test = new GuideGeneratorServiceImp();
 
         List<Guide> myGuide = guideService.getAll();
