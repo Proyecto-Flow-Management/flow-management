@@ -63,7 +63,7 @@ public class GuideList extends VerticalLayout {
     }
 
     private void updateList() {
-        grid.setColumns("name", "label");
+        grid.setColumns("name", "label", "mainStep");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.addComponentColumn(guide ->{

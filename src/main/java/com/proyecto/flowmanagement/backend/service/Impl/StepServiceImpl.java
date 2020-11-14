@@ -32,13 +32,13 @@ public class StepServiceImpl implements IStepService {
 	}
 
 	@Override
-	public Step getById(Integer id) {
+	public Step getById(Long id) {
 		Optional<Step> op = repo.findById(id);
 		return op.isPresent() ? op.get() : new Step();
 	}
 
 	@Override
-	public void delete(Integer id) {
+	public void delete(Long id) {
 		repo.deleteById(id);
 	}
 

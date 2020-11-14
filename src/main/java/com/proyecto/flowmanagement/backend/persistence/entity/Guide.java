@@ -15,14 +15,13 @@ public class Guide extends AbstractEntity {
 	
 	@Column(name = "label")
 	private String label;
-	
+
+	@Column(name = "mainStep")
+	private String mainStep;
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name="guide_id")
 	private List<Step> steps;
-
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="guide_id")
-	private List<Alternative> alternatives;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="guide_id")
@@ -44,19 +43,27 @@ public class Guide extends AbstractEntity {
 		this.label = label;
 	}
 
-	public List<Step> getSteps(){ return this.steps;}
-
-	public void setSteps(List<Step> steps){ this.steps = steps;}
-
-	public List<Alternative> getAlternatives() {return this.alternatives;}
-
-	public void setAlternative(List<Alternative> alternatives) {
-		this.alternatives = alternatives;
+	public String getMainStep() {
+		return mainStep;
 	}
 
-	public List<Operation> getOperations() {return this.operations;}
+	public void setMainStep(String mainStep) {
+		this.mainStep = mainStep;
+	}
 
-	public void setOperation(List<Operation> operations) {
+	public List<Step> getSteps() {
+		return steps;
+	}
+
+	public void setSteps(List<Step> steps) {
+		this.steps = steps;
+	}
+
+	public List<Operation> getOperations() {
+		return operations;
+	}
+
+	public void setOperations(List<Operation> operations) {
 		this.operations = operations;
 	}
 }
