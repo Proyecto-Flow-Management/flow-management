@@ -1,7 +1,5 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -44,7 +42,7 @@ public class Guide extends AbstractEntity {
 		this.label = label;
 	}
 
-	public void setSteps(List<Step> steps){ this.steps = steps;}
+		public void setSteps(List<Step> steps){ this.steps = steps;}
 
 	public List<Alternative> getAlternatives() {return this.alternatives;}
 

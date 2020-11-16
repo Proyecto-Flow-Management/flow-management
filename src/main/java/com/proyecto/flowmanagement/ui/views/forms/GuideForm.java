@@ -5,13 +5,16 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
+import com.proyecto.flowmanagement.backend.service.Impl.StepServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
-import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -19,7 +22,6 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.shared.Registration;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,24 +32,61 @@ import java.util.List;
 public class GuideForm extends VerticalLayout {
     private Guide guide;
     private GuideServiceImpl guideService;
+    private StepServiceImpl stepService;
+
 
     TextField name = new TextField("Nombre de la Guia");
     TextField label = new TextField("Etiqueta");
     TextField mainStep = new TextField("Paso principal");
+
+
+    Grid<Step> grid = new Grid<>(Step.class);
+    Div messageDiv = new Div();
 
     Button save = new Button("Save");
     Button close = new Button("Cancel");
 
     Binder<Guide> binder = new BeanValidationBinder<>(Guide.class);
 
-    public GuideForm(List<Step> steps, GuideServiceImpl guideService) {
+    public GuideForm(List<Step> steps, GuideServiceImpl guideService, StepServiceImpl stepService) {
         addClassName("guide-form");
         this.guideService = guideService;
+        this.stepService = stepService;
+
+        setSizeFull();
+        configureGrid();
+
+        Div content = new Div(grid);
+        content.addClassName("content");
+        content.setSizeFull();
+
+        updateList();
+        grid.setItems(stepService.getAll());
 
         binder.bindInstanceFields(this);
         generateStyle();
 
-        add(name,label,mainStep, createButtonsLayout());
+        add(name,label,mainStep,new H3("Steps:"), content, messageDiv , createButtonsLayout());
+    }
+
+    private void  configureGrid() {
+        grid.addClassName("step-grid");
+        grid.setSizeFull();
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
+
+        grid.asMultiSelect().addValueChangeListener(event -> {
+            String selectedSteps = "";
+            for (Step step : grid.getSelectedItems())
+                selectedSteps += step.getText() + ", ";
+            String message = String.format("Seleccionados actualmente: %s", selectedSteps);
+//            String message = String.format("Seleccionados actualmente: %s", event.getValue());
+            messageDiv.setText(message);
+        });
+        grid.getColumns().forEach(col -> col.setAutoWidth(true));
+    }
+
+    private void updateList() {
+        grid.setColumns("text", "label");
     }
 
     private Component createButtonsLayout() {

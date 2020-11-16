@@ -121,8 +121,8 @@ CREATE TABLE `convertion` (
 
 CREATE TABLE `step` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
   `label` varchar(255) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
