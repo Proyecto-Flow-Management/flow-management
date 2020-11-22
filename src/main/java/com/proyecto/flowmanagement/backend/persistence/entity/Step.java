@@ -16,6 +16,9 @@ public class Step extends AbstractEntity{
 	@Column(name = "text")
 	private String text;
 
+	@Column(name = "text_id")
+	private String textId;
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="step_id")
 	private List<Operation> operations;
@@ -27,6 +30,14 @@ public class Step extends AbstractEntity{
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="step_id")
 	private List<StepDocument> stepDocuments;
+
+	public String getTextId() {
+		return textId;
+	}
+
+	public void setTextId(String textId) {
+		this.textId = textId;
+	}
 
 	public String getLabel() {
 		return label;
