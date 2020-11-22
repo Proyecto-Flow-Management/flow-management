@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "step_document")
-public class StepDocument  extends AbstractEntity{
+public class ReferenceDoc extends AbstractEntity{
 
     @Column(name = "name")
     private String url;

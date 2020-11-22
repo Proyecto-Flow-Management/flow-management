@@ -1,14 +1,14 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
-import springfox.documentation.spring.web.readers.operation.OperationReader;
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "step")
 public class Step extends AbstractEntity{
+
+	@Column(name = "stepId")
+	private String stepId;
 
 	@Column(name = "label")
 	private String label;
@@ -26,7 +26,15 @@ public class Step extends AbstractEntity{
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="step_id")
-	private List<StepDocument> stepDocuments;
+	private List<ReferenceDoc> referenceDocs;
+
+	public String getStepId() {
+		return stepId;
+	}
+
+	public void setStepId(String stepId) {
+		this.stepId = stepId;
+	}
 
 	public String getLabel() {
 		return label;
@@ -60,11 +68,11 @@ public class Step extends AbstractEntity{
 		this.alternatives = alternatives;
 	}
 
-	public List<StepDocument> getStepDocuments() {
-		return stepDocuments;
+	public List<ReferenceDoc> getReferenceDocs() {
+		return referenceDocs;
 	}
 
-	public void setStepDocuments(List<StepDocument> stepDocuments) {
-		this.stepDocuments = stepDocuments;
+	public void setReferenceDocs(List<ReferenceDoc> referenceDocs) {
+		this.referenceDocs = referenceDocs;
 	}
 }
