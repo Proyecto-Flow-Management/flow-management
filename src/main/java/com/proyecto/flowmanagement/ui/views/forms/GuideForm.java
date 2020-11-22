@@ -69,6 +69,7 @@ public class GuideForm extends VerticalLayout {
     private void validateAndSave() {
         try {
             CreateTest();
+            //binder.writeBean(guide);
             UI.getCurrent().navigate("GuideList");
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,7 +88,8 @@ public class GuideForm extends VerticalLayout {
         Guide guideNew = new Guide();
 
         guideNew.setName(name.getValue());
-        guideNew.setLabel(label.getLabel());
+        guideNew.setLabel(label.getValue());
+        guideNew.setMainStep(mainStep.getValue());
 
         List<Step> steps = new LinkedList<Step>();
 
@@ -96,22 +98,21 @@ public class GuideForm extends VerticalLayout {
         List<Alternative> stepAlternative = new LinkedList<Alternative>();
         List<Operation> stepOperation = new LinkedList<Operation>();
 
-        List<Alternative> guideAlternative = new LinkedList<Alternative>();
+        //List<Alternative> guideAlternative = new LinkedList<Alternative>();
         List<Operation> guideOperation = new LinkedList<Operation>();
 
-        Alternative alternative1Guide = new Alternative();
-        Alternative alternative2Guide = new Alternative();
+        //Alternative alternative1Guide = new Alternative();
+        //Alternative alternative2Guide = new Alternative();
 
         Operation operation1Guide = new Operation();
         Operation operation2Guide = new Operation();
 
-        alternative1Guide.setLabel("Label Alternative 1 Guide");
-        alternative1Guide.setName("Name Alternative 1 Guide");
-        alternative2Guide.setLabel("Label Alternative 2 Guide");
-        alternative2Guide.setName("Name Alternative 2 Guide");
-        guideAlternative.add(alternative1Guide);
-        guideAlternative.add(alternative2Guide);
-        guideNew.setAlternative(guideAlternative);
+        //alternative1Guide.setLabel("Label Alternative 1 Guide");
+        //alternative1Guide.setName("Name Alternative 1 Guide");
+        //alternative2Guide.setLabel("Label Alternative 2 Guide");
+        //alternative2Guide.setName("Name Alternative 2 Guide");
+        //guideAlternative.add(alternative1Guide);
+        //guideAlternative.add(alternative2Guide);
 
         operation1Guide.setLabel("Label Operation 1 Guide");
         operation1Guide.setName("Name Operation 1 Guide");
@@ -120,7 +121,6 @@ public class GuideForm extends VerticalLayout {
 
         guideOperation.add(operation1Guide);
         guideOperation.add(operation2Guide);
-        guideNew.setOperation(guideOperation); 
 
         Alternative alternative1Step1 = new Alternative();
         Alternative alternative2Step1 = new Alternative();
@@ -135,7 +135,7 @@ public class GuideForm extends VerticalLayout {
 
         stepAlternative.add(alternative1Step1);
         stepAlternative.add(alternative2Step1);
-        stepOne.setAlternative(stepAlternative);
+        stepOne.setAlternatives(stepAlternative);
 
         operation1Step1.setLabel("Label Operation 1 Step 1");
         operation1Step1.setName("Name Operation 1 Step 1");
@@ -144,7 +144,7 @@ public class GuideForm extends VerticalLayout {
 
         stepOperation.add(operation1Step1);
         stepOperation.add(operation2Step1);
-        stepOne.setOperation(stepOperation);
+        stepOne.setOperations(stepOperation);
 
         stepOne.setLabel("Label TEST 1");
         stepOne.setText("Name TEST 1");

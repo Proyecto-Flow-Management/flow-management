@@ -10,11 +10,11 @@ import java.util.List;
 @Table(name = "step")
 public class Step extends AbstractEntity{
 
-	@Column(name = "name")
-	private String text;
-	
 	@Column(name = "label")
 	private String label;
+	
+	@Column(name = "text")
+	private String text;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="step_id")
@@ -28,14 +28,6 @@ public class Step extends AbstractEntity{
 	@JoinColumn(name="step_id")
 	private List<StepDocument> stepDocuments;
 
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String name) {
-		this.text = name;
-	}
-
 	public String getLabel() {
 		return label;
 	}
@@ -44,24 +36,35 @@ public class Step extends AbstractEntity{
 		this.label = label;
 	}
 
-	public List<Alternative> getAlternatives() {return this.alternatives;}
-
-	public void setAlternative(List<Alternative> alternatives) {
-		this.alternatives = alternatives;
+	public String getText() {
+		return text;
 	}
 
-	public List<Operation> getOperations() {return this.operations;}
+	public void setText(String text) {
+		this.text = text;
+	}
 
-	public void setOperation(List<Operation> operations) {
+	public List<Operation> getOperations() {
+		return operations;
+	}
+
+	public void setOperations(List<Operation> operations) {
 		this.operations = operations;
 	}
 
-	public List<StepDocument> getDocuments() {
-		return this.stepDocuments;
+	public List<Alternative> getAlternatives() {
+		return alternatives;
+	}
+
+	public void setAlternatives(List<Alternative> alternatives) {
+		this.alternatives = alternatives;
+	}
+
+	public List<StepDocument> getStepDocuments() {
+		return stepDocuments;
 	}
 
 	public void setStepDocuments(List<StepDocument> stepDocuments) {
 		this.stepDocuments = stepDocuments;
 	}
-
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide" xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+            <ttg:mainStepId>1</ttg:mainStepId>
+
+<ttg:step>
+    <ttg:stepId>1</ttg:stepId>
+    <ttg:label>Name TEST 1</ttg:label>
+    <ttg:text>Label TEST 1</ttg:text>
+</ttg:step></ttg:guide>

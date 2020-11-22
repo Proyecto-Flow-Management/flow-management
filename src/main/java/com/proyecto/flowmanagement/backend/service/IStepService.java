@@ -8,6 +8,6 @@ public interface IStepService {
 	Step add(Step step);
 	Step update(Step step);
 	List<Step> getAll();
-	Step getById(Integer id);
-	void delete(Integer id);
+	Step getById(Long id);
+	void delete(Long id);
 }
