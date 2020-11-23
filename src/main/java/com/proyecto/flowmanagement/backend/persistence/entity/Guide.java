@@ -42,7 +42,7 @@ public class Guide extends AbstractEntity {
 		this.label = label;
 	}
 
-		public void setSteps(List<Step> steps){ this.steps = steps;}
+	public void setSteps(List<Step> steps){ this.steps = steps;}
 
 	public List<Alternative> getAlternatives() {return this.alternatives;}
 

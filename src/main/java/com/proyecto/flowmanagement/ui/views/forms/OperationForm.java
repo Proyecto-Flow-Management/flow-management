@@ -1,6 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Step;
+import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -15,34 +15,32 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
 
-//@org.springframework.stereotype.Component
-//@Route(value = "CreateStep", layout = MainLayout.class)
-//@PageTitle("CreateStep | Flow Management")
-public class StepForm extends FormLayout {
-    private Step step;
+public class OperationForm extends FormLayout {
+    private Operation operation;
 
-    TextField text = new TextField("Nombre");
+
+    TextField name = new TextField("Nombre");
     TextField label = new TextField("Etiqueta");
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
 
-    Binder<Step> binder = new BeanValidationBinder<>(Step.class);
+    Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
 
-    public StepForm() {
-        addClassName("step-form");
+    public OperationForm() {
+        addClassName("operation-form");
 
         binder.bindInstanceFields(this);
 
-        add(text,
+        add(name,
                 label,
                 createButtonsLayout());
     }
 
-    public void setStep(Step step) {
-        this.step = step;
-        binder.readBean(step);
+    public void setOperation(Operation operation) {
+        this.operation = operation;
+        binder.readBean(operation);
     }
 
     private Component createButtonsLayout() {
@@ -54,8 +52,8 @@ public class StepForm extends FormLayout {
         close.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(click -> validateAndSave());
-        delete.addClickListener(click -> fireEvent(new StepForm.DeleteEvent(this, step)));
-        close.addClickListener(click -> fireEvent(new StepForm.CloseEvent(this)));
+        delete.addClickListener(click -> fireEvent(new OperationForm.DeleteEvent(this, operation)));
+        close.addClickListener(click -> fireEvent(new OperationForm.CloseEvent(this)));
 
         binder.addStatusChangeListener(evt -> save.setEnabled(binder.isValid()));
 
@@ -64,42 +62,42 @@ public class StepForm extends FormLayout {
 
     private void validateAndSave() {
         try {
-            binder.writeBean(step);
-            fireEvent(new StepForm.SaveEvent(this, step));
+            binder.writeBean(operation);
+            fireEvent(new OperationForm.SaveEvent(this, operation));
         } catch (ValidationException e) {
             e.printStackTrace();
         }
     }
 
     // Events
-    public static abstract class StepFormEvent extends ComponentEvent<StepForm> {
-        private Step step;
+    public static abstract class OperationFormEvent extends ComponentEvent<OperationForm> {
+        private Operation operation;
 
-        protected StepFormEvent(StepForm source, Step step) {
+        protected OperationFormEvent(OperationForm source, Operation operation) {
             super(source, false);
-            this.step = step;
+            this.operation = operation;
         }
 
-        public Step getStep() {
-            return step;
-        }
-    }
-
-    public static class SaveEvent extends StepForm.StepFormEvent {
-        SaveEvent(StepForm source, Step step) {
-            super(source, step);
+        public Operation getOperation() {
+            return operation;
         }
     }
 
-    public static class DeleteEvent extends StepForm.StepFormEvent {
-        DeleteEvent(StepForm source, Step step) {
-            super(source, step);
+    public static class SaveEvent extends OperationForm.OperationFormEvent {
+        SaveEvent(OperationForm source, Operation operation) {
+            super(source, operation);
+        }
+    }
+
+    public static class DeleteEvent extends OperationForm.OperationFormEvent {
+        DeleteEvent(OperationForm source, Operation operation) {
+            super(source, operation);
         }
 
     }
 
-    public static class CloseEvent extends StepForm.StepFormEvent {
-        CloseEvent(StepForm source) {
+    public static class CloseEvent extends OperationForm.OperationFormEvent {
+        CloseEvent(OperationForm source) {
             super(source, null);
         }
     }

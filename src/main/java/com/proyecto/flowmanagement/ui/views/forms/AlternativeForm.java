@@ -1,6 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Step;
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -15,34 +15,32 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
 
-//@org.springframework.stereotype.Component
-//@Route(value = "CreateStep", layout = MainLayout.class)
-//@PageTitle("CreateStep | Flow Management")
-public class StepForm extends FormLayout {
-    private Step step;
+public class AlternativeForm extends FormLayout {
+    private Alternative alternative;
 
-    TextField text = new TextField("Nombre");
+
+    TextField name = new TextField("Nombre");
     TextField label = new TextField("Etiqueta");
 
-    Button save = new Button("Save");
-    Button delete = new Button("Delete");
-    Button close = new Button("Cancel");
+    Button save = new Button("Guardar");
+    Button delete = new Button("Borrar");
+    Button close = new Button("Cancelar");
 
-    Binder<Step> binder = new BeanValidationBinder<>(Step.class);
+    Binder<Alternative> binder = new BeanValidationBinder<>(Alternative.class);
 
-    public StepForm() {
-        addClassName("step-form");
+    public AlternativeForm() {
+        addClassName("alternative-form");
 
         binder.bindInstanceFields(this);
 
-        add(text,
+        add(name,
                 label,
                 createButtonsLayout());
     }
 
-    public void setStep(Step step) {
-        this.step = step;
-        binder.readBean(step);
+    public void setAlternative(Alternative alternative) {
+        this.alternative = alternative;
+        binder.readBean(alternative);
     }
 
     private Component createButtonsLayout() {
@@ -54,8 +52,8 @@ public class StepForm extends FormLayout {
         close.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(click -> validateAndSave());
-        delete.addClickListener(click -> fireEvent(new StepForm.DeleteEvent(this, step)));
-        close.addClickListener(click -> fireEvent(new StepForm.CloseEvent(this)));
+        delete.addClickListener(click -> fireEvent(new AlternativeForm.DeleteEvent(this, alternative)));
+        close.addClickListener(click -> fireEvent(new AlternativeForm.CloseEvent(this)));
 
         binder.addStatusChangeListener(evt -> save.setEnabled(binder.isValid()));
 
@@ -64,42 +62,42 @@ public class StepForm extends FormLayout {
 
     private void validateAndSave() {
         try {
-            binder.writeBean(step);
-            fireEvent(new StepForm.SaveEvent(this, step));
+            binder.writeBean(alternative);
+            fireEvent(new AlternativeForm.SaveEvent(this, alternative));
         } catch (ValidationException e) {
             e.printStackTrace();
         }
     }
 
     // Events
-    public static abstract class StepFormEvent extends ComponentEvent<StepForm> {
-        private Step step;
+    public static abstract class AlternativeFormEvent extends ComponentEvent<AlternativeForm> {
+        private Alternative alternative;
 
-        protected StepFormEvent(StepForm source, Step step) {
+        protected AlternativeFormEvent(AlternativeForm source, Alternative alternative) {
             super(source, false);
-            this.step = step;
+            this.alternative = alternative;
         }
 
-        public Step getStep() {
-            return step;
-        }
-    }
-
-    public static class SaveEvent extends StepForm.StepFormEvent {
-        SaveEvent(StepForm source, Step step) {
-            super(source, step);
+        public Alternative getAlternative() {
+            return alternative;
         }
     }
 
-    public static class DeleteEvent extends StepForm.StepFormEvent {
-        DeleteEvent(StepForm source, Step step) {
-            super(source, step);
+    public static class SaveEvent extends AlternativeForm.AlternativeFormEvent {
+        SaveEvent(AlternativeForm source, Alternative alternative) {
+            super(source, alternative);
+        }
+    }
+
+    public static class DeleteEvent extends AlternativeForm.AlternativeFormEvent {
+        DeleteEvent(AlternativeForm source, Alternative alternative) {
+            super(source, alternative);
         }
 
     }
 
-    public static class CloseEvent extends StepForm.StepFormEvent {
-        CloseEvent(StepForm source) {
+    public static class CloseEvent extends AlternativeForm.AlternativeFormEvent {
+        CloseEvent(AlternativeForm source) {
             super(source, null);
         }
     }
