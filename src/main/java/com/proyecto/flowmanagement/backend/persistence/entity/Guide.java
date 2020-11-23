@@ -23,10 +23,6 @@ public class Guide extends AbstractEntity {
 	@JoinColumn(name="guide_id")
 	private List<Step> steps;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="guide_id")
-	private List<Operation> operations;
-
 	public String getName() {
 		return name;
 	}
@@ -57,13 +53,5 @@ public class Guide extends AbstractEntity {
 
 	public void setSteps(List<Step> steps) {
 		this.steps = steps;
-	}
-
-	public List<Operation> getOperations() {
-		return operations;
-	}
-
-	public void setOperations(List<Operation> operations) {
-		this.operations = operations;
 	}
 }

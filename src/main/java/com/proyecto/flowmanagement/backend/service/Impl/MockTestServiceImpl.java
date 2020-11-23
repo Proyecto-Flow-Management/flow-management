@@ -1,9 +1,6 @@
 package com.proyecto.flowmanagement.backend.service.Impl;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
-import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
-import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
-import com.proyecto.flowmanagement.backend.persistence.entity.Step;
+import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -47,7 +44,29 @@ public class MockTestServiceImpl {
         Operation operation1Step1 = new Operation();
         Operation operation2Step1 = new Operation();
 
-        alternative1Step1.setLabel("Label Alternative 1 Step 1");
+        alternative1Step1.setLabel("CF_EA_CW_GESTIONABLE");
+
+        //Unary
+        UnaryCondition unaryCondition = new UnaryCondition();
+        unaryCondition.setOperationName("ACS_getCPEidByInternalNumber");
+        ConditionParameter conditionParameterUnary = new ConditionParameter();
+        conditionParameterUnary.setField("gestionable");
+        conditionParameterUnary.setFieldType("string");
+        conditionParameterUnary.setOperator("=");
+        conditionParameterUnary.setValue("HABILITADA");
+        unaryCondition.setConditionParameter(conditionParameterUnary);
+        alternative1Step1.setConditions(unaryCondition);
+
+        UnaryCondition unaryCondition2 = new UnaryCondition();
+        unaryCondition2.setOperationName("ACS_getCPEidByInternalNumber");
+        ConditionParameter conditionParameterUnary2 = new ConditionParameter();
+        conditionParameterUnary2.setField("gestionable");
+        conditionParameterUnary2.setFieldType("string");
+        conditionParameterUnary2.setOperator("=");
+        conditionParameterUnary2.setValue("Deshabilitada");
+        unaryCondition.setConditionParameter(conditionParameterUnary);
+        alternative2Step1.setConditions(unaryCondition);
+
         alternative2Step1.setLabel("Label Alternative 2 Step 1");
 
         stepAlternative.add(alternative1Step1);

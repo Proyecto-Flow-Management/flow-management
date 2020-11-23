@@ -16,9 +16,9 @@ public class Alternative  extends AbstractEntity{
 	@Column(name = "next_step")
 	private String nextStep;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name="alternative_id")
-	private List<Condition> conditions;
+	private UnaryCondition conditions;
 
 	public String getGuideName() {
 		return guideName;
@@ -44,11 +44,11 @@ public class Alternative  extends AbstractEntity{
 		this.label = label;
 	}
 
-	public List<Condition> getConditions() {
+	public UnaryCondition getConditions() {
 		return conditions;
 	}
 
-	public void setConditions(List<Condition> conditions) {
+	public void setConditions(UnaryCondition conditions) {
 		this.conditions = conditions;
 	}
 }

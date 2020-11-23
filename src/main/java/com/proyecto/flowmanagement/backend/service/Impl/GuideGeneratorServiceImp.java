@@ -1,8 +1,7 @@
 package com.proyecto.flowmanagement.backend.service.Impl;
 
 import com.proyecto.flowmanagement.backend.def.XMLConstants;
-import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
-import com.proyecto.flowmanagement.backend.persistence.entity.Step;
+import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -42,8 +41,6 @@ public class GuideGeneratorServiceImp {
             doc = configureGuidXML(doc,guide);
 
             doc = configureStepsXML(doc, guide);
-            
-            doc = configureAlternativesXML(doc, guide);
 
             doc = configureOperationsXML(doc, guide);
 
@@ -80,6 +77,7 @@ public class GuideGeneratorServiceImp {
         schemaLocation.setTextContent(XMLConstants.XMLNS_SCHEMALOCATION);
 
         mainStepID.setTextContent(guide.getSteps().get(0).getId().toString());
+
         return doc;
     }
 
@@ -104,9 +102,12 @@ public class GuideGeneratorServiceImp {
 
                 Node newStep = docStep.getElementsByTagName(XMLConstants.STEP_ELEMENT).item(0);
 
-                doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT).item(0).appendChild(doc.importNode(newStep,true));
+                for (Alternative alternative : step.getAlternatives()) {
+                    Node alt = configureStepAlternativesXML(doc, alternative);
+                    newStep.appendChild(docStep.importNode(alt,true));
+                }
 
-                String esto = "";
+                doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT).item(0).appendChild(doc.importNode(newStep,true));
             }
         }
         catch (Exception ex)
@@ -121,8 +122,57 @@ public class GuideGeneratorServiceImp {
         return doc;
     }
 
-    private Document configureAlternativesXML(Document doc, Guide guide) {
-        return doc;
+    private Node configureStepAlternativesXML(Document doc, Alternative alternative) throws ParserConfigurationException, IOException, SAXException {
+
+        File file = new File(XMLConstants.ALTERNATIVE_XML_LOCATION);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document docAlternative = dBuilder.parse(file);
+
+        Node idStep = docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE_STEP_ID).item(0);
+        Node guideName = docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE_GUIDE_NAME).item(0);
+        Node label = docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE_LABEL).item(0);
+
+        idStep.setTextContent(alternative.getNextStep());
+        guideName.setTextContent(alternative.getGuideName());
+        label.setTextContent(alternative.getLabel());
+
+        Node alternativeNode = getUnaryCondition(alternative.getConditions());
+
+        docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE).item(0).appendChild(docAlternative.importNode(alternativeNode,true));
+
+        return docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE).item(0);
+    }
+
+    private Node getAlternativeCondition(Document docAlternative, UnaryCondition condition) throws ParserConfigurationException, IOException, SAXException {
+       Node result = null;
+
+       result = getUnaryCondition(condition);
+
+       return result;
+    }
+
+    private Node getUnaryCondition(UnaryCondition condition) throws IOException, SAXException, ParserConfigurationException {
+        File file = new File(XMLConstants.UNARY_CONDITION_XML);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document docUnary = dBuilder.parse(file);
+
+        Node name = docUnary.getElementsByTagName(XMLConstants.UNARY_CONDITION_OPERATION_NAME).item(0);
+        Node field = docUnary.getElementsByTagName(XMLConstants.UNARY_CONDITION_FIELD).item(0);
+        Node fieldType = docUnary.getElementsByTagName(XMLConstants.UNARY_CONDITION_FIELD_TYPE).item(0);
+        Node operator = docUnary.getElementsByTagName(XMLConstants.UNARY_CONDITION_OPERATOR).item(0);
+        Node value = docUnary.getElementsByTagName(XMLConstants.UNARY_CONDITION_VALUE).item(0);
+
+        name.setTextContent(condition.getOperationName());
+        field.setTextContent(condition.getConditionParameter().getField());
+        fieldType.setTextContent(condition.getConditionParameter().getFieldType());
+        operator.setTextContent(condition.getConditionParameter().getOperator());
+        value.setTextContent(condition.getConditionParameter().getValue());
+
+        Node conditionNode = docUnary.getElementsByTagName(XMLConstants.ALTERNATIVE_CONDITION).item(0);
+
+        return conditionNode;
     }
 
 }
