@@ -20,6 +20,10 @@ public class Alternative  extends AbstractEntity{
 	@JoinColumn(name="alternative_id")
 	private UnaryCondition conditions;
 
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name="binary_condition_id")
+	private BinaryCondition binaryConditions;
+
 	public String getGuideName() {
 		return guideName;
 	}
@@ -50,5 +54,13 @@ public class Alternative  extends AbstractEntity{
 
 	public void setConditions(UnaryCondition conditions) {
 		this.conditions = conditions;
+	}
+
+	public BinaryCondition getBinaryConditions() {
+		return binaryConditions;
+	}
+
+	public void setBinaryConditions(BinaryCondition binaryConditions) {
+		this.binaryConditions = binaryConditions;
 	}
 }

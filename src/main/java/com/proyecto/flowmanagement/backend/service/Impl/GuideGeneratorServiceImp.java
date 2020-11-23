@@ -137,19 +137,47 @@ public class GuideGeneratorServiceImp {
         guideName.setTextContent(alternative.getGuideName());
         label.setTextContent(alternative.getLabel());
 
-        Node alternativeNode = getUnaryCondition(alternative.getConditions());
+        if(alternative.getConditions() != null)
+        {
+            Node unaryNode = getUnaryCondition(alternative.getConditions());
+            Node locationAlternative = docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE).item(0);
+            Node unaryImported = docAlternative.importNode(unaryNode,true);
+            locationAlternative.appendChild(unaryImported);
+        }
 
-        docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE).item(0).appendChild(docAlternative.importNode(alternativeNode,true));
+        if(alternative.getBinaryConditions() != null)
+        {
+            Node binaryCondition = getBinaryCondition(alternative.getBinaryConditions());
+            Node locationAlternative = docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE).item(0);
+            Node binaryImported = docAlternative.importNode(binaryCondition,true);
+            locationAlternative.appendChild(binaryImported);
+        }
 
         return docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE).item(0);
     }
 
-    private Node getAlternativeCondition(Document docAlternative, UnaryCondition condition) throws ParserConfigurationException, IOException, SAXException {
-       Node result = null;
+    private Node getBinaryCondition(BinaryCondition binaryConditions) throws ParserConfigurationException, IOException, SAXException {
+        File file = new File(XMLConstants.BINARY_CONDITION_XML);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document docBinary = dBuilder.parse(file);
 
-       result = getUnaryCondition(condition);
+        Node operator = docBinary.getElementsByTagName(XMLConstants.BINARY_OPERATOR).item(0);
 
-       return result;
+        operator.setTextContent(binaryConditions.getOperator());
+
+        int i = 1;
+
+        for (UnaryCondition unaryCondition : binaryConditions.getConditions()) {
+            Node unaryConditionNode = getUnaryCondition(unaryCondition);
+            Node locationAlternative = docBinary.getElementsByTagName(XMLConstants.BINARY_CONDITION).item(0);
+            Node unaryNodeImported = docBinary.importNode(unaryConditionNode,true);
+            locationAlternative.appendChild(unaryNodeImported);
+            docBinary.renameNode(unaryNodeImported, unaryNodeImported.getNamespaceURI(),XMLConstants.BINARY_OPERATORS);
+            i++;
+        }
+
+        return docBinary.getElementsByTagName(XMLConstants.BINARY_CONDITION).item(0);
     }
 
     private Node getUnaryCondition(UnaryCondition condition) throws IOException, SAXException, ParserConfigurationException {

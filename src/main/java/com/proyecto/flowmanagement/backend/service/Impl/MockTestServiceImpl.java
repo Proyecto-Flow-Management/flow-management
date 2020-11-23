@@ -57,15 +57,37 @@ public class MockTestServiceImpl {
         unaryCondition.setConditionParameter(conditionParameterUnary);
         alternative1Step1.setConditions(unaryCondition);
 
-        UnaryCondition unaryCondition2 = new UnaryCondition();
-        unaryCondition2.setOperationName("ACS_getCPEidByInternalNumber");
-        ConditionParameter conditionParameterUnary2 = new ConditionParameter();
-        conditionParameterUnary2.setField("gestionable");
-        conditionParameterUnary2.setFieldType("string");
-        conditionParameterUnary2.setOperator("=");
-        conditionParameterUnary2.setValue("Deshabilitada");
-        unaryCondition.setConditionParameter(conditionParameterUnary);
-        alternative2Step1.setConditions(unaryCondition);
+
+        // BinaryCondition
+        List<UnaryCondition> listUnary = new LinkedList<>();
+
+        BinaryCondition binaryCondition = new BinaryCondition();
+        binaryCondition.setOperator("OR");
+
+        UnaryCondition unaryCondition1A2 = new UnaryCondition();
+        unaryCondition1A2.setOperationName("consultaEstadoGSF");
+        ConditionParameter conditionParameterO1A2 = new ConditionParameter();
+        conditionParameterO1A2.setField("consultaEstadoGSF.estado_pon.phase_state");
+        conditionParameterO1A2.setFieldType("string");
+        conditionParameterO1A2.setOperator("=");
+        conditionParameterO1A2.setValue("OK");
+        unaryCondition1A2.setConditionParameter(conditionParameterO1A2);
+
+
+        UnaryCondition unaryCondition2A2 = new UnaryCondition();
+        unaryCondition2A2.setOperationName("consultaEstadoGSF");
+        ConditionParameter conditionParameterO2A2 = new ConditionParameter();
+        conditionParameterO2A2.setField("consultaEstadoGSF.estado_pon.phase_state");
+        conditionParameterO2A2.setFieldType("string");
+        conditionParameterO2A2.setOperator("=");
+        conditionParameterO2A2.setValue("SIN INFORMACION");
+        unaryCondition2A2.setConditionParameter(conditionParameterO2A2);
+
+        listUnary.add(unaryCondition1A2);
+        listUnary.add(unaryCondition2A2);
+
+        binaryCondition.setConditions(listUnary);
+        alternative2Step1.setBinaryConditions(binaryCondition);
 
         alternative2Step1.setLabel("Label Alternative 2 Step 1");
 
