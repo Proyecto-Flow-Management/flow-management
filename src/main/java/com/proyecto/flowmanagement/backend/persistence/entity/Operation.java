@@ -2,19 +2,13 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "operation")
 public class Operation  extends AbstractEntity{
+
 	@Column(name = "name")
 	private String name;
 
@@ -45,26 +39,31 @@ public class Operation  extends AbstractEntity{
 	@Column(name = "operationType")
 	private OperationType operationType;
 
-	@Column(name = "inParameters")
-	private OperationParameter inParameters;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "operation_id")
+	private List<OperationParameter> inParameters;
 
-	@Column(name = "outParameters")
-	private OperationParameter outParameters;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "operation_id")
+	private List<OperationParameter> outParameters;
 
-	@Column(name = "condition")
-	private Condition condition;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "operation_id")
+	private List<Condition> conditions;
 
 	@Column(name = "notifyAlternative")
 	private Boolean notifyAlternative;
 
-	@Column(name = "alternativeIds")
-	private String alternativeIds;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "operation_id")
+	private List<String> alternativeIds;
 
 	@Column(name = "notifyOperation")
 	private Boolean notifyOperation;
 
-	@Column(name = "operationNotifyIds")
-	private String operationNotifyIds;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "operation_id")
+	private List<String> operationNotifyIds;
 
 	@Column(name = "notifyOperationDelay")
 	private Integer notifyOperationDelay;
@@ -149,28 +148,28 @@ public class Operation  extends AbstractEntity{
 		this.operationType = operationType;
 	}
 
-	public OperationParameter getInParameters() {
+	public List<OperationParameter> getInParameters() {
 		return inParameters;
 	}
 
-	public void setInParameters(OperationParameter inParameters) {
+	public void setInParameters(List<OperationParameter> inParameters) {
 		this.inParameters = inParameters;
 	}
 
-	public OperationParameter getOutParameters() {
+	public List<OperationParameter> getOutParameters() {
 		return outParameters;
 	}
 
-	public void setOutParameters(OperationParameter outParameters) {
+	public void setOutParameters(List<OperationParameter> outParameters) {
 		this.outParameters = outParameters;
 	}
 
-	public Condition getCondition() {
-		return condition;
+	public List<Condition> getConditions() {
+		return conditions;
 	}
 
-	public void setCondition(Condition condition) {
-		this.condition = condition;
+	public void setConditions(List<Condition> conditions) {
+		this.conditions = conditions;
 	}
 
 	public Boolean getNotifyAlternative() {
@@ -181,11 +180,11 @@ public class Operation  extends AbstractEntity{
 		this.notifyAlternative = notifyAlternative;
 	}
 
-	public String getAlternativeIds() {
+	public List<String> getAlternativeIds() {
 		return alternativeIds;
 	}
 
-	public void setAlternativeIds(String alternativeIds) {
+	public void setAlternativeIds(List<String> alternativeIds) {
 		this.alternativeIds = alternativeIds;
 	}
 
@@ -197,11 +196,11 @@ public class Operation  extends AbstractEntity{
 		this.notifyOperation = notifyOperation;
 	}
 
-	public String getOperationNotifyIds() {
+	public List<String> getOperationNotifyIds() {
 		return operationNotifyIds;
 	}
 
-	public void setOperationNotifyIds(String operationNotifyIds) {
+	public void setOperationNotifyIds(List<String> operationNotifyIds) {
 		this.operationNotifyIds = operationNotifyIds;
 	}
 
