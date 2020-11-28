@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
+import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 
 import javax.persistence.*;
@@ -39,11 +40,11 @@ public class Operation  extends AbstractEntity{
 	@Column(name = "operationType")
 	private OperationType operationType;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "operation_id")
 	private List<OperationParameter> inParameters;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "operation_id")
 	private List<OperationParameter> outParameters;
 
@@ -54,16 +55,16 @@ public class Operation  extends AbstractEntity{
 	@Column(name = "notifyAlternative")
 	private Boolean notifyAlternative;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "operation_id")
-	private List<String> alternativeIds;
+	private List<Alternative> alternativeIds;
 
 	@Column(name = "notifyOperation")
 	private Boolean notifyOperation;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "operation_id")
-	private List<String> operationNotifyIds;
+	private List<Operation> operationNotifyIds;
 
 	@Column(name = "notifyOperationDelay")
 	private Integer notifyOperationDelay;
@@ -180,11 +181,11 @@ public class Operation  extends AbstractEntity{
 		this.notifyAlternative = notifyAlternative;
 	}
 
-	public List<String> getAlternativeIds() {
+	public List<Alternative> getAlternativeIds() {
 		return alternativeIds;
 	}
 
-	public void setAlternativeIds(List<String> alternativeIds) {
+	public void setAlternativeIds(List<Alternative> alternativeIds) {
 		this.alternativeIds = alternativeIds;
 	}
 
@@ -196,11 +197,11 @@ public class Operation  extends AbstractEntity{
 		this.notifyOperation = notifyOperation;
 	}
 
-	public List<String> getOperationNotifyIds() {
+	public List<Operation> getOperationNotifyIds() {
 		return operationNotifyIds;
 	}
 
-	public void setOperationNotifyIds(List<String> operationNotifyIds) {
+	public void setOperationNotifyIds(List<Operation> operationNotifyIds) {
 		this.operationNotifyIds = operationNotifyIds;
 	}
 

@@ -1,9 +1,10 @@
 package com.proyecto.flowmanagement.backend.service.Impl;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
-import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
-import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
-import com.proyecto.flowmanagement.backend.persistence.entity.Step;
+import com.proyecto.flowmanagement.backend.def.OperationType;
+import com.proyecto.flowmanagement.backend.def.SimpleOperationType;
+import com.proyecto.flowmanagement.backend.def.TaskOperationType;
+import com.proyecto.flowmanagement.backend.persistence.entity.*;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -30,17 +31,22 @@ public class MockTestServiceImpl {
 
         List<Operation> guideOperation = new LinkedList<Operation>();
 
-        Operation operation1Guide = new Operation();
-        Operation operation2Guide = new Operation();
+        SimpleOperation operation1Guide = new SimpleOperation();
+        TaskOperation operation2Guide = new TaskOperation();
 
-        operation1Guide.setLabel("Label Operation 1 Guide");
+        operation1Guide.setLabel("Label Operation 1 Guide Chito");
         operation1Guide.setName("Name Operation 1 Guide");
+        operation1Guide.setVisible(true);
+        operation1Guide.setOperationType(OperationType.simpleOperation);
+        operation1Guide.setType(SimpleOperationType.configuration);
         operation2Guide.setLabel("Label Operation 2 Guide");
         operation2Guide.setName("Name Operation 2 Guide");
+        operation2Guide.setOperationType(OperationType.taskOperation);
+        operation2Guide.setType(TaskOperationType.close);
+
 
         guideOperation.add(operation1Guide);
         guideOperation.add(operation2Guide);
-
         Alternative alternative1Step1 = new Alternative();
         Alternative alternative2Step1 = new Alternative();
 
@@ -68,6 +74,7 @@ public class MockTestServiceImpl {
 
         steps.add(stepOne);
 
+        guideNew.setOperations(guideOperation);
         guideNew.setSteps(steps);
 
         return guideNew;

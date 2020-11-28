@@ -1,9 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide" xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-            <ttg:mainStepId>1</ttg:mainStepId>
+            <ttg:mainStepId>INITIAL</ttg:mainStepId>
 
 <ttg:step>
-    <ttg:stepId>1</ttg:stepId>
+    <ttg:stepId>Name TEST 1</ttg:stepId>
     <ttg:label>Name TEST 1</ttg:label>
     <ttg:text>Label TEST 1</ttg:text>
-</ttg:step></ttg:guide>
+</ttg:step><ttg:operation xsi:type="ttg:SimpleOperation">
+    <ttg:name>Name Operation 1 Guide</ttg:name>
+    <ttg:label>Label Operation 1 Guide Chito</ttg:label>
+    <ttg:visible>true</ttg:visible>
+    <ttg:preExecute/>
+    <ttg:comment/>
+    <ttg:title/>
+    <ttg:automatic/>
+    <ttg:pauseExecution/>
+    <ttg:operationOrder/>
+    <ttg:operationType>simpleOperation</ttg:operationType>
+    <ttg:inParameters/>
+    <ttg:outParameters/>
+    <ttg:condition/>
+    <ttg:notifyAlternative/>
+    <ttg:alternativeIds/>
+    <ttg:notifyOperation/>
+    <ttg:operationNotifyIds/>
+    <ttg:notifyOperationDelay/>
+    <ttg:type>configuration</ttg:type>
+    <ttg:servicio/>
+</ttg:operation><ttg:operation xsi:type="ttg:TaskOperation">
+    <ttg:name>Name Operation 2 Guide</ttg:name>
+    <ttg:label>Label Operation 2 Guide</ttg:label>
+    <ttg:visible/>
+    <ttg:preExecute/>
+    <ttg:comment/>
+    <ttg:title/>
+    <ttg:automatic/>
+    <ttg:pauseExecution/>
+    <ttg:operationOrder/>
+    <ttg:operationType>taskOperation</ttg:operationType>
+    <ttg:inParameters/>
+    <ttg:outParameters/>
+    <ttg:condition/>
+    <ttg:notifyAlternative/>
+    <ttg:alternativeIds/>
+    <ttg:notifyOperation/>
+    <ttg:operationNotifyIds/>
+    <ttg:notifyOperationDelay/>
+    <ttg:type>close</ttg:type>
+    <ttg:targetSystem/>
+    <ttg:candidateGroups/>
+    <ttg:mailTemplate/>
+    <ttg:mailTo/>
+    <ttg:mailSubjectPrefix/>
+</ttg:operation></ttg:guide>
