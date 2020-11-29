@@ -2,8 +2,53 @@
 
             <ttg:mainStepId>1</ttg:mainStepId>
 
-<ttg:step>
-    <ttg:stepId>1</ttg:stepId>
-    <ttg:label>Name TEST 1</ttg:label>
-    <ttg:text>Label TEST 1</ttg:text>
-</ttg:step></ttg:guide>
+            <ttg:step>
+
+                <ttg:stepId>1</ttg:stepId>
+                <ttg:label>Name TEST 1</ttg:label>
+                <ttg:text>Label TEST 1</ttg:text>
+
+                <ttg:alternative>
+                    <ttg:stepId/>
+                    <ttg:guideName/>
+                    <ttg:label>CF_EA_CW_GESTIONABLE</ttg:label>
+                    <ttg:condition xsi:type="ttg:UnaryCondition">
+                        <ttg:operationName>ACS_getCPEidByInternalNumber</ttg:operationName>
+                        <ttg:conditionsEnableAlternative>
+                            <ttg:field>gestionable</ttg:field>
+                            <ttg:fieldType>string</ttg:fieldType>
+                            <ttg:operator>=</ttg:operator>
+                            <ttg:value>HABILITADA</ttg:value>
+                        </ttg:conditionsEnableAlternative>
+                    </ttg:condition>
+                </ttg:alternative>
+
+                <ttg:alternative>
+                    <ttg:stepId/>
+                    <ttg:guideName/>
+                    <ttg:label>Label Alternative 2 Step 1</ttg:label>
+                    <ttg:condition xsi:type="ttg:BinaryCondition">
+                        <ttg:operation>OR</ttg:operation>
+                        <operator xsi:type="ttg:UnaryCondition">
+                            <ttg:operationName>consultaEstadoGSF</ttg:operationName>
+                            <ttg:conditionsEnableAlternative>
+                                <ttg:field>consultaEstadoGSF.estado_pon.phase_state</ttg:field>
+                                <ttg:fieldType>string</ttg:fieldType>
+                                <ttg:operator>=</ttg:operator>
+                                <ttg:value>OK</ttg:value>
+                            </ttg:conditionsEnableAlternative>
+                        </operator>
+                        <operator xsi:type="ttg:UnaryCondition">
+                            <ttg:operationName>consultaEstadoGSF</ttg:operationName>
+                            <ttg:conditionsEnableAlternative>
+                                <ttg:field>consultaEstadoGSF.estado_pon.phase_state</ttg:field>
+                                <ttg:fieldType>string</ttg:fieldType>
+                                <ttg:operator>=</ttg:operator>
+                                <ttg:value>SIN INFORMACION</ttg:value>
+                            </ttg:conditionsEnableAlternative>
+                        </operator>
+                    </ttg:condition>
+                </ttg:alternative>
+            </ttg:step>
+
+</ttg:guide>

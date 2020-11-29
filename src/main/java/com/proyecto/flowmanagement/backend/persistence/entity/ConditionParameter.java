@@ -12,35 +12,42 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "condition_parameter")
-public class ConditionParameter {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+public class ConditionParameter  extends AbstractEntity{
 	
-	@Column(name = "name")
-    private String name;
+	@Column(name = "field")
+    private String field;
 	
+	@Column(name = "fieldType")
+    private String fieldType;
+
+	@Column(name = "operator")
+	private String operator;
+
 	@Column(name = "value")
-    private String value;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_condition_type", nullable = false, foreignKey = @ForeignKey(name = "FK_condition_parameter_condition_type"))
-	private ConditionType conditionType;
+	private String value;
 
-	public Integer getId() {
-		return id;
+	public String getField() {
+		return field;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setField(String field) {
+		this.field = field;
 	}
 
-	public String getName() {
-		return name;
+	public String getFieldType() {
+		return fieldType;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFieldType(String fieldType) {
+		this.fieldType = fieldType;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
 
 	public String getValue() {
@@ -50,13 +57,4 @@ public class ConditionParameter {
 	public void setValue(String value) {
 		this.value = value;
 	}
-
-	public ConditionType getConditionType() {
-		return conditionType;
-	}
-
-	public void setConditionType(ConditionType conditionType) {
-		conditionType = conditionType;
-	}
-
 }

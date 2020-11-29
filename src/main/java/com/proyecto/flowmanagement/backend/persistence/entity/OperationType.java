@@ -9,25 +9,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "operation_type")
-public class OperationType {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+public class OperationType  extends AbstractEntity implements Cloneable   {
 	
 	@Column(name = "name")
 	private String name;
 	
 	@Column(name = "label")
 	private String label;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;

@@ -5,6 +5,9 @@ public final class XMLConstants {
     //XML Templates
     public static final String GUIDE_XML_LOCATION = "src/main/resources/XMLResources/GuideXML.xml";
     public static final String STEP_XML_LOCATION = "src/main/resources/XMLResources/StepXML.xml";
+    public static final String ALTERNATIVE_XML_LOCATION = "src/main/resources/XMLResources/AlternativeXML.xml";
+    public static final String UNARY_CONDITION_XML = "src/main/resources/XMLResources/UnaryCondition.xml";
+    public static final String BINARY_CONDITION_XML = "src/main/resources/XMLResources/BinaryConditionXML.xml";
 
     //GUIDE ATTRIBUTES
     public static final String GUIDE_ELEMENT = "ttg:guide";
@@ -20,6 +23,28 @@ public final class XMLConstants {
     public static final String STEP_ID = "ttg:stepId";
     public static final String STEP_TEXT = "ttg:label";
     public static final String STEP_LABEL = "ttg:text";
+
+    //ALTERNATIVES ATTRIBUTES
+    public static final String ALTERNATIVE = "ttg:alternative";
+    public static final String ALTERNATIVE_STEP_ID = "ttg:stepId";
+    public static final String ALTERNATIVE_GUIDE_NAME = "ttg:guideName";
+    public static final String ALTERNATIVE_LABEL = "ttg:label";
+
+    //CONDITIONS
+    public static final String ALTERNATIVE_CONDITION = "ttg:condition";
+
+    //UnaryConditions
+    public static final String UNARY_CONDITION_OPERATION_NAME= "ttg:operationName";
+    public static final String UNARY_CONDITION_FIELD= "ttg:field";
+    public static final String UNARY_CONDITION_FIELD_TYPE= "ttg:fieldType";
+    public static final String UNARY_CONDITION_OPERATOR= "ttg:operator";
+    public static final String UNARY_CONDITION_VALUE= "ttg:value";
+
+    //BinaryCondition
+    public static final String BINARY_CONDITION = "ttg:condition";
+    public static final String BINARY_OPERATOR = "ttg:operation";
+    public static final String BINARY_OPERATORS = "operator";
+
 
     // AUX
     public static final String GUIDE_RESULT = "src/main/resources/XMLResources/GuideResult.xml";

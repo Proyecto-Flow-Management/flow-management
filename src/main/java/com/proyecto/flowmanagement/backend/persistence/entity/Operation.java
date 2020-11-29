@@ -15,10 +15,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "operation")
 public class Operation  extends AbstractEntity{
-	
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "label")
 	private String label;
 
@@ -37,4 +36,5 @@ public class Operation  extends AbstractEntity{
 	public void setLabel(String label) {
 		this.label = label;
 	}
+
 }
