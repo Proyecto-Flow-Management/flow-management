@@ -1,22 +1,7 @@
 <ttg:operation xsi:type="ttg:SimpleOperation">
     <ttg:name></ttg:name>
     <ttg:label></ttg:label>
-    <ttg:visible></ttg:visible>
-    <ttg:preExecute></ttg:preExecute>
-    <ttg:comment></ttg:comment>
-    <ttg:title></ttg:title>
-    <ttg:automatic></ttg:automatic>
-    <ttg:pauseExecution></ttg:pauseExecution>
-    <ttg:operationOrder></ttg:operationOrder>
     <ttg:operationType></ttg:operationType>
-    <ttg:inParameters></ttg:inParameters>
-    <ttg:outParameters></ttg:outParameters>
-    <ttg:condition></ttg:condition>
-    <ttg:notifyAlternative></ttg:notifyAlternative>
-    <ttg:alternativeIds></ttg:alternativeIds>
-    <ttg:notifyOperation></ttg:notifyOperation>
-    <ttg:operationNotifyIds></ttg:operationNotifyIds>
-    <ttg:notifyOperationDelay></ttg:notifyOperationDelay>
     <ttg:type></ttg:type>
     <ttg:servicio></ttg:servicio>
 </ttg:operation>

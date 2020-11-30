@@ -1,23 +1,5 @@
 <ttg:inParameters>
     <ttg:name></ttg:name>
-    <ttg:label></ttg:label>
-    <ttg:visible></ttg:visible>
-    <ttg:visibleWhenInParameterEqualsCondition></ttg:visibleWhenInParameterEqualsCondition>
     <ttg:type></ttg:type>
     <ttg:description></ttg:description>
-    <ttg:value></ttg:value>
-    <ttg:enable></ttg:enable>
-    <ttg:required></ttg:required>
-    <ttg:validateExpression></ttg:validateExpression>
-    <ttg:validateExpressionErrorDescription></ttg:validateExpressionErrorDescription>
-    <ttg:optionValue></ttg:optionValue>
-    <ttg:dateFormat></ttg:dateFormat>
-    <ttg:dateFormatRangeEnd></ttg:dateFormatRangeEnd>
-    <ttg:dateFormatFinal></ttg:dateFormatFinal>
-    <ttg:sourceValueEntity></ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty></ttg:sourceValueEntityProperty>
-    <ttg:convert></ttg:convert>
-    <ttg:convertCondition></ttg:convertCondition>
-    <ttg:validateCrossFieldCondition></ttg:validateCrossFieldCondition>
-    <ttg:valueWhenInParameterEquals></ttg:valueWhenInParameterEquals>
 </ttg:inParameters>
