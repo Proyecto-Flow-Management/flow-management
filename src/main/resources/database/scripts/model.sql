@@ -144,6 +144,12 @@ CREATE TABLE `step_template` (
   FOREIGN KEY (`step_id`) REFERENCES `step` (`id`)
 );
 
+CREATE TABLE `step_document` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `alternative` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `label` varchar(255) DEFAULT NULL,

@@ -38,6 +38,13 @@ public class GuideForm extends VerticalLayout {
     private GuideServiceImpl guideService;
     private StepServiceImpl stepService;
     private OperationServiceImpl operationService;
+    HorizontalLayout contentFields;
+    HorizontalLayout contentOperation;
+    HorizontalLayout contentAlternative;
+    HorizontalLayout toolbarStep;
+    HorizontalLayout toolbarOperation;
+    HorizontalLayout toolbarAlternative;
+    HorizontalLayout createButtons;
 
     TextField name = new TextField("Nombre de la Guia");
     TextField label = new TextField("Etiqueta");
@@ -53,6 +60,7 @@ public class GuideForm extends VerticalLayout {
     Div messageDiv = new Div();
     Div messageDiv2 = new Div();
     Div messageDiv3 = new Div();
+
 
     Button save = new Button("Guardar");
     Button close = new Button("Cancelar");
@@ -86,16 +94,16 @@ public class GuideForm extends VerticalLayout {
         alternativeForm.addListener(AlternativeForm.CloseEvent.class, e -> closeEditorAlternative());
         alternativeForm.setVisible(false);
 
-        HorizontalLayout contentFields = new HorizontalLayout(name,label,mainStep);
+        contentFields = new HorizontalLayout(name,label,mainStep);
 
 //        Div contentStep = new Div(gridStep, stepForm);
-        HorizontalLayout contentStep = new HorizontalLayout(gridStep,stepForm);
+        HorizontalLayout contentStep = new HorizontalLayout(stepForm, gridStep);
         contentStep.addClassName("content");
         contentStep.setSizeFull();
-        HorizontalLayout contentOperation = new HorizontalLayout(gridOperation, operationForm);
+        contentOperation = new HorizontalLayout(operationForm, gridOperation);
         contentOperation.addClassName("contentOperation");
         contentOperation.setSizeFull();
-        HorizontalLayout contentAlternative = new HorizontalLayout(gridAlternative, alternativeForm);
+        contentAlternative = new HorizontalLayout(alternativeForm, gridAlternative);
         contentAlternative.addClassName("contentAlternative");
         contentAlternative.setSizeFull();
 
@@ -109,12 +117,14 @@ public class GuideForm extends VerticalLayout {
         binder.bindInstanceFields(this);
         generateStyle();
 
-        HorizontalLayout toolbarStep = getToolBarStep();
+        toolbarStep = getToolBarStep();
+        toolbarOperation = getToolBarOperation();
+        toolbarAlternative = getToolBarAlternative();
         toolbarStep.setAlignItems(Alignment.START);
 
-        HorizontalLayout createButtons = createButtonsLayout();
+        createButtons = createButtonsLayout();
         createButtons.setAlignItems(Alignment.CENTER);
-        add(contentFields, toolbarStep, contentStep, messageDiv, getToolBarOperation(), contentOperation, messageDiv2, getToolBarAlternative(), contentAlternative, messageDiv3, createButtons);
+        add(contentFields, toolbarStep, contentStep, messageDiv, toolbarOperation, contentOperation, messageDiv2, toolbarAlternative, contentAlternative, messageDiv3, createButtons);
 //        add(name,label,mainStep, toolbarStep, contentStep, messageDiv, getToolBarOperation(), contentOperation, messageDiv2, contentAlternative, messageDiv3, createButtons);
 //        add(name,label,mainStep,new H3("Steps:"), getToolBarStep(), contentStep, messageDiv , new H3("Operations"), contentOperation, messageDiv2, createButtonsLayout());
     }
@@ -175,8 +185,25 @@ public class GuideForm extends VerticalLayout {
         } else {
             stepForm.setStep(step);
             stepForm.setVisible(true);
+            gridStep.setVisible(false);
+            contentFields.setVisible(false);
+            setVisibleEditStep(false);
+//            toolbarStep.setVisible(false);
+//            toolbarOperation.setVisible(false);
+//            contentOperation.setVisible(false);
+//            toolbarAlternative.setVisible(false);
+//            contentAlternative.setVisible(false);
             addClassName("editing");
         }
+    }
+
+    private void setVisibleEditStep(Boolean bool){
+        toolbarStep.setVisible(bool);
+        toolbarOperation.setVisible(bool);
+        contentOperation.setVisible(bool);
+        toolbarAlternative.setVisible(bool);
+        contentAlternative.setVisible(bool);
+        createButtons.setVisible(bool);
     }
 
     private void deleteStep(StepForm.DeleteEvent evt) {
@@ -193,11 +220,17 @@ public class GuideForm extends VerticalLayout {
         gridStep.getDataProvider().refreshAll();
 //        updateList();
         closeEditorStep();
+        gridStep.setVisible(true);
+        contentFields.setVisible(true);
+        setVisibleEditStep(true);
     }
 
     private void closeEditorStep() {
         stepForm.setStep(null);
         stepForm.setVisible(false);
+        gridStep.setVisible(true);
+        contentFields.setVisible(true);
+        setVisibleEditStep(true);
         removeClassName("editing");
     }
 

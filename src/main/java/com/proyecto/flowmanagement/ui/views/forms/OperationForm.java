@@ -22,9 +22,9 @@ public class OperationForm extends FormLayout {
     TextField name = new TextField("Nombre");
     TextField label = new TextField("Etiqueta");
 
-    Button save = new Button("Save");
-    Button delete = new Button("Delete");
-    Button close = new Button("Cancel");
+    Button save = new Button("Guardar");
+    Button delete = new Button("Borrar");
+    Button close = new Button("Cancelar");
 
     Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
 

@@ -1,16 +1,14 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
-import springfox.documentation.spring.web.readers.operation.OperationReader;
-
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "step_document")
 public class StepDocument  extends AbstractEntity{
 
-    @Column(name = "name")
+    @Column(name = "url")
     private String url;
 
     public String getUrl() {
