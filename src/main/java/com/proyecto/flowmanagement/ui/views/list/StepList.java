@@ -3,102 +3,107 @@ package com.proyecto.flowmanagement.ui.views.list;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.backend.service.Impl.StepServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
+import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @Route(value = "StepList", layout = MainLayout.class)
-@PageTitle("Listar Steps | Flow Management")
+@PageTitle("StepList | Flow Management")
 public class StepList extends VerticalLayout {
-
+    private final StepForm form;
     Grid<Step> grid = new Grid<>(Step.class);
-    StepServiceImpl stepService;
+    TextField filterText = new TextField();
 
-    public StepList(StepServiceImpl stepService) {
+    private StepServiceImpl stepService;
+
+    public StepList(StepServiceImpl stepService){
         this.stepService = stepService;
-
-        addClassName("create-step-view");
+        addClassName("list-view");
         setSizeFull();
         configureGrid();
 
-        Div content = new Div(grid);
+        form = new StepForm();
+        form.addListener(StepForm.SaveEvent.class, this::saveStep);
+        form.addListener(StepForm.DeleteEvent.class, this::deleteStep);
+        form.addListener(StepForm.CloseEvent.class, e -> closeEditor());
+
+        Div content = new Div(grid, form);
         content.addClassName("content");
         content.setSizeFull();
 
         add(getToolBar(), content);
         updateList();
-        grid.setItems(stepService.getAll());
+        closeEditor();
+    }
+    private void deleteStep(StepForm.DeleteEvent evt) {
+        stepService.delete(evt.getStep().getId());
+        updateList();
+        closeEditor();
+    }
+
+    private void saveStep(StepForm.SaveEvent evt) {
+        stepService.add(evt.getStep());
+        updateList();
+        closeEditor();
+    }
+
+    private void closeEditor() {
+        form.setStep(null);
+        form.setVisible(false);
+        removeClassName("editing");
     }
 
     private HorizontalLayout getToolBar() {
+//        filterText.setPlaceholder("Filter by name...");
+//        filterText.setClearButtonVisible(true);
+//        filterText.setValueChangeMode(ValueChangeMode.LAZY);
+//        filterText.addValueChangeListener(e -> updateList());
+
+//        Button addStepButton = new Button("Add Step", click -> addStep());
         Button addStepButton = new Button("Crear Step", event -> UI.getCurrent().navigate("CreateStep"));
+
+//        HorizontalLayout toolbar = new HorizontalLayout(filterText, addStepButton);
         HorizontalLayout toolbar = new HorizontalLayout(addStepButton);
         toolbar.addClassName("toolbar");
         return toolbar;
     }
 
+    private void addStep() {
+        grid.asSingleSelect().clear();
+        editStep(new Step());
+    }
+
     private void updateList() {
-        grid.setColumns("label", "text");
-        grid.getColumns().forEach(col -> col.setAutoWidth(true));
-
-        grid.addComponentColumn(step ->{
-            Icon icon = new Icon("vaadin", "edit");
-            Button botonEliminar = new Button(icon);
-            icon.addClickListener(e -> {
-                editStep(step.getId());
-            });
-            return  botonEliminar;
-        }).setHeader("Editar");
-
-        grid.addComponentColumn(step ->{
-            Icon icon = new Icon("vaadin", "trash");
-            Button botonEliminar = new Button(icon);
-            botonEliminar.addClickListener(e -> {
-                deleteStep(step.getId());
-            });
-            return  botonEliminar;
-        }).setHeader("Eliminar");
-
-        grid.addComponentColumn(step ->{
-            Icon icon = new Icon("vaadin", "external-link");
-            Button botonEliminar = new Button(icon);
-            botonEliminar.addClickListener(e -> {
-                export(step.getId());
-            });
-            return  botonEliminar;
-        }).setHeader("Exportar");
+        grid.setItems(stepService.getAll());
     }
 
     private void  configureGrid() {
         grid.addClassName("step-grid");
         grid.setSizeFull();
+        grid.setColumns("text", "label");
+//        grid.setColumns("name", "label", "nextStep");
+
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
+
+        grid.asSingleSelect().addValueChangeListener(evt -> editStep(evt.getValue()));
     }
 
-    private void deleteStep(Long id)
-    {
-        stepService.delete(id);
-        grid.setItems(stepService.getAll());
-    }
-
-    private void editStep(Long id)
-    {
-        UI.getCurrent().navigate("EditStep");
-    }
-
-
-    private void export(Long id)
-    {
-
+    private void editStep(Step step) {
+        if(step == null) {
+            closeEditor();
+        } else {
+            form.setStep(step);
+            form.setVisible(true);
+            addClassName("editing");
+        }
     }
 }

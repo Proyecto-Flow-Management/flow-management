@@ -1,6 +1,5 @@
 package com.proyecto.flowmanagement.ui;
 
-import com.proyecto.flowmanagement.ui.views.dashboard.DashboardView;
 import com.proyecto.flowmanagement.ui.views.list.GuideList;
 import com.proyecto.flowmanagement.ui.views.list.UserList;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -40,12 +39,14 @@ public class MainLayout extends AppLayout {
     private void createDrawer() {
         RouterLink listLink = new RouterLink("List", UserList.class);
         RouterLink guideLink = new RouterLink("Guide", GuideList.class);
+//        RouterLink stepLink = new RouterLink("Step", StepList.class);
         listLink.setHighlightCondition(HighlightConditions.sameLocation());
 
         addToDrawer(new VerticalLayout(
                 listLink,
-                guideLink,
-                new RouterLink("Dashboard", DashboardView.class)
+                guideLink
+//                stepLink
+//                new RouterLink("Dashboard", DashboardView.class)
         ));
     }
 
