@@ -62,6 +62,9 @@ public final class XMLConstants {
     public static final String OPERATION_PAUSE_EXECUTION = "ttg:pauseExecution";
     public static final String OPERATION_OPERATION_ORDER = "ttg:operationOrder";
     public static final String OPERATION_OPERATION_TYPE = "ttg:operationType";
+    public static final String OPERATION_IN_PARAMETERS = "ttg:inParameters";
+    public static final String OPERATION_OUT_PARAMETERS = "ttg:outParameters";
+    public static final String OPERATION_CONDITION = "ttg:condition";
     public static final String OPERATION_NOTIFY_ALTERNATIVE = "ttg:notifyAlternative";
     public static final String OPERATION_ALTERNATIVE_IDS = "ttg:alternativeIds";
     public static final String OPERATION_NOTIFY_OPERATION = "ttg:notifyOperation";
@@ -76,27 +79,30 @@ public final class XMLConstants {
     public static final String OPERATION_MAIL_SUBJECT_PREFIX = "ttg:mailSubjectPrefix";
 
     //OPERATION PARAMETER ATTRIBUTES
-    public static final String OPERATION_PARAMETER_NAME = "ttg:name";
-    public static final String OPERATION_PARAMETER_LABEL = "ttg:label";
-    public static final String OPERATION_PARAMETER_VISIBLE = "ttg:visible";
-    public static final String OPERATION_PARAMETER_VISIBLE_WHEN_IN_PARAMETER_EQUALS_CONDITION = "ttg:visibleWhenInParameterEqualsCondition";
-    public static final String OPERATION_PARAMETER_TYPE = "ttg:type";
-    public static final String OPERATION_PARAMETER_DESCRIPTION = "ttg:description";
-    public static final String OPERATION_PARAMETER_VALUE = "ttg:value";
-    public static final String OPERATION_PARAMETER_ENABLE = "ttg:enable";
-    public static final String OPERATION_PARAMETER_REQUIRED = "ttg:required";
-    public static final String OPERATION_PARAMETER_VALIDATE_EXPRESSION = "ttg:validateExpression";
-    public static final String OPERATION_PARAMETER_VALIDATE_EXPRESSION_ERROR_DESCRIPTION = "ttg:validateExpressionErrorDescription";
-    public static final String OPERATION_PARAMETER_OPTION_VALUE = "ttg:optionValue";
-    public static final String OPERATION_PARAMETER_DATE_FORMAT = "ttg:dateFormat";
-    public static final String OPERATION_PARAMETER_DTE_FORMAT_RANGE_END = "ttg:dateFormatRangeEnd";
-    public static final String OPERATION_PARAMETER_DATE_FORMAT_FINAL = "ttg:dateFormatFinal";
-    public static final String OPERATION_PARAMETER_SOURCE_VALUE_ENTITY = "ttg:sourceValueEntity";
-    public static final String OPERATION_PARAMETER_SOURCE_VALUE_ENTITY_PROPERTY = "ttg:sourceValueEntityProperty";
-    public static final String OPERATION_PARAMETER_CONVERT = "ttg:convert";
-    public static final String OPERATION_PARAMETER_CONVERT_CONDITION = "ttg:convertCondition";
-    public static final String OPERATION_PARAMETER_VALIDATE_CROSS_FIELD_CONDITION = "ttg:validateCrossFieldCondition";
-    public static final String OPERATION_PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS = "ttg:valueWhenInParameterEquals";
+    public static final String PARAMETER_IN_ELEMENT = "ttg:inParameters";
+    public static final String PARAMETER_OUT_ELEMENT = "ttg:outParameters";
+    public static final String PARAMETER_NAME = "ttg:name";
+    public static final String PARAMETER_LABEL = "ttg:label";
+    public static final String PARAMETER_VISIBLE = "ttg:visible";
+    public static final String PARAMETER_VISIBLE_WHEN_IN_PARAMETER_EQUALS_CONDITION = "ttg:visibleWhenInParameterEqualsCondition";
+    public static final String PARAMETER_TYPE = "ttg:type";
+    public static final String PARAMETER_DESCRIPTION = "ttg:description";
+    public static final String PARAMETER_VALUE = "ttg:value";
+    public static final String PARAMETER_ENABLE = "ttg:enable";
+    public static final String PARAMETER_REQUIRED = "ttg:required";
+    public static final String PARAMETER_VALIDATE_EXPRESSION = "ttg:validateExpression";
+    public static final String PARAMETER_VALIDATE_EXPRESSION_ERROR_DESCRIPTION = "ttg:validateExpressionErrorDescription";
+    public static final String PARAMETER_OPTION_VALUE = "ttg:optionValue";
+    public static final String PARAMETER_DATE_FORMAT = "ttg:dateFormat";
+    public static final String PARAMETER_DTE_FORMAT_RANGE_END = "ttg:dateFormatRangeEnd";
+    public static final String PARAMETER_DATE_FORMAT_FINAL = "ttg:dateFormatFinal";
+    public static final String PARAMETER_SOURCE_VALUE_ENTITY = "ttg:sourceValueEntity";
+    public static final String PARAMETER_SOURCE_VALUE_ENTITY_PROPERTY = "ttg:sourceValueEntityProperty";
+    public static final String PARAMETER_PROPERTIES = "ttg:properties";
+    public static final String PARAMETER_CONVERT = "ttg:convert";
+    public static final String PARAMETER_CONVERT_CONDITION = "ttg:convertCondition";
+    public static final String PARAMETER_VALIDATE_CROSS_FIELD_CONDITION = "ttg:validateCrossFieldCondition";
+    public static final String PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS = "ttg:valueWhenInParameterEquals";
 
     // AUX
     public static final String GUIDE_RESULT = "src/main/resources/XMLResources/GuideResult.xml";

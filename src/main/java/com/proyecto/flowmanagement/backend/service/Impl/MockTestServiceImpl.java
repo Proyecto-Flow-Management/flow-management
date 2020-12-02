@@ -28,6 +28,15 @@ public class MockTestServiceImpl {
         Step stepOne = new Step();
 
         List<Alternative> stepAlternative = new LinkedList<Alternative>();
+
+        Alternative alternative1 = new Alternative();
+        alternative1.setNextStep("Prueba1");
+        Alternative alternative2 = new Alternative();
+        alternative2.setNextStep("Prueba2");
+
+        stepAlternative.add(alternative1);
+        stepAlternative.add(alternative2);
+
         List<Operation> stepOperation = new LinkedList<Operation>();
 
         List<Operation> guideOperation = new LinkedList<Operation>();
@@ -35,11 +44,33 @@ public class MockTestServiceImpl {
         SimpleOperation operation1Guide = new SimpleOperation();
         TaskOperation operation2Guide = new TaskOperation();
 
+        OperationParameter operationParameter1 = new OperationParameter();
+        OperationParameter operationParameter2 = new OperationParameter();
+        operationParameter1.setName("parametro 1");
+        operationParameter1.setType("collection");
+        operationParameter1.setDescription("prueba 1");
+        operationParameter2.setName("parametro 2");
+        operationParameter2.setType("date");
+        operationParameter2.setDescription("prueba 2");
+        List<OperationParameter> parameters = new LinkedList<>();
+        parameters.add(operationParameter1);
+        parameters.add(operationParameter2);
+
         operation1Guide.setLabel("Label Operation 1 Guide Chito");
         operation1Guide.setName("Name Operation 1 Guide");
         operation1Guide.setVisible(true);
+        operation1Guide.setPreExecute(false);
+        operation1Guide.setComment("Probando Comment");
+        operation1Guide.setTitle("Probando Title");
+        operation1Guide.setPauseExecution(false);
+        operation1Guide.setOperationOrder(true);
         operation1Guide.setOperationType(OperationType.simpleOperation);
+        operation1Guide.setInParameters(parameters);
+        operation1Guide.setNotifyAlternative(true);
+        operation1Guide.setAlternativeIds(stepAlternative);
         operation1Guide.setType(SimpleOperationType.configuration);
+        operation1Guide.setService("service");
+
         operation2Guide.setLabel("Label Operation 2 Guide");
         operation2Guide.setName("Name Operation 2 Guide");
         operation2Guide.setOperationType(OperationType.taskOperation);

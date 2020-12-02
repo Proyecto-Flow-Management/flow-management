@@ -40,4 +40,15 @@
         <ttg:operator>=</ttg:operator>
         <ttg:value>SIN INFORMACION</ttg:value>
     </ttg:conditionsEnableAlternative>
-</operator></ttg:condition></ttg:alternative></ttg:step></ttg:guide>
+</operator></ttg:condition></ttg:alternative></ttg:step><ttg:operation xsi:type="ttg:SimpleOperation">
+    <ttg:name>Name Operation 1 Guide</ttg:name>
+    <ttg:label>Label Operation 1 Guide Chito</ttg:label><ttg:visible>true</ttg:visible>
+    <ttg:operationType>simpleOperation</ttg:operationType>
+    <ttg:type>configuration</ttg:type>
+    <ttg:servicio/>
+</ttg:operation><ttg:operation xsi:type="ttg:TaskOperation">
+    <ttg:name>Name Operation 2 Guide</ttg:name>
+    <ttg:label>Label Operation 2 Guide</ttg:label>
+    <ttg:operationType>taskOperation</ttg:operationType>
+    <ttg:type>close</ttg:type>
+</ttg:operation></ttg:guide>
