@@ -303,7 +303,6 @@ public class GuideGeneratorServiceImp {
 
         for (UnaryCondition unaryCondition : binaryConditions.getConditions()) {
             Node unaryConditionNode = getUnaryCondition(unaryCondition);
-            Node esto = docBinary.createElement("");
             Node locationAlternative = docBinary.getElementsByTagName(XMLConstants.BINARY_CONDITION).item(0);
             Node unaryNodeImported = docBinary.importNode(unaryConditionNode,true);
             locationAlternative.appendChild(unaryNodeImported);

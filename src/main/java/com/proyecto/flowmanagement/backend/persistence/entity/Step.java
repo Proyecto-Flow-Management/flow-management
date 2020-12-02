@@ -3,6 +3,8 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import springfox.documentation.spring.web.readers.operation.OperationReader;
 
 import javax.persistence.*;
@@ -23,16 +25,17 @@ public class Step extends AbstractEntity{
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="step_id")
-	@Fetch(FetchMode.SUBSELECT)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Operation> operations;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="step_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Alternative> alternatives;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="step_id")
-	@Fetch(FetchMode.SUBSELECT)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<StepDocument> stepDocuments;
 
 	public String getTextId() {

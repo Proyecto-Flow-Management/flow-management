@@ -3,6 +3,8 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -23,11 +25,12 @@ public class Guide extends AbstractEntity {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="guide_id")
-	@Fetch(FetchMode.SELECT)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Step> steps;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="guide_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Operation> operations;
 
 	public String getName() {
