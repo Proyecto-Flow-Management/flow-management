@@ -1,5 +1,8 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,8 +12,9 @@ public class UnaryCondition  extends AbstractEntity{
     @Column(name = "operation_name")
     private String OperationName;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="unary_condition_id")
+    @Fetch(FetchMode.SELECT)
     ConditionParameter conditionParameter;
 
     public String getOperationName() {

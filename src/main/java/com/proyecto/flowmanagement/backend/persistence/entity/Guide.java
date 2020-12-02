@@ -1,6 +1,8 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,9 +21,14 @@ public class Guide extends AbstractEntity {
 	@Column(name = "mainStep")
 	private String mainStep;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="guide_id")
+	@Fetch(FetchMode.SELECT)
 	private List<Step> steps;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="guide_id")
+	private List<Operation> operations;
 
 	public String getName() {
 		return name;
@@ -53,5 +60,13 @@ public class Guide extends AbstractEntity {
 
 	public void setSteps(List<Step> steps) {
 		this.steps = steps;
+	}
+
+	public List<Operation> getOperations() {
+		return operations;
+	}
+
+	public void setOperations(List<Operation> operations) {
+		this.operations = operations;
 	}
 }

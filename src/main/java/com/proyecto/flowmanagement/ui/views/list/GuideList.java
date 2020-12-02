@@ -3,6 +3,7 @@ package com.proyecto.flowmanagement.ui.views.list;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideGeneratorServiceImp;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
+import com.proyecto.flowmanagement.backend.service.Impl.MockTestServiceImpl;
 import com.proyecto.flowmanagement.backend.service.Impl.StepServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.forms.GuideForm;
@@ -30,7 +31,7 @@ public class GuideList extends VerticalLayout {
 
     public GuideList(GuideServiceImpl guideService) {
         this.guideService = guideService;
-//        test();
+        test();
         addClassName("create-guide-view");
         setSizeFull();
         configureGrid();
@@ -54,7 +55,7 @@ public class GuideList extends VerticalLayout {
 
     public void test(){
         GuideGeneratorServiceImp test = new GuideGeneratorServiceImp();
-
+        MockTestServiceImpl mock = new MockTestServiceImpl();
         List<Guide> myGuide = guideService.getAll();
         if (!myGuide.isEmpty())
         {

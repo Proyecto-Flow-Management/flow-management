@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.backend.service.Impl;
 
+import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.def.XMLConstants;
 import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,8 @@ public class GuideGeneratorServiceImp {
             doc = configureOperationsXML(doc, guide);
 
             printResult(doc);
+
+           String esto = "test";
         }
         catch(Exception ex)
         {
@@ -76,8 +79,7 @@ public class GuideGeneratorServiceImp {
         xmlnsxsi.setTextContent(XMLConstants.XMLNS_XSI);
         schemaLocation.setTextContent(XMLConstants.XMLNS_SCHEMALOCATION);
 
-        mainStepID.setTextContent(guide.getSteps().get(0).getId().toString());
-
+        mainStepID.setTextContent(guide.getMainStep());
         return doc;
     }
 
@@ -96,7 +98,7 @@ public class GuideGeneratorServiceImp {
                 Node labelStep = docStep.getElementsByTagName(XMLConstants.STEP_LABEL).item(0);
                 Node textStep = docStep.getElementsByTagName(XMLConstants.STEP_TEXT).item(0);
 
-                idStep.setTextContent(step.getId().toString());
+                idStep.setTextContent(step.getText());
                 labelStep.setTextContent(step.getLabel());
                 textStep.setTextContent(step.getText());
 
@@ -118,7 +120,138 @@ public class GuideGeneratorServiceImp {
         return doc;
     }
 
+    private Node configureOperationsXML(Document doc, Operation operation) throws ParserConfigurationException, IOException, SAXException {
+
+        File file = new File(XMLConstants.STEP_XML_LOCATION);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document docOperation = dBuilder.parse(file);
+
+        if (operation.getOperationType() == OperationType.simpleOperation){
+            SimpleOperation simpleOperation = (SimpleOperation) operation;
+            file = new File(XMLConstants.SIMPLE_OPERATION_XML_LOCATION);
+        }
+        else if(operation.getOperationType() == OperationType.taskOperation){
+            TaskOperation taskOperation = (TaskOperation) operation;
+            file = new File(XMLConstants.TASK_OPERATION_XML_LOCATION);
+        }
+
+        Node nameOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_NAME).item(0);
+        nameOperation.setTextContent(operation.getName());
+        Node labelOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_LABEL).item(0);
+        labelOperation.setTextContent(operation.getLabel());
+        if (operation.getVisible() != null) {
+            Node visibleOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_VISIBLE).item(0);
+            visibleOperation.setTextContent(operation.getVisible().toString());
+        }
+        if (operation.getPreExecute() != null) {
+            Node preExecuteOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_PRE_EXECUTE).item(0);
+            preExecuteOperation.setTextContent(operation.getPreExecute().toString());
+        }
+        if (operation.getComment() != null) {
+            Node commentOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_COMMENT).item(0);
+            commentOperation.setTextContent(operation.getComment());
+        }
+        if (operation.getTitle() != null) {
+            Node titleOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_TITLE).item(0);
+            titleOperation.setTextContent(operation.getTitle());
+        }
+        if (operation.getAutomatic() != null) {
+            Node automaticOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_AUTOMATIC).item(0);
+            automaticOperation.setTextContent(operation.getAutomatic().toString());
+        }
+        if (operation.getPauseExecution() != null) {
+            Node pauseExecutionOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_PAUSE_EXECUTION).item(0);
+            pauseExecutionOperation.setTextContent(operation.getPauseExecution().toString());
+        }
+        if (operation.getOperationOrder() != null) {
+            Node operationOrderOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_OPERATION_ORDER).item(0);
+            operationOrderOperation.setTextContent(operation.getOperationOrder().toString());
+        }
+        Node operationTypeOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_OPERATION_TYPE).item(0);
+        operationTypeOperation.setTextContent(operation.getOperationType().name());
+
+        //inParameters
+        //OutParameters
+        //Conditions
+
+        if (operation.getNotifyAlternative() != null) {
+            Node notifyAlternativeOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
+            notifyAlternativeOperation.setTextContent(operation.getNotifyAlternative().toString());
+
+            for (Alternative alternative : operation.getAlternativeIds()){
+                Node alternativeIdsOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ALTERNATIVE_IDS).item(0);
+                alternativeIdsOperation.setTextContent(alternative.getNextStep());
+            }
+        }
+
+        if (operation.getNotifyOperation() != null) {
+            Node notifyOperationOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION).item(0);
+            notifyOperationOperation.setTextContent(operation.getNotifyOperation().toString());
+
+            for (Operation operation1 : operation.getOperationNotifyIds()){
+                Node operationIdsOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_OPERATION_IDS).item(0);
+                operationIdsOperation.setTextContent(operation1.getName());
+            }
+        }
+
+        if (operation.getNotifyOperationDelay() != null) {
+            Node notifyOperationDelayOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY).item(0);
+            notifyOperationDelayOperation.setTextContent(operation.getNotifyOperationDelay().toString());
+        }
+
+        if (operation.getOperationType() == OperationType.simpleOperation){
+            SimpleOperation simpleOperation = (SimpleOperation) operation;
+            Node typeOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_TYPE).item(0);
+            typeOperation.setTextContent(simpleOperation.getType().name());
+            Node serviceOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_SERVICE).item(0);
+            serviceOperation.setTextContent(simpleOperation.getService());
+        }
+        else if(operation.getOperationType() == OperationType.taskOperation){
+            TaskOperation taskOperation = (TaskOperation) operation;
+            Node typeOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_TYPE).item(0);
+            typeOperation.setTextContent(taskOperation.getType().name());
+
+            if (taskOperation.getTargetSystem() != null) {
+                Node targetSystemOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_TARGET_SYSTEM).item(0);
+                targetSystemOperation.setTextContent(taskOperation.getTargetSystem());
+            }
+            if (taskOperation.getCandidateGroups() != null) {
+                Node candidateGroupsOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_CANDIDATE_GROUPS).item(0);
+                candidateGroupsOperation.setTextContent(taskOperation.getCandidateGroups());
+            }
+            if (taskOperation.getMailTemplate() != null) {
+                Node mailTemplateOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TEMPLATE).item(0);
+                mailTemplateOperation.setTextContent(taskOperation.getMailTemplate());
+            }
+            if (taskOperation.getMailTo() != null) {
+                Node mailToOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TO).item(0);
+                mailToOperation.setTextContent(taskOperation.getMailTo());
+            }
+            if (taskOperation.getMailSubjectPrefix() != null) {
+                Node mailSubjectPrefixOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_SUBJECT_PREFIX).item(0);
+                mailSubjectPrefixOperation.setTextContent(taskOperation.getMailSubjectPrefix());
+            }
+        }
+
+        Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+
+        return newOperation;
+    }
     private Document configureOperationsXML(Document doc, Guide guide) {
+        try
+        {
+            for (Operation operation: guide.getOperations())
+            {
+                Node newOperation = configureOperationsXML(doc, operation);
+                doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT).item(0).appendChild(doc.importNode(newOperation,true));
+            }
+        }
+        catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+
         return doc;
     }
 
@@ -170,6 +303,7 @@ public class GuideGeneratorServiceImp {
 
         for (UnaryCondition unaryCondition : binaryConditions.getConditions()) {
             Node unaryConditionNode = getUnaryCondition(unaryCondition);
+            Node esto = docBinary.createElement("");
             Node locationAlternative = docBinary.getElementsByTagName(XMLConstants.BINARY_CONDITION).item(0);
             Node unaryNodeImported = docBinary.importNode(unaryConditionNode,true);
             locationAlternative.appendChild(unaryNodeImported);

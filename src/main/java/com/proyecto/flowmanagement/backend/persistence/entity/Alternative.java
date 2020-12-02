@@ -1,5 +1,8 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -17,11 +20,11 @@ public class Alternative  extends AbstractEntity{
 	private String nextStep;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name="alternative_id")
+	@JoinColumn(name="alternative_unary_id")
 	private UnaryCondition conditions;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name="binary_condition_id")
+	@JoinColumn(name="alternative_binary_id")
 	private BinaryCondition binaryConditions;
 
 	public String getGuideName() {

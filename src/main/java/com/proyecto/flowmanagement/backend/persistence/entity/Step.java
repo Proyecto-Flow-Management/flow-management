@@ -1,6 +1,8 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import springfox.documentation.spring.web.readers.operation.OperationReader;
 
 import javax.persistence.*;
@@ -21,6 +23,7 @@ public class Step extends AbstractEntity{
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="step_id")
+	@Fetch(FetchMode.SUBSELECT)
 	private List<Operation> operations;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -29,6 +32,7 @@ public class Step extends AbstractEntity{
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="step_id")
+	@Fetch(FetchMode.SUBSELECT)
 	private List<StepDocument> stepDocuments;
 
 	public String getTextId() {
