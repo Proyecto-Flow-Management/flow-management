@@ -9,33 +9,49 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
+import sun.invoke.util.VerifyType;
 
-public class AlternativeForm extends FormLayout {
+public class AlternativeForm extends VerticalLayout {
+
     private Alternative alternative;
 
+    UnaryConditionForm unaryConditionForm = new UnaryConditionForm();
 
-    TextField name = new TextField("Nombre");
+    TextField guideName = new TextField("Nombre");
     TextField label = new TextField("Etiqueta");
+    TextField nextStep = new TextField("Etiqueta");
 
-    Button save = new Button("Guardar");
+    Button addUnaryCondition = new Button("Agregar Condicion");
+
+    public Button save = new Button("Guardar");
     Button delete = new Button("Borrar");
     Button close = new Button("Cancelar");
 
     Binder<Alternative> binder = new BeanValidationBinder<>(Alternative.class);
 
     public AlternativeForm() {
-        addClassName("alternative-form");
-
+        configureElements();
         binder.bindInstanceFields(this);
+    }
 
-        add(name,
-                label,
-                createButtonsLayout());
+    public static void setStep(Alternative alternative) {
+    }
+
+    public void configureElements() {
+        addClassName("alternative-form");
+        HorizontalLayout elements = new HorizontalLayout();
+
+        elements.add(guideName, label, nextStep);
+        unaryConditionForm = new UnaryConditionForm();
+        unaryConditionForm.setVisible(false);
+
+        add(addUnaryCondition, unaryConditionForm, createButtonsLayout());
     }
 
     public void setAlternative(Alternative alternative) {
@@ -47,63 +63,33 @@ public class AlternativeForm extends FormLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
-        save.addClickListener(click -> validateAndSave());
-        delete.addClickListener(click -> fireEvent(new AlternativeForm.DeleteEvent(this, alternative)));
-        close.addClickListener(click -> fireEvent(new AlternativeForm.CloseEvent(this)));
-
-        binder.addStatusChangeListener(evt -> save.setEnabled(binder.isValid()));
+        addUnaryCondition.addClickListener(buttonClickEvent -> showUnaryForm());
 
         return new HorizontalLayout(save, delete, close);
     }
 
-    private void validateAndSave() {
-        try {
-            binder.writeBean(alternative);
-            fireEvent(new AlternativeForm.SaveEvent(this, alternative));
-        } catch (ValidationException e) {
-            e.printStackTrace();
-        }
+    private void showUnaryForm() {
     }
 
-    // Events
-    public static abstract class AlternativeFormEvent extends ComponentEvent<AlternativeForm> {
-        private Alternative alternative;
+    public boolean isValid() {
+        boolean result = false;
 
-        protected AlternativeFormEvent(AlternativeForm source, Alternative alternative) {
-            super(source, false);
-            this.alternative = alternative;
-        }
+        if(!this.label.getValue().isEmpty() &&
+           (!this.guideName.getValue().isEmpty() || !this.nextStep.getValue().isEmpty()))
+            result = true;
 
-        public Alternative getAlternative() {
-            return alternative;
-        }
+        return false;
     }
 
-    public static class SaveEvent extends AlternativeForm.AlternativeFormEvent {
-        SaveEvent(AlternativeForm source, Alternative alternative) {
-            super(source, alternative);
-        }
+    public Alternative getAlternative()
+    {
+        this.alternative = new Alternative();
+        this.alternative.setLabel(label.getValue());
+        this.alternative.setConditions(this.unaryConditionForm.unaryCondition);
+        return this.alternative;
     }
 
-    public static class DeleteEvent extends AlternativeForm.AlternativeFormEvent {
-        DeleteEvent(AlternativeForm source, Alternative alternative) {
-            super(source, alternative);
-        }
-
-    }
-
-    public static class CloseEvent extends AlternativeForm.AlternativeFormEvent {
-        CloseEvent(AlternativeForm source) {
-            super(source, null);
-        }
-    }
-
-    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
-                                                                  ComponentEventListener<T> listener) {
-        return getEventBus().addListener(eventType, listener);
-    }
 }

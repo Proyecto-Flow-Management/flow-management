@@ -9,22 +9,22 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
 
-public class OperationForm extends FormLayout {
+public class OperationForm extends VerticalLayout {
     private Operation operation;
-
 
     TextField name = new TextField("Nombre");
     TextField label = new TextField("Etiqueta");
 
-    Button save = new Button("Guardar");
+    public Button save = new Button("Guardar");
     Button delete = new Button("Borrar");
-    Button close = new Button("Cancelar");
+    public Button close = new Button("Cancelar");
 
     Binder<Operation> binder = new BeanValidationBinder<>(Operation.class);
 

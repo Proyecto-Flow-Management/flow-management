@@ -10,7 +10,7 @@ public final class XMLConstants {
     public static final String IN_PARAMETER_XML_LOCATION = "src/main/resources/XMLResources/InParameterXML.xml";
     public static final String OUT_PARAMETER_XML_LOCATION = "src/main/resources/XMLResources/OutParameterXML.xml";
     public static final String ALTERNATIVE_XML_LOCATION = "src/main/resources/XMLResources/AlternativeXML.xml";
-    public static final String UNARY_CONDITION_XML = "src/main/resources/XMLResources/UnaryCondition.xml";
+    public static final String UNARY_CONDITION_XML = "src/main/resources/XMLResources/UnaryConditionForm.xml";
     public static final String BINARY_CONDITION_XML = "src/main/resources/XMLResources/BinaryConditionXML.xml";
 
     //GUIDE ATTRIBUTES
