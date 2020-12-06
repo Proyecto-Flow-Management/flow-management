@@ -1,54 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide" xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-            <ttg:mainStepId>Rafa</ttg:mainStepId>
+            <ttg:mainStepId/>
 
-<ttg:step>
-    <ttg:stepId>Name TEST 1</ttg:stepId>
-    <ttg:label>Name TEST 1</ttg:label>
-    <ttg:text>Label TEST 1</ttg:text>
-<ttg:alternative>
-    <ttg:stepId/>
-    <ttg:guideName/>
-    <ttg:label>CF_EA_CW_GESTIONABLE</ttg:label>
-<ttg:condition xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>ACS_getCPEidByInternalNumber</ttg:operationName>
-    <ttg:conditionsEnableAlternative>
-        <ttg:field>gestionable</ttg:field>
-        <ttg:fieldType>string</ttg:fieldType>
-        <ttg:operator>=</ttg:operator>
-        <ttg:value>HABILITADA</ttg:value>
-    </ttg:conditionsEnableAlternative>
-</ttg:condition></ttg:alternative><ttg:alternative>
-    <ttg:stepId/>
-    <ttg:guideName/>
-    <ttg:label>Label Alternative 2 Step 1</ttg:label>
-<ttg:condition xsi:type="ttg:BinaryCondition">
-    <ttg:operation>OR</ttg:operation>
-<operator xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>consultaEstadoGSF</ttg:operationName>
-    <ttg:conditionsEnableAlternative>
-        <ttg:field>consultaEstadoGSF.estado_pon.phase_state</ttg:field>
-        <ttg:fieldType>string</ttg:fieldType>
-        <ttg:operator>=</ttg:operator>
-        <ttg:value>OK</ttg:value>
-    </ttg:conditionsEnableAlternative>
-</operator><operator xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>consultaEstadoGSF</ttg:operationName>
-    <ttg:conditionsEnableAlternative>
-        <ttg:field>consultaEstadoGSF.estado_pon.phase_state</ttg:field>
-        <ttg:fieldType>string</ttg:fieldType>
-        <ttg:operator>=</ttg:operator>
-        <ttg:value>SIN INFORMACION</ttg:value>
-    </ttg:conditionsEnableAlternative>
-</operator></ttg:condition></ttg:alternative></ttg:step><ttg:operation xsi:type="ttg:SimpleOperation">
-    <ttg:name>Name Operation 1 Guide</ttg:name>
-    <ttg:label>Label Operation 1 Guide Chito</ttg:label><ttg:visible>true</ttg:visible>
-    <ttg:operationType>simpleOperation</ttg:operationType>
-    <ttg:type>configuration</ttg:type>
-    <ttg:servicio/>
-</ttg:operation><ttg:operation xsi:type="ttg:TaskOperation">
-    <ttg:name>Name Operation 2 Guide</ttg:name>
-    <ttg:label>Label Operation 2 Guide</ttg:label>
-    <ttg:operationType>taskOperation</ttg:operationType>
-    <ttg:type>close</ttg:type>
-</ttg:operation></ttg:guide>
+</ttg:guide>

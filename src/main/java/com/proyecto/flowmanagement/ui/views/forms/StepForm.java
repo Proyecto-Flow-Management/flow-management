@@ -2,8 +2,6 @@ package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
-import com.proyecto.flowmanagement.ui.MainLayout;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -18,21 +16,22 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @org.springframework.stereotype.Component
-@Route(value = "CreateStep", layout = MainLayout.class)
 @PageTitle("CreateStep | Flow Management")
 public class StepForm extends VerticalLayout {
+    private final StepDocumentForm stepDocumentForm;
     private Step step;
 
     List<StepDocument> stepDocumentList = new ArrayList<StepDocument>();
 
     HorizontalLayout toolbarStepDocument;
+    HorizontalLayout contentFields;
+    HorizontalLayout createButtons;
 
     TextField text = new TextField("Nombre");
     TextField label = new TextField("Etiqueta");
@@ -52,8 +51,11 @@ public class StepForm extends VerticalLayout {
         setSizeFull();
         configureGrid();
 
-        HorizontalLayout contentFields = new HorizontalLayout(text,label);
-        HorizontalLayout contentStepDocument = new HorizontalLayout(gridStepDocument);
+        stepDocumentForm = new StepDocumentForm();
+        configureStepDocumentForm();
+
+        contentFields = new HorizontalLayout(text,label);
+        HorizontalLayout contentStepDocument = new HorizontalLayout(stepDocumentForm, gridStepDocument);
         toolbarStepDocument = getToolBarStepDocument();
         contentStepDocument.addClassName("contentStep");
         contentStepDocument.setSizeFull();
@@ -62,13 +64,21 @@ public class StepForm extends VerticalLayout {
         gridStepDocument.setItems(stepDocumentList);
 
         binder.bindInstanceFields(this);
+        createButtons = createButtonsLayout();
 
-        add(contentFields, toolbarStepDocument, contentStepDocument, messageDiv, createButtonsLayout());
+        add(contentFields, toolbarStepDocument, contentStepDocument, messageDiv, createButtons);
     }
 
     public void setStep(Step step) {
         this.step = step;
         binder.readBean(step);
+    }
+
+    public void configureStepDocumentForm(){
+        stepDocumentForm.addListener(StepDocumentForm.SaveEvent.class, this::saveStepDocument);
+        stepDocumentForm.addListener(StepDocumentForm.DeleteEvent.class, this::deleteStepDocument);
+        stepDocumentForm.addListener(StepDocumentForm.CloseEvent.class, e -> closeEditorStepDocument());
+        stepDocumentForm.setVisible(false);
     }
 
     private void updateList() {
@@ -99,35 +109,8 @@ public class StepForm extends VerticalLayout {
         return toolbar;
     }
 
-    private void addStepDocument() {
-//        gridStep.asSingleSelect().clear();
-        gridStepDocument.asMultiSelect().clear();
-        editStep(new Step());
-    }
 
-    private void editStep(Step step) {
-        if(step == null) {
-            closeEditorStep();
-        } else {
-//            stepDocumentForm.setStep(step);
-//            stepDocumentForm.setVisible(true);
-//            gridStepDocument.setVisible(false);
-//            contentFields.setVisible(false);
-//            setVisibleEditStep(false);
-            addClassName("editing");
-        }
-    }
-
-    private void closeEditorStep() {
-//        stepDocumentForm.setStep(null);
-//        stepDocumentForm.setVisible(false);
-//        gridStepDocument.setVisible(true);
-//        contentFields.setVisible(true);
-//        setVisibleEditStep(true);
-        removeClassName("editing");
-    }
-
-    private Component createButtonsLayout() {
+    private HorizontalLayout createButtonsLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -152,6 +135,55 @@ public class StepForm extends VerticalLayout {
             e.printStackTrace();
         }
     }
+
+    private void addStepDocument() {
+        gridStepDocument.asMultiSelect().clear();
+        editStepDocument(new StepDocument());
+    }
+
+    private void editStepDocument(StepDocument stepDocument) {
+        if(step == null) {
+            closeEditorStepDocument();
+        } else {
+            stepDocumentForm.setStepDocument(stepDocument);
+            stepDocumentForm.setVisible(true);
+            gridStepDocument.setVisible(false);
+            contentFields.setVisible(false);
+            setVisibleEditStepDocument(false);
+            addClassName("editing");
+        }
+    }
+
+
+    private void deleteStepDocument(StepDocumentForm.DeleteEvent evt) {
+        updateList();
+        closeEditorStepDocument();
+    }
+
+    private void saveStepDocument(StepDocumentForm.SaveEvent evt) {
+        stepDocumentList.add(evt.getStepDocument());
+        gridStepDocument.setItems(stepDocumentList);
+        gridStepDocument.getDataProvider().refreshAll();
+        closeEditorStepDocument();
+        gridStepDocument.setVisible(true);
+        contentFields.setVisible(true);
+        setVisibleEditStepDocument(true);
+    }
+
+    private void closeEditorStepDocument() {
+        stepDocumentForm.setStepDocument(null);
+        stepDocumentForm.setVisible(false);
+        gridStepDocument.setVisible(true);
+        contentFields.setVisible(true);
+        setVisibleEditStepDocument(true);
+        removeClassName("editing");
+    }
+
+    private void setVisibleEditStepDocument(Boolean bool){
+        toolbarStepDocument.setVisible(bool);
+        createButtons.setVisible(bool);
+    }
+
 
     // Events
     public static abstract class StepFormEvent extends ComponentEvent<StepForm> {
