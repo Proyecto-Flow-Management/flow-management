@@ -26,13 +26,9 @@ public class AlternativeForm extends VerticalLayout {
 
     ConditionsGridForm conditionsGridForm = new ConditionsGridForm();
 
-    UnaryConditionForm unaryConditionForm = new UnaryConditionForm();
-
     TextField guideName = new TextField("Guida Nombre Alternative");
     TextField label = new TextField("Label Alternative");
     TextField nextStep = new TextField("nextStep Alternative");
-
-    Button addUnaryCondition = new Button("Agregar Condicion");
 
     public Button save = new Button("Guardar");
     Button delete = new Button("Borrar");
@@ -57,10 +53,11 @@ public class AlternativeForm extends VerticalLayout {
 
         HorizontalLayout actionsLayout = new HorizontalLayout();
 
-        elements.add(guideName, label, nextStep,addUnaryCondition);
+        elements.add(guideName, label, nextStep);
 
         actionsLayout.add(save,close,delete);
 
+        conditionsLayout.setWidthFull();
         conditionsLayout.add(conditionsGridForm);
 
         form.add(elements,conditionsLayout, actionsLayout);
@@ -71,21 +68,6 @@ public class AlternativeForm extends VerticalLayout {
     public void setAlternative(Alternative alternative) {
         this.alternative = alternative;
         binder.readBean(alternative);
-    }
-
-    private Component createButtonsLayout() {
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        save.addClickShortcut(Key.ENTER);
-        close.addClickShortcut(Key.ESCAPE);
-
-        addUnaryCondition.addClickListener(buttonClickEvent -> showUnaryForm());
-
-        return new HorizontalLayout(save, delete, close);
-    }
-
-    private void showUnaryForm() {
     }
 
     public boolean isValid() {
@@ -102,7 +84,6 @@ public class AlternativeForm extends VerticalLayout {
     {
         this.alternative = new Alternative();
         this.alternative.setLabel(label.getValue());
-        this.alternative.setConditions(this.unaryConditionForm.unaryCondition);
         return this.alternative;
     }
 

@@ -18,17 +18,19 @@ public class StepGridForm  extends VerticalLayout {
     private Button createStep;
 
     Grid<Step> stepGrid;
-    List<Step> stepList;
+    List<Step> stepList = new LinkedList<>();
 
     public StepGridForm()
     {
-        this.stepList = new LinkedList<>();
         setSizeFull();
+
         configureElements();
     }
 
+
     private void configureElements()
     {
+
         configureGrid();
         createStep = new Button("Crear Step", click -> addStep());
 
@@ -49,7 +51,6 @@ public class StepGridForm  extends VerticalLayout {
         HorizontalLayout createStepLayout = new HorizontalLayout();
         createStepLayout.add(createStep);
         createStepLayout.setWidthFull();
-
 
         add(createStepLayout, stepFormLayout, gridLayout);
     }
@@ -78,7 +79,12 @@ public class StepGridForm  extends VerticalLayout {
         stepGrid = new Grid<>(Step.class);
         stepGrid.addClassName("user-grid");
         stepGrid.setSizeFull();
+        stepGrid.setColumns("label", "text");
+
+        stepGrid.getColumns().forEach(col -> col.setAutoWidth(true));
         stepGrid.asSingleSelect().addValueChangeListener(evt -> editStep(evt.getValue()));
+
+        stepGrid.asSingleSelect();
     }
 
     private void editStep(Step step) {

@@ -5,6 +5,7 @@ import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.grids.AlternativeGridForm;
 import com.proyecto.flowmanagement.ui.views.grids.DocumentsGridForm;
+import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -24,10 +25,18 @@ import com.vaadin.flow.shared.Registration;
 @CssImport("./styles/step-grid-form.css")
 public class StepForm extends HorizontalLayout {
 
-    private Step step;
+    private Step step = new Step();
 
     AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
     DocumentsGridForm documentsGridForm = new DocumentsGridForm();
+    OperationGridForm operationGridForm = new OperationGridForm();
+
+    VerticalLayout form = new VerticalLayout();
+    HorizontalLayout elements = new HorizontalLayout();
+    HorizontalLayout alternativeGridLayout = new HorizontalLayout();
+    HorizontalLayout stepDocumentsLayout = new HorizontalLayout();
+    HorizontalLayout operationsLayout = new HorizontalLayout();
+    HorizontalLayout actionsLayout = new HorizontalLayout();
 
     TextField text = new TextField("Texto Step");
     TextField textId = new TextField("TextId Step");
@@ -38,37 +47,54 @@ public class StepForm extends HorizontalLayout {
 
 
     public StepForm() {
-        setClassName("stepSection");
-        this.step = new Step();
-        configureElements();
-    }
 
-    private void configureElements() {
-        VerticalLayout form = new VerticalLayout();
-        HorizontalLayout elements = new HorizontalLayout();
-        HorizontalLayout alternativeGridLayout = new HorizontalLayout();
-        HorizontalLayout stepDocumentsLayout = new HorizontalLayout();
-        HorizontalLayout actionsLayout = new HorizontalLayout();
-
-        addClassName("step-form");
-        this.text.setValue("");
-        this.textId.setValue("");
-        this.label.setValue("");
         setSizeFull();
 
-        elements.add(text,textId,label);
+        configureElements();
+
+        configureAlternatives();
+
+        configureDocuments();
+
+        configureOperations();
+
+        configureForm();
+    }
+
+    private void configureForm() {
+        form.add(elements,
+                alternativeGridLayout,
+                operationsLayout,
+                stepDocumentsLayout,
+                actionsLayout);
+
+        add(form);
+    }
+
+    private void configureOperations() {
+        operationsLayout.setWidthFull();
+        operationsLayout.add(operationGridForm);
+    }
+
+    private void configureDocuments() {
+        stepDocumentsLayout.setWidthFull();
+        stepDocumentsLayout.add(documentsGridForm);
+    }
+
+    private void configureAlternatives() {
         alternativeGridForm.setWidthFull();
         alternativeGridLayout.setWidthFull();
         alternativeGridLayout.add(alternativeGridForm);
+    }
 
-        stepDocumentsLayout.setWidthFull();
-        stepDocumentsLayout.add(documentsGridForm);
+    private void configureElements() {
+        addClassName("stepSection");
+        this.text.setValue("");
+        this.textId.setValue("");
+        this.label.setValue("");
 
+        elements.add(text,textId,label);
         actionsLayout.add(createButtonsLayout());
-
-        form.add(elements,alternativeGridLayout,stepDocumentsLayout,actionsLayout);
-
-        add(form);
     }
 
     private Component createButtonsLayout() {
