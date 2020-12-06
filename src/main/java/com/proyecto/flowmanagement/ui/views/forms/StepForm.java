@@ -4,42 +4,41 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.grids.AlternativeGridForm;
+import com.proyecto.flowmanagement.ui.views.grids.DocumentsGridForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
 @org.springframework.stereotype.Component
-@Route(value = "CreateStep", layout = MainLayout.class)
 @PageTitle("CreateStep | Flow Management")
+@CssImport("./styles/step-grid-form.css")
 public class StepForm extends HorizontalLayout {
 
     private Step step;
 
     AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
+    DocumentsGridForm documentsGridForm = new DocumentsGridForm();
 
-    TextField text = new TextField("Nombre");
-    TextField textId = new TextField("Nombre");
-    TextField label = new TextField("Etiqueta");
+    TextField text = new TextField("Texto Step");
+    TextField textId = new TextField("TextId Step");
+    TextField label = new TextField("Label Step");
 
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
 
 
     public StepForm() {
+        setClassName("stepSection");
         this.step = new Step();
         configureElements();
     }
@@ -48,6 +47,7 @@ public class StepForm extends HorizontalLayout {
         VerticalLayout form = new VerticalLayout();
         HorizontalLayout elements = new HorizontalLayout();
         HorizontalLayout alternativeGridLayout = new HorizontalLayout();
+        HorizontalLayout stepDocumentsLayout = new HorizontalLayout();
         HorizontalLayout actionsLayout = new HorizontalLayout();
 
         addClassName("step-form");
@@ -57,12 +57,16 @@ public class StepForm extends HorizontalLayout {
         setSizeFull();
 
         elements.add(text,textId,label);
-
+        alternativeGridForm.setWidthFull();
+        alternativeGridLayout.setWidthFull();
         alternativeGridLayout.add(alternativeGridForm);
+
+        stepDocumentsLayout.setWidthFull();
+        stepDocumentsLayout.add(documentsGridForm);
 
         actionsLayout.add(createButtonsLayout());
 
-        form.add(elements,alternativeGridLayout,actionsLayout);
+        form.add(elements,alternativeGridLayout,stepDocumentsLayout,actionsLayout);
 
         add(form);
     }
@@ -78,21 +82,7 @@ public class StepForm extends HorizontalLayout {
         save.addClickListener(click -> validateAndSave());
         close.addClickListener(click -> fireEvent(new StepForm.CloseEvent(this)));
 
-        //alternativeForm.save.addClickListener(buttonClickEvent -> addAlternative());
-
         return new HorizontalLayout(save, close);
-    }
-
-    private void addAlternative() {
-        //if(alternativeForm.isValid())
-       // {
-        //    this.step.addAlternative(alternativeForm.getAlternative());
-        //    updateAlternativeGrid();
-       // }
-    }
-
-    private void updateAlternativeGrid() {
-
     }
 
     private void validateAndSave() {
@@ -101,6 +91,8 @@ public class StepForm extends HorizontalLayout {
           step.setText(text.getValue());
           step.setTextId(textId.getValue());
           step.setLabel(label.getValue());
+          step.setAlternatives(alternativeGridForm.getAlternatives());
+          step.setStepDocuments(documentsGridForm.getDocuments());
       }
     }
 

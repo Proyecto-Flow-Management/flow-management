@@ -33,22 +33,28 @@ public class AlternativeGridForm extends VerticalLayout {
         alternativeForm = new AlternativeForm();
         alternativeForm.setVisible(false);
         alternativeForm.save.addClickListener(buttonClickEvent -> CreateAlternative());
+        alternativeForm.close.addClickListener(buttonClickEvent -> CloseForm());
         alternativeGrid = new Grid<>(Alternative.class);
         alternativeGrid.setWidthFull();
 
+        setWidthFull();
         HorizontalLayout gridLayout = new HorizontalLayout();
         gridLayout.add(alternativeGrid);
         gridLayout.setWidthFull();
 
-        HorizontalLayout stepFormLayout = new HorizontalLayout();
-        stepFormLayout.add(alternativeForm);
-        stepFormLayout.setWidthFull();
+        HorizontalLayout alternativeFormLayout = new HorizontalLayout();
+        alternativeFormLayout.add(alternativeForm);
+        alternativeFormLayout.setWidthFull();
 
-        HorizontalLayout createStepLayout = new HorizontalLayout();
-        createStepLayout.add(createAlternative);
-        createStepLayout.setWidthFull();
+        HorizontalLayout createAlternativeLyout = new HorizontalLayout();
+        createAlternativeLyout.add(createAlternative);
+        createAlternativeLyout.setWidthFull();
 
-        add(createStepLayout, stepFormLayout, gridLayout);
+        add(createAlternativeLyout, alternativeFormLayout, gridLayout);
+    }
+
+    private void CloseForm() {
+        this.alternativeForm.setVisible(false);
     }
 
     private void CreateAlternative() {
@@ -78,15 +84,19 @@ public class AlternativeGridForm extends VerticalLayout {
         if(alternative == null) {
             closeEditor();
         } else {
-            alternativeForm.setStep(alternative);
+            alternativeForm.setAlternative(alternative);
             alternativeForm.setVisible(true);
             addClassName("editing");
         }
     }
 
     private void closeEditor() {
-        alternativeForm.setStep(null);
+        alternativeForm.setAlternative(null);
         alternativeForm.setVisible(false);
         removeClassName("editing");
+    }
+
+    public List<Alternative> getAlternatives() {
+        return this.alternativeList;
     }
 }

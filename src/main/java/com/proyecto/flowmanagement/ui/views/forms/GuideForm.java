@@ -91,8 +91,8 @@ public class GuideForm extends VerticalLayout {
         add(guidelabel);
 
         guideLayout = new HorizontalLayout();
-        name = new TextField("Nombre");
-        label = new TextField("Etiqueta");
+        name = new TextField("Nombre Guia");
+        label = new TextField("Label Guia");
         guideLayout.add(name,label);
     }
 

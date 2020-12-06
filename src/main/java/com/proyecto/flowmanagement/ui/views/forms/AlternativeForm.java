@@ -1,12 +1,14 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
+import com.proyecto.flowmanagement.ui.views.grids.ConditionsGridForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -17,41 +19,53 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
 import sun.invoke.util.VerifyType;
 
+@CssImport("./styles/alternative-form.css")
 public class AlternativeForm extends VerticalLayout {
 
     private Alternative alternative;
 
+    ConditionsGridForm conditionsGridForm = new ConditionsGridForm();
+
     UnaryConditionForm unaryConditionForm = new UnaryConditionForm();
 
-    TextField guideName = new TextField("Nombre");
-    TextField label = new TextField("Etiqueta");
-    TextField nextStep = new TextField("Etiqueta");
+    TextField guideName = new TextField("Guida Nombre Alternative");
+    TextField label = new TextField("Label Alternative");
+    TextField nextStep = new TextField("nextStep Alternative");
 
     Button addUnaryCondition = new Button("Agregar Condicion");
 
     public Button save = new Button("Guardar");
     Button delete = new Button("Borrar");
-    Button close = new Button("Cancelar");
+    public Button close = new Button("Cancelar");
 
     Binder<Alternative> binder = new BeanValidationBinder<>(Alternative.class);
 
+
     public AlternativeForm() {
+        setClassName("alternativeSection");
         configureElements();
         binder.bindInstanceFields(this);
     }
 
-    public static void setStep(Alternative alternative) {
-    }
-
     public void configureElements() {
-        addClassName("alternative-form");
+
+        VerticalLayout form = new VerticalLayout();
+
         HorizontalLayout elements = new HorizontalLayout();
 
-        elements.add(guideName, label, nextStep);
-        unaryConditionForm = new UnaryConditionForm();
-        unaryConditionForm.setVisible(false);
+        HorizontalLayout conditionsLayout = new HorizontalLayout();
 
-        add(addUnaryCondition, unaryConditionForm, createButtonsLayout());
+        HorizontalLayout actionsLayout = new HorizontalLayout();
+
+        elements.add(guideName, label, nextStep,addUnaryCondition);
+
+        actionsLayout.add(save,close,delete);
+
+        conditionsLayout.add(conditionsGridForm);
+
+        form.add(elements,conditionsLayout, actionsLayout);
+
+        add(form);
     }
 
     public void setAlternative(Alternative alternative) {

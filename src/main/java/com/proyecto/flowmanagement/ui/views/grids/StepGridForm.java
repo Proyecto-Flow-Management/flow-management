@@ -37,7 +37,6 @@ public class StepGridForm  extends VerticalLayout {
         stepForm.save.addClickListener(buttonClickEvent -> CreateStep());
         stepForm.close.addClickListener(buttonClickEvent -> CloseForm());
         stepGrid = new Grid<>(Step.class);
-        stepGrid.setWidth("80%");
 
         HorizontalLayout gridLayout = new HorizontalLayout();
         gridLayout.add(stepGrid);
@@ -79,15 +78,6 @@ public class StepGridForm  extends VerticalLayout {
         stepGrid = new Grid<>(Step.class);
         stepGrid.addClassName("user-grid");
         stepGrid.setSizeFull();
-        stepGrid.removeAllColumns();
-
-        for(Grid.Column column : stepGrid.getColumns())
-        {
-            stepGrid.removeColumnByKey(column.getKey());
-        }
-
-        stepGrid.addColumn("label");
-        stepGrid.addColumn("text");
         stepGrid.asSingleSelect().addValueChangeListener(evt -> editStep(evt.getValue()));
     }
 
