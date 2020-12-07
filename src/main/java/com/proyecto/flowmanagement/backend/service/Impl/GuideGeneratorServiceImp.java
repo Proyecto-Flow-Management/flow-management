@@ -185,10 +185,6 @@ public class GuideGeneratorServiceImp {
                 Node operationTypeOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_OPERATION_TYPE).item(0);
                 operationTypeOperation.setTextContent(operation.getOperationType().name());
 
-                //inParameters
-                //OutParameters
-                //Conditions
-
                 if (operation.getNotifyOperationDelay() != null) {
                     Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
                     Node notifyOperationDelayOperation = docOperation.createElement(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY);
@@ -266,126 +262,118 @@ public class GuideGeneratorServiceImp {
                     }
                 }
 
+                if (operation.getInParameters() != null) {
+                    for(OperationParameter parameter: operation.getInParameters()){
+                        Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+                        Node inParametersOperation = docOperation.importNode(getParameter(parameter,XMLConstants.OPERATION_IN_PARAMETERS),true);
+                        newOperation.insertBefore(inParametersOperation,operationTypeOperation.getNextSibling());
+                    }
+                }
+
+                if (operation.getOutParameters() != null) {
+                    for(OperationParameter parameter: operation.getOutParameters()){
+                        Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+                        Node outParametersOperation = docOperation.importNode(getParameter(parameter,XMLConstants.OPERATION_OUT_PARAMETERS),true);
+                        newOperation.insertBefore(outParametersOperation,operationTypeOperation.getNextSibling());
+                    }
+                }
+
                 Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
 
                 doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT).item(0).appendChild(doc.importNode(newOperation,true));
-
-                if (operation.getInParameters() != null) {
-                    docOperation = configureParameterXML(docOperation, operation.getInParameters(), XMLConstants.OPERATION_IN_PARAMETERS);
-                }
-                if (operation.getOutParameters() != null) {
-                    docOperation = configureParameterXML(docOperation, operation.getOutParameters(), XMLConstants.OPERATION_OUT_PARAMETERS);
-                }
             }
         }
         catch (Exception ex)
         {
             System.out.println(ex.getMessage());
         }
-
         return doc;
     }
 
-    private Document configureParameterXML(Document doc, List<OperationParameter> parameters, String constantTypeParameter){
-        try
-        {
-            for (OperationParameter parameter: parameters)
-            {
-                File file = null;
-                if (constantTypeParameter == XMLConstants.OPERATION_IN_PARAMETERS){
-                    file = new File(XMLConstants.IN_PARAMETER_XML_LOCATION);
-                }
-                else if(constantTypeParameter == XMLConstants.OPERATION_OUT_PARAMETERS){
-                    file = new File(XMLConstants.OUT_PARAMETER_XML_LOCATION);
-                }
-
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                Document docParameter = dBuilder.parse(file);
-
-                Node nameParameter = docParameter.getElementsByTagName(XMLConstants.PARAMETER_NAME).item(0);
-                nameParameter.setTextContent(parameter.getName());
-
-
-                if (parameter.getVisibleWhenInParameterEqualsCondition() != null) {
-                    Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-                    Node visibleWhenInParameterEqualsConditionParameter = docParameter.createElement(XMLConstants.PARAMETER_VISIBLE_WHEN_IN_PARAMETER_EQUALS_CONDITION);
-                    visibleWhenInParameterEqualsConditionParameter.setTextContent(parameter.getVisibleWhenInParameterEqualsCondition());
-                    newOperation.insertBefore(visibleWhenInParameterEqualsConditionParameter,nameParameter.getNextSibling());
-                }
-                if (parameter.getVisibleWhenInParameterEqualsCondition() != null) {
-                    Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-                    Node visibleParameter = docParameter.createElement(XMLConstants.PARAMETER_VISIBLE);
-                    visibleParameter.setTextContent(parameter.getVisible().toString());
-                    newOperation.insertBefore(visibleParameter,nameParameter.getNextSibling());
-                }
-                if (parameter.getVisibleWhenInParameterEqualsCondition() != null) {
-                    Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-                    Node labelParameter = docParameter.createElement(XMLConstants.PARAMETER_LABEL);
-                    labelParameter.setTextContent(parameter.getLabel());
-                    newOperation.insertBefore(labelParameter,nameParameter.getNextSibling());
-                }
-
-                Node typeParameter = docParameter.getElementsByTagName(XMLConstants.PARAMETER_TYPE).item(0);
-                typeParameter.setTextContent(parameter.getType());
-
-                Node descriptionParameter = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DESCRIPTION).item(0);
-                descriptionParameter.setTextContent(parameter.getDescription());
-
-                if (parameter.getValueWhenInParameterEquals() != null) {
-                    Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-                    Node valueWhenInParameterEqualsParameter = docParameter.createElement(XMLConstants.PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS);
-                    valueWhenInParameterEqualsParameter.setTextContent(parameter.getValueWhenInParameterEquals());
-                    newOperation.insertBefore(valueWhenInParameterEqualsParameter,descriptionParameter.getNextSibling());
-                }
-                if (parameter.getValidateCrossFieldCondition() != null) {
-                    Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-                    Node validateCrossFieldConditionParameter = docParameter.createElement(XMLConstants.PARAMETER_VALIDATE_CROSS_FIELD_CONDITION);
-                    validateCrossFieldConditionParameter.setTextContent(parameter.getValidateCrossFieldCondition().toString());
-                    newOperation.insertBefore(validateCrossFieldConditionParameter,descriptionParameter.getNextSibling());
-                }
-                if (parameter.getConvertCondition() != null) {
-                    Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-                    Node convertConditionParameter = docParameter.createElement(XMLConstants.PARAMETER_CONVERT_CONDITION);
-                    convertConditionParameter.setTextContent(parameter.getConvertCondition().toString());
-                    newOperation.insertBefore(convertConditionParameter,descriptionParameter.getNextSibling());
-                }
-                if (parameter.getConvert() != null) {
-                    Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-                    Node convertParameter = docParameter.createElement(XMLConstants.PARAMETER_CONVERT);
-                    convertParameter.setTextContent(parameter.getConvert().toString());
-                    newOperation.insertBefore(convertParameter,descriptionParameter.getNextSibling());
-                }
-                if (parameter.getProperties() != null) {
-                    Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-                    Node propertiesParameter = docParameter.createElement(XMLConstants.PARAMETER_PROPERTIES);
-                    propertiesParameter.setTextContent(parameter.getProperties().toString());
-                    newOperation.insertBefore(propertiesParameter,descriptionParameter.getNextSibling());
-                }
-                if (parameter.getSourceValueEntityProperty() != null) {
-                    Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-                    Node sourceValueEntityPropertyParameter = docParameter.createElement(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY_PROPERTY);
-                    sourceValueEntityPropertyParameter.setTextContent(parameter.getSourceValueEntityProperty());
-                    newOperation.insertBefore(sourceValueEntityPropertyParameter,descriptionParameter.getNextSibling());
-                }
-
-                Node newOperation = null;
-                if (constantTypeParameter == XMLConstants.OPERATION_IN_PARAMETERS){
-                    newOperation = docParameter.getElementsByTagName(XMLConstants.PARAMETER_IN_ELEMENT).item(0);
-                }
-                else if(constantTypeParameter == XMLConstants.OPERATION_OUT_PARAMETERS){
-                    newOperation = docParameter.getElementsByTagName(XMLConstants.PARAMETER_OUT_ELEMENT).item(0);
-                }
-
-                doc.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0).appendChild(doc.importNode(newOperation,true));
-            }
+    private Node getParameter(OperationParameter parameter, String constantTypeParameter) throws ParserConfigurationException, IOException, SAXException, TransformerException, org.xml.sax.SAXException {
+        Node parameterNode = null;
+        File file = null;
+        if (constantTypeParameter == XMLConstants.OPERATION_IN_PARAMETERS){
+            file = new File(XMLConstants.IN_PARAMETER_XML_LOCATION);
         }
-        catch (Exception ex)
-        {
-            System.out.println(ex.getMessage());
+        else if(constantTypeParameter == XMLConstants.OPERATION_OUT_PARAMETERS){
+            file = new File(XMLConstants.OUT_PARAMETER_XML_LOCATION);
+        }
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document docParameter = dBuilder.parse(file);
+
+        Node nameParameter = docParameter.getElementsByTagName(XMLConstants.PARAMETER_NAME).item(0);
+        nameParameter.setTextContent(parameter.getName());
+
+        if (parameter.getVisibleWhenInParameterEqualsCondition() != null) {
+            Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node visibleWhenInParameterEqualsConditionParameter = docParameter.createElement(XMLConstants.PARAMETER_VISIBLE_WHEN_IN_PARAMETER_EQUALS_CONDITION);
+            visibleWhenInParameterEqualsConditionParameter.setTextContent(parameter.getVisibleWhenInParameterEqualsCondition());
+            newOperation.insertBefore(visibleWhenInParameterEqualsConditionParameter,nameParameter.getNextSibling());
+        }
+        if (parameter.getVisibleWhenInParameterEqualsCondition() != null) {
+            Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node visibleParameter = docParameter.createElement(XMLConstants.PARAMETER_VISIBLE);
+            visibleParameter.setTextContent(parameter.getVisible().toString());
+            newOperation.insertBefore(visibleParameter,nameParameter.getNextSibling());
+        }
+        if (parameter.getVisibleWhenInParameterEqualsCondition() != null) {
+            Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node labelParameter = docParameter.createElement(XMLConstants.PARAMETER_LABEL);
+            labelParameter.setTextContent(parameter.getLabel());
+            newOperation.insertBefore(labelParameter,nameParameter.getNextSibling());
         }
 
-        return doc;
+        Node typeParameter = docParameter.getElementsByTagName(XMLConstants.PARAMETER_TYPE).item(0);
+        typeParameter.setTextContent(parameter.getType());
+
+        Node descriptionParameter = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DESCRIPTION).item(0);
+        descriptionParameter.setTextContent(parameter.getDescription());
+
+        if (parameter.getValueWhenInParameterEquals() != null) {
+            Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node valueWhenInParameterEqualsParameter = docParameter.createElement(XMLConstants.PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS);
+            valueWhenInParameterEqualsParameter.setTextContent(parameter.getValueWhenInParameterEquals());
+            newOperation.insertBefore(valueWhenInParameterEqualsParameter,descriptionParameter.getNextSibling());
+        }
+        if (parameter.getValidateCrossFieldCondition() != null) {
+            Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node validateCrossFieldConditionParameter = docParameter.createElement(XMLConstants.PARAMETER_VALIDATE_CROSS_FIELD_CONDITION);
+            validateCrossFieldConditionParameter.setTextContent(parameter.getValidateCrossFieldCondition().toString());
+            newOperation.insertBefore(validateCrossFieldConditionParameter,descriptionParameter.getNextSibling());
+        }
+        if (parameter.getConvertCondition() != null) {
+            Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node convertConditionParameter = docParameter.createElement(XMLConstants.PARAMETER_CONVERT_CONDITION);
+            convertConditionParameter.setTextContent(parameter.getConvertCondition().toString());
+            newOperation.insertBefore(convertConditionParameter,descriptionParameter.getNextSibling());
+        }
+        if (parameter.getConvert() != null) {
+            Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node convertParameter = docParameter.createElement(XMLConstants.PARAMETER_CONVERT);
+            convertParameter.setTextContent(parameter.getConvert().toString());
+            newOperation.insertBefore(convertParameter,descriptionParameter.getNextSibling());
+        }
+        if (parameter.getProperties() != null) {
+            Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node propertiesParameter = docParameter.createElement(XMLConstants.PARAMETER_PROPERTIES);
+            propertiesParameter.setTextContent(parameter.getProperties().toString());
+            newOperation.insertBefore(propertiesParameter,descriptionParameter.getNextSibling());
+        }
+        if (parameter.getSourceValueEntityProperty() != null) {
+            Node newOperation = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node sourceValueEntityPropertyParameter = docParameter.createElement(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY_PROPERTY);
+            sourceValueEntityPropertyParameter.setTextContent(parameter.getSourceValueEntityProperty());
+            newOperation.insertBefore(sourceValueEntityPropertyParameter,descriptionParameter.getNextSibling());
+        }
+        if (constantTypeParameter == XMLConstants.OPERATION_IN_PARAMETERS){
+            parameterNode = docParameter.getElementsByTagName(XMLConstants.PARAMETER_IN_ELEMENT).item(0);
+        }
+        else if(constantTypeParameter == XMLConstants.OPERATION_OUT_PARAMETERS){
+            parameterNode = docParameter.getElementsByTagName(XMLConstants.PARAMETER_OUT_ELEMENT).item(0);
+        }
+        return parameterNode;
     }
 
     private Node configureStepAlternativesXML(Document doc, Alternative alternative) throws ParserConfigurationException, IOException, SAXException, org.xml.sax.SAXException {
