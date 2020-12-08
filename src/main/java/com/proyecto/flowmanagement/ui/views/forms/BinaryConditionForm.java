@@ -46,6 +46,7 @@ public class BinaryConditionForm extends VerticalLayout {
     private void validateAndSave() {
         if(isValid())
         {
+            binaryCondition = new BinaryCondition();
             binaryCondition.setOperator(operationNameText.getValue());
         }
 
@@ -54,6 +55,7 @@ public class BinaryConditionForm extends VerticalLayout {
     public void setBinaryCondition(BinaryCondition BinaryCondition) {
 //        this.BinaryCondition = BinaryCondition;
 //        binder.readBean(BinaryCondition);
+        this.operationNameText.setValue("");
     }
 
 

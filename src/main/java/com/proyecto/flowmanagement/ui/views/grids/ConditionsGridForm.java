@@ -45,6 +45,7 @@ public class ConditionsGridForm extends VerticalLayout {
         binaryConditionForm.save.addClickListener(buttonClickEvent -> CreateBinaryCondition());
         binaryConditionForm.close.addClickListener(buttonClickEvent -> CloseBinaryForm());
 
+        updateUnaryGrid();
 
         VerticalLayout unaryGridLayout = new VerticalLayout();
         unaryGridLayout.add(unaryConditionGrid);
@@ -83,6 +84,7 @@ public class ConditionsGridForm extends VerticalLayout {
         unaryConditionGrid = new Grid<>(UnaryCondition.class);
         unaryConditionGrid.setSelectionMode(Grid.SelectionMode.MULTI);
         binaryConditionGrid = new Grid<>(BinaryCondition.class);
+        binaryConditionGrid.setSelectionMode(Grid.SelectionMode.MULTI);
         unaryConditionGrid.setWidthFull();
         binaryConditionGrid.setWidthFull();
     }
@@ -93,7 +95,7 @@ public class ConditionsGridForm extends VerticalLayout {
     }
     
     private void addBinaryCondition() {
-        binaryConditionGrid.asSingleSelect().clear();
+        binaryConditionGrid.asMultiSelect().clear();
         editBinaryCondition(new BinaryCondition());
     }
 

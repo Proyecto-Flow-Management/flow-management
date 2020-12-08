@@ -58,6 +58,7 @@ public class UnaryConditionForm extends FormLayout {
     private void validateAndSave() {
         if(isValid())
         {
+            unaryCondition = new UnaryCondition();
             ConditionParameter conditionParameter = new ConditionParameter();
             conditionParameter.setValue(valueText.getValue());
             conditionParameter.setField(fieldText.getValue());
