@@ -1,9 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
-import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.forms.OperationForm;
-import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -55,16 +53,47 @@ public class OperationGridForm extends VerticalLayout {
         add(createOperationLayout, operationFormLayout, gridLayout);
     }
 
+    private void updateGrid() {
+        operationGrid.setItems(operationList);
+    }
+
     private void CloseForm() {
+        this.operationForm.setVisible(false);
     }
 
     private void CreateOperation() {
+        Operation newOperation = operationForm.getOperation();
+        operationList.add(newOperation);
+        updateGrid();
+        operationForm.setVisible(false);
     }
 
     private void addOperation() {
+        operationGrid.asSingleSelect().clear();
+        editOperation(new Operation());
     }
 
     private void configureGrid() {
+        operationGrid = new Grid<>(Operation.class);
+        operationGrid.addClassName("user-grid");
+        operationGrid.setSizeFull();
+        operationGrid.asSingleSelect().addValueChangeListener(evt -> editOperation(evt.getValue()));
+    }
+
+    private void editOperation(Operation operation) {
+        if(operation == null) {
+            closeEditor();
+        } else {
+            operationForm.setOperation(operation);
+            operationForm.setVisible(true);
+            addClassName("editing");
+        }
+    }
+
+    private void closeEditor() {
+        operationForm.setOperation(null);
+        operationForm.setVisible(false);
+        removeClassName("editing");
     }
 
     public List<Operation> getOperations() {
