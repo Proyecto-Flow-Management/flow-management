@@ -3,8 +3,8 @@ package com.proyecto.flowmanagement.backend.service.Impl;
 import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.def.XMLConstants;
 import com.proyecto.flowmanagement.backend.persistence.entity.*;
-import jdk.internal.org.xml.sax.SAXException;
 import org.springframework.stereotype.Service;
+import com.google.common.collect.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -18,6 +18,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Parameter;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -263,17 +265,19 @@ public class GuideGeneratorServiceImp {
                 }
 
                 if (operation.getInParameters() != null) {
-                    for(OperationParameter parameter: operation.getInParameters()){
+                    int max = operation.getInParameters().size();
+                    for(int i=max-1; i>=0; i--){
                         Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                        Node inParametersOperation = docOperation.importNode(getParameter(parameter,XMLConstants.OPERATION_IN_PARAMETERS),true);
+                        Node inParametersOperation = docOperation.importNode(getParameter(operation.getInParameters().get(i), XMLConstants.OPERATION_IN_PARAMETERS),true);
                         newOperation.insertBefore(inParametersOperation,operationTypeOperation.getNextSibling());
                     }
                 }
 
                 if (operation.getOutParameters() != null) {
-                    for(OperationParameter parameter: operation.getOutParameters()){
+                    int max = operation.getOutParameters().size();
+                    for(int i=max-1; i>=0; i--){
                         Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                        Node outParametersOperation = docOperation.importNode(getParameter(parameter,XMLConstants.OPERATION_OUT_PARAMETERS),true);
+                        Node outParametersOperation = docOperation.importNode(getParameter(operation.getInParameters().get(i),XMLConstants.OPERATION_OUT_PARAMETERS),true);
                         newOperation.insertBefore(outParametersOperation,operationTypeOperation.getNextSibling());
                     }
                 }
@@ -290,7 +294,7 @@ public class GuideGeneratorServiceImp {
         return doc;
     }
 
-    private Node getParameter(OperationParameter parameter, String constantTypeParameter) throws ParserConfigurationException, IOException, SAXException, TransformerException, org.xml.sax.SAXException {
+    private Node getParameter(OperationParameter parameter, String constantTypeParameter) throws ParserConfigurationException, IOException, TransformerException, org.xml.sax.SAXException {
         Node parameterNode = null;
         File file = null;
         if (constantTypeParameter == XMLConstants.OPERATION_IN_PARAMETERS){
@@ -376,7 +380,7 @@ public class GuideGeneratorServiceImp {
         return parameterNode;
     }
 
-    private Node configureStepAlternativesXML(Document doc, Alternative alternative) throws ParserConfigurationException, IOException, SAXException, org.xml.sax.SAXException {
+    private Node configureStepAlternativesXML(Document doc, Alternative alternative) throws ParserConfigurationException, IOException, org.xml.sax.SAXException {
 
         File file = new File(XMLConstants.ALTERNATIVE_XML_LOCATION);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -410,7 +414,7 @@ public class GuideGeneratorServiceImp {
         return docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE).item(0);
     }
 
-    private Node getBinaryCondition(BinaryCondition binaryConditions) throws ParserConfigurationException, IOException, SAXException, org.xml.sax.SAXException {
+    private Node getBinaryCondition(BinaryCondition binaryConditions) throws ParserConfigurationException, IOException, org.xml.sax.SAXException {
         File file = new File(XMLConstants.BINARY_CONDITION_XML);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -434,7 +438,7 @@ public class GuideGeneratorServiceImp {
         return docBinary.getElementsByTagName(XMLConstants.BINARY_CONDITION).item(0);
     }
 
-    private Node getUnaryCondition(UnaryCondition condition) throws IOException, SAXException, ParserConfigurationException, org.xml.sax.SAXException {
+    private Node getUnaryCondition(UnaryCondition condition) throws IOException, ParserConfigurationException, org.xml.sax.SAXException {
         File file = new File(XMLConstants.UNARY_CONDITION_XML);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
