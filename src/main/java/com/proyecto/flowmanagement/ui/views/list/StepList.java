@@ -57,7 +57,7 @@ public class StepList extends VerticalLayout {
     }
 
     private void closeEditor() {
-        form.setStep(null);
+        form.setVisible(false);
         form.setVisible(false);
         removeClassName("editing");
     }
@@ -101,7 +101,7 @@ public class StepList extends VerticalLayout {
         if(step == null) {
             closeEditor();
         } else {
-            form.setStep(step);
+            form.setVisible(true);
             form.setVisible(true);
             addClassName("editing");
         }

@@ -3,154 +3,141 @@ package com.proyecto.flowmanagement.ui.views.forms;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
 import com.proyecto.flowmanagement.ui.MainLayout;
+import com.proyecto.flowmanagement.ui.views.grids.AlternativeGridForm;
+import com.proyecto.flowmanagement.ui.views.grids.DocumentsGridForm;
+import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @org.springframework.stereotype.Component
-@Route(value = "CreateStep", layout = MainLayout.class)
 @PageTitle("CreateStep | Flow Management")
-public class StepForm extends VerticalLayout {
-    private Step step;
+@CssImport("./styles/step-grid-form.css")
+public class StepForm extends HorizontalLayout {
 
-    List<StepDocument> stepDocumentList = new ArrayList<StepDocument>();
+    private Step step = new Step();
 
-    HorizontalLayout toolbarStepDocument;
+    AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
+    DocumentsGridForm documentsGridForm = new DocumentsGridForm();
+    OperationGridForm operationGridForm = new OperationGridForm();
 
-    TextField text = new TextField("Nombre");
-    TextField label = new TextField("Etiqueta");
+    VerticalLayout form = new VerticalLayout();
+    HorizontalLayout elements = new HorizontalLayout();
+    HorizontalLayout alternativeGridLayout = new HorizontalLayout();
+    HorizontalLayout stepDocumentsLayout = new HorizontalLayout();
+    HorizontalLayout operationsLayout = new HorizontalLayout();
+    HorizontalLayout actionsLayout = new HorizontalLayout();
 
-    Button save = new Button("Guardar");
-    Button delete = new Button("Borrar");
-    Button close = new Button("Cancelar");
+    TextField text = new TextField("Texto Step");
+    TextField textId = new TextField("TextId Step");
+    TextField label = new TextField("Label Step");
 
-    Grid<StepDocument> gridStepDocument = new Grid<>(StepDocument.class);
-    Div messageDiv = new Div();
+    public Button save = new Button("Guardar");
+    public Button close = new Button("Cancelar");
 
-    Binder<Step> binder = new BeanValidationBinder<>(Step.class);
 
     public StepForm() {
-        addClassName("step-form");
 
         setSizeFull();
-        configureGrid();
 
-        HorizontalLayout contentFields = new HorizontalLayout(text,label);
-        HorizontalLayout contentStepDocument = new HorizontalLayout(gridStepDocument);
-        toolbarStepDocument = getToolBarStepDocument();
-        contentStepDocument.addClassName("contentStep");
-        contentStepDocument.setSizeFull();
+        configureElements();
 
-        updateList();
-        gridStepDocument.setItems(stepDocumentList);
+        configureAlternatives();
 
-        binder.bindInstanceFields(this);
+        configureDocuments();
 
-        add(contentFields, toolbarStepDocument, contentStepDocument, messageDiv, createButtonsLayout());
+        configureOperations();
+
+        configureForm();
     }
 
-    public void setStep(Step step) {
-        this.step = step;
-        binder.readBean(step);
+    private void configureForm() {
+        form.add(elements,
+                alternativeGridLayout,
+                operationsLayout,
+                stepDocumentsLayout,
+                actionsLayout);
+
+        add(form);
     }
 
-    private void updateList() {
-        gridStepDocument.setColumns("url");
+    private void configureOperations() {
+        operationsLayout.setWidthFull();
+        operationsLayout.add(operationGridForm);
     }
 
-    private void  configureGrid() {
-        gridStepDocument.addClassName("stepdocument-grid");
-        gridStepDocument.setSizeFull();
-        gridStepDocument.setSelectionMode(Grid.SelectionMode.MULTI);
-
-        gridStepDocument.asMultiSelect().addValueChangeListener(event -> {
-            String selectedSteps = "";
-            for (StepDocument stepDocument : gridStepDocument.getSelectedItems())
-                selectedSteps += stepDocument.getUrl() + ", ";
-            String message = String.format("Seleccionados actualmente: %s", selectedSteps);
-//            String message = String.format("Seleccionados actualmente: %s", event.getValue());
-            messageDiv.setText(message);
-        });
-        gridStepDocument.getColumns().forEach(col -> col.setAutoWidth(true));
+    private void configureDocuments() {
+        stepDocumentsLayout.setWidthFull();
+        stepDocumentsLayout.add(documentsGridForm);
     }
 
-    private HorizontalLayout getToolBarStepDocument() {
-        Button addStepDocumentButton = new Button("Crear Step Document", click -> addStepDocument());
-
-        HorizontalLayout toolbar = new HorizontalLayout(addStepDocumentButton);
-        toolbar.addClassName("toolbar");
-        return toolbar;
+    private void configureAlternatives() {
+        alternativeGridForm.setWidthFull();
+        alternativeGridLayout.setWidthFull();
+        alternativeGridLayout.add(alternativeGridForm);
     }
 
-    private void addStepDocument() {
-//        gridStep.asSingleSelect().clear();
-        gridStepDocument.asMultiSelect().clear();
-        editStep(new Step());
-    }
+    private void configureElements() {
+        addClassName("stepSection");
+        this.text.setValue("");
+        this.textId.setValue("");
+        this.label.setValue("");
 
-    private void editStep(Step step) {
-        if(step == null) {
-            closeEditorStep();
-        } else {
-//            stepDocumentForm.setStep(step);
-//            stepDocumentForm.setVisible(true);
-//            gridStepDocument.setVisible(false);
-//            contentFields.setVisible(false);
-//            setVisibleEditStep(false);
-            addClassName("editing");
-        }
-    }
-
-    private void closeEditorStep() {
-//        stepDocumentForm.setStep(null);
-//        stepDocumentForm.setVisible(false);
-//        gridStepDocument.setVisible(true);
-//        contentFields.setVisible(true);
-//        setVisibleEditStep(true);
-        removeClassName("editing");
+        elements.add(text,textId,label);
+        actionsLayout.add(createButtonsLayout());
     }
 
     private Component createButtonsLayout() {
+
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(click -> validateAndSave());
-        delete.addClickListener(click -> fireEvent(new StepForm.DeleteEvent(this, step)));
         close.addClickListener(click -> fireEvent(new StepForm.CloseEvent(this)));
 
-        binder.addStatusChangeListener(evt -> save.setEnabled(binder.isValid()));
-
-        return new HorizontalLayout(save, delete, close);
+        return new HorizontalLayout(save, close);
     }
 
     private void validateAndSave() {
-        try {
-            binder.writeBean(step);
-            fireEvent(new StepForm.SaveEvent(this, step));
-        } catch (ValidationException e) {
-            e.printStackTrace();
-        }
+      if(isValid())
+      {
+          step.setText(text.getValue());
+          step.setTextId(textId.getValue());
+          step.setLabel(label.getValue());
+          step.setAlternatives(alternativeGridForm.getAlternatives());
+          step.setStepDocuments(documentsGridForm.getDocuments());
+      }
+    }
+
+    private boolean isValid() {
+        boolean result = false;
+
+        if(!text.getValue().isEmpty() &&
+           !textId.getValue().isEmpty() &&
+           !label.getValue().isEmpty())
+            result = true;
+
+        return result;
+    }
+
+    public void setStep(Step step) {
+    }
+
+    public Step getStep() {
+        return this.step;
     }
 
     // Events

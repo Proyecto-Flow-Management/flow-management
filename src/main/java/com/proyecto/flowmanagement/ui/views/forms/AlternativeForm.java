@@ -1,41 +1,68 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
+import com.proyecto.flowmanagement.ui.views.grids.ConditionsGridForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
+import sun.invoke.util.VerifyType;
 
-public class AlternativeForm extends FormLayout {
+@CssImport("./styles/alternative-form.css")
+public class AlternativeForm extends VerticalLayout {
+
     private Alternative alternative;
 
+    ConditionsGridForm conditionsGridForm = new ConditionsGridForm();
 
-    TextField name = new TextField("Nombre");
-    TextField label = new TextField("Etiqueta");
+    TextField guideName = new TextField("Guida Nombre Alternative");
+    TextField label = new TextField("Label Alternative");
+    TextField nextStep = new TextField("nextStep Alternative");
 
-    Button save = new Button("Guardar");
+    public Button save = new Button("Guardar");
     Button delete = new Button("Borrar");
-    Button close = new Button("Cancelar");
+    public Button close = new Button("Cancelar");
 
     Binder<Alternative> binder = new BeanValidationBinder<>(Alternative.class);
 
+
     public AlternativeForm() {
-        addClassName("alternative-form");
-
+        setClassName("alternativeSection");
+        configureElements();
         binder.bindInstanceFields(this);
+    }
 
-        add(name,
-                label,
-                createButtonsLayout());
+    public void configureElements() {
+
+        VerticalLayout form = new VerticalLayout();
+
+        HorizontalLayout elements = new HorizontalLayout();
+
+        HorizontalLayout conditionsLayout = new HorizontalLayout();
+
+        HorizontalLayout actionsLayout = new HorizontalLayout();
+
+        elements.add(guideName, label, nextStep);
+
+        actionsLayout.add(save,close,delete);
+
+        conditionsLayout.setWidthFull();
+        conditionsLayout.add(conditionsGridForm);
+
+        form.add(elements,conditionsLayout, actionsLayout);
+
+        add(form);
     }
 
     public void setAlternative(Alternative alternative) {
@@ -43,67 +70,21 @@ public class AlternativeForm extends FormLayout {
         binder.readBean(alternative);
     }
 
-    private Component createButtonsLayout() {
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+    public boolean isValid() {
+        boolean result = false;
 
-        save.addClickShortcut(Key.ENTER);
-        close.addClickShortcut(Key.ESCAPE);
+        if(!this.label.getValue().isEmpty() &&
+           (!this.guideName.getValue().isEmpty() || !this.nextStep.getValue().isEmpty()))
+            result = true;
 
-        save.addClickListener(click -> validateAndSave());
-        delete.addClickListener(click -> fireEvent(new AlternativeForm.DeleteEvent(this, alternative)));
-        close.addClickListener(click -> fireEvent(new AlternativeForm.CloseEvent(this)));
-
-        binder.addStatusChangeListener(evt -> save.setEnabled(binder.isValid()));
-
-        return new HorizontalLayout(save, delete, close);
+        return false;
     }
 
-    private void validateAndSave() {
-        try {
-            binder.writeBean(alternative);
-            fireEvent(new AlternativeForm.SaveEvent(this, alternative));
-        } catch (ValidationException e) {
-            e.printStackTrace();
-        }
+    public Alternative getAlternative()
+    {
+        this.alternative = new Alternative();
+        this.alternative.setLabel(label.getValue());
+        return this.alternative;
     }
 
-    // Events
-    public static abstract class AlternativeFormEvent extends ComponentEvent<AlternativeForm> {
-        private Alternative alternative;
-
-        protected AlternativeFormEvent(AlternativeForm source, Alternative alternative) {
-            super(source, false);
-            this.alternative = alternative;
-        }
-
-        public Alternative getAlternative() {
-            return alternative;
-        }
-    }
-
-    public static class SaveEvent extends AlternativeForm.AlternativeFormEvent {
-        SaveEvent(AlternativeForm source, Alternative alternative) {
-            super(source, alternative);
-        }
-    }
-
-    public static class DeleteEvent extends AlternativeForm.AlternativeFormEvent {
-        DeleteEvent(AlternativeForm source, Alternative alternative) {
-            super(source, alternative);
-        }
-
-    }
-
-    public static class CloseEvent extends AlternativeForm.AlternativeFormEvent {
-        CloseEvent(AlternativeForm source) {
-            super(source, null);
-        }
-    }
-
-    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
-                                                                  ComponentEventListener<T> listener) {
-        return getEventBus().addListener(eventType, listener);
-    }
 }

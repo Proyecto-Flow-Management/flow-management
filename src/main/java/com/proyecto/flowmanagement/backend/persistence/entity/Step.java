@@ -82,6 +82,8 @@ public class Step extends AbstractEntity{
 		return stepDocuments;
 	}
 
+	public void addAlternative(Alternative alternative){this.alternatives.add(alternative);}
+
 	public void setStepDocuments(List<StepDocument> stepDocuments) {
 		this.stepDocuments = stepDocuments;
 	}
