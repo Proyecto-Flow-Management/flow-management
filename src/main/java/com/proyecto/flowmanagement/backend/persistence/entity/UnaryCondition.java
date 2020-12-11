@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class UnaryCondition  extends AbstractEntity{
 
     @Column(name = "operation_name")
-    private String OperationName;
+    private String operationName;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="unary_condition_id")
@@ -18,11 +18,11 @@ public class UnaryCondition  extends AbstractEntity{
     ConditionParameter conditionParameter;
 
     public String getOperationName() {
-        return OperationName;
+        return operationName;
     }
 
     public void setOperationName(String operationName) {
-        OperationName = operationName;
+        this.operationName = operationName;
     }
 
     public ConditionParameter getConditionParameter() {

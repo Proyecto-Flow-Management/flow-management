@@ -1,8 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
-import com.proyecto.flowmanagement.backend.persistence.entity.User;
 import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -10,7 +8,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,7 +16,7 @@ public class StepGridForm  extends VerticalLayout {
     private StepForm stepForm;
     private Button createStep;
 
-    Grid<Step> stepGrid;
+    Grid<Step> stepGrid = new Grid<>(Step.class);
     List<Step> stepList = new LinkedList<>();
 
     public StepGridForm()
@@ -77,10 +74,11 @@ public class StepGridForm  extends VerticalLayout {
     }
 
     private void configureGrid() {
-        stepGrid = new Grid<>(Step.class);
+//        stepGrid = new Grid<>(Step.class);
         stepGrid.addClassName("user-grid");
-        stepGrid.setSizeFull();
-        stepGrid.setColumns("label", "text");
+//        stepGrid.setSizeFull();
+        stepGrid.setColumns("label", "text", "textId");
+        stepGrid.setWidth("80%");
 
         stepGrid.getColumns().forEach(col -> col.setAutoWidth(true));
         stepGrid.asSingleSelect().addValueChangeListener(evt -> editStep(evt.getValue()));

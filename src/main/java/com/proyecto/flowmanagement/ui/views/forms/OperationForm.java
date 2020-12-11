@@ -3,6 +3,7 @@ package com.proyecto.flowmanagement.ui.views.forms;
 import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.proyecto.flowmanagement.ui.views.grids.AlternativeGridForm;
+import com.proyecto.flowmanagement.ui.views.grids.OperationParameterGridForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -27,10 +28,14 @@ public class OperationForm extends HorizontalLayout {
     private Operation operation;
 
     AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
+    OperationParameterGridForm inParameterGridForm = new OperationParameterGridForm("Crear IN Operation Parameter");
+    OperationParameterGridForm outParameterGridForm = new OperationParameterGridForm("Crear OUT Operation Parameter");
 
     VerticalLayout form = new VerticalLayout();
     FormLayout elements = new FormLayout();
     HorizontalLayout alternativeGridLayout = new HorizontalLayout();
+    HorizontalLayout inParameterGridLayout = new HorizontalLayout();
+    HorizontalLayout outParameterGridLayout = new HorizontalLayout();
     HorizontalLayout actionsLayout = new HorizontalLayout();
 
     TextField name = new TextField("Nombre");
@@ -57,6 +62,7 @@ public class OperationForm extends HorizontalLayout {
         configureElements();
 
         configureAlternatives();
+        configureOperationParameters();
 
         configureForm();
 
@@ -88,9 +94,21 @@ public class OperationForm extends HorizontalLayout {
         alternativeGridLayout.add(alternativeGridForm);
     }
 
+    private void configureOperationParameters() {
+        inParameterGridForm.setWidthFull();
+        inParameterGridLayout.setWidthFull();
+        inParameterGridLayout.add(inParameterGridForm);
+
+        outParameterGridForm.setWidthFull();
+        outParameterGridLayout.setWidthFull();
+        outParameterGridLayout.add(outParameterGridForm);
+    }
+
     private void configureForm() {
         form.add(elements,
                 alternativeGridLayout,
+                inParameterGridLayout,
+                outParameterGridLayout,
                 actionsLayout);
 
         add(form);
