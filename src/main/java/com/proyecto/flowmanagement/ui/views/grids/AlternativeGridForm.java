@@ -1,9 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
-import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.forms.AlternativeForm;
-import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,7 +14,7 @@ public class AlternativeGridForm extends VerticalLayout {
     private AlternativeForm alternativeForm;
     public Button createAlternative;
 
-    Grid<Alternative> alternativeGrid;
+    Grid<Alternative> alternativeGrid = new Grid<>(Alternative.class);
     List<Alternative> alternativeList;
 
     public AlternativeGridForm()
@@ -34,8 +32,6 @@ public class AlternativeGridForm extends VerticalLayout {
         alternativeForm.setVisible(false);
         alternativeForm.save.addClickListener(buttonClickEvent -> CreateAlternative());
         alternativeForm.close.addClickListener(buttonClickEvent -> CloseForm());
-        alternativeGrid = new Grid<>(Alternative.class);
-        alternativeGrid.setWidthFull();
 
         setWidthFull();
         HorizontalLayout gridLayout = new HorizontalLayout();
@@ -76,7 +72,8 @@ public class AlternativeGridForm extends VerticalLayout {
     private void configureGrid() {
         alternativeGrid = new Grid<>(Alternative.class);
         alternativeGrid.addClassName("user-grid");
-        alternativeGrid.setSizeFull();
+        alternativeGrid.setColumns("guideName","label","nextStep");
+        alternativeGrid.setWidth("80%");
         alternativeGrid.asSingleSelect().addValueChangeListener(evt -> editAlternative(evt.getValue()));
     }
 

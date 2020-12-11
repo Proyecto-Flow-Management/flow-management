@@ -14,7 +14,7 @@ public class OperationGridForm extends VerticalLayout {
     private Button createOperation;
     public OperationForm operationForm;
 
-    Grid<Operation> operationGrid;
+    Grid<Operation> operationGrid = new Grid<>(Operation.class);
     List<Operation> operationList;
 
     public OperationGridForm()
@@ -33,9 +33,6 @@ public class OperationGridForm extends VerticalLayout {
         operationForm.setVisible(false);
         operationForm.save.addClickListener(buttonClickEvent -> CreateOperation());
         operationForm.close.addClickListener(buttonClickEvent -> CloseForm());
-
-        operationGrid = new Grid<>(Operation.class);
-        operationGrid.setWidth("80%");
 
         HorizontalLayout gridLayout = new HorizontalLayout();
         gridLayout.add(operationGrid);
@@ -74,10 +71,11 @@ public class OperationGridForm extends VerticalLayout {
     }
 
     private void configureGrid() {
-        operationGrid = new Grid<>(Operation.class);
         operationGrid.addClassName("user-grid");
-        operationGrid.setSizeFull();
+        operationGrid.setColumns("name","label","visible","preExecute","comment","title");
+        operationGrid.setWidth("80%");
         operationGrid.asSingleSelect().addValueChangeListener(evt -> editOperation(evt.getValue()));
+        operationGrid.asSingleSelect();
     }
 
     private void editOperation(Operation operation) {

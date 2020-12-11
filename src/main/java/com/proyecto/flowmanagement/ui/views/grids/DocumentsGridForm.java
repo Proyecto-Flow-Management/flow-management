@@ -1,11 +1,8 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
 import com.proyecto.flowmanagement.ui.views.forms.DocumentsForm;
-import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -38,7 +35,6 @@ public class DocumentsGridForm extends VerticalLayout {
         documentsForm.save.addClickListener(buttonClickEvent -> CreateStepDocument());
         documentsForm.close.addClickListener(buttonClickEvent -> CloseForm());
 
-        stepDocumentGrid = new Grid<>(StepDocument.class);
 
         HorizontalLayout gridLayout = new HorizontalLayout();
         gridLayout.add(stepDocumentGrid);
@@ -92,6 +88,9 @@ public class DocumentsGridForm extends VerticalLayout {
     }
 
     private void configureGrid() {
+        stepDocumentGrid = new Grid<>(StepDocument.class);
+        stepDocumentGrid.setColumns("url");
+        stepDocumentGrid.setWidth("80%");
     }
 
     public List<StepDocument> getDocuments() {

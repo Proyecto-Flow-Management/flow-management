@@ -83,10 +83,14 @@ public class ConditionsGridForm extends VerticalLayout {
     private void configureGrid() {
         unaryConditionGrid = new Grid<>(UnaryCondition.class);
         unaryConditionGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+        unaryConditionGrid.setColumns("operationName","conditionParameter");
+        unaryConditionGrid.setWidth("80%");
+
         binaryConditionGrid = new Grid<>(BinaryCondition.class);
         binaryConditionGrid.setSelectionMode(Grid.SelectionMode.MULTI);
-        unaryConditionGrid.setWidthFull();
-        binaryConditionGrid.setWidthFull();
+        binaryConditionGrid.setColumns("operator","conditions");
+        binaryConditionGrid.setWidth("80%");
+
     }
 
     private void addUnaryCondition() {
