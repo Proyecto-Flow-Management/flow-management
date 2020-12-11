@@ -5,12 +5,15 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.forms.AlternativeForm;
 import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import java.util.LinkedList;
 import java.util.List;
 
+@CssImport("./styles/general.css")
 public class AlternativeGridForm extends VerticalLayout {
 
     private AlternativeForm alternativeForm;
@@ -27,6 +30,7 @@ public class AlternativeGridForm extends VerticalLayout {
 
     private void configureElements()
     {
+        this.alternativeList = new LinkedList<>();
         configureGrid();
         createAlternative = new Button("Crear Alternative", click -> addAlternative());
 
@@ -34,13 +38,11 @@ public class AlternativeGridForm extends VerticalLayout {
         alternativeForm.setVisible(false);
         alternativeForm.save.addClickListener(buttonClickEvent -> CreateAlternative());
         alternativeForm.close.addClickListener(buttonClickEvent -> CloseForm());
-        alternativeGrid = new Grid<>(Alternative.class);
-        alternativeGrid.setWidthFull();
 
         setWidthFull();
         HorizontalLayout gridLayout = new HorizontalLayout();
         gridLayout.add(alternativeGrid);
-        gridLayout.setWidthFull();
+        gridLayout.addClassName("gridHorizontalLayout");
 
         HorizontalLayout alternativeFormLayout = new HorizontalLayout();
         alternativeFormLayout.add(alternativeForm);
@@ -77,6 +79,7 @@ public class AlternativeGridForm extends VerticalLayout {
         alternativeGrid = new Grid<>(Alternative.class);
         alternativeGrid.addClassName("user-grid");
         alternativeGrid.setSizeFull();
+        alternativeGrid.setColumns("label","nextStep");
         alternativeGrid.asSingleSelect().addValueChangeListener(evt -> editAlternative(evt.getValue()));
     }
 

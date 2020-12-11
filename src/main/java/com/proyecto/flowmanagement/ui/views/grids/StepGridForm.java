@@ -5,6 +5,7 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.backend.persistence.entity.User;
 import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
+@CssImport("./styles/general.css")
 public class StepGridForm  extends VerticalLayout {
     private StepForm stepForm;
     private Button createStep;
@@ -30,7 +32,6 @@ public class StepGridForm  extends VerticalLayout {
 
     private void configureElements()
     {
-
         configureGrid();
         createStep = new Button("Crear Step", click -> addStep());
 
@@ -38,10 +39,10 @@ public class StepGridForm  extends VerticalLayout {
         stepForm.setVisible(false);
         stepForm.save.addClickListener(buttonClickEvent -> CreateStep());
         stepForm.close.addClickListener(buttonClickEvent -> CloseForm());
-        stepGrid = new Grid<>(Step.class);
 
         HorizontalLayout gridLayout = new HorizontalLayout();
         gridLayout.add(stepGrid);
+        gridLayout.addClassName("gridHorizontalLayout");
         gridLayout.setWidthFull();
 
         HorizontalLayout stepFormLayout = new HorizontalLayout();

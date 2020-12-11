@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
 import com.proyecto.flowmanagement.ui.views.forms.DocumentsForm;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.util.LinkedList;
 import java.util.List;
 
+@CssImport("./styles/general.css")
 public class DocumentsGridForm extends VerticalLayout {
 
     private Button createDocument;
@@ -38,11 +40,9 @@ public class DocumentsGridForm extends VerticalLayout {
         documentsForm.save.addClickListener(buttonClickEvent -> CreateStepDocument());
         documentsForm.close.addClickListener(buttonClickEvent -> CloseForm());
 
-        stepDocumentGrid = new Grid<>(StepDocument.class);
-
         HorizontalLayout gridLayout = new HorizontalLayout();
         gridLayout.add(stepDocumentGrid);
-        gridLayout.setWidthFull();
+        gridLayout.addClassName("gridHorizontalLayout");
 
         HorizontalLayout stepDocumentFormLayout = new HorizontalLayout();
         stepDocumentFormLayout.add(documentsForm);
@@ -91,7 +91,15 @@ public class DocumentsGridForm extends VerticalLayout {
         removeClassName("editing");
     }
 
-    private void configureGrid() {
+private void configureGrid() {  
+    stepDocumentGrid = new Grid<>(StepDocument.class);
+    stepDocumentGrid.addClassName("user-grid");
+    stepDocumentGrid.setSizeFull();
+    stepDocumentGrid.setColumns("url");
+    stepDocumentGrid.asSingleSelect().addValueChangeListener(evt -> editAlternative(evt.getValue()));
+    }
+
+    private void editAlternative(StepDocument value) {
     }
 
     public List<StepDocument> getDocuments() {

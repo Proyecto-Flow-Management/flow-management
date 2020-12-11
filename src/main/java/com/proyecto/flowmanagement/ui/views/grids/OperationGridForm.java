@@ -3,6 +3,7 @@ package com.proyecto.flowmanagement.ui.views.grids;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.proyecto.flowmanagement.ui.views.forms.OperationForm;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -10,6 +11,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.util.LinkedList;
 import java.util.List;
 
+@CssImport("./styles/general.css")
 public class OperationGridForm extends VerticalLayout {
     private Button createOperation;
     public OperationForm operationForm;
@@ -34,12 +36,9 @@ public class OperationGridForm extends VerticalLayout {
         operationForm.save.addClickListener(buttonClickEvent -> CreateOperation());
         operationForm.close.addClickListener(buttonClickEvent -> CloseForm());
 
-        operationGrid = new Grid<>(Operation.class);
-        operationGrid.setWidth("80%");
-
         HorizontalLayout gridLayout = new HorizontalLayout();
         gridLayout.add(operationGrid);
-        gridLayout.setWidthFull();
+        gridLayout.addClassName("gridHorizontalLayout");
 
         HorizontalLayout operationFormLayout = new HorizontalLayout();
         operationFormLayout.add(operationForm);
@@ -76,6 +75,7 @@ public class OperationGridForm extends VerticalLayout {
     private void configureGrid() {
         operationGrid = new Grid<>(Operation.class);
         operationGrid.addClassName("user-grid");
+        operationGrid.setColumns("name","label");
         operationGrid.setSizeFull();
         operationGrid.asSingleSelect().addValueChangeListener(evt -> editOperation(evt.getValue()));
     }

@@ -2,15 +2,4 @@
 
             <ttg:mainStepId>Rafa</ttg:mainStepId>
 
-<ttg:operation xsi:type="ttg:SimpleOperation">
-    <ttg:name>Name Operation 1 Guide</ttg:name>
-    <ttg:label>Label Operation 1 Guide Chito</ttg:label><ttg:visible>true</ttg:visible>
-    <ttg:operationType>simpleOperation</ttg:operationType>
-    <ttg:type>configuration</ttg:type>
-    <ttg:servicio/>
-</ttg:operation><ttg:operation xsi:type="ttg:TaskOperation">
-    <ttg:name>Name Operation 2 Guide</ttg:name>
-    <ttg:label>Label Operation 2 Guide</ttg:label>
-    <ttg:operationType>taskOperation</ttg:operationType>
-    <ttg:type>close</ttg:type>
-</ttg:operation></ttg:guide>
+</ttg:guide>

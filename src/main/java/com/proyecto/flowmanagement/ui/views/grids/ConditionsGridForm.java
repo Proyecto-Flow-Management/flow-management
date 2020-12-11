@@ -5,6 +5,7 @@ import com.proyecto.flowmanagement.backend.persistence.entity.UnaryCondition;
 import com.proyecto.flowmanagement.ui.views.forms.BinaryConditionForm;
 import com.proyecto.flowmanagement.ui.views.forms.UnaryConditionForm;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -12,10 +13,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+@CssImport("./styles/general.css")
 public class ConditionsGridForm extends VerticalLayout {
 
     UnaryConditionForm unaryConditionForm;
     BinaryConditionForm binaryConditionForm;
+
     Button addUnaryCondition = new Button("Agregar Condicion");
     Button addBinaryCondition = new Button("Agregar Condicion Binaria");
 
@@ -47,13 +50,14 @@ public class ConditionsGridForm extends VerticalLayout {
 
         updateUnaryGrid();
 
-        VerticalLayout unaryGridLayout = new VerticalLayout();
+        HorizontalLayout unaryGridLayout = new HorizontalLayout();
         unaryGridLayout.add(unaryConditionGrid);
-        unaryGridLayout.setWidthFull();
+        unaryConditionGrid.setWidthFull();
+        unaryGridLayout.addClassName("gridHorizontalLayout");
 
-        VerticalLayout binaryGridLayout = new VerticalLayout();
-        unaryGridLayout.add(binaryConditionGrid);
-        unaryGridLayout.setWidthFull();
+        HorizontalLayout binaryGridLayout = new HorizontalLayout();
+        binaryGridLayout.add(binaryConditionGrid);
+        binaryGridLayout.addClassName("gridHorizontalLayout");
 
         HorizontalLayout unaryConditionFormLayout = new HorizontalLayout();
         unaryConditionFormLayout.add(unaryConditionForm);
@@ -75,27 +79,29 @@ public class ConditionsGridForm extends VerticalLayout {
         binaryLayout.add(createBinaryLayout);
         binaryLayout.add(binaryConditionFormLayout);
         binaryLayout.add(binaryGridLayout);
-        binaryLayout.setWidthFull();
 
-        add(createUnaryLayout, unaryConditionFormLayout, unaryGridLayout, binaryLayout);
+        add(createUnaryLayout,
+                unaryConditionFormLayout,
+                unaryGridLayout,
+                binaryLayout,
+                createBinaryLayout,
+                binaryConditionFormLayout,
+                binaryGridLayout
+        );
     }
 
     private void configureGrid() {
         unaryConditionGrid = new Grid<>(UnaryCondition.class);
-        unaryConditionGrid.setSelectionMode(Grid.SelectionMode.MULTI);
         binaryConditionGrid = new Grid<>(BinaryCondition.class);
-        binaryConditionGrid.setSelectionMode(Grid.SelectionMode.MULTI);
-        unaryConditionGrid.setWidthFull();
-        binaryConditionGrid.setWidthFull();
     }
 
     private void addUnaryCondition() {
-        unaryConditionGrid.asMultiSelect().clear();
+        unaryConditionGrid.asSingleSelect().clear();
         editUnaryCondition(new UnaryCondition());
     }
     
     private void addBinaryCondition() {
-        binaryConditionGrid.asMultiSelect().clear();
+        binaryConditionGrid.asSingleSelect().clear();
         editBinaryCondition(new BinaryCondition());
     }
 

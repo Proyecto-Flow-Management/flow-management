@@ -45,6 +45,8 @@ public class AlternativeForm extends VerticalLayout {
 
     public void configureElements() {
 
+        save.addClickListener(buttonClickEvent -> validAndSave());
+
         VerticalLayout form = new VerticalLayout();
 
         HorizontalLayout elements = new HorizontalLayout();
@@ -65,6 +67,13 @@ public class AlternativeForm extends VerticalLayout {
         add(form);
     }
 
+    private void validAndSave() {
+        this.alternative = new Alternative();
+        alternative.setLabel(this.label.getValue());
+        alternative.setGuideName(this.guideName.getValue());
+        alternative.setNextStep(this.nextStep.getValue());
+    }
+
     public void setAlternative(Alternative alternative) {
         this.alternative = alternative;
         binder.readBean(alternative);
@@ -82,9 +91,7 @@ public class AlternativeForm extends VerticalLayout {
 
     public Alternative getAlternative()
     {
-        this.alternative = new Alternative();
-        this.alternative.setLabel(label.getValue());
-        return this.alternative;
+       return this.alternative;
     }
 
 }
