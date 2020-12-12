@@ -31,7 +31,7 @@ public class GuideList extends VerticalLayout {
 
     public GuideList(GuideServiceImpl guideService) {
         this.guideService = guideService;
-        test();
+        //test();
         addClassName("create-guide-view");
         setSizeFull();
         configureGrid();
