@@ -19,7 +19,7 @@ import com.vaadin.flow.shared.Registration;
 
 @CssImport("./styles/unary-form.css")
 public class UnaryConditionForm extends FormLayout {
-
+    boolean editing;
     UnaryCondition unaryCondition = new UnaryCondition();
 
     TextField operationNameText = new TextField("Operation Name");
@@ -30,10 +30,12 @@ public class UnaryConditionForm extends FormLayout {
 
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
+    public Button delete = new Button("Eliminar");
 
     Binder<UnaryCondition> binder = new BeanValidationBinder<>(UnaryCondition.class);
 
     public UnaryConditionForm() {
+        editing = false;
         configureElements();
     }
 
@@ -49,6 +51,7 @@ public class UnaryConditionForm extends FormLayout {
 
 
     private Component createButtonsLayout() {
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         save.addClickShortcut(Key.ENTER);
@@ -102,6 +105,18 @@ public class UnaryConditionForm extends FormLayout {
             result = true;
 
         return result;
+    }
+
+    public void setBinaryCondition(UnaryCondition unaryCondition) {
+        if(unaryCondition != null){
+            this.editing = true;
+            this.operationNameText.setValue(unaryCondition.getOperationName());
+            this.delete.setVisible(true);
+        }
+        else{
+            this.operationNameText.setValue("");
+            this.editing=false;
+        }
     }
 
     // Events

@@ -8,11 +8,10 @@ import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
 import com.proyecto.flowmanagement.ui.views.grids.StepGridForm;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.Section;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -68,8 +67,22 @@ public class GuideForm extends VerticalLayout {
     private void createForm() {
         crearGuia = new Button("Crear Guia");
         crearGuia.addClickListener(buttonClickEvent -> crearGuia());
-        add(guideLayout,stepSecctionLayout,operationSecctionLayout);
+        HorizontalLayout botonCrear = new HorizontalLayout();
+
+        Span content = new Span("Guia creada y archivo XML generado!");
+        Notification notification = new Notification(content);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+
+        Button button = new Button("Crear Guia");
+        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        button.addClickListener(event -> notification.open());
+
+        botonCrear.add(button);
+        add(guideLayout,stepSecctionLayout,operationSecctionLayout,botonCrear);
     }
+
 
     private void crearGuia() {
 

@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class OperationParameterGridForm extends VerticalLayout {
-    private Button createOperationParameter;
+    public Button createOperationParameter;
     public OperationParameterForm operationParameterForm;
 
     Grid<OperationParameter> operationParameterGrid = new Grid<>(OperationParameter.class);;

@@ -154,7 +154,7 @@ public class OperationParameterForm extends HorizontalLayout {
                 !valueWhenInParameterEquals.getValue().isEmpty())
             result = true;
 
-        return result;
+        return true;
     }
 
     // Events

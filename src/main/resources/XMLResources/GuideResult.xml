@@ -1,11 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ttg:guide xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
-           xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide" xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <ttg:label>Izi Equipo Tecnico</ttg:label>
-    <ttg:name>Equipo Antel</ttg:label>
+    <ttg:name>Configuracion Equipo Antel</ttg:name>
+    <ttg:label>Conf_equipo_antel</ttg:label>
     <ttg:mainStepId>CF_EQUIPO_ANTEL</ttg:mainStepId>
 
     <ttg:step>
@@ -35,10 +31,10 @@
             <ttg:automatic>false</ttg:automatic>
             <ttg:operationOrder>1</ttg:operationOrder>
             <ttg:title>Deriva reclamo a ATSM</ttg:title>
-            <ttg:comment>Se debe informar al cliente que personal técnico lo llamará a la brevedad.</ttg:comment>
+            <ttg:comment>Se debe informar al cliente que personal tecnico lo llamara a la brevedad.</ttg:comment>
             <ttg:inParameters>
                 <ttg:name>diagnosticCode</ttg:name>
-                <ttg:label>Diagnóstico</ttg:label>
+                <ttg:label>Diagnostico</ttg:label>
                 <ttg:required>true</ttg:required>
                 <ttg:visible>true</ttg:visible>
                 <ttg:type>string</ttg:type>
@@ -48,7 +44,7 @@
             <ttg:inParameters>
                 <ttg:name>contact_contactName</ttg:name>
                 <ttg:visible>true</ttg:visible>
-                <ttg:label>Nombre de Contacto</ttg:label>
+                <ttg:label>Nombre de contacto</ttg:label>
                 <ttg:enable>true</ttg:enable>
                 <ttg:type>string</ttg:type>
                 <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
@@ -57,7 +53,7 @@
             <ttg:inParameters>
                 <ttg:name>contactTime_from</ttg:name>
                 <ttg:visible>false</ttg:visible>
-                <ttg:label>Hora Desde</ttg:label>
+                <ttg:label>Hora desde</ttg:label>
                 <ttg:enable>false</ttg:enable>
                 <ttg:type>string</ttg:type>
                 <ttg:value>00:00</ttg:value>
@@ -65,7 +61,7 @@
             <ttg:inParameters>
                 <ttg:name>contactTime_to</ttg:name>
                 <ttg:visible>false</ttg:visible>
-                <ttg:label>Hora Hasta</ttg:label>
+                <ttg:label>Hora hasta</ttg:label>
                 <ttg:enable>false</ttg:enable>
                 <ttg:type>string</ttg:type>
                 <ttg:value>23:59</ttg:value>
@@ -80,20 +76,11 @@
             <ttg:inParameters>
                 <ttg:name>contact_contactMechanisms_Phone</ttg:name>
                 <ttg:visible>true</ttg:visible>
-                <ttg:label>Teléfono de contacto</ttg:label>
+                <ttg:label>Telefono de contacto</ttg:label>
                 <ttg:enable>true</ttg:enable>
                 <ttg:type>string</ttg:type>
                 <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
                 <ttg:sourceValueEntityProperty>contactClaimant:contactMechanisms.Phone</ttg:sourceValueEntityProperty>
-            </ttg:inParameters>
-            <ttg:inParameters>
-                <ttg:name>param_record_descripcion_problema</ttg:name>
-                <ttg:visible>true</ttg:visible>
-                <ttg:label>Descripcion problema</ttg:label>
-                <ttg:required>true</ttg:required>
-                <ttg:enable>true</ttg:enable>
-                <ttg:type>string</ttg:type>
-                <ttg:validateExpression>(^[\s\'\-\+\*\.\=¿¡:,;áéíóúüÁÉÍÓÚñÑ@a-zA-Z0-9]{0,200}$)</ttg:validateExpression>                                  <ttg:validateExpressionErrorDescription>La descripción debe tener máximo 200 caracteres</ttg:validateExpressionErrorDescription>
             </ttg:inParameters>
             <ttg:operationType>taskOperation</ttg:operationType>
             <ttg:type>delegate</ttg:type>

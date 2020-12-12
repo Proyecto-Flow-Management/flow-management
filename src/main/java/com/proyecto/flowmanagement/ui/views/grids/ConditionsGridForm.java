@@ -20,6 +20,7 @@ public class ConditionsGridForm extends VerticalLayout {
     BinaryConditionForm binaryConditionForm;
 
     BinaryCondition editingBinary;
+    UnaryCondition editUnary;
 
     Button addUnaryCondition = new Button("Agregar Condicion");
     Button addBinaryCondition = new Button("Agregar Condicion Binaria");
@@ -95,10 +96,20 @@ public class ConditionsGridForm extends VerticalLayout {
 
     private void configureGrid() {
         unaryConditionGrid = new Grid<>(UnaryCondition.class);
-        unaryConditionGrid.setColumns("operationName","conditionParameter");
+        unaryConditionGrid.setColumns("operationName");
+        unaryConditionGrid.asSingleSelect().addValueChangeListener(evt -> editUnaryCondition2(evt.getValue()));
         binaryConditionGrid = new Grid<>(BinaryCondition.class);
-        binaryConditionGrid.setColumns("operator","conditions");
+        binaryConditionGrid.setColumns("operator");
         binaryConditionGrid.asSingleSelect().addValueChangeListener(evt -> editBinaryCondition(evt.getValue()));
+    }
+
+    private void editUnaryCondition2(UnaryCondition unaryCondition) {
+        this.editUnary = unaryCondition;
+        unaryConditionForm.setVisible(true);
+        if(unaryCondition != null) {
+            unaryConditionForm.setBinaryCondition(unaryCondition);
+            addClassName("editing");
+        }
     }
 
     private void addUnaryCondition() {
