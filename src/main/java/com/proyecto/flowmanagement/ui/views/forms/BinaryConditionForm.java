@@ -19,11 +19,12 @@ import com.vaadin.flow.shared.Registration;
 public class BinaryConditionForm extends VerticalLayout {
 
     BinaryCondition binaryCondition = new BinaryCondition();
-
+public boolean editing;
     TextField operationNameText = new TextField("Operation Name");
     
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
+    public Button delete = new Button("Eliminar");
 
     Binder<BinaryCondition> binder = new BeanValidationBinder<>(BinaryCondition.class);
 
@@ -32,17 +33,20 @@ public class BinaryConditionForm extends VerticalLayout {
     }
 
     private void configureElements() {
+        editing = false;
         addClassName("binaryForm");
         this.operationNameText.setValue("");
         add(operationNameText, createButtonsLayout());
     }
     private Component createButtonsLayout() {
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        delete.setVisible(false);
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
         save.addClickListener(click -> validateAndSave());
-        return new HorizontalLayout(save, close);
+        return new HorizontalLayout(save, close, delete);
     }
 
     private void validateAndSave() {
@@ -54,10 +58,16 @@ public class BinaryConditionForm extends VerticalLayout {
 
     }
 
-    public void setBinaryCondition(BinaryCondition BinaryCondition) {
-//        this.BinaryCondition = BinaryCondition;
-//        binder.readBean(BinaryCondition);
-        this.operationNameText.setValue("");
+    public void setBinaryCondition(BinaryCondition binaryCondition) {
+        if(binaryCondition != null){
+            this.editing = true;
+            this.operationNameText.setValue(binaryCondition.getOperator());
+            this.delete.setVisible(true);
+        }
+        else{
+            this.operationNameText.setValue("");
+            this.editing=false;
+        }
     }
 
 

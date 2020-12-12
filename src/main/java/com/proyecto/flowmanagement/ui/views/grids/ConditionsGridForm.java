@@ -19,6 +19,8 @@ public class ConditionsGridForm extends VerticalLayout {
     UnaryConditionForm unaryConditionForm;
     BinaryConditionForm binaryConditionForm;
 
+    BinaryCondition editingBinary;
+
     Button addUnaryCondition = new Button("Agregar Condicion");
     Button addBinaryCondition = new Button("Agregar Condicion Binaria");
 
@@ -45,8 +47,9 @@ public class ConditionsGridForm extends VerticalLayout {
         
         binaryConditionForm = new BinaryConditionForm();
         binaryConditionForm.setVisible(false);
-        binaryConditionForm.save.addClickListener(buttonClickEvent -> CreateBinaryCondition());
+        binaryConditionForm.save.addClickListener(buttonClickEvent -> CreateOrSaveBinaryCondition());
         binaryConditionForm.close.addClickListener(buttonClickEvent -> CloseBinaryForm());
+        binaryConditionForm.delete.addClickListener(buttonClickEvent -> EliminarBinary());
 
         updateUnaryGrid();
 
@@ -95,6 +98,7 @@ public class ConditionsGridForm extends VerticalLayout {
         unaryConditionGrid.setColumns("operationName","conditionParameter");
         binaryConditionGrid = new Grid<>(BinaryCondition.class);
         binaryConditionGrid.setColumns("operator","conditions");
+        binaryConditionGrid.asSingleSelect().addValueChangeListener(evt -> editBinaryCondition(evt.getValue()));
     }
 
     private void addUnaryCondition() {
@@ -103,8 +107,9 @@ public class ConditionsGridForm extends VerticalLayout {
     }
     
     private void addBinaryCondition() {
+        binaryConditionForm.setBinaryCondition(null);
         binaryConditionGrid.asSingleSelect().clear();
-        editBinaryCondition(new BinaryCondition());
+        editBinaryCondition(null);
     }
 
     private void CloseUnaryForm() {
@@ -114,7 +119,12 @@ public class ConditionsGridForm extends VerticalLayout {
     private void CloseBinaryForm() {
         this.binaryConditionForm.setVisible(false);
     }
-    
+
+    private void EliminarBinary() {
+        binaryConditionList.remove(editingBinary);
+        updateBinaryGrid();
+        closeBinaryEditor();
+    }
 
     private void CreateUnaryCondition() {
         UnaryCondition newUnaryCondition = unaryConditionForm.getUnaryCondition();
@@ -123,13 +133,25 @@ public class ConditionsGridForm extends VerticalLayout {
         unaryConditionForm.setVisible(false);
     }
     
-    private void CreateBinaryCondition() {
+    private void CreateOrSaveBinaryCondition() {
+
         BinaryCondition newBinaryCondition = binaryConditionForm.getBinaryCondition();
-        List<UnaryCondition> unaryConditionsList = new ArrayList<>(unaryConditionGrid.getSelectedItems());
-        newBinaryCondition.setConditions(unaryConditionsList);
-        binaryConditionList.add(newBinaryCondition);
-        updateBinaryGrid();
+
+        if(binaryConditionForm.editing)
+        {
+            int index = binaryConditionList.indexOf(editingBinary);
+            binaryConditionList.set(index, newBinaryCondition);
+            updateBinaryGrid();
+        }
+        else
+        {
+            binaryConditionList.add(newBinaryCondition);
+            updateBinaryGrid();
+            closeBinaryEditor();
+        }
+
         binaryConditionForm.setVisible(false);
+
     }
 
     private void updateUnaryGrid() {
@@ -153,11 +175,10 @@ public class ConditionsGridForm extends VerticalLayout {
     }    
     
     private void editBinaryCondition(BinaryCondition binaryCondition) {
-        if(binaryCondition == null) {
-            closeBinaryEditor();
-        } else {
+        this.editingBinary = binaryCondition;
+        binaryConditionForm.setVisible(true);
+        if(binaryCondition != null) {
             binaryConditionForm.setBinaryCondition(binaryCondition);
-            binaryConditionForm.setVisible(true);
             addClassName("editing");
         }
     }
@@ -180,4 +201,10 @@ public class ConditionsGridForm extends VerticalLayout {
     public List<BinaryCondition> getBinaryConditions() {
         return this.binaryConditionList;
     }
+
+    public void setConditions()
+    {
+
+    }
+
 }
