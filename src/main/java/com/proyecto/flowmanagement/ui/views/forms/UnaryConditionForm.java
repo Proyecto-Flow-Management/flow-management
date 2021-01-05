@@ -1,6 +1,4 @@
 package com.proyecto.flowmanagement.ui.views.forms;
-
-
 import com.proyecto.flowmanagement.backend.persistence.entity.ConditionParameter;
 import com.proyecto.flowmanagement.backend.persistence.entity.UnaryCondition;
 import com.vaadin.flow.component.Component;
@@ -19,7 +17,8 @@ import com.vaadin.flow.shared.Registration;
 
 @CssImport("./styles/unary-form.css")
 public class UnaryConditionForm extends FormLayout {
-    boolean editing;
+    public boolean editing;
+
     UnaryCondition unaryCondition = new UnaryCondition();
 
     TextField operationNameText = new TextField("Operation Name");
@@ -54,10 +53,11 @@ public class UnaryConditionForm extends FormLayout {
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        delete.setVisible(false);
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
         save.addClickListener(click -> validateAndSave());
-        return new HorizontalLayout(save, close);
+        return new HorizontalLayout(save, close, delete);
     }
 
     private void validateAndSave() {
@@ -77,20 +77,30 @@ public class UnaryConditionForm extends FormLayout {
     }
 
     public void setUnaryCondition(UnaryCondition unaryCondition) {
-//        this.unaryCondition = unaryCondition;
-//        binder.readBean(unaryCondition);
-        this.operationNameText.setValue("");
-        this.fieldText.setValue("");
-        this.fieldTypeText.setValue("");
-        this.operatorText.setValue("");
-        this.valueText.setValue("");
+
+        if(unaryCondition != null){
+            this.operationNameText.setValue(unaryCondition.getOperationName());
+            this.fieldText.setValue(unaryCondition.getConditionParameter().getField());
+            this.fieldTypeText.setValue(unaryCondition.getConditionParameter().getFieldType());
+            this.operatorText.setValue(unaryCondition.getConditionParameter().getOperator());
+            this.valueText.setValue(unaryCondition.getConditionParameter().getValue());
+            this.editing = true;
+            this.delete.setVisible(true);
+        }
+        else{
+            this.operationNameText.setValue("");
+            this.fieldText.setValue("");
+            this.fieldTypeText.setValue("");
+            this.operatorText.setValue("");
+            this.valueText.setValue("");
+            this.editing=false;
+            this.delete.setVisible(false);
+        }
     }
 
 
     public UnaryCondition getUnaryCondition()
     {
-//        this.unaryCondition = new UnaryCondition();
-//        this.unaryCondition.setOperationName(operationNameText.getValue());
         return this.unaryCondition;
     }
 

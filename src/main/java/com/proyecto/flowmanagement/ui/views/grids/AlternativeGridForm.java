@@ -36,7 +36,7 @@ public class AlternativeGridForm extends VerticalLayout {
 
         alternativeForm = new AlternativeForm();
         alternativeForm.setVisible(false);
-        alternativeForm.save.addClickListener(buttonClickEvent -> CreateAlternative());
+        alternativeForm.save.addClickListener(buttonClickEvent -> CreateorSaveAlternative());
         alternativeForm.close.addClickListener(buttonClickEvent -> CloseForm());
 
         setWidthFull();
@@ -59,8 +59,14 @@ public class AlternativeGridForm extends VerticalLayout {
         this.alternativeForm.setVisible(false);
     }
 
-    private void CreateAlternative() {
+    private void CreateorSaveAlternative() {
+
         Alternative newAlternative = alternativeForm.getAlternative();
+
+        if(alternativeForm.editing)
+        {
+            
+        }
         alternativeList.add(newAlternative);
         updateGrid();
         alternativeForm.setVisible(false);

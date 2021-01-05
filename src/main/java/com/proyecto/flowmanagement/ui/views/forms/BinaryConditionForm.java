@@ -18,8 +18,8 @@ import com.vaadin.flow.shared.Registration;
 @CssImport("./styles/binary-form.css")
 public class BinaryConditionForm extends VerticalLayout {
 
+    public boolean editing;
     BinaryCondition binaryCondition = new BinaryCondition();
-public boolean editing;
     TextField operationNameText = new TextField("Operation Name");
     
     public Button save = new Button("Guardar");
@@ -29,6 +29,7 @@ public boolean editing;
     Binder<BinaryCondition> binder = new BeanValidationBinder<>(BinaryCondition.class);
 
     public BinaryConditionForm() {
+        editing = false;
         configureElements();
     }
 

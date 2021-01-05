@@ -19,13 +19,13 @@ public class Alternative  extends AbstractEntity{
 	@Column(name = "next_step")
 	private String nextStep;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name="alternative_unary_id")
-	private UnaryCondition conditions;
+	private List<UnaryCondition> conditions;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name="alternative_binary_id")
-	private BinaryCondition binaryConditions;
+	private List<BinaryCondition> binaryConditions;
 
 	public String getGuideName() {
 		return guideName;
@@ -51,19 +51,19 @@ public class Alternative  extends AbstractEntity{
 		this.label = label;
 	}
 
-	public UnaryCondition getConditions() {
+	public List<UnaryCondition> getConditions() {
 		return conditions;
 	}
 
-	public void setConditions(UnaryCondition conditions) {
+	public void setConditions(List<UnaryCondition> conditions) {
 		this.conditions = conditions;
 	}
 
-	public BinaryCondition getBinaryConditions() {
+	public List<BinaryCondition> getBinaryConditions() {
 		return binaryConditions;
 	}
 
-	public void setBinaryConditions(BinaryCondition binaryConditions) {
+	public void setBinaryConditions(List<BinaryCondition> binaryConditions) {
 		this.binaryConditions = binaryConditions;
 	}
 }
