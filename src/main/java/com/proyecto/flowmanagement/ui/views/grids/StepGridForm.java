@@ -5,6 +5,7 @@ import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -16,6 +17,7 @@ public class StepGridForm  extends VerticalLayout {
     private StepForm stepForm;
     private Button createStep;
 
+    Div messageDiv = new Div();
     Grid<Step> stepGrid = new Grid<>(Step.class);
     List<Step> stepList = new LinkedList<>();
 
@@ -38,7 +40,8 @@ public class StepGridForm  extends VerticalLayout {
         stepForm.close.addClickListener(buttonClickEvent -> CloseForm());
 
         HorizontalLayout gridLayout = new HorizontalLayout();
-        gridLayout.add(stepGrid);
+//        gridLayout.add(stepGrid);
+        gridLayout.add(stepGrid, messageDiv);
         gridLayout.addClassName("gridHorizontalLayout");
         gridLayout.setWidthFull();
 
@@ -69,7 +72,8 @@ public class StepGridForm  extends VerticalLayout {
     }
 
     private void addStep() {
-        stepGrid.asSingleSelect().clear();
+//        stepGrid.asSingleSelect().clear();
+        stepGrid.asMultiSelect().clear();
         editStep(new Step());
     }
 
@@ -81,9 +85,19 @@ public class StepGridForm  extends VerticalLayout {
         stepGrid.setWidth("80%");
 
         stepGrid.getColumns().forEach(col -> col.setAutoWidth(true));
-        stepGrid.asSingleSelect().addValueChangeListener(evt -> editStep(evt.getValue()));
+//        stepGrid.asSingleSelect().addValueChangeListener(evt -> editStep(evt.getValue()));
+        stepGrid.setSelectionMode(Grid.SelectionMode.MULTI);
 
-        stepGrid.asSingleSelect();
+        stepGrid.asMultiSelect().addValueChangeListener(event -> {
+            String selectedSteps = "";
+            for (Step step : stepGrid.getSelectedItems())
+                selectedSteps += step.getTextId() + ", ";
+            String message = String.format("Seleccionados actualmente: %s", selectedSteps);
+            messageDiv.setText(message);
+        });
+
+//        stepGrid.asSingleSelect();
+        stepGrid.asMultiSelect();
     }
 
     private void editStep(Step step) {

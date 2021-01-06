@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
 import com.proyecto.flowmanagement.ui.MainLayout;
@@ -25,7 +26,8 @@ import com.vaadin.flow.shared.Registration;
 @CssImport("./styles/step-grid-form.css")
 public class StepForm extends HorizontalLayout {
 
-    private Step step = new Step();
+//    private Step step = new Step();
+    private Step step;
 
     AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
     DocumentsGridForm documentsGridForm = new DocumentsGridForm();
@@ -114,6 +116,7 @@ public class StepForm extends HorizontalLayout {
     private void validateAndSave() {
       if(isValid())
       {
+          this.step = new Step();
           step.setText(text.getValue());
           step.setTextId(textId.getValue());
           step.setLabel(label.getValue());
@@ -134,6 +137,8 @@ public class StepForm extends HorizontalLayout {
     }
 
     public void setStep(Step step) {
+        this.step = step;
+//        binder.readBean(alternative);
     }
 
     public Step getStep() {
