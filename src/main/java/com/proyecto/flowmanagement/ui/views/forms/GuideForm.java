@@ -1,22 +1,25 @@
 package com.proyecto.flowmanagement.ui.views.forms;
+
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
-import com.proyecto.flowmanagement.backend.persistence.entity.User;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
-
 import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
 import com.proyecto.flowmanagement.ui.views.grids.StepGridForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @org.springframework.stereotype.Component
 @Route(value = "CreateGuide", layout = MainLayout.class)
@@ -34,6 +37,7 @@ public class GuideForm extends VerticalLayout {
     HorizontalLayout layoutGuide;
     TextField name;
     TextField label;
+    ComboBox<String> mainStep;
 
     StepGridForm stepGridForm;
     OperationGridForm operationGridForm;
@@ -90,6 +94,7 @@ public class GuideForm extends VerticalLayout {
 
         newGuide.setName(name.getValue());
         newGuide.setLabel(label.getValue());
+        newGuide.setMainStep(mainStep.getValue());
 
         newGuide.setSteps(stepGridForm.getSteps());
         newGuide.setOperations(operationGridForm.getOperations());
@@ -106,16 +111,26 @@ public class GuideForm extends VerticalLayout {
         guideLayout = new HorizontalLayout();
         name = new TextField("Nombre Guia");
         label = new TextField("Label Guia");
-        guideLayout.add(name,label);
+        mainStep = new ComboBox<>("Empezar en:");
+        mainStep.setPlaceholder("Id Step Principal");
+        guideLayout.add(name,label,mainStep);
     }
 
     private void configureStepElements() {
         stepGridForm = new StepGridForm();
         stepGridForm.setWidthFull();
+        stepGridForm.getStepGrid().asSingleSelect().addValueChangeListener(evt -> updateComboMainStep());
+        stepGridForm.getSaveButton().addClickListener(evt -> updateComboMainStep());
         stepSecctionLayout = new HorizontalLayout();
         stepSecctionLayout.setWidthFull();
         stepSecctionLayout.add(stepGridForm);
     }
 
-
+    private void updateComboMainStep() {
+        List<String> mainStepIds = new LinkedList<>();
+        for (Step step :stepGridForm.getSteps()){
+            mainStepIds.add(step.getTextId());
+        }
+        mainStep.setItems(mainStepIds);
+    }
 }
