@@ -21,7 +21,7 @@ import sun.invoke.util.VerifyType;
 
 @CssImport("./styles/alternative-form.css")
 public class AlternativeForm extends VerticalLayout {
-
+    public boolean editing;
     private Alternative alternative;
 
     ConditionsGridForm conditionsGridForm = new ConditionsGridForm();
@@ -31,7 +31,7 @@ public class AlternativeForm extends VerticalLayout {
     TextField nextStep = new TextField("nextStep Alternative");
 
     public Button save = new Button("Guardar");
-    Button delete = new Button("Borrar");
+    Button delete = new Button("Eliminar");
     public Button close = new Button("Cancelar");
 
     Binder<Alternative> binder = new BeanValidationBinder<>(Alternative.class);
@@ -40,6 +40,7 @@ public class AlternativeForm extends VerticalLayout {
     public AlternativeForm() {
         setClassName("alternativeSection");
         configureElements();
+        editing = false;
         binder.bindInstanceFields(this);
     }
 
@@ -57,9 +58,16 @@ public class AlternativeForm extends VerticalLayout {
 
         elements.add(guideName, label, nextStep);
 
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        save.addClickShortcut(Key.ENTER);
+        close.addClickShortcut(Key.ESCAPE);
+
         actionsLayout.add(save,close,delete);
 
         conditionsLayout.setWidthFull();
+
         conditionsLayout.add(conditionsGridForm);
 
         form.add(elements,conditionsLayout, actionsLayout);
@@ -75,8 +83,24 @@ public class AlternativeForm extends VerticalLayout {
     }
 
     public void setAlternative(Alternative alternative) {
-        this.alternative = alternative;
-        binder.readBean(alternative);
+
+        if(alternative != null)
+        {
+            this.alternative = alternative;
+            this.guideName.setValue(alternative.getGuideName());
+            this.nextStep.setValue(alternative.getNextStep());
+            this.label.setValue(alternative.getLabel());
+            editing = true;
+            delete.setVisible(true);
+            this.conditionsGridForm = new ConditionsGridForm(alternative);
+        }
+        else
+        {
+            this.guideName.setValue("");
+            this.nextStep.setValue("");
+            this.label.setValue("");
+            this.conditionsGridForm = new ConditionsGridForm(alternative);
+        }
     }
 
     public boolean isValid() {
@@ -91,7 +115,9 @@ public class AlternativeForm extends VerticalLayout {
 
     public Alternative getAlternative()
     {
-       return this.alternative;
+        this.alternative.setConditions(conditionsGridForm.getUnaryConditions());
+        this.alternative.setBinaryConditions(conditionsGridForm.getBinaryConditions());
+        return this.alternative;
     }
 
 }

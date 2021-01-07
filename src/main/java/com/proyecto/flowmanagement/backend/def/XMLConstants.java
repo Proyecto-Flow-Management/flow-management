@@ -25,8 +25,8 @@ public final class XMLConstants {
     //STEPS ATTRIBUTES
     public static final String STEP_ELEMENT = "ttg:step";
     public static final String STEP_ID = "ttg:stepId";
-    public static final String STEP_TEXT = "ttg:label";
-    public static final String STEP_LABEL = "ttg:text";
+    public static final String  STEP_LABEL = "ttg:label";
+    public static final String  STEP_TEXT = "ttg:text";
 
     //ALTERNATIVES ATTRIBUTES
     public static final String ALTERNATIVE = "ttg:alternative";

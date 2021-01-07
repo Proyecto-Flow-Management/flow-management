@@ -2,6 +2,8 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,13 +21,15 @@ public class Alternative  extends AbstractEntity{
 	@Column(name = "next_step")
 	private String nextStep;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="alternative_unary_id")
-	private UnaryCondition conditions;
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<UnaryCondition> conditions;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="alternative_binary_id")
-	private BinaryCondition binaryConditions;
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<BinaryCondition> binaryConditions;
 
 	public String getGuideName() {
 		return guideName;
@@ -51,19 +55,19 @@ public class Alternative  extends AbstractEntity{
 		this.label = label;
 	}
 
-	public UnaryCondition getConditions() {
+	public List<UnaryCondition> getConditions() {
 		return conditions;
 	}
 
-	public void setConditions(UnaryCondition conditions) {
+	public void setConditions(List<UnaryCondition> conditions) {
 		this.conditions = conditions;
 	}
 
-	public BinaryCondition getBinaryConditions() {
+	public List<BinaryCondition> getBinaryConditions() {
 		return binaryConditions;
 	}
 
-	public void setBinaryConditions(BinaryCondition binaryConditions) {
+	public void setBinaryConditions(List<BinaryCondition> binaryConditions) {
 		this.binaryConditions = binaryConditions;
 	}
 }

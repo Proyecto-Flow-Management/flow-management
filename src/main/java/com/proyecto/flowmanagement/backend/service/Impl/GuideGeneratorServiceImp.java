@@ -141,10 +141,10 @@ public class GuideGeneratorServiceImp {
                 Node labelOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_LABEL).item(0);
                 labelOperation.setTextContent(operation.getLabel());
 
-                if (operation.getOperationOrder() != null) {
+                if (operation.getOperationOrder() > 0) {
                     Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
                     Node operationOrderOperation = docOperation.createElement(XMLConstants.OPERATION_OPERATION_ORDER);
-                    operationOrderOperation.setTextContent(operation.getOperationOrder().toString());
+                    operationOrderOperation.setTextContent(String.valueOf(operation.getOperationOrder()));
                     newOperation.insertBefore(operationOrderOperation,labelOperation.getNextSibling());
                 }
                 if (operation.getPauseExecution() != null) {
@@ -397,7 +397,7 @@ public class GuideGeneratorServiceImp {
 
         if(alternative.getConditions() != null)
         {
-            Node unaryNode = getUnaryCondition(alternative.getConditions());
+            Node unaryNode = getUnaryCondition(alternative.getConditions().get(0));
             Node locationAlternative = docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE).item(0);
             Node unaryImported = docAlternative.importNode(unaryNode,true);
             locationAlternative.appendChild(unaryImported);
@@ -405,7 +405,7 @@ public class GuideGeneratorServiceImp {
 
         if(alternative.getBinaryConditions() != null)
         {
-            Node binaryCondition = getBinaryCondition(alternative.getBinaryConditions());
+            Node binaryCondition = getBinaryCondition(alternative.getBinaryConditions().get(0));
             Node locationAlternative = docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE).item(0);
             Node binaryImported = docAlternative.importNode(binaryCondition,true);
             locationAlternative.appendChild(binaryImported);

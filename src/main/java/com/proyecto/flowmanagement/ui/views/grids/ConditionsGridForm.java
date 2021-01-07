@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.BinaryCondition;
 import com.proyecto.flowmanagement.backend.persistence.entity.UnaryCondition;
 import com.proyecto.flowmanagement.ui.views.forms.BinaryConditionForm;
@@ -11,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @CssImport("./styles/general.css")
@@ -36,6 +38,26 @@ public class ConditionsGridForm extends VerticalLayout {
         configureElements();
     }
 
+    public ConditionsGridForm(Alternative alternative)
+    {
+
+        if(alternative != null)
+        {
+            unaryConditionList = alternative.getConditions();
+            binaryConditionList = alternative.getBinaryConditions();
+        }
+        else
+        {
+            this.unaryConditionList = new LinkedList<>();
+            this.binaryConditionList = new LinkedList<>();
+        }
+
+        configureElements();
+
+        updateUnaryGrid();
+        updateBinaryGrid();
+    }
+
     private void configureElements() {
         configureGrid();
         addUnaryCondition = new Button("Crear Condicion Unaria", click -> addUnaryCondition());
@@ -43,14 +65,15 @@ public class ConditionsGridForm extends VerticalLayout {
 
         unaryConditionForm = new UnaryConditionForm();
         unaryConditionForm.setVisible(false);
-        unaryConditionForm.save.addClickListener(buttonClickEvent -> CreateUnaryCondition());
-        unaryConditionForm.close.addClickListener(buttonClickEvent -> CloseUnaryForm());
+        unaryConditionForm.save.addClickListener(buttonClickEvent -> CreateOrSaveUnaryCondition());
+        unaryConditionForm.delete.addClickListener(buttonClickEvent -> EliminarUnary());
+        unaryConditionForm.close.addClickListener(buttonClickEvent -> closeUnaryEditor());
         
         binaryConditionForm = new BinaryConditionForm();
         binaryConditionForm.setVisible(false);
         binaryConditionForm.save.addClickListener(buttonClickEvent -> CreateOrSaveBinaryCondition());
-        binaryConditionForm.close.addClickListener(buttonClickEvent -> CloseBinaryForm());
         binaryConditionForm.delete.addClickListener(buttonClickEvent -> EliminarBinary());
+        binaryConditionForm.close.addClickListener(buttonClickEvent -> closeBinaryEditor());
 
         updateUnaryGrid();
 
@@ -97,24 +120,34 @@ public class ConditionsGridForm extends VerticalLayout {
     private void configureGrid() {
         unaryConditionGrid = new Grid<>(UnaryCondition.class);
         unaryConditionGrid.setColumns("operationName");
-        unaryConditionGrid.asSingleSelect().addValueChangeListener(evt -> editUnaryCondition2(evt.getValue()));
+        unaryConditionGrid.asSingleSelect().addValueChangeListener(evt -> editUnaryCondition(evt.getValue()));
         binaryConditionGrid = new Grid<>(BinaryCondition.class);
         binaryConditionGrid.setColumns("operator");
         binaryConditionGrid.asSingleSelect().addValueChangeListener(evt -> editBinaryCondition(evt.getValue()));
     }
 
-    private void editUnaryCondition2(UnaryCondition unaryCondition) {
+    private void editUnaryCondition(UnaryCondition unaryCondition) {
         this.editUnary = unaryCondition;
         unaryConditionForm.setVisible(true);
         if(unaryCondition != null) {
-            unaryConditionForm.setBinaryCondition(unaryCondition);
+            unaryConditionForm.setUnaryCondition(unaryCondition);
+            addClassName("editing");
+        }
+    }
+
+    private void editBinaryCondition(BinaryCondition binaryCondition) {
+        this.editingBinary = binaryCondition;
+        binaryConditionForm.setVisible(true);
+        if(binaryCondition != null) {
+            binaryConditionForm.setBinaryCondition(binaryCondition);
             addClassName("editing");
         }
     }
 
     private void addUnaryCondition() {
+        unaryConditionForm.setUnaryCondition(null);
         unaryConditionGrid.asSingleSelect().clear();
-        editUnaryCondition(new UnaryCondition());
+        editUnaryCondition(null);
     }
     
     private void addBinaryCondition() {
@@ -123,12 +156,10 @@ public class ConditionsGridForm extends VerticalLayout {
         editBinaryCondition(null);
     }
 
-    private void CloseUnaryForm() {
-        this.unaryConditionForm.setVisible(false);
-    }
-    
-    private void CloseBinaryForm() {
-        this.binaryConditionForm.setVisible(false);
+    private void EliminarUnary() {
+        unaryConditionList.remove(editUnary);
+        updateUnaryGrid();
+        closeUnaryEditor();
     }
 
     private void EliminarBinary() {
@@ -137,10 +168,23 @@ public class ConditionsGridForm extends VerticalLayout {
         closeBinaryEditor();
     }
 
-    private void CreateUnaryCondition() {
+    private void CreateOrSaveUnaryCondition() {
+
         UnaryCondition newUnaryCondition = unaryConditionForm.getUnaryCondition();
-        unaryConditionList.add(newUnaryCondition);
-        updateUnaryGrid();
+
+        if(unaryConditionForm.editing)
+        {
+            int index = unaryConditionList.indexOf(editUnary);
+            unaryConditionList.set(index, newUnaryCondition);
+            updateUnaryGrid();
+        }
+        else
+        {
+            unaryConditionList.add(newUnaryCondition);
+            updateUnaryGrid();
+            closeUnaryEditor();
+        }
+
         unaryConditionForm.setVisible(false);
     }
     
@@ -166,7 +210,6 @@ public class ConditionsGridForm extends VerticalLayout {
     }
 
     private void updateUnaryGrid() {
-//        unaryConditionGrid.getDataProvider().refreshAll();
         unaryConditionGrid.setItems(unaryConditionList);
     }
 
@@ -175,24 +218,6 @@ public class ConditionsGridForm extends VerticalLayout {
         binaryConditionGrid.setItems(binaryConditionList);
     }
 
-    private void editUnaryCondition(UnaryCondition unaryCondition) {
-        if(unaryCondition == null) {
-            closeUnaryEditor();
-        } else {
-            unaryConditionForm.setUnaryCondition(unaryCondition);
-            unaryConditionForm.setVisible(true);
-            addClassName("editing");
-        }
-    }    
-    
-    private void editBinaryCondition(BinaryCondition binaryCondition) {
-        this.editingBinary = binaryCondition;
-        binaryConditionForm.setVisible(true);
-        if(binaryCondition != null) {
-            binaryConditionForm.setBinaryCondition(binaryCondition);
-            addClassName("editing");
-        }
-    }
 
     private void closeUnaryEditor() {
         unaryConditionForm.setUnaryCondition(null);
@@ -211,11 +236,6 @@ public class ConditionsGridForm extends VerticalLayout {
     }
     public List<BinaryCondition> getBinaryConditions() {
         return this.binaryConditionList;
-    }
-
-    public void setConditions()
-    {
-
     }
 
 }
