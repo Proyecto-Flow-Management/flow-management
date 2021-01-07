@@ -18,7 +18,7 @@ public class AlternativeGridForm extends VerticalLayout {
 
     private AlternativeForm alternativeForm;
     public Button createAlternative;
-
+    Alternative editAlternative;
     Grid<Alternative> alternativeGrid;
     List<Alternative> alternativeList;
 
@@ -65,11 +65,16 @@ public class AlternativeGridForm extends VerticalLayout {
 
         if(alternativeForm.editing)
         {
-            
+            int index = alternativeList.indexOf(editAlternative);
+            alternativeList.set(index, newAlternative);
+            updateGrid();
         }
-        alternativeList.add(newAlternative);
-        updateGrid();
-        alternativeForm.setVisible(false);
+        else
+        {
+            alternativeList.add(newAlternative);
+            updateGrid();
+            closeEditor();
+        }
     }
 
     private void updateGrid() {
@@ -78,7 +83,7 @@ public class AlternativeGridForm extends VerticalLayout {
 
     private void addAlternative() {
         alternativeGrid.asSingleSelect().clear();
-        editAlternative(new Alternative());
+        editAlternative(null);
     }
 
     private void configureGrid() {
@@ -90,13 +95,17 @@ public class AlternativeGridForm extends VerticalLayout {
     }
 
     private void editAlternative(Alternative alternative) {
-        if(alternative == null) {
-            closeEditor();
-        } else {
+        alternativeForm.setVisible(true);
+
+        if(alternative != null) {
+            this.editAlternative = alternative;
             alternativeForm.setAlternative(alternative);
-            alternativeForm.setVisible(true);
             addClassName("editing");
         }
+        else
+            {
+                alternativeForm.setAlternative(null);
+            }
     }
 
     private void closeEditor() {

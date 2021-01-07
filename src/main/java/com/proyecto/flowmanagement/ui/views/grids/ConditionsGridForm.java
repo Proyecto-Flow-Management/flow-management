@@ -12,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @CssImport("./styles/general.css")
@@ -39,9 +40,20 @@ public class ConditionsGridForm extends VerticalLayout {
 
     public ConditionsGridForm(Alternative alternative)
     {
+
+        if(alternative != null)
+        {
+            unaryConditionList = alternative.getConditions();
+            binaryConditionList = alternative.getBinaryConditions();
+        }
+        else
+        {
+            this.unaryConditionList = new LinkedList<>();
+            this.binaryConditionList = new LinkedList<>();
+        }
+
         configureElements();
-        unaryConditionList = alternative.getConditions();
-        binaryConditionList = alternative.getBinaryConditions();
+
         updateUnaryGrid();
         updateBinaryGrid();
     }
@@ -198,7 +210,6 @@ public class ConditionsGridForm extends VerticalLayout {
     }
 
     private void updateUnaryGrid() {
-//        unaryConditionGrid.getDataProvider().refreshAll();
         unaryConditionGrid.setItems(unaryConditionList);
     }
 
@@ -225,11 +236,6 @@ public class ConditionsGridForm extends VerticalLayout {
     }
     public List<BinaryCondition> getBinaryConditions() {
         return this.binaryConditionList;
-    }
-
-    public void setConditions()
-    {
-
     }
 
 }

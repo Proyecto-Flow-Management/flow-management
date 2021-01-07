@@ -83,6 +83,7 @@ public class AlternativeForm extends VerticalLayout {
     }
 
     public void setAlternative(Alternative alternative) {
+
         if(alternative != null)
         {
             this.alternative = alternative;
@@ -98,6 +99,7 @@ public class AlternativeForm extends VerticalLayout {
             this.guideName.setValue("");
             this.nextStep.setValue("");
             this.label.setValue("");
+            this.conditionsGridForm = new ConditionsGridForm(alternative);
         }
     }
 
@@ -113,7 +115,9 @@ public class AlternativeForm extends VerticalLayout {
 
     public Alternative getAlternative()
     {
-       return this.alternative;
+        this.alternative.setConditions(conditionsGridForm.getUnaryConditions());
+        this.alternative.setBinaryConditions(conditionsGridForm.getBinaryConditions());
+        return this.alternative;
     }
 
 }

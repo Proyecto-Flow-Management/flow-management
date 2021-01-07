@@ -2,6 +2,8 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,12 +21,14 @@ public class Alternative  extends AbstractEntity{
 	@Column(name = "next_step")
 	private String nextStep;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="alternative_unary_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<UnaryCondition> conditions;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="alternative_binary_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<BinaryCondition> binaryConditions;
 
 	public String getGuideName() {

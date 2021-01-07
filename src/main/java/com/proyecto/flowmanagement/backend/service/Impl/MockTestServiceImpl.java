@@ -96,7 +96,7 @@ public class MockTestServiceImpl {
         conditionParameterUnary.setOperator("=");
         conditionParameterUnary.setValue("HABILITADA");
         unaryCondition.setConditionParameter(conditionParameterUnary);
-        alternative1Step1.setConditions(unaryCondition);
+        //alternative1Step1.setConditions(unaryCondition.);
 
 
         // BinaryCondition
@@ -128,7 +128,7 @@ public class MockTestServiceImpl {
         listUnary.add(unaryCondition2A2);
 
         binaryCondition.setConditions(listUnary);
-        alternative2Step1.setBinaryConditions(binaryCondition);
+        //alternative2Step1.setBinaryConditions(binaryCondition);
 
         alternative2Step1.setLabel("Label Alternative 2 Step 1");
 
