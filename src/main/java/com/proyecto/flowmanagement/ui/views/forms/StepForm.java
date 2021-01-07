@@ -1,8 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
-import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
-import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.grids.AlternativeGridForm;
 import com.proyecto.flowmanagement.ui.views.grids.DocumentsGridForm;
 import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
@@ -17,7 +15,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
 @org.springframework.stereotype.Component
@@ -25,7 +22,8 @@ import com.vaadin.flow.shared.Registration;
 @CssImport("./styles/step-grid-form.css")
 public class StepForm extends HorizontalLayout {
 
-    private Step step = new Step();
+//    private Step step = new Step();
+    private Step step;
 
     AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
     DocumentsGridForm documentsGridForm = new DocumentsGridForm();
@@ -114,6 +112,7 @@ public class StepForm extends HorizontalLayout {
     private void validateAndSave() {
       if(isValid())
       {
+          this.step = new Step();
           step.setText(text.getValue());
           step.setTextId(textId.getValue());
           step.setLabel(label.getValue());
@@ -134,10 +133,15 @@ public class StepForm extends HorizontalLayout {
     }
 
     public void setStep(Step step) {
+        this.step = step;
+//        binder.readBean(alternative);
     }
 
     public Step getStep() {
         return this.step;
+    }
+    public Button getSaveButton() {
+        return this.save;
     }
 
     // Events

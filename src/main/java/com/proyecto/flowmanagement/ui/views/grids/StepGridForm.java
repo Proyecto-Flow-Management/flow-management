@@ -13,7 +13,7 @@ import java.util.List;
 
 @CssImport("./styles/general.css")
 public class StepGridForm  extends VerticalLayout {
-    private StepForm stepForm;
+    public StepForm stepForm;
     private Button createStep;
 
     Grid<Step> stepGrid = new Grid<>(Step.class);
@@ -104,5 +104,11 @@ public class StepGridForm  extends VerticalLayout {
 
     public List<Step> getSteps() {
         return this.stepList;
+    }
+    public Grid<Step> getStepGrid() {
+        return this.stepGrid;
+    }
+    public Button getSaveButton() {
+        return this.stepForm.getSaveButton();
     }
 }
