@@ -25,7 +25,7 @@ import java.util.List;
 @Route(value = "CreateGuide", layout = MainLayout.class)
 @PageTitle("CreateGuide | Flow Management")
 public class GuideForm extends VerticalLayout {
-
+    private Guide guide;
 
     HorizontalLayout guideLayout;
     HorizontalLayout stepSecctionLayout;
@@ -70,7 +70,8 @@ public class GuideForm extends VerticalLayout {
 
     private void createForm() {
         crearGuia = new Button("Crear Guia");
-        crearGuia.addClickListener(buttonClickEvent -> crearGuia());
+//        crearGuia.addClickListener(buttonClickEvent -> crearGuia());
+        crearGuia.addClickListener(buttonClickEvent -> validateAndSave());
         HorizontalLayout botonCrear = new HorizontalLayout();
 
         Span content = new Span("Guia creada y archivo XML generado!");
@@ -84,7 +85,28 @@ public class GuideForm extends VerticalLayout {
         button.addClickListener(event -> notification.open());
 
         botonCrear.add(button);
+//        botonCrear.add(crearGuia);
         add(guideLayout,stepSecctionLayout,operationSecctionLayout,botonCrear);
+    }
+
+    private void validateAndSave() {
+        if(isValid())
+        {
+            guide.setLabel(label.getValue());
+            guide.setName(name.getValue());
+            guide.setSteps(stepGridForm.getSteps());
+            guide.setOperations(operationGridForm.getOperations());
+        }
+    }
+
+    private boolean isValid() {
+        boolean result = false;
+
+        if(!name.getValue().isEmpty() &&
+                !label.getValue().isEmpty())
+            result = true;
+
+        return result;
     }
 
 
@@ -111,8 +133,14 @@ public class GuideForm extends VerticalLayout {
         guideLayout = new HorizontalLayout();
         name = new TextField("Nombre Guia");
         label = new TextField("Label Guia");
+        name.setRequired(true);
+        name.setErrorMessage("Este campo es obligatorio.");
+        label.setRequired(true);
+        label.setErrorMessage("Este campo es obligatorio.");
         mainStep = new ComboBox<>("Empezar en:");
         mainStep.setPlaceholder("Id Step Principal");
+        mainStep.setRequired(true);
+        mainStep.setErrorMessage("Debes seleccionar un Step Principal.");
         guideLayout.add(name,label,mainStep);
     }
 

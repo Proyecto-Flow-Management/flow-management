@@ -1,11 +1,9 @@
 package com.proyecto.flowmanagement.backend.service.Impl;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.def.SimpleOperationType;
 import com.proyecto.flowmanagement.backend.def.TaskOperationType;
 import com.proyecto.flowmanagement.backend.persistence.entity.*;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -63,7 +61,7 @@ public class MockTestServiceImpl {
         operation1Guide.setComment("Probando Comment");
         operation1Guide.setTitle("Probando Title");
         operation1Guide.setPauseExecution(false);
-        operation1Guide.setOperationOrder(true);
+        operation1Guide.setOperationOrder(3);
         operation1Guide.setOperationType(OperationType.simpleOperation);
         operation1Guide.setInParameters(parameters);
         operation1Guide.setNotifyAlternative(true);

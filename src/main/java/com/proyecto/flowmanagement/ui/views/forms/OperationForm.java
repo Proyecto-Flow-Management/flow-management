@@ -14,8 +14,11 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
 
@@ -46,11 +49,11 @@ public class OperationForm extends HorizontalLayout {
     TextField title = new TextField("Title");
     Checkbox automatic = new Checkbox("Automatic");
     Checkbox pauseExecution = new Checkbox("Pause Execution");
-    Checkbox operationOrder = new Checkbox("Operation Order");
+    IntegerField operationOrder = new IntegerField ("Operation Order");
     ComboBox<OperationType> operationType = new ComboBox<>("Operation Type");
     Checkbox notifyAlternative = new Checkbox("Notify Alternative");
     Checkbox notifyOperation = new Checkbox("Notify Operation");
-    TextField notifyOperationDelay = new TextField("Notify Operation Delay");
+    IntegerField notifyOperationDelay = new IntegerField("Notify Operation Delay");
 
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
@@ -70,19 +73,30 @@ public class OperationForm extends HorizontalLayout {
 
     private void configureElements() {
         addClassName("operationSection");
-        this.name.setValue("");
-        this.label.setValue("");
-        this.visible.setValue(false);
-        this.preExecute.setValue(false);
-        this.comment.setValue("");
-        this.title.setValue("");
-        this.automatic.setValue(false);
-        this.pauseExecution.setValue(false);
-        this.operationOrder.setValue(false);
+        this.name.setRequired(true);
+        this.name.setErrorMessage("Este campo es obligatorio.");
+        this.label.setRequired(true);
+        this.label.setErrorMessage("Este campo es obligatorio.");
+        this.operationType.setRequired(true);
+        this.operationType.setErrorMessage("Debes seleccionar un tipo.");
+
+        this.operationOrder.setPlaceholder("-1 Para no incluir el tag");
+        this.notifyOperationDelay.setPlaceholder("-1 Para no incluir el tag");
         this.operationType.setItems(OperationType.values());
-        this.notifyAlternative.setValue(false);
-        this.notifyOperation.setValue(false);
-        this.notifyOperationDelay.setValue("");
+
+//        this.name.setValue("");
+//        this.label.setValue("");
+//        this.visible.setValue(false);
+//        this.preExecute.setValue(false);
+//        this.comment.setValue("");
+//        this.title.setValue("");
+//        this.automatic.setValue(false);
+//        this.pauseExecution.setValue(false);
+//        this.operationOrder.setValue(-1);
+//        this.notifyAlternative.setValue(false);
+//        this.notifyOperation.setValue(false);
+//        this.notifyOperationDelay.setValue(-1);
+
 
         elements.add(name,label,comment,title,notifyOperationDelay,operationType,visible,preExecute,automatic,pauseExecution,operationOrder,notifyAlternative,notifyOperation);
         actionsLayout.add(createButtonsLayout());
@@ -150,7 +164,14 @@ public class OperationForm extends HorizontalLayout {
             operation.setOperationType(operationType.getValue());
             operation.setNotifyAlternative(notifyAlternative.getValue());
             operation.setNotifyOperation(notifyOperation.getValue());
-            operation.setNotifyOperationDelay(parseInt(notifyOperationDelay.getValue()));
+            operation.setNotifyOperationDelay(notifyOperationDelay.getValue());
+        }
+        else {
+            Span content = new Span("Los campos ingresados no son correctos.");
+            Notification notification = new Notification(content);
+            notification.setDuration(3000);
+            notification.setPosition(Notification.Position.MIDDLE);
+            notification.open();
         }
     }
 
@@ -159,11 +180,7 @@ public class OperationForm extends HorizontalLayout {
 
         if(!name.getValue().isEmpty() &&
                 !label.getValue().isEmpty() &&
-                !comment.getValue().isEmpty() &&
-                !title.getValue().isEmpty() &&
-                operationType != null &&
-                !notifyOperationDelay.getValue().isEmpty() &&
-                isInteger(notifyOperationDelay.getValue()))
+                operationType != null)
             result = true;
 
         return result;

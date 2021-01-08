@@ -1,10 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
-import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
 import com.proyecto.flowmanagement.ui.views.forms.DocumentsForm;
-import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
@@ -86,7 +83,7 @@ public class DocumentsGridForm extends VerticalLayout {
     }
 
     private void closeEditor() {
-       // documentsForm.setStepDocument(null);
+//        documentsForm.setStepDocument(null);
         documentsForm.setVisible(false);
         removeClassName("editing");
     }

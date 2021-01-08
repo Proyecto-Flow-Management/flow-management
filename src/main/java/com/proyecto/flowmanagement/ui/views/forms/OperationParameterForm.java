@@ -10,6 +10,8 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -61,6 +63,13 @@ public class OperationParameterForm extends HorizontalLayout {
 
     private void configureElements() {
         addClassName("operationParameterSection");
+        this.name.setRequired(true);
+        this.name.setErrorMessage("Este campo es obligatorio.");
+        this.type.setRequired(true);
+        this.type.setErrorMessage("Este campo es obligatorio.");
+        this.description.setRequired(true);
+        this.description.setErrorMessage("Este campo es obligatorio.");
+
         this.name.setValue("");
         this.label.setValue("");
         this.visible.setValue(false);
@@ -133,28 +142,24 @@ public class OperationParameterForm extends HorizontalLayout {
             operationParameter.setConvert(convert.getValue());
             operationParameter.setValueWhenInParameterEquals(valueWhenInParameterEquals.getValue());
         }
+        else {
+            Span content = new Span("Los campos ingresados no son correctos.");
+            Notification notification = new Notification(content);
+            notification.setDuration(3000);
+            notification.setPosition(Notification.Position.MIDDLE);
+            notification.open();
+        }
     }
 
     private boolean isValid() {
         boolean result = false;
 
         if(!name.getValue().isEmpty() &&
-                !label.getValue().isEmpty() &&
-                !visibleWhenInParameterEqualsCondition.getValue().isEmpty() &&
                 !type.getValue().isEmpty() &&
-                !description.getValue().isEmpty() &&
-                !value.getValue().isEmpty() &&
-                !validateExpression.getValue().isEmpty() &&
-                !validateExpressionErrorDescription.getValue().isEmpty() &&
-                !optionValue.getValue().isEmpty() &&
-                !dateFormat.getValue().isEmpty() &&
-                !dateFormatRangeEnd.getValue().isEmpty() &&
-                !dateFormatFinal.getValue().isEmpty() &&
-                !sourceValueEntityProperty.getValue().isEmpty() &&
-                !valueWhenInParameterEquals.getValue().isEmpty())
+                !description.getValue().isEmpty())
             result = true;
 
-        return true;
+        return result;
     }
 
     // Events
