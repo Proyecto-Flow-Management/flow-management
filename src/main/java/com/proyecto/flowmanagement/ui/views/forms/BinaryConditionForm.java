@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.BinaryCondition;
+import com.proyecto.flowmanagement.ui.views.grids.UnaryGridCondition;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -16,7 +17,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 
 @CssImport("./styles/binary-form.css")
-public class BinaryConditionForm extends VerticalLayout {
+public class BinaryConditionForm extends HorizontalLayout {
 
     public boolean editing;
     BinaryCondition binaryCondition = new BinaryCondition();
@@ -26,20 +27,41 @@ public class BinaryConditionForm extends VerticalLayout {
     public Button close = new Button("Cancelar");
     public Button delete = new Button("Eliminar");
 
+    VerticalLayout form = new VerticalLayout();
+
+    HorizontalLayout fields = new HorizontalLayout();
+    HorizontalLayout unaryGridLayout = new HorizontalLayout();
+    HorizontalLayout actions = new HorizontalLayout();
+
+    UnaryGridCondition unaryGridCondition;
+
     Binder<BinaryCondition> binder = new BeanValidationBinder<>(BinaryCondition.class);
 
     public BinaryConditionForm() {
         editing = false;
+
+        setWidthFull();
+
         configureElements();
+        
+        configureUnaryCondition();
+
+        configureForm();
+    }
+
+    private void configureForm() {
+        form.add(fields, unaryGridLayout, actions);
+        add(form);
     }
 
     private void configureElements() {
         editing = false;
+        fields.add(operationNameText);
         addClassName("binaryForm");
+        createButtonsLayout();
         this.operationNameText.setValue("");
-        add(operationNameText, createButtonsLayout());
     }
-    private Component createButtonsLayout() {
+    private void createButtonsLayout() {
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         delete.setVisible(false);
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -47,7 +69,7 @@ public class BinaryConditionForm extends VerticalLayout {
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
         save.addClickListener(click -> validateAndSave());
-        return new HorizontalLayout(save, close, delete);
+        actions.add(save, close, delete);
     }
 
     private void validateAndSave() {
@@ -63,10 +85,12 @@ public class BinaryConditionForm extends VerticalLayout {
         if(binaryCondition != null){
             this.editing = true;
             this.operationNameText.setValue(binaryCondition.getOperator());
+            this.unaryGridCondition.setUnaryCondition(binaryCondition.getConditions());
             this.delete.setVisible(true);
         }
         else{
             this.operationNameText.setValue("");
+            unaryGridCondition.setAsDefault();
             this.editing=false;
         }
     }
@@ -74,6 +98,7 @@ public class BinaryConditionForm extends VerticalLayout {
 
     public BinaryCondition getBinaryCondition()
     {
+        binaryCondition.setConditions(unaryGridCondition.getUnaryConditionList());
         return this.binaryCondition;
     }
 
@@ -100,27 +125,10 @@ public class BinaryConditionForm extends VerticalLayout {
         }
     }
 
-    public static class SaveEvent extends BinaryConditionForm.BinaryConditionFormEvent {
-        SaveEvent(BinaryConditionForm source, BinaryCondition BinaryCondition) {
-            super(source, BinaryCondition);
-        }
-    }
-
-    public static class DeleteEvent extends BinaryConditionForm.BinaryConditionFormEvent {
-        DeleteEvent(BinaryConditionForm source, BinaryCondition BinaryCondition) {
-            super(source, BinaryCondition);
-        }
-
-    }
-
-    public static class CloseEvent extends BinaryConditionForm.BinaryConditionFormEvent {
-        CloseEvent(BinaryConditionForm source) {
-            super(source, null);
-        }
-    }
-
-    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
-                                                                  ComponentEventListener<T> listener) {
-        return getEventBus().addListener(eventType, listener);
+    private void configureUnaryCondition() {
+        unaryGridLayout.setWidthFull();
+        unaryGridLayout.setWidthFull();
+        unaryGridCondition = new UnaryGridCondition();
+        unaryGridLayout.add(unaryGridCondition);
     }
 }

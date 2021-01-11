@@ -21,10 +21,11 @@ import sun.invoke.util.VerifyType;
 
 @CssImport("./styles/alternative-form.css")
 public class AlternativeForm extends VerticalLayout {
+
     public boolean editing;
     private Alternative alternative;
 
-    ConditionsGridForm conditionsGridForm = new ConditionsGridForm();
+    ConditionForm conditionForm = new ConditionForm();
 
     TextField guideName = new TextField("Guida Nombre Alternative");
     TextField label = new TextField("Label Alternative");
@@ -68,7 +69,7 @@ public class AlternativeForm extends VerticalLayout {
 
         conditionsLayout.setWidthFull();
 
-        conditionsLayout.add(conditionsGridForm);
+        conditionsLayout.add(conditionForm);
 
         form.add(elements,conditionsLayout, actionsLayout);
 
@@ -90,16 +91,16 @@ public class AlternativeForm extends VerticalLayout {
             this.guideName.setValue(alternative.getGuideName());
             this.nextStep.setValue(alternative.getNextStep());
             this.label.setValue(alternative.getLabel());
+            this.conditionForm.setConditions(alternative);
             editing = true;
             delete.setVisible(true);
-            this.conditionsGridForm = new ConditionsGridForm(alternative);
         }
         else
         {
             this.guideName.setValue("");
             this.nextStep.setValue("");
             this.label.setValue("");
-            this.conditionsGridForm = new ConditionsGridForm(alternative);
+            this.conditionForm.setAsDefault();
         }
     }
 
@@ -115,8 +116,8 @@ public class AlternativeForm extends VerticalLayout {
 
     public Alternative getAlternative()
     {
-        this.alternative.setConditions(conditionsGridForm.getUnaryConditions());
-        this.alternative.setBinaryConditions(conditionsGridForm.getBinaryConditions());
+        this.alternative.setConditions(conditionForm.getUnaryConditions());
+        this.alternative.setBinaryConditions(conditionForm.getBinaryConditions());
         return this.alternative;
     }
 

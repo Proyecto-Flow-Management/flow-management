@@ -103,9 +103,9 @@ public class AlternativeGridForm extends VerticalLayout {
             addClassName("editing");
         }
         else
-            {
-                alternativeForm.setAlternative(null);
-            }
+        {
+            alternativeForm.setAlternative(null);
+        }
     }
 
     private void closeEditor() {

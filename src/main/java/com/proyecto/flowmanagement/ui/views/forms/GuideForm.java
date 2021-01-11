@@ -49,7 +49,7 @@ public class GuideForm extends VerticalLayout {
         configureDocumentsElements();
 
         createForm();
-    }
+}
 
     private void configureDocumentsElements() {
     }
