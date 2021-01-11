@@ -48,7 +48,16 @@ public class DocumentsForm extends VerticalLayout {
         }
     }
 
-    private boolean isValid() {
+    public boolean isValid() {
+        boolean result = false;
+
+        if(validateFields())
+            result = true;
+
+        return result;
+    }
+
+    public boolean validateFields() {
         boolean result = false;
 
         if(!this.url.getValue().isEmpty()) {

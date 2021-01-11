@@ -206,7 +206,16 @@ public class OperationForm extends HorizontalLayout {
         }
     }
 
-    private boolean isValid() {
+    public boolean isValid() {
+        boolean result = false;
+
+        if(validateFields())
+            result = true;
+
+        return result;
+    }
+
+    public boolean validateFields(){
         boolean result = false;
 
         if(!name.getValue().isEmpty() &&

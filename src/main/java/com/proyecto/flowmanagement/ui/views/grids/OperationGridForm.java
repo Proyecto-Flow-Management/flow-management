@@ -60,10 +60,12 @@ public class OperationGridForm extends VerticalLayout {
     }
 
     private void CreateOperation() {
-        Operation newOperation = operationForm.getOperation();
-        operationList.add(newOperation);
-        updateGrid();
-        operationForm.setVisible(false);
+        if (operationForm.isValid()) {
+            Operation newOperation = operationForm.getOperation();
+            operationList.add(newOperation);
+            updateGrid();
+            operationForm.setVisible(false);
+        }
     }
 
     private void addOperation() {

@@ -57,10 +57,12 @@ public class DocumentsGridForm extends VerticalLayout {
     }
 
     private void CreateStepDocument() {
-        StepDocument newStepDocument = documentsForm.getStepDocument();
-        stepDocumentsList.add(newStepDocument);
-        updateGrid();
-        documentsForm.setVisible(false);
+        if (documentsForm.isValid()) {
+            StepDocument newStepDocument = documentsForm.getStepDocument();
+            stepDocumentsList.add(newStepDocument);
+            updateGrid();
+            documentsForm.setVisible(false);
+        }
     }
 
     private void updateGrid() {

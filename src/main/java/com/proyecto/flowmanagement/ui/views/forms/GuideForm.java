@@ -102,6 +102,15 @@ public class GuideForm extends VerticalLayout {
     private boolean isValid() {
         boolean result = false;
 
+        if(validateFields())
+            result = true;
+
+        return result;
+    }
+
+    public boolean validateFields(){
+        boolean result = false;
+
         if(!name.getValue().isEmpty() &&
                 !label.getValue().isEmpty() &&
                 !mainStep.isEmpty())
