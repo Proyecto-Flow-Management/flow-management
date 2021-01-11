@@ -7,7 +7,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
@@ -31,13 +31,13 @@ public class OperationParameterForm extends HorizontalLayout {
 
     TextField name = new TextField("Nombre");
     TextField label = new TextField("Etiqueta");
-    Checkbox visible = new Checkbox("Visible");
+    ComboBox<String> visible = new ComboBox<>("Visible");
     TextField visibleWhenInParameterEqualsCondition = new TextField("Visisble when In Parameter equals Condition");
     TextField type = new TextField("Type");
     TextField description = new TextField("Description");
     TextField value = new TextField("Value");
-    Checkbox enable = new Checkbox("Enable");
-    Checkbox required = new Checkbox("Required");
+    ComboBox<String> enable = new ComboBox<>("Enable");
+    ComboBox<String> required = new ComboBox<>("Required");
     TextField validateExpression = new TextField("Validate Expression");
     TextField validateExpressionErrorDescription = new TextField("Validate Expression Error Description");
     TextField optionValue = new TextField("Option Value");
@@ -45,7 +45,7 @@ public class OperationParameterForm extends HorizontalLayout {
     TextField dateFormatRangeEnd = new TextField("Date Format Range End");
     TextField dateFormatFinal = new TextField("Date Format Final");
     TextField sourceValueEntityProperty = new TextField("Source Value Entity Property");
-    Checkbox convert = new Checkbox("Convert");
+    ComboBox<String> convert = new ComboBox<>("Convert");
     TextField valueWhenInParameterEquals = new TextField("Value When In Parameter Equals");
 
     public Button save = new Button("Guardar");
@@ -69,25 +69,15 @@ public class OperationParameterForm extends HorizontalLayout {
         this.type.setErrorMessage("Este campo es obligatorio.");
         this.description.setRequired(true);
         this.description.setErrorMessage("Este campo es obligatorio.");
+        this.visible.setItems("True","False","Null");
+        this.visible.setValue("Null");
+        this.enable.setItems("True","False","Null");
+        this.enable.setValue("Null");
+        this.required.setItems("True","False","Null");
+        this.required.setValue("Null");
+        this.convert.setItems("True","False","Null");
+        this.convert.setValue("Null");
 
-        this.name.setValue("");
-        this.label.setValue("");
-        this.visible.setValue(false);
-        this.visibleWhenInParameterEqualsCondition.setValue("");
-        this.type.setValue("");
-        this.description.setValue("");
-        this.value.setValue("");
-        this.enable.setValue(false);
-        this.required.setValue(false);
-        this.validateExpression.setValue("");
-        this.validateExpressionErrorDescription.setValue("");
-        this.optionValue.setValue("");
-        this.dateFormat.setValue("");
-        this.dateFormatRangeEnd.setValue("");
-        this.dateFormatFinal.setValue("");
-        this.sourceValueEntityProperty.setValue("");
-        this.convert.setValue(false);
-        this.valueWhenInParameterEquals.setValue("");
         elements.add(name,label,visibleWhenInParameterEqualsCondition,type,description,value,validateExpression,validateExpressionErrorDescription,optionValue,dateFormat,dateFormatRangeEnd,dateFormatFinal,sourceValueEntityProperty,valueWhenInParameterEquals,enable,required,visible,convert);
         actionsLayout.add(createButtonsLayout());
     }
@@ -125,13 +115,28 @@ public class OperationParameterForm extends HorizontalLayout {
         {
             operationParameter.setName(name.getValue());
             operationParameter.setLabel(label.getValue());
-            operationParameter.setVisible(visible.getValue());
+            if (this.visible.getValue() == "True"){
+                operationParameter.setVisible(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operationParameter.setVisible(Boolean.FALSE);
+            }
             operationParameter.setVisibleWhenInParameterEqualsCondition(visibleWhenInParameterEqualsCondition.getValue());
             operationParameter.setType(type.getValue());
             operationParameter.setDescription(description.getValue());
             operationParameter.setValue(value.getValue());
-            operationParameter.setEnable(enable.getValue());
-            operationParameter.setRequired(required.getValue());
+            if (this.visible.getValue() == "True"){
+                operationParameter.setEnable(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operationParameter.setEnable(Boolean.FALSE);
+            }
+            if (this.visible.getValue() == "True"){
+                operationParameter.setRequired(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operationParameter.setRequired(Boolean.FALSE);
+            }
             operationParameter.setValidateExpression(validateExpression.getValue());
             operationParameter.setValidateExpressionErrorDescription(validateExpressionErrorDescription.getValue());
             operationParameter.setOptionValue(optionValue.getValue());
@@ -139,11 +144,16 @@ public class OperationParameterForm extends HorizontalLayout {
             operationParameter.setDateFormatRangeEnd(dateFormatRangeEnd.getValue());
             operationParameter.setDateFormatFinal(dateFormatFinal.getValue());
             operationParameter.setSourceValueEntityProperty(sourceValueEntityProperty.getValue());
-            operationParameter.setConvert(convert.getValue());
+            if (this.visible.getValue() == "True"){
+                operationParameter.setConvert(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operationParameter.setConvert(Boolean.FALSE);
+            }
             operationParameter.setValueWhenInParameterEquals(valueWhenInParameterEquals.getValue());
         }
         else {
-            Span content = new Span("Los campos ingresados no son correctos.");
+            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
             Notification notification = new Notification(content);
             notification.setDuration(3000);
             notification.setPosition(Notification.Position.MIDDLE);

@@ -40,7 +40,7 @@ public class DocumentsForm extends VerticalLayout {
             stepDocument.setUrl(url.getValue());
         }
         else {
-            Span content = new Span("Los campos ingresados no son correctos.");
+            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
             Notification notification = new Notification(content);
             notification.setDuration(3000);
             notification.setPosition(Notification.Position.MIDDLE);

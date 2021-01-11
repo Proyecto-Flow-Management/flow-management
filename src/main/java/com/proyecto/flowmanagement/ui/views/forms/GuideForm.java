@@ -103,7 +103,8 @@ public class GuideForm extends VerticalLayout {
         boolean result = false;
 
         if(!name.getValue().isEmpty() &&
-                !label.getValue().isEmpty())
+                !label.getValue().isEmpty() &&
+                !mainStep.isEmpty())
             result = true;
 
         return result;
@@ -141,6 +142,7 @@ public class GuideForm extends VerticalLayout {
         mainStep.setPlaceholder("Id Step Principal");
         mainStep.setRequired(true);
         mainStep.setErrorMessage("Debes seleccionar un Step Principal.");
+
         guideLayout.add(name,label,mainStep);
     }
 

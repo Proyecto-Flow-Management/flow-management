@@ -10,7 +10,6 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -43,16 +42,16 @@ public class OperationForm extends HorizontalLayout {
 
     TextField name = new TextField("Nombre");
     TextField label = new TextField("Etiqueta");
-    Checkbox visible = new Checkbox("Visible");
-    Checkbox preExecute = new Checkbox("Pre Execute");
+    ComboBox<String> visible = new ComboBox<>("Visible");
+    ComboBox<String> preExecute = new ComboBox<>("Pre Execute");
     TextField comment = new TextField("Comment");
     TextField title = new TextField("Title");
-    Checkbox automatic = new Checkbox("Automatic");
-    Checkbox pauseExecution = new Checkbox("Pause Execution");
+    ComboBox<String> automatic = new ComboBox<>("Automatic");
+    ComboBox<String> pauseExecution = new ComboBox<>("Pause Execution");
     IntegerField operationOrder = new IntegerField ("Operation Order");
     ComboBox<OperationType> operationType = new ComboBox<>("Operation Type");
-    Checkbox notifyAlternative = new Checkbox("Notify Alternative");
-    Checkbox notifyOperation = new Checkbox("Notify Operation");
+    ComboBox<String> notifyAlternative = new ComboBox<>("Notify Alternative");
+    ComboBox<String> notifyOperation = new ComboBox<>("Notify Operation");
     IntegerField notifyOperationDelay = new IntegerField("Notify Operation Delay");
 
     public Button save = new Button("Guardar");
@@ -79,26 +78,24 @@ public class OperationForm extends HorizontalLayout {
         this.label.setErrorMessage("Este campo es obligatorio.");
         this.operationType.setRequired(true);
         this.operationType.setErrorMessage("Debes seleccionar un tipo.");
+        this.visible.setItems("True","False","Null");
+        this.visible.setValue("Null");
+        this.preExecute.setItems("True","False","Null");
+        this.preExecute.setValue("Null");
+        this.automatic.setItems("True","False","Null");
+        this.automatic.setValue("Null");
+        this.pauseExecution.setItems("True","False","Null");
+        this.pauseExecution.setValue("Null");
+        this.notifyAlternative.setItems("True","False","Null");
+        this.notifyAlternative.setValue("Null");
+        this.notifyOperation.setItems("True","False","Null");
+        this.notifyOperation.setValue("Null");
 
-        this.operationOrder.setPlaceholder("-1 Para no incluir el tag");
-        this.notifyOperationDelay.setPlaceholder("-1 Para no incluir el tag");
+        this.operationOrder.setPlaceholder("Dejar vacío para no incluir el tag.");
+        this.notifyOperationDelay.setPlaceholder("Dejar vacío para no incluir el tag.");
         this.operationType.setItems(OperationType.values());
 
-//        this.name.setValue("");
-//        this.label.setValue("");
-//        this.visible.setValue(false);
-//        this.preExecute.setValue(false);
-//        this.comment.setValue("");
-//        this.title.setValue("");
-//        this.automatic.setValue(false);
-//        this.pauseExecution.setValue(false);
-//        this.operationOrder.setValue(-1);
-//        this.notifyAlternative.setValue(false);
-//        this.notifyOperation.setValue(false);
-//        this.notifyOperationDelay.setValue(-1);
-
-
-        elements.add(name,label,comment,title,notifyOperationDelay,operationType,visible,preExecute,automatic,pauseExecution,operationOrder,notifyAlternative,notifyOperation);
+        elements.add(name,label,comment,title,notifyOperationDelay,operationOrder,operationType,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation);
         actionsLayout.add(createButtonsLayout());
     }
 
@@ -154,20 +151,54 @@ public class OperationForm extends HorizontalLayout {
         {
             operation.setName(name.getValue());
             operation.setLabel(label.getValue());
-            operation.setVisible(visible.getValue());
-            operation.setPreExecute(preExecute.getValue());
+            if (this.visible.getValue() == "True"){
+                operation.setVisible(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operation.setVisible(Boolean.FALSE);
+            }
+            if (this.visible.getValue() == "True"){
+                operation.setPreExecute(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operation.setPreExecute(Boolean.FALSE);
+            }
             operation.setComment(comment.getValue());
             operation.setTitle(title.getValue());
-            operation.setAutomatic(automatic.getValue());
-            operation.setPauseExecution(pauseExecution.getValue());
-            operation.setOperationOrder(operationOrder.getValue());
+            if (this.visible.getValue() == "True"){
+                operation.setAutomatic(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operation.setAutomatic(Boolean.FALSE);
+            }
+            if (this.visible.getValue() == "True"){
+                operation.setPauseExecution(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operation.setPauseExecution(Boolean.FALSE);
+            }
+            if (!operationOrder.isEmpty()){
+                operation.setOperationOrder(operationOrder.getValue());
+            }
             operation.setOperationType(operationType.getValue());
-            operation.setNotifyAlternative(notifyAlternative.getValue());
-            operation.setNotifyOperation(notifyOperation.getValue());
-            operation.setNotifyOperationDelay(notifyOperationDelay.getValue());
+            if (this.visible.getValue() == "True"){
+                operation.setNotifyAlternative(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operation.setNotifyAlternative(Boolean.FALSE);
+            }
+            if (this.visible.getValue() == "True"){
+                operation.setNotifyOperation(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operation.setNotifyOperation(Boolean.FALSE);
+            }
+            if (!notifyOperationDelay.isEmpty()){
+                operation.setNotifyOperationDelay(notifyOperationDelay.getValue());
+            }
         }
         else {
-            Span content = new Span("Los campos ingresados no son correctos.");
+            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
             Notification notification = new Notification(content);
             notification.setDuration(3000);
             notification.setPosition(Notification.Position.MIDDLE);
@@ -180,7 +211,7 @@ public class OperationForm extends HorizontalLayout {
 
         if(!name.getValue().isEmpty() &&
                 !label.getValue().isEmpty() &&
-                operationType != null)
+                !operationType.isEmpty())
             result = true;
 
         return result;

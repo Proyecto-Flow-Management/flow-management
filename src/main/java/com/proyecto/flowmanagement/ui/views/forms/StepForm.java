@@ -89,6 +89,7 @@ public class StepForm extends HorizontalLayout {
 
     private void configureElements() {
         addClassName("stepSection");
+
         this.text.setRequired(true);
         this.text.setErrorMessage("Este campo es obligatorio.");
         this.textId.setRequired(true);
@@ -129,7 +130,7 @@ public class StepForm extends HorizontalLayout {
           step.setStepDocuments(documentsGridForm.getDocuments());
       }
       else {
-          Span content = new Span("Los campos ingresados no son correctos.");
+          Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
           Notification notification = new Notification(content);
           notification.setDuration(3000);
           notification.setPosition(Notification.Position.MIDDLE);

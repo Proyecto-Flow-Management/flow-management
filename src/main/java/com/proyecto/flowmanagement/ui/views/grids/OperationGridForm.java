@@ -48,7 +48,6 @@ public class OperationGridForm extends VerticalLayout {
         createOperationLayout.add(createOperation);
         createOperationLayout.setWidthFull();
 
-
         add(createOperationLayout, operationFormLayout, gridLayout);
     }
 
