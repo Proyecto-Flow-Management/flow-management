@@ -73,21 +73,19 @@ public class BinaryGridCondition  extends VerticalLayout {
     }
 
     private void CreateorSaveUnary() {
+        if (binaryForm.isValid()) {
+            BinaryCondition newBinary = binaryForm.getBinaryCondition();
 
-        BinaryCondition newBinary = binaryForm.getBinaryCondition();
-
-        if(binaryForm.editing)
-        {
-            int index = binaryConditionList.indexOf(editBinary);
-            binaryConditionList.set(index, newBinary);
-            CloseForm();
-            updateGrid();
-        }
-        else
-        {
-            binaryConditionList.add(newBinary);
-            updateGrid();
-            CloseForm();
+            if (binaryForm.editing) {
+                int index = binaryConditionList.indexOf(editBinary);
+                binaryConditionList.set(index, newBinary);
+                CloseForm();
+                updateGrid();
+            } else {
+                binaryConditionList.add(newBinary);
+                updateGrid();
+                CloseForm();
+            }
         }
     }
 

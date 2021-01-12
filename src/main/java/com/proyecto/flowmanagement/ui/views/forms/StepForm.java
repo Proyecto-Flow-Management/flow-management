@@ -143,28 +143,35 @@ public class StepForm extends HorizontalLayout {
     }
 
     private void validateAndSave() {
-      if(isValid())
+      if(!validateGrids())
       {
-          this.step = new Step();
-          step.setText(text.getValue());
-          step.setTextId(textId.getValue());
-          step.setLabel(label.getValue());
-          step.setAlternatives(alternativeGridForm.getAlternatives());
-          step.setStepDocuments(documentsGridForm.getDocuments());
+          Span content = new Span("La grilla de Alternative u Operations se encuentra vacía. Se debe tener al menos un elemento en ambas.");
+          Notification notification = new Notification(content);
+          notification.setDuration(3000);
+          notification.setPosition(Notification.Position.MIDDLE);
+          notification.open();
       }
-      else {
+      else if (!validateFields()) {
           Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
           Notification notification = new Notification(content);
           notification.setDuration(3000);
           notification.setPosition(Notification.Position.MIDDLE);
           notification.open();
       }
+      else {
+          this.step = new Step();
+          step.setText(text.getValue());
+          step.setTextId(textId.getValue());
+          step.setLabel(label.getValue());
+          step.setAlternatives(alternativeGridForm.getAlternatives());
+          step.setStepDocuments(documentsGridForm.getDocuments());
+    }
     }
 
     public boolean isValid() {
         boolean result = false;
 
-        if(validateFields())
+        if(validateFields() && validateGrids())
             result = true;
 
         return result;
@@ -175,8 +182,16 @@ public class StepForm extends HorizontalLayout {
 
         if(!text.getValue().isEmpty() &&
                 !textId.getValue().isEmpty() &&
-                !label.getValue().isEmpty() &&
-                operationGridForm.getOperations().size() > 0 &&
+                !label.getValue().isEmpty())
+            result = true;
+
+        return result;
+    }
+
+    public boolean validateGrids(){
+        boolean result = false;
+
+        if( operationGridForm.getOperations().size() > 0 &&
                 alternativeGridForm.getAlternatives().size() > 0)
             result = true;
 

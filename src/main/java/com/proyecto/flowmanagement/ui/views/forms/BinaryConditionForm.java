@@ -9,6 +9,8 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -56,6 +58,8 @@ public class BinaryConditionForm extends HorizontalLayout {
 
     private void configureElements() {
         editing = false;
+        this.operationNameText.setRequired(true);
+        this.operationNameText.setErrorMessage("Este campo es obligatorio.");
         fields.add(operationNameText);
         addClassName("binaryForm");
         createButtonsLayout();
@@ -77,6 +81,13 @@ public class BinaryConditionForm extends HorizontalLayout {
         {
             binaryCondition = new BinaryCondition();
             binaryCondition.setOperator(operationNameText.getValue());
+        }
+        else {
+            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
+            Notification notification = new Notification(content);
+            notification.setDuration(3000);
+            notification.setPosition(Notification.Position.MIDDLE);
+            notification.open();
         }
 
     }
@@ -102,7 +113,16 @@ public class BinaryConditionForm extends HorizontalLayout {
         return this.binaryCondition;
     }
 
-    private boolean isValid() {
+    public boolean isValid() {
+        boolean result = false;
+
+        if(validateFields())
+            result = true;
+
+        return result;
+    }
+
+    public boolean validateFields() {
         boolean result = false;
 
         if(!operationNameText.getValue().isEmpty())

@@ -72,21 +72,19 @@ public class UnaryGridCondition  extends VerticalLayout  {
     }
 
     private void CreateorSaveUnary() {
+        if(unaryForm.isValid()) {
+            UnaryCondition newUnary = unaryForm.getUnaryCondition();
 
-        UnaryCondition newUnary = unaryForm.getUnaryCondition();
-
-        if(unaryForm.editing)
-        {
-            int index = unaryConditionList.indexOf(editUnary);
-            unaryConditionList.set(index, newUnary);
-            updateGrid();
-            CloseForm();
-        }
-        else
-        {
-            unaryConditionList.add(newUnary);
-            updateGrid();
-            CloseForm();
+            if (unaryForm.editing) {
+                int index = unaryConditionList.indexOf(editUnary);
+                unaryConditionList.set(index, newUnary);
+                updateGrid();
+                CloseForm();
+            } else {
+                unaryConditionList.add(newUnary);
+                updateGrid();
+                CloseForm();
+            }
         }
     }
 

@@ -9,6 +9,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -42,10 +44,20 @@ public class UnaryConditionForm extends FormLayout {
     private void configureElements() {
         addClassName("unaryForm");
         this.operationNameText.setValue("");
+        this.operationNameText.setRequired(true);
+        this.operationNameText.setErrorMessage("Este campo es obligatorio.");
         this.fieldText.setValue("");
+        this.fieldText.setRequired(true);
+        this.fieldText.setErrorMessage("Este campo es obligatorio.");
         this.fieldTypeText.setValue("");
+        this.fieldTypeText.setRequired(true);
+        this.fieldTypeText.setErrorMessage("Este campo es obligatorio.");
         this.operatorText.setValue("");
+        this.operatorText.setRequired(true);
+        this.operatorText.setErrorMessage("Este campo es obligatorio.");;
         this.valueText.setValue("");
+        this.valueText.setRequired(true);
+        this.valueText.setErrorMessage("Este campo es obligatorio.");;
         add(operationNameText, fieldText,fieldTypeText,operatorText,valueText,createButtonsLayout());
     }
 
@@ -74,7 +86,13 @@ public class UnaryConditionForm extends FormLayout {
             unaryCondition.setOperationName(operationNameText.getValue());
             unaryCondition.setConditionParameter(conditionParameter);
         }
-
+        else {
+            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
+            Notification notification = new Notification(content);
+            notification.setDuration(3000);
+            notification.setPosition(Notification.Position.MIDDLE);
+            notification.open();
+        }
     }
 
     public void setUnaryCondition(UnaryCondition unaryCondition) {
@@ -105,14 +123,23 @@ public class UnaryConditionForm extends FormLayout {
         return this.unaryCondition;
     }
 
-    private boolean isValid() {
+    public boolean isValid() {
+        boolean result = false;
+
+        if (validateFields())
+            result = true;
+
+        return result;
+    }
+
+    public boolean validateFields(){
         boolean result = false;
 
         if( !fieldText.getValue().isEmpty() &&
-            !fieldTypeText.getValue().isEmpty() &&
-            !operatorText.getValue().isEmpty() &&
-            !valueText.getValue().isEmpty() &&
-            !operationNameText.getValue().isEmpty())
+                !fieldTypeText.getValue().isEmpty() &&
+                !operatorText.getValue().isEmpty() &&
+                !valueText.getValue().isEmpty() &&
+                !operationNameText.getValue().isEmpty())
             result = true;
 
         return result;
