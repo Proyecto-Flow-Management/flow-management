@@ -16,7 +16,7 @@ import java.util.List;
 @CssImport("./styles/general.css")
 public class AlternativeGridForm extends VerticalLayout {
 
-    private AlternativeForm alternativeForm;
+    public AlternativeForm alternativeForm;
     public Button createAlternative;
     Alternative editAlternative;
     Grid<Alternative> alternativeGrid;

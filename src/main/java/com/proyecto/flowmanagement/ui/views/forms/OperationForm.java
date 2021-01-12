@@ -2,6 +2,7 @@ package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
+import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
 import com.proyecto.flowmanagement.ui.views.grids.AlternativeGridForm;
 import com.proyecto.flowmanagement.ui.views.grids.OperationParameterGridForm;
 import com.vaadin.flow.component.Component;
@@ -19,6 +20,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
 
+import java.util.List;
+
 import static java.lang.Integer.parseInt;
 
 
@@ -26,14 +29,15 @@ import static java.lang.Integer.parseInt;
 @CssImport("./styles/operation-grid-form.css")
 public class OperationForm extends HorizontalLayout {
     private Operation operation;
+    public List<String> alteratives;
+    AlternativeIdsForm alternativeIdsForm;
 
-    AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
     OperationParameterGridForm inParameterGridForm = new OperationParameterGridForm("Crear IN Operation Parameter");
     OperationParameterGridForm outParameterGridForm = new OperationParameterGridForm("Crear OUT Operation Parameter");
 
     VerticalLayout form = new VerticalLayout();
     FormLayout elements = new FormLayout();
-    HorizontalLayout alternativeGridLayout = new HorizontalLayout();
+    HorizontalLayout alternativeIdsFormLayout = new HorizontalLayout();
     HorizontalLayout inParameterGridLayout = new HorizontalLayout();
     HorizontalLayout outParameterGridLayout = new HorizontalLayout();
     HorizontalLayout actionsLayout = new HorizontalLayout();
@@ -57,15 +61,32 @@ public class OperationForm extends HorizontalLayout {
 
 
     public OperationForm() {
+
         setSizeFull();
 
         configureElements();
 
-        configureAlternatives();
         configureOperationParameters();
 
         configureForm();
 
+    }
+
+    public OperationForm(List<String> alteratives) {
+
+        setSizeFull();
+
+        this.alteratives = alteratives;
+
+        this.alternativeIdsForm = new AlternativeIdsForm(alteratives);
+
+        configureElements();
+
+        configureAlternatives();
+
+        configureOperationParameters();
+
+        configureForm();
     }
 
     private void configureElements() {
@@ -89,9 +110,9 @@ public class OperationForm extends HorizontalLayout {
     }
 
     private void configureAlternatives() {
-        alternativeGridForm.setWidthFull();
-        alternativeGridLayout.setWidthFull();
-        alternativeGridLayout.add(alternativeGridForm);
+        alternativeIdsFormLayout.setWidthFull();
+        alternativeIdsFormLayout.setWidthFull();
+        alternativeIdsFormLayout.add(inParameterGridForm);
     }
 
     private void configureOperationParameters() {
@@ -105,11 +126,19 @@ public class OperationForm extends HorizontalLayout {
     }
 
     private void configureForm() {
-        form.add(elements,
-                alternativeGridLayout,
+
+        if(this.alteratives != null && this.alteratives.size() >0){
+            form.add(elements,
+                    alternativeIdsFormLayout,
+                    inParameterGridLayout,
+                    outParameterGridLayout,
+                    actionsLayout);
+        }
+        else{form.add(elements,
                 inParameterGridLayout,
                 outParameterGridLayout,
                 actionsLayout);
+        }
 
         add(form);
     }
