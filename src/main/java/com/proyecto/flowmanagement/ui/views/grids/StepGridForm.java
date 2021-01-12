@@ -58,10 +58,12 @@ public class StepGridForm  extends VerticalLayout {
     }
 
     private void CreateStep() {
-        Step newStep = stepForm.getStep();
-        stepList.add(newStep);
-        updateGrid();
-        stepForm.setVisible(false);
+        if (stepForm.isValid()){
+            Step newStep = stepForm.getStep();
+            stepList.add(newStep);
+            updateGrid();
+            stepForm.setVisible(false);
+        }
     }
 
     private void updateGrid() {

@@ -60,10 +60,12 @@ public class OperationParameterGridForm extends VerticalLayout {
     }
 
     private void CreateOperationParameter() {
-        OperationParameter newOperationParameter = operationParameterForm.getOperationParameter();
-        operationParameterList.add(newOperationParameter);
-        updateGrid();
-        operationParameterForm.setVisible(false);
+        if (operationParameterForm.isValid()) {
+            OperationParameter newOperationParameter = operationParameterForm.getOperationParameter();
+            operationParameterList.add(newOperationParameter);
+            updateGrid();
+            operationParameterForm.setVisible(false);
+        }
     }
 
     private void addOperationParameter() {

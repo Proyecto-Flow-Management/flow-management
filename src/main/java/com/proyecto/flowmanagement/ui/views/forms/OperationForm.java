@@ -11,12 +11,14 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
 
@@ -44,17 +46,17 @@ public class OperationForm extends HorizontalLayout {
 
     TextField name = new TextField("Nombre");
     TextField label = new TextField("Etiqueta");
-    Checkbox visible = new Checkbox("Visible");
-    Checkbox preExecute = new Checkbox("Pre Execute");
+    ComboBox<String> visible = new ComboBox<>("Visible");
+    ComboBox<String> preExecute = new ComboBox<>("Pre Execute");
     TextField comment = new TextField("Comment");
     TextField title = new TextField("Title");
-    Checkbox automatic = new Checkbox("Automatic");
-    Checkbox pauseExecution = new Checkbox("Pause Execution");
-    Checkbox operationOrder = new Checkbox("Operation Order");
+    ComboBox<String> automatic = new ComboBox<>("Automatic");
+    ComboBox<String> pauseExecution = new ComboBox<>("Pause Execution");
+    IntegerField operationOrder = new IntegerField ("Operation Order");
     ComboBox<OperationType> operationType = new ComboBox<>("Operation Type");
-    Checkbox notifyAlternative = new Checkbox("Notify Alternative");
-    Checkbox notifyOperation = new Checkbox("Notify Operation");
-    TextField notifyOperationDelay = new TextField("Notify Operation Delay");
+    ComboBox<String> notifyAlternative = new ComboBox<>("Notify Alternative");
+    ComboBox<String> notifyOperation = new ComboBox<>("Notify Operation");
+    IntegerField notifyOperationDelay = new IntegerField("Notify Operation Delay");
 
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
@@ -91,21 +93,30 @@ public class OperationForm extends HorizontalLayout {
 
     private void configureElements() {
         addClassName("operationSection");
-        this.name.setValue("");
-        this.label.setValue("");
-        this.visible.setValue(false);
-        this.preExecute.setValue(false);
-        this.comment.setValue("");
-        this.title.setValue("");
-        this.automatic.setValue(false);
-        this.pauseExecution.setValue(false);
-        this.operationOrder.setValue(false);
-        this.operationType.setItems(OperationType.values());
-        this.notifyAlternative.setValue(false);
-        this.notifyOperation.setValue(false);
-        this.notifyOperationDelay.setValue("");
+        this.name.setRequired(true);
+        this.name.setErrorMessage("Este campo es obligatorio.");
+        this.label.setRequired(true);
+        this.label.setErrorMessage("Este campo es obligatorio.");
+        this.operationType.setRequired(true);
+        this.operationType.setErrorMessage("Debes seleccionar un tipo.");
+        this.visible.setItems("True","False","Null");
+        this.visible.setValue("Null");
+        this.preExecute.setItems("True","False","Null");
+        this.preExecute.setValue("Null");
+        this.automatic.setItems("True","False","Null");
+        this.automatic.setValue("Null");
+        this.pauseExecution.setItems("True","False","Null");
+        this.pauseExecution.setValue("Null");
+        this.notifyAlternative.setItems("True","False","Null");
+        this.notifyAlternative.setValue("Null");
+        this.notifyOperation.setItems("True","False","Null");
+        this.notifyOperation.setValue("Null");
 
-        elements.add(name,label,comment,title,notifyOperationDelay,operationType,visible,preExecute,automatic,pauseExecution,operationOrder,notifyAlternative,notifyOperation);
+        this.operationOrder.setPlaceholder("Dejar vacío para no incluir el tag.");
+        this.notifyOperationDelay.setPlaceholder("Dejar vacío para no incluir el tag.");
+        this.operationType.setItems(OperationType.values());
+
+        elements.add(name,label,comment,title,notifyOperationDelay,operationOrder,operationType,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation);
         actionsLayout.add(createButtonsLayout());
     }
 
@@ -165,34 +176,82 @@ public class OperationForm extends HorizontalLayout {
     }
 
     private void validateAndSave() {
+        operation = new Operation();
+
         if(isValid())
         {
             operation.setName(name.getValue());
             operation.setLabel(label.getValue());
-            operation.setVisible(visible.getValue());
-            operation.setPreExecute(preExecute.getValue());
+            if (this.visible.getValue() == "True"){
+                operation.setVisible(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operation.setVisible(Boolean.FALSE);
+            }
+            if (this.visible.getValue() == "True"){
+                operation.setPreExecute(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operation.setPreExecute(Boolean.FALSE);
+            }
             operation.setComment(comment.getValue());
             operation.setTitle(title.getValue());
-            operation.setAutomatic(automatic.getValue());
-            operation.setPauseExecution(pauseExecution.getValue());
-            operation.setOperationOrder(operationOrder.getValue());
+            if (this.visible.getValue() == "True"){
+                operation.setAutomatic(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operation.setAutomatic(Boolean.FALSE);
+            }
+            if (this.visible.getValue() == "True"){
+                operation.setPauseExecution(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operation.setPauseExecution(Boolean.FALSE);
+            }
+            if (!operationOrder.isEmpty()){
+                operation.setOperationOrder(true);
+            }
             operation.setOperationType(operationType.getValue());
-            operation.setNotifyAlternative(notifyAlternative.getValue());
-            operation.setNotifyOperation(notifyOperation.getValue());
-            operation.setNotifyOperationDelay(parseInt(notifyOperationDelay.getValue()));
+            if (this.visible.getValue() == "True"){
+                operation.setNotifyAlternative(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operation.setNotifyAlternative(Boolean.FALSE);
+            }
+            if (this.visible.getValue() == "True"){
+                operation.setNotifyOperation(Boolean.TRUE);
+            }
+            else if (this.visible.getValue() == "False"){
+                operation.setNotifyOperation(Boolean.FALSE);
+            }
+            if (!notifyOperationDelay.isEmpty()){
+                operation.setNotifyOperationDelay(notifyOperationDelay.getValue());
+            }
+        }
+        else {
+            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
+            Notification notification = new Notification(content);
+            notification.setDuration(3000);
+            notification.setPosition(Notification.Position.MIDDLE);
+            notification.open();
         }
     }
 
-    private boolean isValid() {
+    public boolean isValid() {
+        boolean result = false;
+
+        if(validateFields())
+            result = true;
+
+        return result;
+    }
+
+    public boolean validateFields(){
         boolean result = false;
 
         if(!name.getValue().isEmpty() &&
                 !label.getValue().isEmpty() &&
-                !comment.getValue().isEmpty() &&
-                !title.getValue().isEmpty() &&
-                operationType != null &&
-                !notifyOperationDelay.getValue().isEmpty() &&
-                isInteger(notifyOperationDelay.getValue()))
+                !operationType.isEmpty())
             result = true;
 
         return result;

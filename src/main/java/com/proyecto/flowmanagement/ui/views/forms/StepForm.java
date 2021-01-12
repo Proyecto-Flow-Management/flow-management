@@ -12,6 +12,8 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -110,6 +112,14 @@ public class StepForm extends HorizontalLayout {
 
     private void configureElements() {
         addClassName("stepSection");
+
+        this.text.setRequired(true);
+        this.text.setErrorMessage("Este campo es obligatorio.");
+        this.textId.setRequired(true);
+        this.textId.setErrorMessage("Este campo es obligatorio.");
+        this.label.setRequired(true);
+        this.label.setErrorMessage("Este campo es obligatorio.");
+
         this.text.setValue("");
         this.textId.setValue("");
         this.label.setValue("");
@@ -142,14 +152,32 @@ public class StepForm extends HorizontalLayout {
           step.setAlternatives(alternativeGridForm.getAlternatives());
           step.setStepDocuments(documentsGridForm.getDocuments());
       }
+      else {
+          Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
+          Notification notification = new Notification(content);
+          notification.setDuration(3000);
+          notification.setPosition(Notification.Position.MIDDLE);
+          notification.open();
+      }
     }
 
-    private boolean isValid() {
+    public boolean isValid() {
+        boolean result = false;
+
+        if(validateFields())
+            result = true;
+
+        return result;
+    }
+
+    public boolean validateFields(){
         boolean result = false;
 
         if(!text.getValue().isEmpty() &&
-           !textId.getValue().isEmpty() &&
-           !label.getValue().isEmpty())
+                !textId.getValue().isEmpty() &&
+                !label.getValue().isEmpty() &&
+                operationGridForm.getOperations().size() > 0 &&
+                alternativeGridForm.getAlternatives().size() > 0)
             result = true;
 
         return result;

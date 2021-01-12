@@ -60,20 +60,18 @@ public class AlternativeGridForm extends VerticalLayout {
     }
 
     private void CreateorSaveAlternative() {
+        if (alternativeForm.isValid()) {
+            Alternative newAlternative = alternativeForm.getAlternative();
 
-        Alternative newAlternative = alternativeForm.getAlternative();
-
-        if(alternativeForm.editing)
-        {
-            int index = alternativeList.indexOf(editAlternative);
-            alternativeList.set(index, newAlternative);
-            updateGrid();
-        }
-        else
-        {
-            alternativeList.add(newAlternative);
-            updateGrid();
-            closeEditor();
+            if (alternativeForm.editing) {
+                int index = alternativeList.indexOf(editAlternative);
+                alternativeList.set(index, newAlternative);
+                updateGrid();
+            } else {
+                alternativeList.add(newAlternative);
+                updateGrid();
+                closeEditor();
+            }
         }
     }
 

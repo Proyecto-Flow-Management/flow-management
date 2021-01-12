@@ -3,6 +3,8 @@ package com.proyecto.flowmanagement.ui.views.forms;
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -22,21 +24,46 @@ public class DocumentsForm extends VerticalLayout {
 
     private void configureElements() {
         HorizontalLayout elements = new HorizontalLayout();
-        save.addClickListener(buttonClickEvent -> validAndSave());
+        save.addClickListener(buttonClickEvent -> validateAndSave());
+        this.url.setRequired(true);
+        this.url.setErrorMessage("Este campo es obligatorio.");
+
+        this.url.setValue("");
         elements.add(url,save,close);
         add(elements);
     }
 
-    private void validAndSave() {
+    private void validateAndSave() {
         if(isValid())
         {
             stepDocument = new StepDocument();
             stepDocument.setUrl(url.getValue());
         }
+        else {
+            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
+            Notification notification = new Notification(content);
+            notification.setDuration(3000);
+            notification.setPosition(Notification.Position.MIDDLE);
+            notification.open();
+        }
     }
 
-    private boolean isValid() {
-        return true;
+    public boolean isValid() {
+        boolean result = false;
+
+        if(validateFields())
+            result = true;
+
+        return result;
+    }
+
+    public boolean validateFields() {
+        boolean result = false;
+
+        if(!this.url.getValue().isEmpty()) {
+            result = true;
+        }
+        return result;
     }
 
     public StepDocument getStepDocument() {
@@ -44,5 +71,6 @@ public class DocumentsForm extends VerticalLayout {
     }
 
     public void setStepDocument(StepDocument stepDocument) {
+        this.stepDocument = stepDocument;
     }
 }

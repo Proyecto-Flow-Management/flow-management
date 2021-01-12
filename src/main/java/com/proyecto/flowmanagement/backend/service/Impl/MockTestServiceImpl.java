@@ -1,11 +1,9 @@
 package com.proyecto.flowmanagement.backend.service.Impl;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.def.SimpleOperationType;
 import com.proyecto.flowmanagement.backend.def.TaskOperationType;
 import com.proyecto.flowmanagement.backend.persistence.entity.*;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;

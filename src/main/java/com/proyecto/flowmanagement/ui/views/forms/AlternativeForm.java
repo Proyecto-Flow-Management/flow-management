@@ -2,22 +2,18 @@ package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.ui.views.grids.ConditionsGridForm;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
-import sun.invoke.util.VerifyType;
 
 @CssImport("./styles/alternative-form.css")
 public class AlternativeForm extends VerticalLayout {
@@ -27,7 +23,7 @@ public class AlternativeForm extends VerticalLayout {
 
     ConditionForm conditionForm = new ConditionForm();
 
-    TextField guideName = new TextField("Guida Nombre Alternative");
+    TextField guideName = new TextField("Guia Nombre Alternative");
     TextField label = new TextField("Label Alternative");
     TextField nextStep = new TextField("nextStep Alternative");
 
@@ -35,19 +31,16 @@ public class AlternativeForm extends VerticalLayout {
     Button delete = new Button("Eliminar");
     public Button close = new Button("Cancelar");
 
-    Binder<Alternative> binder = new BeanValidationBinder<>(Alternative.class);
-
 
     public AlternativeForm() {
         setClassName("alternativeSection");
         configureElements();
         editing = false;
-        binder.bindInstanceFields(this);
     }
 
     public void configureElements() {
 
-        save.addClickListener(buttonClickEvent -> validAndSave());
+        save.addClickListener(buttonClickEvent -> validateAndSave());
 
         VerticalLayout form = new VerticalLayout();
 
@@ -56,6 +49,9 @@ public class AlternativeForm extends VerticalLayout {
         HorizontalLayout conditionsLayout = new HorizontalLayout();
 
         HorizontalLayout actionsLayout = new HorizontalLayout();
+
+        this.label.setRequired(true);
+        this.label.setErrorMessage("Este campo es obligatorio.");
 
         elements.add(guideName, label, nextStep);
 
@@ -76,16 +72,24 @@ public class AlternativeForm extends VerticalLayout {
         add(form);
     }
 
-    private void validAndSave() {
-        this.alternative = new Alternative();
-        alternative.setLabel(this.label.getValue());
-        alternative.setGuideName(this.guideName.getValue());
-        alternative.setNextStep(this.nextStep.getValue());
+    private void validateAndSave() {
+        if (isValid()){
+            this.alternative = new Alternative();
+            alternative.setLabel(this.label.getValue());
+            alternative.setGuideName(this.guideName.getValue());
+            alternative.setNextStep(this.nextStep.getValue());
+        }
+        else {
+            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
+            Notification notification = new Notification(content);
+            notification.setDuration(3000);
+            notification.setPosition(Notification.Position.MIDDLE);
+            notification.open();
+        }
     }
 
     public void setAlternative(Alternative alternative) {
-
-        if(alternative != null)
+        if (alternative != null)
         {
             this.alternative = alternative;
             this.guideName.setValue(alternative.getGuideName());
@@ -107,11 +111,20 @@ public class AlternativeForm extends VerticalLayout {
     public boolean isValid() {
         boolean result = false;
 
-        if(!this.label.getValue().isEmpty() &&
-           (!this.guideName.getValue().isEmpty() || !this.nextStep.getValue().isEmpty()))
+        if(validateFields())
             result = true;
 
-        return false;
+        return result;
+    }
+
+    public boolean validateFields(){
+        boolean result = false;
+
+        if(!this.label.getValue().isEmpty() &&
+                (!this.guideName.getValue().isEmpty() || !this.nextStep.getValue().isEmpty()))
+            result = true;
+
+        return result;
     }
 
     public Alternative getAlternative()
@@ -121,4 +134,41 @@ public class AlternativeForm extends VerticalLayout {
         return this.alternative;
     }
 
+    // Events
+    public static abstract class AlternativeFormEvent extends ComponentEvent<AlternativeForm> {
+        private Alternative alternative;
+
+        protected AlternativeFormEvent(AlternativeForm source, Alternative alternative) {
+            super(source, false);
+            this.alternative = alternative;
+        }
+
+        public Alternative getAlternative() {
+            return alternative;
+        }
+    }
+
+    public static class SaveEvent extends AlternativeForm.AlternativeFormEvent {
+        SaveEvent(AlternativeForm source, Alternative alternative) {
+            super(source, alternative);
+        }
+    }
+
+    public static class DeleteEvent extends AlternativeForm.AlternativeFormEvent {
+        DeleteEvent(AlternativeForm source, Alternative alternative) {
+            super(source, alternative);
+        }
+
+    }
+
+    public static class CloseEvent extends AlternativeForm.AlternativeFormEvent {
+        CloseEvent(AlternativeForm source) {
+            super(source, null);
+        }
+    }
+
+    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
+                                                                  ComponentEventListener<T> listener) {
+        return getEventBus().addListener(eventType, listener);
+    }
 }

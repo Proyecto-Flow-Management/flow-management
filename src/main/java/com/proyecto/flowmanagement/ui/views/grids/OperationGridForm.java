@@ -50,7 +50,6 @@ public class OperationGridForm extends VerticalLayout {
         createOperationLayout.add(createOperation);
         createOperationLayout.setWidthFull();
 
-
         add(createOperationLayout, operationFormLayout, gridLayout);
     }
 
@@ -63,10 +62,12 @@ public class OperationGridForm extends VerticalLayout {
     }
 
     private void CreateOperation() {
-        Operation newOperation = operationForm.getOperation();
-        operationList.add(newOperation);
-        updateGrid();
-        operationForm.setVisible(false);
+        if (operationForm.isValid()) {
+            Operation newOperation = operationForm.getOperation();
+            operationList.add(newOperation);
+            updateGrid();
+            CloseForm();
+        }
     }
 
     private void addOperation() {
