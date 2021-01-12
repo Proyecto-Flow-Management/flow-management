@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.grids.AlternativeGridForm;
 import com.proyecto.flowmanagement.ui.views.grids.DocumentsGridForm;
@@ -16,6 +17,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.shared.Registration;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Component
 @PageTitle("CreateStep | Flow Management")
@@ -57,6 +62,8 @@ public class StepForm extends HorizontalLayout {
         configureOperations();
 
         configureForm();
+
+        agregarInteractividad();
     }
 
     private void configureForm() {
@@ -83,6 +90,22 @@ public class StepForm extends HorizontalLayout {
         alternativeGridForm.setWidthFull();
         alternativeGridLayout.setWidthFull();
         alternativeGridLayout.add(alternativeGridForm);
+    }
+
+    public void agregarInteractividad()
+    {
+        alternativeGridForm.alternativeForm.save.addClickListener(buttonClickEvent -> addToOperationForm());
+    }
+
+    private void addToOperationForm() {
+        List<String> ids = new LinkedList<>();
+
+        for (Alternative alternative: this.alternativeGridForm.getAlternatives()) {
+            if(alternative.getNextStep() != "")
+                ids.add(alternative.getNextStep());
+        }
+
+        this.operationGridForm.alternatives = ids;
     }
 
     private void configureElements() {

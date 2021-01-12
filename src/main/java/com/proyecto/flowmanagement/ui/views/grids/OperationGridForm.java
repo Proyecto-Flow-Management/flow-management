@@ -16,6 +16,8 @@ public class OperationGridForm extends VerticalLayout {
     private Button createOperation;
     public OperationForm operationForm;
 
+    public List<String> alternatives;
+
     Grid<Operation> operationGrid;
     List<Operation> operationList;
 
@@ -69,6 +71,8 @@ public class OperationGridForm extends VerticalLayout {
 
     private void addOperation() {
         operationGrid.asSingleSelect().clear();
+        operationForm.setVisible(true);
+        operationForm = new OperationForm(alternatives);
         editOperation(new Operation());
     }
 
@@ -84,6 +88,7 @@ public class OperationGridForm extends VerticalLayout {
         if(operation == null) {
             closeEditor();
         } else {
+            this.operationForm.alteratives = this.alternatives;
             operationForm.setOperation(operation);
             operationForm.setVisible(true);
             addClassName("editing");

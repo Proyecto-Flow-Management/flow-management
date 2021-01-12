@@ -16,7 +16,7 @@ import java.util.List;
 @CssImport("./styles/general.css")
 public class AlternativeGridForm extends VerticalLayout {
 
-    private AlternativeForm alternativeForm;
+    public AlternativeForm alternativeForm;
     public Button createAlternative;
     Alternative editAlternative;
     Grid<Alternative> alternativeGrid;
@@ -103,9 +103,9 @@ public class AlternativeGridForm extends VerticalLayout {
             addClassName("editing");
         }
         else
-            {
-                alternativeForm.setAlternative(null);
-            }
+        {
+            alternativeForm.setAlternative(null);
+        }
     }
 
     private void closeEditor() {
