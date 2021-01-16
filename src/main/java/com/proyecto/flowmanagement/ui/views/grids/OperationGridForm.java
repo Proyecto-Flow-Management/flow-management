@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
+import com.proyecto.flowmanagement.backend.persistence.entity.UnaryCondition;
 import com.proyecto.flowmanagement.ui.views.forms.OperationForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -54,7 +55,17 @@ public class OperationGridForm extends VerticalLayout {
     }
 
     private void updateGrid() {
-        operationGrid.setItems(operationList);
+        if (operationList != null) {
+            operationGrid.setItems(operationList);
+        }
+        else{
+            operationGrid.setItems(new LinkedList<>());
+        }
+    }
+
+    public void updateOperations(List operationList){
+        this.operationList = operationList;
+        updateGrid();
     }
 
     private void CloseForm() {
@@ -72,8 +83,7 @@ public class OperationGridForm extends VerticalLayout {
 
     private void addOperation() {
         operationGrid.asSingleSelect().clear();
-        operationForm.setVisible(true);
-        operationForm = new OperationForm(alternatives);
+//        operationForm = new OperationForm(alternatives);
         editOperation(new Operation());
     }
 
@@ -86,6 +96,7 @@ public class OperationGridForm extends VerticalLayout {
     }
 
     private void editOperation(Operation operation) {
+        operationForm.setVisible(true);
         if(operation == null) {
             closeEditor();
         } else {
@@ -94,6 +105,11 @@ public class OperationGridForm extends VerticalLayout {
             operationForm.setVisible(true);
             addClassName("editing");
         }
+    }
+
+    public void setAsDefault() {
+        this.operationList = new LinkedList<Operation>();
+        this.operationGrid.setItems(operationList);
     }
 
     private void closeEditor() {

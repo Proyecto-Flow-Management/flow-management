@@ -2,6 +2,7 @@ package com.proyecto.flowmanagement.ui.views.grids;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
+import com.proyecto.flowmanagement.backend.persistence.entity.UnaryCondition;
 import com.proyecto.flowmanagement.ui.views.forms.AlternativeForm;
 import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.button.Button;
@@ -10,6 +11,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class AlternativeGridForm extends VerticalLayout {
     Alternative editAlternative;
     Grid<Alternative> alternativeGrid;
     List<Alternative> alternativeList;
+    List<String> stepIdList;
 
     public AlternativeGridForm()
     {
@@ -76,7 +79,21 @@ public class AlternativeGridForm extends VerticalLayout {
     }
 
     private void updateGrid() {
-        alternativeGrid.setItems(alternativeList);
+        if (alternativeList != null) {
+            alternativeGrid.setItems(alternativeList);
+        }
+        else{
+            alternativeGrid.setItems(new LinkedList<>());
+        }
+    }
+
+    public void updateAlternatives(List alternativeList){
+        this.alternativeList = alternativeList;
+        updateGrid();
+    }
+
+    public void setStepIdList (List stepIdList){
+        this.stepIdList = stepIdList;
     }
 
     private void addAlternative() {
@@ -88,12 +105,13 @@ public class AlternativeGridForm extends VerticalLayout {
         alternativeGrid = new Grid<>(Alternative.class);
         alternativeGrid.addClassName("user-grid");
         alternativeGrid.setSizeFull();
-        alternativeGrid.setColumns("label","nextStep");
+        alternativeGrid.setColumns("label","nextStep","guideName");
         alternativeGrid.asSingleSelect().addValueChangeListener(evt -> editAlternative(evt.getValue()));
     }
 
     private void editAlternative(Alternative alternative) {
         alternativeForm.setVisible(true);
+        alternativeForm.setStepIdCombo(stepIdList);
 
         if(alternative != null) {
             this.editAlternative = alternative;
@@ -104,6 +122,11 @@ public class AlternativeGridForm extends VerticalLayout {
         {
             alternativeForm.setAlternative(null);
         }
+    }
+
+    public void setAsDefault() {
+        this.alternativeList = new LinkedList<Alternative>();
+        this.alternativeGrid.setItems(alternativeList);
     }
 
     private void closeEditor() {

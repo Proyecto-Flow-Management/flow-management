@@ -99,18 +99,18 @@ public class OperationForm extends HorizontalLayout {
         this.label.setErrorMessage("Este campo es obligatorio.");
         this.operationType.setRequired(true);
         this.operationType.setErrorMessage("Debes seleccionar un tipo.");
-        this.visible.setItems("True","False","Null");
-        this.visible.setValue("Null");
-        this.preExecute.setItems("True","False","Null");
-        this.preExecute.setValue("Null");
-        this.automatic.setItems("True","False","Null");
-        this.automatic.setValue("Null");
-        this.pauseExecution.setItems("True","False","Null");
-        this.pauseExecution.setValue("Null");
-        this.notifyAlternative.setItems("True","False","Null");
-        this.notifyAlternative.setValue("Null");
-        this.notifyOperation.setItems("True","False","Null");
-        this.notifyOperation.setValue("Null");
+        this.visible.setItems("True","False","No incluir");
+        this.visible.setValue("No incluir");
+        this.preExecute.setItems("True","False","No incluir");
+        this.preExecute.setValue("No incluir");
+        this.automatic.setItems("True","False","No incluir");
+        this.automatic.setValue("No incluir");
+        this.pauseExecution.setItems("True","False","No incluir");
+        this.pauseExecution.setValue("No incluir");
+        this.notifyAlternative.setItems("True","False","No incluir");
+        this.notifyAlternative.setValue("No incluir");
+        this.notifyOperation.setItems("True","False","No incluir");
+        this.notifyOperation.setValue("No incluir");
 
         this.operationOrder.setPlaceholder("Dejar vacío para no incluir el tag.");
         this.notifyOperationDelay.setPlaceholder("Dejar vacío para no incluir el tag.");
@@ -145,7 +145,8 @@ public class OperationForm extends HorizontalLayout {
                     outParameterGridLayout,
                     actionsLayout);
         }
-        else{form.add(elements,
+        else{
+            form.add(elements,
                 inParameterGridLayout,
                 outParameterGridLayout,
                 actionsLayout);
@@ -188,40 +189,40 @@ public class OperationForm extends HorizontalLayout {
             else if (this.visible.getValue() == "False"){
                 operation.setVisible(Boolean.FALSE);
             }
-            if (this.visible.getValue() == "True"){
+            if (this.preExecute.getValue() == "True"){
                 operation.setPreExecute(Boolean.TRUE);
             }
-            else if (this.visible.getValue() == "False"){
+            else if (this.preExecute.getValue() == "False"){
                 operation.setPreExecute(Boolean.FALSE);
             }
             operation.setComment(comment.getValue());
             operation.setTitle(title.getValue());
-            if (this.visible.getValue() == "True"){
+            if (this.automatic.getValue() == "True"){
                 operation.setAutomatic(Boolean.TRUE);
             }
-            else if (this.visible.getValue() == "False"){
+            else if (this.automatic.getValue() == "False"){
                 operation.setAutomatic(Boolean.FALSE);
             }
-            if (this.visible.getValue() == "True"){
+            if (this.pauseExecution.getValue() == "True"){
                 operation.setPauseExecution(Boolean.TRUE);
             }
-            else if (this.visible.getValue() == "False"){
+            else if (this.pauseExecution.getValue() == "False"){
                 operation.setPauseExecution(Boolean.FALSE);
             }
             if (!operationOrder.isEmpty()){
                 operation.setOperationOrder(true);
             }
             operation.setOperationType(operationType.getValue());
-            if (this.visible.getValue() == "True"){
+            if (this.notifyAlternative.getValue() == "True"){
                 operation.setNotifyAlternative(Boolean.TRUE);
             }
-            else if (this.visible.getValue() == "False"){
+            else if (this.notifyAlternative.getValue() == "False"){
                 operation.setNotifyAlternative(Boolean.FALSE);
             }
-            if (this.visible.getValue() == "True"){
+            if (this.notifyOperation.getValue() == "True"){
                 operation.setNotifyOperation(Boolean.TRUE);
             }
-            else if (this.visible.getValue() == "False"){
+            else if (this.notifyOperation.getValue() == "False"){
                 operation.setNotifyOperation(Boolean.FALSE);
             }
             if (!notifyOperationDelay.isEmpty()){
@@ -249,8 +250,8 @@ public class OperationForm extends HorizontalLayout {
     public boolean validateFields(){
         boolean result = false;
 
-        if(!name.getValue().isEmpty() &&
-                !label.getValue().isEmpty() &&
+        if(!name.isEmpty() &&
+                !label.isEmpty() &&
                 !operationType.isEmpty())
             result = true;
 

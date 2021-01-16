@@ -89,8 +89,27 @@ public class GuideForm extends VerticalLayout {
         add(guideLayout,stepSecctionLayout,operationSecctionLayout,botonCrear);
     }
 
+    private void showNotification(String message){
+        Span content = new Span(message);
+        Notification notification = new Notification(content);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
+    }
+
+
     private void validateAndSave() {
-        if(isValid())
+        if(!validateGrids() && !validateFields()){
+            showNotification("Algún valor ingresado no es correcto o falta completar campos.");
+            showNotification("La grilla de Steps se encuentra vacía. Se debe tener al menos un elemento en esta.");
+        }
+        else if(!validateGrids()){
+            showNotification("La grilla de Steps se encuentra vacía. Se debe tener al menos un elemento en esta.");
+        }
+        else if (!validateFields()) {
+            showNotification("Algún valor ingresado no es correcto o falta completar campos.");
+        }
+        else
         {
             guide.setLabel(label.getValue());
             guide.setName(name.getValue());
@@ -102,7 +121,7 @@ public class GuideForm extends VerticalLayout {
     private boolean isValid() {
         boolean result = false;
 
-        if(validateFields())
+        if(validateFields() && validateGrids())
             result = true;
 
         return result;
@@ -114,6 +133,15 @@ public class GuideForm extends VerticalLayout {
         if(!name.getValue().isEmpty() &&
                 !label.getValue().isEmpty() &&
                 !mainStep.isEmpty())
+            result = true;
+
+        return result;
+    }
+
+    public boolean validateGrids() {
+        boolean result = false;
+
+        if (stepGridForm.getSteps().size() > 0)
             result = true;
 
         return result;

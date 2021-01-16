@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
+import com.proyecto.flowmanagement.backend.persistence.entity.UnaryCondition;
 import com.proyecto.flowmanagement.ui.views.forms.DocumentsForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -66,7 +67,17 @@ public class DocumentsGridForm extends VerticalLayout {
     }
 
     private void updateGrid() {
-        stepDocumentGrid.setItems(stepDocumentsList);
+        if (stepDocumentsList != null) {
+            stepDocumentGrid.setItems(stepDocumentsList);
+        }
+        else{
+            stepDocumentGrid.setItems(new LinkedList<>());
+        }
+    }
+
+    public void updateDocuments(List documentsList){
+        this.stepDocumentsList = documentsList;
+        updateGrid();
     }
 
     private void addDocument() {
@@ -82,6 +93,11 @@ public class DocumentsGridForm extends VerticalLayout {
             documentsForm.setVisible(true);
             addClassName("editing");
         }
+    }
+
+    public void setAsDefault() {
+        this.stepDocumentsList = new LinkedList<StepDocument>();
+        this.stepDocumentGrid.setItems(stepDocumentsList);
     }
 
     private void closeEditor() {

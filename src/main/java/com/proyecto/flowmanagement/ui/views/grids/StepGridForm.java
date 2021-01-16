@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.button.Button;
@@ -13,8 +14,9 @@ import java.util.List;
 
 @CssImport("./styles/general.css")
 public class StepGridForm  extends VerticalLayout {
-    public StepForm stepForm;
     private Button createStep;
+    public StepForm stepForm;
+    Step editStep;
 
     Grid<Step> stepGrid = new Grid<>(Step.class);
     List<Step> stepList = new LinkedList<>();
@@ -22,19 +24,19 @@ public class StepGridForm  extends VerticalLayout {
     public StepGridForm()
     {
         setSizeFull();
-
         configureElements();
     }
 
 
     private void configureElements()
     {
+        this.stepList = new LinkedList<>();
         configureGrid();
         createStep = new Button("Crear Step", click -> addStep());
 
         stepForm = new StepForm();
         stepForm.setVisible(false);
-        stepForm.save.addClickListener(buttonClickEvent -> CreateStep());
+        stepForm.save.addClickListener(buttonClickEvent -> CreateorSaveStep());
         stepForm.close.addClickListener(buttonClickEvent -> CloseForm());
 
         HorizontalLayout gridLayout = new HorizontalLayout();
@@ -53,6 +55,10 @@ public class StepGridForm  extends VerticalLayout {
         add(createStepLayout, stepFormLayout, gridLayout);
     }
 
+    private void updateGrid() {
+        stepGrid.setItems(stepList);
+    }
+
     private void CloseForm() {
         this.stepForm.setVisible(false);
     }
@@ -66,17 +72,30 @@ public class StepGridForm  extends VerticalLayout {
         }
     }
 
-    private void updateGrid() {
-        stepGrid.setItems(stepList);
+    private void CreateorSaveStep() {
+        if (stepForm.isValid()) {
+            Step newStep = stepForm.getStep();
+
+            if (stepForm.editing) {
+                int index = stepList.indexOf(editStep);
+                stepList.set(index, newStep);
+                updateGrid();
+            } else {
+                stepList.add(newStep);
+                updateGrid();
+                closeEditor();
+            }
+        }
     }
 
     private void addStep() {
         stepGrid.asSingleSelect().clear();
-        editStep(new Step());
+        stepForm.setStepIdList(getStepIdList());
+        editStep(null);
     }
 
     private void configureGrid() {
-//        stepGrid = new Grid<>(Step.class);
+        stepGrid = new Grid<>(Step.class);
         stepGrid.addClassName("user-grid");
 //        stepGrid.setSizeFull();
         stepGrid.setColumns("label", "text", "textId");
@@ -89,13 +108,25 @@ public class StepGridForm  extends VerticalLayout {
     }
 
     private void editStep(Step step) {
-        if(step == null) {
-            closeEditor();
-        } else {
+        stepForm.setVisible(true);
+        stepForm.setStepIdList(getStepIdList());
+
+        if(step != null) {
+            this.editStep = step;
             stepForm.setStep(step);
-            stepForm.setVisible(true);
             addClassName("editing");
+        } else {
+            stepForm.setStep(null);
         }
+    }
+
+    private List<String> getStepIdList(){
+        List<String> stepIdList = new LinkedList<>();
+        for (Step step:
+             stepList) {
+            stepIdList.add(step.getTextId());
+        }
+        return stepIdList;
     }
 
     private void closeEditor() {

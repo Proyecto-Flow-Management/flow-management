@@ -20,6 +20,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.shared.Registration;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,8 +30,9 @@ import java.util.stream.Collectors;
 @CssImport("./styles/step-grid-form.css")
 public class StepForm extends HorizontalLayout {
 
-//    private Step step = new Step();
+    public boolean editing;
     private Step step;
+    List<String> stepIdList;
 
     AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
     DocumentsGridForm documentsGridForm = new DocumentsGridForm();
@@ -48,6 +50,7 @@ public class StepForm extends HorizontalLayout {
     TextField label = new TextField("Label Step");
 
     public Button save = new Button("Guardar");
+    Button delete = new Button("Eliminar");
     public Button close = new Button("Cancelar");
 
 
@@ -66,48 +69,8 @@ public class StepForm extends HorizontalLayout {
         configureForm();
 
         agregarInteractividad();
-    }
 
-    private void configureForm() {
-        form.add(elements,
-                alternativeGridLayout,
-                operationsLayout,
-                stepDocumentsLayout,
-                actionsLayout);
-
-        add(form);
-    }
-
-    private void configureOperations() {
-        operationsLayout.setWidthFull();
-        operationsLayout.add(operationGridForm);
-    }
-
-    private void configureDocuments() {
-        stepDocumentsLayout.setWidthFull();
-        stepDocumentsLayout.add(documentsGridForm);
-    }
-
-    private void configureAlternatives() {
-        alternativeGridForm.setWidthFull();
-        alternativeGridLayout.setWidthFull();
-        alternativeGridLayout.add(alternativeGridForm);
-    }
-
-    public void agregarInteractividad()
-    {
-        alternativeGridForm.alternativeForm.save.addClickListener(buttonClickEvent -> addToOperationForm());
-    }
-
-    private void addToOperationForm() {
-        List<String> ids = new LinkedList<>();
-
-        for (Alternative alternative: this.alternativeGridForm.getAlternatives()) {
-            if(alternative.getNextStep() != "")
-                ids.add(alternative.getNextStep());
-        }
-
-        this.operationGridForm.alternatives = ids;
+        editing = false;
     }
 
     private void configureElements() {
@@ -128,6 +91,60 @@ public class StepForm extends HorizontalLayout {
         actionsLayout.add(createButtonsLayout());
     }
 
+    private void configureAlternatives() {
+        alternativeGridForm.setWidthFull();
+        alternativeGridLayout.setWidthFull();
+        alternativeGridLayout.add(alternativeGridForm);
+    }
+
+    private void configureDocuments() {
+        stepDocumentsLayout.setWidthFull();
+        stepDocumentsLayout.add(documentsGridForm);
+    }
+
+    private void configureOperations() {
+        operationsLayout.setWidthFull();
+        operationsLayout.add(operationGridForm);
+    }
+
+    private void configureForm() {
+
+        form.add(elements,
+                operationsLayout,
+                alternativeGridLayout,
+                stepDocumentsLayout,
+                actionsLayout);
+
+        add(form);
+    }
+
+    public void setStep(Step step) {
+        this.step = step;
+
+        if (step != null)
+        {
+            this.step = step;
+            this.text.setValue(step.getText());
+            this.textId.setValue(step.getTextId());
+            this.label.setValue(step.getLabel());
+            this.operationGridForm.updateOperations(step.getOperations());
+            this.alternativeGridForm.updateAlternatives(step.getAlternatives());
+            this.documentsGridForm.updateDocuments(step.getStepDocuments());
+            editing = true;
+            delete.setVisible(true);
+        }
+        else
+        {
+            this.text.setValue("");
+            this.textId.setValue("");
+            this.label.setValue("");
+            this.alternativeGridForm.setAsDefault();
+            this.operationGridForm.setAsDefault();
+            this.documentsGridForm.setAsDefault();
+
+        }
+    }
+
     private Component createButtonsLayout() {
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -142,29 +159,66 @@ public class StepForm extends HorizontalLayout {
         return new HorizontalLayout(save, close);
     }
 
+    public Step getStep() {
+        return this.step;
+    }
+
+    public void agregarInteractividad()
+    {
+        alternativeGridForm.alternativeForm.save.addClickListener(buttonClickEvent -> addToOperationForm());
+
+    }
+
+    public void setStepIdList (List stepIdList){
+        this.stepIdList = stepIdList;
+        alternativeGridForm.setStepIdList(this.stepIdList);
+    }
+
+    private void addToOperationForm() {
+        List<String> ids = new LinkedList<>();
+
+        for (Alternative alternative: this.alternativeGridForm.getAlternatives()) {
+            if(alternative.getNextStep() != "")
+                ids.add(alternative.getNextStep());
+        }
+
+        this.operationGridForm.alternatives = ids;
+    }
+
+    private void showNotification(String message){
+        Span content = new Span(message);
+        Notification notification = new Notification(content);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
+    }
+
     private void validateAndSave() {
-      if(isValid())
-      {
-          this.step = new Step();
-          step.setText(text.getValue());
-          step.setTextId(textId.getValue());
-          step.setLabel(label.getValue());
-          step.setAlternatives(alternativeGridForm.getAlternatives());
-          step.setStepDocuments(documentsGridForm.getDocuments());
-      }
-      else {
-          Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
-          Notification notification = new Notification(content);
-          notification.setDuration(3000);
-          notification.setPosition(Notification.Position.MIDDLE);
-          notification.open();
-      }
+        if(!validateGrids() && !validateFields()){
+            showNotification("Algún valor ingresado no es correcto o falta completar campos.");
+            showNotification("La grilla de Alternative u Operations se encuentra vacía. Se debe tener al menos un elemento en ambas.");
+        }
+        else if(!validateGrids()){
+            showNotification("La grilla de Alternative u Operations se encuentra vacía. Se debe tener al menos un elemento en ambas.");
+        }
+        else if (!validateFields()) {
+            showNotification("Algún valor ingresado no es correcto o falta completar campos.");
+        }
+        else {
+            this.step = new Step();
+            step.setText(text.getValue());
+            step.setTextId(textId.getValue());
+            step.setLabel(label.getValue());
+            step.setOperations(operationGridForm.getOperations());
+            step.setAlternatives(alternativeGridForm.getAlternatives());
+            step.setStepDocuments(documentsGridForm.getDocuments());
+        }
     }
 
     public boolean isValid() {
         boolean result = false;
 
-        if(validateFields())
+        if(validateFields() && validateGrids())
             result = true;
 
         return result;
@@ -175,22 +229,28 @@ public class StepForm extends HorizontalLayout {
 
         if(!text.getValue().isEmpty() &&
                 !textId.getValue().isEmpty() &&
-                !label.getValue().isEmpty() &&
-                operationGridForm.getOperations().size() > 0 &&
+                !label.getValue().isEmpty())
+            result = true;
+
+        return result;
+    }
+
+    public boolean validateGrids() {
+        boolean result = false;
+
+        if (operationGridForm.getOperations().size() > 0 &&
                 alternativeGridForm.getAlternatives().size() > 0)
             result = true;
 
         return result;
     }
 
-    public void setStep(Step step) {
-        this.step = step;
-//        binder.readBean(alternative);
+    public void clearFields(){
+        this.text.setValue("");
+        this.textId.setValue("");
+        this.label.setValue("");
     }
 
-    public Step getStep() {
-        return this.step;
-    }
     public Button getSaveButton() {
         return this.save;
     }

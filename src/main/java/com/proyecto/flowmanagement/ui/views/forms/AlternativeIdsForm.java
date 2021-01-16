@@ -48,7 +48,12 @@ public class AlternativeIdsForm extends HorizontalLayout {
 
         HorizontalLayout gridAlternativesLayout = new HorizontalLayout();
         gridAlternatives = new Grid<String>();
-        gridAlternatives.setItems(alternativesId);
+        if (alternativesId!= null){
+            gridAlternatives.setItems(alternativesId);
+        }
+        else {
+            gridAlternatives.setItems(new LinkedList<>());
+        }
         gridAlternativesLayout.add(gridAlternatives);
 
         HorizontalLayout eliminarLayout = new HorizontalLayout();
