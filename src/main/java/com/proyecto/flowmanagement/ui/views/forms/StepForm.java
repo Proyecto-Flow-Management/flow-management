@@ -33,6 +33,7 @@ public class StepForm extends HorizontalLayout {
     public boolean editing;
     private Step step;
     List<String> stepIdList;
+    List<String> createGuides;
 
     AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
     DocumentsGridForm documentsGridForm = new DocumentsGridForm();
@@ -148,6 +149,7 @@ public class StepForm extends HorizontalLayout {
     private Component createButtonsLayout() {
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         save.addClickShortcut(Key.ENTER);
@@ -156,7 +158,7 @@ public class StepForm extends HorizontalLayout {
         save.addClickListener(click -> validateAndSave());
         close.addClickListener(click -> fireEvent(new StepForm.CloseEvent(this)));
 
-        return new HorizontalLayout(save, close);
+        return new HorizontalLayout(save, close, delete);
     }
 
     public Step getStep() {
@@ -172,6 +174,10 @@ public class StepForm extends HorizontalLayout {
     public void setStepIdList (List stepIdList){
         this.stepIdList = stepIdList;
         alternativeGridForm.setStepIdList(this.stepIdList);
+    }
+
+    public List<String> getCreateGuides(){
+        return this.createGuides;
     }
 
     private void addToOperationForm() {
@@ -212,6 +218,7 @@ public class StepForm extends HorizontalLayout {
             step.setOperations(operationGridForm.getOperations());
             step.setAlternatives(alternativeGridForm.getAlternatives());
             step.setStepDocuments(documentsGridForm.getDocuments());
+            this.createGuides = alternativeGridForm.getCreateGuides();
         }
     }
 
@@ -243,12 +250,6 @@ public class StepForm extends HorizontalLayout {
             result = true;
 
         return result;
-    }
-
-    public void clearFields(){
-        this.text.setValue("");
-        this.textId.setValue("");
-        this.label.setValue("");
     }
 
     public Button getSaveButton() {

@@ -24,6 +24,7 @@ public class AlternativeGridForm extends VerticalLayout {
     Grid<Alternative> alternativeGrid;
     List<Alternative> alternativeList;
     List<String> stepIdList;
+    List<String> createGuides;
 
     public AlternativeGridForm()
     {
@@ -34,6 +35,7 @@ public class AlternativeGridForm extends VerticalLayout {
     private void configureElements()
     {
         this.alternativeList = new LinkedList<>();
+        this.createGuides = new LinkedList<>();
         configureGrid();
         createAlternative = new Button("Crear Alternative", click -> addAlternative());
 
@@ -65,6 +67,10 @@ public class AlternativeGridForm extends VerticalLayout {
     private void CreateorSaveAlternative() {
         if (alternativeForm.isValid()) {
             Alternative newAlternative = alternativeForm.getAlternative();
+            String createGuide = alternativeForm.getCreateGuide();
+            if (!createGuides.contains(createGuide) && createGuide!=""){
+                createGuides.add(createGuide);
+            }
 
             if (alternativeForm.editing) {
                 int index = alternativeList.indexOf(editAlternative);
@@ -73,8 +79,8 @@ public class AlternativeGridForm extends VerticalLayout {
             } else {
                 alternativeList.add(newAlternative);
                 updateGrid();
-                closeEditor();
             }
+            closeEditor();
         }
     }
 
@@ -127,6 +133,10 @@ public class AlternativeGridForm extends VerticalLayout {
     public void setAsDefault() {
         this.alternativeList = new LinkedList<Alternative>();
         this.alternativeGrid.setItems(alternativeList);
+    }
+
+    public List<String> getCreateGuides(){
+        return this.createGuides;
     }
 
     private void closeEditor() {

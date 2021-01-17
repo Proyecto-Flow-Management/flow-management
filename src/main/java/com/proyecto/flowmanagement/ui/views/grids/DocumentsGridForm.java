@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
 import com.proyecto.flowmanagement.backend.persistence.entity.UnaryCondition;
 import com.proyecto.flowmanagement.ui.views.forms.DocumentsForm;
@@ -17,25 +18,25 @@ public class DocumentsGridForm extends VerticalLayout {
 
     private Button createDocument;
     DocumentsForm documentsForm;
+    StepDocument editStepDocument;
 
     Grid<StepDocument> stepDocumentGrid;
     List<StepDocument> stepDocumentsList;
 
     public DocumentsGridForm()
     {
-        stepDocumentsList = new LinkedList<>();
         setSizeFull();
         configureElements();
     }
 
     private void configureElements() {
+        stepDocumentsList = new LinkedList<>();
         configureGrid();
         createDocument = new Button("Crear Document", click -> addDocument());
 
         documentsForm = new DocumentsForm();
         documentsForm.setVisible(false);
-
-        documentsForm.save.addClickListener(buttonClickEvent -> CreateStepDocument());
+        documentsForm.save.addClickListener(buttonClickEvent -> CreateorSaveStepDocument());
         documentsForm.close.addClickListener(buttonClickEvent -> CloseForm());
 
         HorizontalLayout gridLayout = new HorizontalLayout();
@@ -57,12 +58,20 @@ public class DocumentsGridForm extends VerticalLayout {
         this.documentsForm.setVisible(false);
     }
 
-    private void CreateStepDocument() {
+
+    private void CreateorSaveStepDocument() {
         if (documentsForm.isValid()) {
             StepDocument newStepDocument = documentsForm.getStepDocument();
-            stepDocumentsList.add(newStepDocument);
-            updateGrid();
-            documentsForm.setVisible(false);
+
+            if (documentsForm.editing) {
+                int index = stepDocumentsList.indexOf(editStepDocument);
+                stepDocumentsList.set(index, newStepDocument);
+                updateGrid();
+            } else {
+                stepDocumentsList.add(newStepDocument);
+                updateGrid();
+            }
+            closeEditor();
         }
     }
 
@@ -82,16 +91,20 @@ public class DocumentsGridForm extends VerticalLayout {
 
     private void addDocument() {
         stepDocumentGrid.asSingleSelect().clear();
-        editStepDocument(new StepDocument());
+        editStepDocument(null);
     }
 
     private void editStepDocument(StepDocument stepDocument) {
-        if(stepDocument == null) {
-            closeEditor();
-        } else {
+        documentsForm.setVisible(true);
+
+        if(stepDocument != null) {
+            this.editStepDocument = stepDocument;
             documentsForm.setStepDocument(stepDocument);
-            documentsForm.setVisible(true);
             addClassName("editing");
+        }
+        else
+        {
+            documentsForm.setStepDocument(null);
         }
     }
 
@@ -101,7 +114,7 @@ public class DocumentsGridForm extends VerticalLayout {
     }
 
     private void closeEditor() {
-//        documentsForm.setStepDocument(null);
+        documentsForm.setStepDocument(null);
         documentsForm.setVisible(false);
         removeClassName("editing");
     }
@@ -111,10 +124,7 @@ private void configureGrid() {
     stepDocumentGrid.addClassName("user-grid");
     stepDocumentGrid.setSizeFull();
     stepDocumentGrid.setColumns("url");
-    stepDocumentGrid.asSingleSelect().addValueChangeListener(evt -> editAlternative(evt.getValue()));
-    }
-
-    private void editAlternative(StepDocument value) {
+    stepDocumentGrid.asSingleSelect().addValueChangeListener(evt -> editStepDocument(evt.getValue()));
     }
 
     public List<StepDocument> getDocuments() {

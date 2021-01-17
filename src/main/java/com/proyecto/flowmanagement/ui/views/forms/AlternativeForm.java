@@ -24,6 +24,7 @@ public class AlternativeForm extends VerticalLayout {
 
     public boolean editing;
     private Alternative alternative;
+    private String createGuide;
     List<String> stepIdList;
 
     ConditionForm conditionForm = new ConditionForm();
@@ -57,6 +58,7 @@ public class AlternativeForm extends VerticalLayout {
 
         HorizontalLayout actionsLayout = new HorizontalLayout();
 
+        this.createGuide = "";
         this.label.setRequired(true);
         this.label.setErrorMessage("Este campo es obligatorio.");
         this.guideNameText.setRequired(true);
@@ -107,6 +109,7 @@ public class AlternativeForm extends VerticalLayout {
             alternative.setLabel(this.label.getValue());
             if (this.transitionCombo.getValue() == "guideName") {
                 alternative.setGuideName(this.guideNameText.getValue());
+                createGuide = this.guideNameText.getValue();
             }
             else if (this.transitionCombo.getValue() == "stepId"){
                 alternative.setNextStep(this.stepIdCombo.getValue().toString());
@@ -127,6 +130,7 @@ public class AlternativeForm extends VerticalLayout {
             this.alternative = alternative;
             if (this.alternative.getGuideName()!=null){
                 this.transitionCombo.setValue("guideName");
+                this.createGuide = this.alternative.getGuideName();
                 this.guideNameText.setValue(alternative.getGuideName());
                 this.guideNameText.setVisible(true);
                 this.stepIdCombo.setVisible(false);
@@ -147,8 +151,13 @@ public class AlternativeForm extends VerticalLayout {
             this.guideNameText.setValue("");
             this.stepIdCombo.setValue("");
             this.label.setValue("");
+            this.createGuide = "";
             this.conditionForm.setAsDefault();
         }
+    }
+
+    public String getCreateGuide(){
+        return this.createGuide;
     }
 
     public boolean isValid() {
@@ -163,13 +172,9 @@ public class AlternativeForm extends VerticalLayout {
     public boolean validateFields(){
         boolean result = false;
 
-//        if(!this.label.getValue().isEmpty() &&
-//                (!this.guideName.getValue().isEmpty() || !this.nextStep.getValue().isEmpty()))
-//            result = true;
-//
         if(!this.label.getValue().isEmpty() &&
                 ((this.transitionCombo.getValue() == "guideName" && !this.guideNameText.getValue().isEmpty()))
-                    || (this.transitionCombo.getValue() == "stepId" && !this.stepIdCombo.isEmpty() && this.stepIdList.size() > 1))
+                    || (this.transitionCombo.getValue() == "stepId" && !this.stepIdCombo.isEmpty() && this.stepIdList.size() >= 1))
             result = true;
 
         return result;

@@ -27,6 +27,8 @@ import java.util.List;
 public class GuideForm extends VerticalLayout {
     private Guide guide;
 
+    List <String> createGuides;
+
     HorizontalLayout guideLayout;
     HorizontalLayout stepSecctionLayout;
     HorizontalLayout operationSecctionLayout;
@@ -115,6 +117,7 @@ public class GuideForm extends VerticalLayout {
             guide.setName(name.getValue());
             guide.setSteps(stepGridForm.getSteps());
             guide.setOperations(operationGridForm.getOperations());
+            createGuides = stepGridForm.getCreateGuides();
         }
     }
 
