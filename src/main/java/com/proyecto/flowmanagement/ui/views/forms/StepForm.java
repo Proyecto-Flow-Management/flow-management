@@ -20,10 +20,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.shared.Registration;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Component
 @PageTitle("CreateStep | Flow Management")
@@ -155,7 +153,7 @@ public class StepForm extends HorizontalLayout {
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
-        save.addClickListener(click -> validateAndSave());
+        save.addClickListener(click -> save());
         close.addClickListener(click -> fireEvent(new StepForm.CloseEvent(this)));
 
         return new HorizontalLayout(save, close, delete);
@@ -199,7 +197,7 @@ public class StepForm extends HorizontalLayout {
         notification.open();
     }
 
-    private void validateAndSave() {
+    private void validate() {
         if(!validateGrids() && !validateFields()){
             showNotification("Algún valor ingresado no es correcto o falta completar campos.");
             showNotification("La grilla de Alternative u Operations se encuentra vacía. Se debe tener al menos un elemento en ambas.");
@@ -221,6 +219,35 @@ public class StepForm extends HorizontalLayout {
             this.createGuides = alternativeGridForm.getCreateGuides();
         }
     }
+
+    public void save(){
+        if (!this.emptyForm()){
+            this.step = new Step();
+            step.setText(text.getValue());
+            step.setTextId(textId.getValue());
+            step.setLabel(label.getValue());
+            step.setOperations(operationGridForm.getOperations());
+            step.setAlternatives(alternativeGridForm.getAlternatives());
+            step.setStepDocuments(documentsGridForm.getDocuments());
+            this.createGuides = alternativeGridForm.getCreateGuides();
+        }
+        else{
+            showNotification("Debes completar al menos un campo.");
+        }
+    }
+
+
+    public boolean emptyForm(){
+        boolean result = false;
+
+        if(text.getValue().isEmpty() &&
+                textId.getValue().isEmpty() &&
+                label.getValue().isEmpty())
+            result = true;
+
+        return result;
+    }
+
 
     public boolean isValid() {
         boolean result = false;

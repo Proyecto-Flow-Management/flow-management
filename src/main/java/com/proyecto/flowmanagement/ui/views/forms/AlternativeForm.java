@@ -1,7 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
-import com.proyecto.flowmanagement.ui.views.grids.ConditionsGridForm;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
@@ -16,7 +15,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @CssImport("./styles/alternative-form.css")
@@ -47,7 +45,7 @@ public class AlternativeForm extends VerticalLayout {
 
     public void configureElements() {
 
-        save.addClickListener(buttonClickEvent -> validateAndSave());
+        save.addClickListener(buttonClickEvent -> save());
         transitionCombo.addValueChangeListener(event -> showTransitionFields());
 
         VerticalLayout form = new VerticalLayout();
@@ -103,7 +101,7 @@ public class AlternativeForm extends VerticalLayout {
         this.stepIdCombo.setItems(stepIds);
     }
 
-    private void validateAndSave() {
+    private void validate() {
         if (isValid()){
             this.alternative = new Alternative();
             alternative.setLabel(this.label.getValue());
@@ -123,6 +121,43 @@ public class AlternativeForm extends VerticalLayout {
             notification.open();
         }
     }
+
+    private void showNotification(String message){
+        Span content = new Span(message);
+        Notification notification = new Notification(content);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
+    }
+
+    private void save(){
+        if (!emptyForm()){
+            this.alternative = new Alternative();
+            alternative.setLabel(this.label.getValue());
+            if (this.transitionCombo.getValue() == "guideName") {
+                alternative.setGuideName(this.guideNameText.getValue());
+                createGuide = this.guideNameText.getValue();
+            }
+            else if (this.transitionCombo.getValue() == "stepId"){
+                alternative.setNextStep(this.stepIdCombo.getValue().toString());
+            }
+        }
+        else{
+            showNotification("Debes completar al menos un campo.");
+        }
+    }
+
+    public boolean emptyForm(){
+        boolean result = false;
+
+        if(this.label.getValue().isEmpty() &&
+                ((this.transitionCombo.getValue() == "guideName" && this.guideNameText.getValue().isEmpty()))
+                || (this.transitionCombo.getValue() == "stepId" && this.stepIdCombo.isEmpty() && this.stepIdList.size() >= 1))
+            result = true;
+
+        return result;
+    }
+
 
     public void setAlternative(Alternative alternative) {
         if (alternative != null)

@@ -1,8 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
-import com.proyecto.flowmanagement.backend.persistence.entity.UnaryCondition;
 import com.proyecto.flowmanagement.ui.views.forms.DocumentsForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -60,7 +58,7 @@ public class DocumentsGridForm extends VerticalLayout {
 
 
     private void CreateorSaveStepDocument() {
-        if (documentsForm.isValid()) {
+        if (!documentsForm.emptyForm()) {
             StepDocument newStepDocument = documentsForm.getStepDocument();
 
             if (documentsForm.editing) {

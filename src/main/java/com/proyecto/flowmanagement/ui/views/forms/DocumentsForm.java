@@ -29,7 +29,7 @@ public class DocumentsForm extends VerticalLayout {
 
     private void configureElements() {
         HorizontalLayout elements = new HorizontalLayout();
-        save.addClickListener(buttonClickEvent -> validateAndSave());
+        save.addClickListener(buttonClickEvent -> save());
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -45,7 +45,7 @@ public class DocumentsForm extends VerticalLayout {
         add(elements);
     }
 
-    private void validateAndSave() {
+    private void validate() {
         if(isValid())
         {
             stepDocument = new StepDocument();
@@ -58,6 +58,33 @@ public class DocumentsForm extends VerticalLayout {
             notification.setPosition(Notification.Position.MIDDLE);
             notification.open();
         }
+    }
+
+    private void showNotification(String message){
+        Span content = new Span(message);
+        Notification notification = new Notification(content);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
+    }
+
+    private void save(){
+        if(!emptyForm()){
+            stepDocument = new StepDocument();
+            stepDocument.setUrl(url.getValue());
+        }
+        else{
+            showNotification("Debes completar al menos un campo.");
+        }
+    }
+
+    public boolean emptyForm(){
+        boolean result = false;
+
+        if(this.url.getValue().isEmpty()) {
+            result = true;
+        }
+        return result;
     }
 
     public boolean isValid() {

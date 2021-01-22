@@ -1,6 +1,5 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.button.Button;
@@ -66,7 +65,7 @@ public class StepGridForm  extends VerticalLayout {
     }
 
     private void CreateorSaveStep() {
-        if (stepForm.isValid()) {
+        if (!stepForm.emptyForm()) {
             Step newStep = stepForm.getStep();
             setCreateGuides();
 

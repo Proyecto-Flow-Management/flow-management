@@ -1,17 +1,13 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
-import com.proyecto.flowmanagement.backend.persistence.entity.Step;
-import com.proyecto.flowmanagement.backend.persistence.entity.UnaryCondition;
 import com.proyecto.flowmanagement.ui.views.forms.AlternativeForm;
-import com.proyecto.flowmanagement.ui.views.forms.StepForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -65,7 +61,7 @@ public class AlternativeGridForm extends VerticalLayout {
     }
 
     private void CreateorSaveAlternative() {
-        if (alternativeForm.isValid()) {
+        if (!alternativeForm.emptyForm()) {
             Alternative newAlternative = alternativeForm.getAlternative();
             String createGuide = alternativeForm.getCreateGuide();
             if (!createGuides.contains(createGuide) && createGuide!=""){
