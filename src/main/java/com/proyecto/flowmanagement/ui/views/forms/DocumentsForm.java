@@ -11,6 +11,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
+import java.util.LinkedList;
+import java.util.List;
+
 @CssImport("./styles/step-document-grid-form.css")
 public class DocumentsForm extends VerticalLayout {
     private StepDocument stepDocument;
@@ -38,26 +41,11 @@ public class DocumentsForm extends VerticalLayout {
         close.addClickShortcut(Key.ESCAPE);
 
         this.url.setRequired(true);
-        this.url.setErrorMessage("Este campo es obligatorio.");
+        this.url.setErrorMessage("Este campo es requerido para exportar la guía.");
 
         this.url.setValue("");
         elements.add(url,save,close, delete);
         add(elements);
-    }
-
-    private void validate() {
-        if(isValid())
-        {
-            stepDocument = new StepDocument();
-            stepDocument.setUrl(url.getValue());
-        }
-        else {
-            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
-            Notification notification = new Notification(content);
-            notification.setDuration(3000);
-            notification.setPosition(Notification.Position.MIDDLE);
-            notification.open();
-        }
     }
 
     private void showNotification(String message){
@@ -74,7 +62,7 @@ public class DocumentsForm extends VerticalLayout {
             stepDocument.setUrl(url.getValue());
         }
         else{
-            showNotification("Debes completar al menos un campo.");
+            showNotification("Debes completar el capmo URL Document.");
         }
     }
 
@@ -87,24 +75,21 @@ public class DocumentsForm extends VerticalLayout {
         return result;
     }
 
-    public boolean isValid() {
-        boolean result = false;
+    public List<String> isValid(){
+        List <String> valores = validateFields();
 
-        if(validateFields())
-            result = true;
-
-        return result;
+        return valores;
     }
 
-    public boolean validateFields() {
-        boolean result = false;
+    public List<String> validateFields(){
+        List<String> valores = new LinkedList<>();
 
-        if(!this.url.getValue().isEmpty()) {
-            result = true;
+        if(url.getValue().trim() == ""){
+            valores.add("El campo Url es obligatorio.");
         }
-        return result;
-    }
 
+        return valores;
+    }
     public StepDocument getStepDocument() {
         return this.stepDocument;
     }

@@ -20,6 +20,8 @@ import com.vaadin.flow.router.Route;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @org.springframework.stereotype.Component
 @Route(value = "CreateGuide", layout = MainLayout.class)
@@ -73,7 +75,7 @@ public class GuideForm extends VerticalLayout {
     private void createForm() {
         crearGuia = new Button("Crear Guia");
 //        crearGuia.addClickListener(buttonClickEvent -> crearGuia());
-        crearGuia.addClickListener(buttonClickEvent -> validateAndSave());
+        crearGuia.addClickListener(buttonClickEvent -> save());
         HorizontalLayout botonCrear = new HorizontalLayout();
 
         Span content = new Span("Guia creada y archivo XML generado!");
@@ -99,20 +101,8 @@ public class GuideForm extends VerticalLayout {
         notification.open();
     }
 
-
-    private void validateAndSave() {
-        if(!validateGrids() && !validateFields()){
-            showNotification("Algún valor ingresado no es correcto o falta completar campos.");
-            showNotification("La grilla de Steps se encuentra vacía. Se debe tener al menos un elemento en esta.");
-        }
-        else if(!validateGrids()){
-            showNotification("La grilla de Steps se encuentra vacía. Se debe tener al menos un elemento en esta.");
-        }
-        else if (!validateFields()) {
-            showNotification("Algún valor ingresado no es correcto o falta completar campos.");
-        }
-        else
-        {
+    public void save(){
+        if(!emptyForm()){
             guide.setLabel(label.getValue());
             guide.setName(name.getValue());
             guide.setSteps(stepGridForm.getSteps());
@@ -121,33 +111,51 @@ public class GuideForm extends VerticalLayout {
         }
     }
 
-    private boolean isValid() {
+    public boolean emptyForm(){
         boolean result = false;
 
-        if(validateFields() && validateGrids())
+        if(name.getValue().isEmpty() &&
+                mainStep.isEmpty() &&
+                label.getValue().isEmpty())
             result = true;
 
         return result;
     }
 
-    public boolean validateFields(){
-        boolean result = false;
+    public List<String> isValid(){
+        List <String> valoresFields = validateFields();
+        List <String> valoresGrids = validateGrids();
 
-        if(!name.getValue().isEmpty() &&
-                !label.getValue().isEmpty() &&
-                !mainStep.isEmpty())
-            result = true;
+        List<String> valores = Stream.concat(valoresFields.stream(), valoresGrids.stream())
+                .collect(Collectors.toList());
 
-        return result;
+        return valores;
     }
 
-    public boolean validateGrids() {
-        boolean result = false;
+    public List<String> validateFields(){
+        List<String> valores = new LinkedList<>();
 
-        if (stepGridForm.getSteps().size() > 0)
-            result = true;
+        if(name.getValue().trim() == ""){
+            valores.add("El campo Name es obligatorio.");
+        }
+        if(mainStep.isEmpty()){
+            valores.add("El campo mainStep es obligatorio.");
+        }
+        if(label.getValue().trim() == ""){
+            valores.add("El campo Label es obligatorio.");
+        }
 
-        return result;
+        return valores;
+    }
+
+    public List<String> validateGrids() {
+        List<String> valores = new LinkedList<>();
+
+        if (stepGridForm.getSteps().size() == 0){
+            valores.add("Se debe tener al menos 1 step");
+        }
+
+        return valores;
     }
 
 

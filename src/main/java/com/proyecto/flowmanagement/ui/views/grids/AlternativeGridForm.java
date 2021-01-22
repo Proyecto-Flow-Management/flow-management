@@ -113,7 +113,6 @@ public class AlternativeGridForm extends VerticalLayout {
 
     private void editAlternative(Alternative alternative) {
         alternativeForm.setVisible(true);
-        alternativeForm.setStepIdCombo(stepIdList);
 
         if(alternative != null) {
             this.editAlternative = alternative;

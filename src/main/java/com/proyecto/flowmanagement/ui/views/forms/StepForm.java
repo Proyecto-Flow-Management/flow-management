@@ -22,6 +22,8 @@ import com.vaadin.flow.shared.Registration;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @org.springframework.stereotype.Component
 @PageTitle("CreateStep | Flow Management")
@@ -76,11 +78,11 @@ public class StepForm extends HorizontalLayout {
         addClassName("stepSection");
 
         this.text.setRequired(true);
-        this.text.setErrorMessage("Este campo es obligatorio.");
+        this.text.setErrorMessage("Este campo es requerido para exportar la guía.");
         this.textId.setRequired(true);
-        this.textId.setErrorMessage("Este campo es obligatorio.");
+        this.textId.setErrorMessage("Este campo es requerido para exportar la guía.");
         this.label.setRequired(true);
-        this.label.setErrorMessage("Este campo es obligatorio.");
+        this.label.setErrorMessage("Este campo es requerido para exportar la guía.");
 
         this.text.setValue("");
         this.textId.setValue("");
@@ -197,28 +199,6 @@ public class StepForm extends HorizontalLayout {
         notification.open();
     }
 
-    private void validate() {
-        if(!validateGrids() && !validateFields()){
-            showNotification("Algún valor ingresado no es correcto o falta completar campos.");
-            showNotification("La grilla de Alternative u Operations se encuentra vacía. Se debe tener al menos un elemento en ambas.");
-        }
-        else if(!validateGrids()){
-            showNotification("La grilla de Alternative u Operations se encuentra vacía. Se debe tener al menos un elemento en ambas.");
-        }
-        else if (!validateFields()) {
-            showNotification("Algún valor ingresado no es correcto o falta completar campos.");
-        }
-        else {
-            this.step = new Step();
-            step.setText(text.getValue());
-            step.setTextId(textId.getValue());
-            step.setLabel(label.getValue());
-            step.setOperations(operationGridForm.getOperations());
-            step.setAlternatives(alternativeGridForm.getAlternatives());
-            step.setStepDocuments(documentsGridForm.getDocuments());
-            this.createGuides = alternativeGridForm.getCreateGuides();
-        }
-    }
 
     public void save(){
         if (!this.emptyForm()){
@@ -232,7 +212,7 @@ public class StepForm extends HorizontalLayout {
             this.createGuides = alternativeGridForm.getCreateGuides();
         }
         else{
-            showNotification("Debes completar al menos un campo.");
+            showNotification("Debes completar al menos un campo. (Texto Step, TextId Step, Label Step)");
         }
     }
 
@@ -248,36 +228,56 @@ public class StepForm extends HorizontalLayout {
         return result;
     }
 
+    public List<String> isValid(){
+        List <String> valoresFields = validateFields();
+        List <String> valoresGrids = validateGrids();
 
-    public boolean isValid() {
-        boolean result = false;
+        List<String> valores = Stream.concat(valoresFields.stream(), valoresGrids.stream())
+                .collect(Collectors.toList());
 
-        if(validateFields() && validateGrids())
-            result = true;
-
-        return result;
+        return valores;
     }
 
-    public boolean validateFields(){
-        boolean result = false;
 
-        if(!text.getValue().isEmpty() &&
-                !textId.getValue().isEmpty() &&
-                !label.getValue().isEmpty())
-            result = true;
+    public List<String> validateFields(){
+        List<String> valores = new LinkedList<>();
 
-        return result;
+        if(text.getValue().trim() == ""){
+           valores.add("El campo Text es obligatorio.");
+        }
+        if(textId.getValue().trim() == ""){
+            valores.add("El campo TextId es obligatorio.");
+        }
+        if(label.getValue().trim() == ""){
+            valores.add("El campo Label es obligatorio.");
+        }
+
+        return valores;
     }
 
-    public boolean validateGrids() {
-        boolean result = false;
+    public List<String> validateGrids() {
+        List<String> valores = new LinkedList<>();
 
-        if (operationGridForm.getOperations().size() > 0 &&
-                alternativeGridForm.getAlternatives().size() > 0)
-            result = true;
+        if (operationGridForm.getOperations().size() == 0){
+            valores.add("Se debe tener al menos 1 operation");
+        }
+        if (alternativeGridForm.getAlternatives().size() == 0){
+            valores.add("Se debe tener al menos 1 alternative");
+        }
 
-        return result;
+        return valores;
     }
+
+
+//    public boolean validateGrids() {
+//        boolean result = false;
+//
+//        if (operationGridForm.getOperations().size() > 0 &&
+//                alternativeGridForm.getAlternatives().size() > 0)
+//            result = true;
+//
+//        return result;
+//    }
 
     public Button getSaveButton() {
         return this.save;

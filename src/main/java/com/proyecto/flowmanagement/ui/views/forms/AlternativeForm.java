@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @CssImport("./styles/alternative-form.css")
@@ -23,14 +24,13 @@ public class AlternativeForm extends VerticalLayout {
     public boolean editing;
     private Alternative alternative;
     private String createGuide;
-    List<String> stepIdList;
 
     ConditionForm conditionForm = new ConditionForm();
 
     TextField label = new TextField("Label Alternative");
     ComboBox transitionCombo = new ComboBox("Transición");
     TextField guideNameText = new TextField("guideName");
-    ComboBox stepIdCombo = new ComboBox("stepId");
+    TextField stepIdText = new TextField("stepId");
 
     public Button save = new Button("Guardar");
     Button delete = new Button("Eliminar");
@@ -58,15 +58,15 @@ public class AlternativeForm extends VerticalLayout {
 
         this.createGuide = "";
         this.label.setRequired(true);
-        this.label.setErrorMessage("Este campo es obligatorio.");
+        this.label.setErrorMessage("Este campo es requerido para exportar la guía.");
         this.guideNameText.setRequired(true);
-        this.guideNameText.setErrorMessage("Este campo es obligatorio.");
-        this.stepIdCombo.setRequired(true);
-        this.stepIdCombo.setErrorMessage("Este campo es obligatorio.");
+        this.guideNameText.setErrorMessage("Este campo es requerido para exportar la guía.");
+        this.stepIdText.setRequired(true);
+        this.stepIdText.setErrorMessage("Este campo es requerido para exportar la guía.");
         this.transitionCombo.setItems("guideName","stepId");
-        this.transitionCombo.setValue("stepId");
+        this.transitionCombo.setValue("guideName");
 
-        elements.add(label, transitionCombo, stepIdCombo, guideNameText);
+        elements.add(label, transitionCombo, stepIdText, guideNameText);
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -88,39 +88,14 @@ public class AlternativeForm extends VerticalLayout {
     private void showTransitionFields() {
         if (this.transitionCombo.getValue() == "guideName"){
             this.guideNameText.setVisible(true);
-            this.stepIdCombo.setVisible(false);
+            this.stepIdText.setVisible(false);
         }
         else if (this.transitionCombo.getValue() == "stepId"){
             this.guideNameText.setVisible(false);
-            this.stepIdCombo.setVisible(true);
+            this.stepIdText.setVisible(true);
         }
     }
 
-    public void setStepIdCombo(List stepIds) {
-        this.stepIdList = stepIds;
-        this.stepIdCombo.setItems(stepIds);
-    }
-
-    private void validate() {
-        if (isValid()){
-            this.alternative = new Alternative();
-            alternative.setLabel(this.label.getValue());
-            if (this.transitionCombo.getValue() == "guideName") {
-                alternative.setGuideName(this.guideNameText.getValue());
-                createGuide = this.guideNameText.getValue();
-            }
-            else if (this.transitionCombo.getValue() == "stepId"){
-                alternative.setNextStep(this.stepIdCombo.getValue().toString());
-            }
-        }
-        else {
-            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
-            Notification notification = new Notification(content);
-            notification.setDuration(3000);
-            notification.setPosition(Notification.Position.MIDDLE);
-            notification.open();
-        }
-    }
 
     private void showNotification(String message){
         Span content = new Span(message);
@@ -139,11 +114,11 @@ public class AlternativeForm extends VerticalLayout {
                 createGuide = this.guideNameText.getValue();
             }
             else if (this.transitionCombo.getValue() == "stepId"){
-                alternative.setNextStep(this.stepIdCombo.getValue().toString());
+                alternative.setNextStep(this.stepIdText.getValue());
             }
         }
         else{
-            showNotification("Debes completar al menos un campo.");
+            showNotification("Debes completar al menos un campo. (Label Alternative, guideName o stepId)");
         }
     }
 
@@ -151,8 +126,8 @@ public class AlternativeForm extends VerticalLayout {
         boolean result = false;
 
         if(this.label.getValue().isEmpty() &&
-                ((this.transitionCombo.getValue() == "guideName" && this.guideNameText.getValue().isEmpty()))
-                || (this.transitionCombo.getValue() == "stepId" && this.stepIdCombo.isEmpty() && this.stepIdList.size() >= 1))
+                (((this.transitionCombo.getValue() == "guideName" && this.guideNameText.getValue().isEmpty()))
+                || (this.transitionCombo.getValue() == "stepId" && this.stepIdText.getValue().isEmpty())))
             result = true;
 
         return result;
@@ -168,12 +143,12 @@ public class AlternativeForm extends VerticalLayout {
                 this.createGuide = this.alternative.getGuideName();
                 this.guideNameText.setValue(alternative.getGuideName());
                 this.guideNameText.setVisible(true);
-                this.stepIdCombo.setVisible(false);
+                this.stepIdText.setVisible(false);
             }
             else if (this.alternative.getNextStep()!=null){
                 this.transitionCombo.setValue("stepId");
-                this.stepIdCombo.setValue(alternative.getNextStep());
-                this.stepIdCombo.setVisible(true);
+                this.stepIdText.setValue(alternative.getNextStep());
+                this.stepIdText.setVisible(true);
                 this.guideNameText.setVisible(false);
             }
             this.label.setValue(alternative.getLabel());
@@ -184,7 +159,7 @@ public class AlternativeForm extends VerticalLayout {
         else
         {
             this.guideNameText.setValue("");
-            this.stepIdCombo.setValue("");
+            this.stepIdText.setValue("");
             this.label.setValue("");
             this.createGuide = "";
             this.conditionForm.setAsDefault();
@@ -195,24 +170,28 @@ public class AlternativeForm extends VerticalLayout {
         return this.createGuide;
     }
 
-    public boolean isValid() {
-        boolean result = false;
 
-        if(validateFields())
-            result = true;
 
-        return result;
+    public List<String> isValid(){
+        List <String> valores = validateFields();
+
+        return valores;
     }
 
-    public boolean validateFields(){
-        boolean result = false;
+    public List<String> validateFields(){
+        List<String> valores = new LinkedList<>();
 
-        if(!this.label.getValue().isEmpty() &&
-                ((this.transitionCombo.getValue() == "guideName" && !this.guideNameText.getValue().isEmpty()))
-                    || (this.transitionCombo.getValue() == "stepId" && !this.stepIdCombo.isEmpty() && this.stepIdList.size() >= 1))
-            result = true;
+        if(label.getValue().trim() == ""){
+            valores.add("El campo Label es obligatorio.");
+        }
+        if (this.transitionCombo.getValue() == "guideName" && this.guideNameText.getValue().trim() == ""){
+            valores.add("El campo guideName es obligatorio.");
+        }
+        if (this.transitionCombo.getValue() == "stepId" && this.stepIdText.getValue().trim() == ""){
+            valores.add("El campo stepId es obligatorio.");
+        }
 
-        return result;
+        return valores;
     }
 
     public Alternative getAlternative()
