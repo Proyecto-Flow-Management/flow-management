@@ -30,6 +30,7 @@ public class GuideForm extends VerticalLayout {
     private Guide guide;
 
     List <String> createGuides;
+    List<String> guideNameList = new LinkedList<>();
 
     HorizontalLayout guideLayout;
     HorizontalLayout stepSecctionLayout;
@@ -158,6 +159,11 @@ public class GuideForm extends VerticalLayout {
         return valores;
     }
 
+    public void setGuideNameList (List guideNameList){
+        this.guideNameList = guideNameList;
+        stepGridForm.setGuideNameList(this.guideNameList);
+    }
+
 
     private void crearGuia() {
 
@@ -199,6 +205,7 @@ public class GuideForm extends VerticalLayout {
         stepGridForm.setWidthFull();
         stepGridForm.getStepGrid().asSingleSelect().addValueChangeListener(evt -> updateComboMainStep());
         stepGridForm.getSaveButton().addClickListener(evt -> updateComboMainStep());
+        stepGridForm.setGuideNameList(this.guideNameList);
         stepSecctionLayout = new HorizontalLayout();
         stepSecctionLayout.setWidthFull();
         stepSecctionLayout.add(stepGridForm);

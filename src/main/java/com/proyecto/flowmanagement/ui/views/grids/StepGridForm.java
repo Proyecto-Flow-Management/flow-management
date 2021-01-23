@@ -19,6 +19,7 @@ public class StepGridForm  extends VerticalLayout {
 
     Grid<Step> stepGrid = new Grid<>(Step.class);
     List<Step> stepList = new LinkedList<>();
+    List<String> guideNameList;
     List<String> createGuides;
 
     public StepGridForm()
@@ -84,6 +85,7 @@ public class StepGridForm  extends VerticalLayout {
     private void addStep() {
         stepGrid.asSingleSelect().clear();
         stepForm.setStepIdList(getStepIdList());
+        stepForm.setGuideNameList(this.guideNameList);
         editStep(null);
     }
 
@@ -103,6 +105,7 @@ public class StepGridForm  extends VerticalLayout {
     private void editStep(Step step) {
         stepForm.setVisible(true);
         stepForm.setStepIdList(getStepIdList());
+        stepForm.setGuideNameList(this.guideNameList);
 
         if(step != null) {
             this.editStep = step;
@@ -111,6 +114,10 @@ public class StepGridForm  extends VerticalLayout {
         } else {
             stepForm.setStep(null);
         }
+    }
+
+    public void setGuideNameList (List guideNameList){
+        this.guideNameList = guideNameList;
     }
 
     private List<String> getStepIdList(){

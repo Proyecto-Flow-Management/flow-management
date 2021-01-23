@@ -17,6 +17,8 @@ import com.vaadin.flow.shared.Registration;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @CssImport("./styles/alternative-form.css")
 public class AlternativeForm extends VerticalLayout {
@@ -24,6 +26,8 @@ public class AlternativeForm extends VerticalLayout {
     public boolean editing;
     private Alternative alternative;
     private String createGuide;
+    List<String> stepIdList;
+    List<String> guideNameList;
 
     ConditionForm conditionForm = new ConditionForm();
 
@@ -116,6 +120,16 @@ public class AlternativeForm extends VerticalLayout {
             else if (this.transitionCombo.getValue() == "stepId"){
                 alternative.setNextStep(this.stepIdText.getValue());
             }
+            if (this.transitionCombo.getValue() == "stepId" && this.stepIdText.getValue().trim() != "") {
+                if (!stepIdList.contains(this.stepIdText.getValue().trim())){
+                    showNotification("Recuerda crear el step: " + this.stepIdText.getValue().trim());
+                }
+            }
+            if (this.transitionCombo.getValue() == "guideName" && this.guideNameText.getValue().trim() != "") {
+                if (!guideNameList.contains(this.guideNameText.getValue().trim())){
+                    showNotification("Recuerda crear la guía: " + this.guideNameText.getValue().trim());
+                }
+            }
         }
         else{
             showNotification("Debes completar al menos un campo. (Label Alternative, guideName o stepId)");
@@ -173,7 +187,11 @@ public class AlternativeForm extends VerticalLayout {
 
 
     public List<String> isValid(){
-        List <String> valores = validateFields();
+        List <String> valoresFields = validateFields();
+        List <String> valoresTransition = validateTransition();
+
+        List<String> valores = Stream.concat(valoresFields.stream(), valoresTransition.stream())
+                .collect(Collectors.toList());
 
         return valores;
     }
@@ -192,6 +210,31 @@ public class AlternativeForm extends VerticalLayout {
         }
 
         return valores;
+    }
+
+    public List<String> validateTransition(){
+        List<String> valores = new LinkedList<>();
+
+        if (this.transitionCombo.getValue() == "guideName" && this.guideNameText.getValue().trim() != ""){
+            if (!guideNameList.contains(this.guideNameText.getValue().trim())){
+                valores.add("Se debe crear la guía: " + this.guideNameText.getValue().trim());
+            }
+        }
+        if (this.transitionCombo.getValue() == "stepId" && this.stepIdText.getValue().trim() != "") {
+            if (!stepIdList.contains(this.stepIdText.getValue().trim())){
+                valores.add("Se debe crear el step: " + this.stepIdText.getValue().trim());
+            }
+        }
+
+        return valores;
+    }
+
+    public void setStepIdList(List<String> stepIdList){
+        this.stepIdList = stepIdList;
+    }
+
+    public void setGuideNameList(List<String> guideNameList){
+        this.guideNameList = guideNameList;
     }
 
     public Alternative getAlternative()

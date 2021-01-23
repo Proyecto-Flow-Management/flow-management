@@ -4,21 +4,19 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideGeneratorServiceImp;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
 import com.proyecto.flowmanagement.backend.service.Impl.MockTestServiceImpl;
-import com.proyecto.flowmanagement.backend.service.Impl.StepServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
-import com.proyecto.flowmanagement.ui.views.forms.GuideForm;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Component
@@ -28,6 +26,7 @@ public class GuideList extends VerticalLayout {
 
     Grid<Guide> grid = new Grid<>(Guide.class);
     GuideServiceImpl guideService;
+    List<Guide> guideList = new LinkedList<>();
 
     public GuideList(GuideServiceImpl guideService) {
         this.guideService = guideService;
@@ -99,6 +98,15 @@ public class GuideList extends VerticalLayout {
         grid.addClassName("guide-grid");
         grid.setSizeFull();
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
+    }
+
+    private List<String> getStepGuideNameList(){
+        List<String> guideNameList = new LinkedList<>();
+        for (Guide guide:
+                guideList) {
+            guideNameList.add(guide.getName());
+        }
+        return guideNameList;
     }
 
     private void deleteGuide(Long id)

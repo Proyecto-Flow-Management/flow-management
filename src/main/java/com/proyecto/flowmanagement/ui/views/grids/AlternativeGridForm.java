@@ -20,6 +20,7 @@ public class AlternativeGridForm extends VerticalLayout {
     Grid<Alternative> alternativeGrid;
     List<Alternative> alternativeList;
     List<String> stepIdList;
+    List<String> guideNameList;
     List<String> createGuides;
 
     public AlternativeGridForm()
@@ -98,6 +99,10 @@ public class AlternativeGridForm extends VerticalLayout {
         this.stepIdList = stepIdList;
     }
 
+    public void setGuideNameList (List guideNameList){
+        this.guideNameList = guideNameList;
+    }
+
     private void addAlternative() {
         alternativeGrid.asSingleSelect().clear();
         editAlternative(null);
@@ -113,6 +118,8 @@ public class AlternativeGridForm extends VerticalLayout {
 
     private void editAlternative(Alternative alternative) {
         alternativeForm.setVisible(true);
+        alternativeForm.setStepIdList(this.stepIdList);
+        alternativeForm.setGuideNameList(this.guideNameList);
 
         if(alternative != null) {
             this.editAlternative = alternative;

@@ -33,6 +33,7 @@ public class StepForm extends HorizontalLayout {
     public boolean editing;
     private Step step;
     List<String> stepIdList;
+    List<String> guideNameList;
     List<String> createGuides;
 
     AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
@@ -176,6 +177,11 @@ public class StepForm extends HorizontalLayout {
         alternativeGridForm.setStepIdList(this.stepIdList);
     }
 
+    public void setGuideNameList (List guideNameList){
+        this.guideNameList = guideNameList;
+        alternativeGridForm.setGuideNameList(this.guideNameList);
+    }
+
     public List<String> getCreateGuides(){
         return this.createGuides;
     }
@@ -268,16 +274,6 @@ public class StepForm extends HorizontalLayout {
         return valores;
     }
 
-
-//    public boolean validateGrids() {
-//        boolean result = false;
-//
-//        if (operationGridForm.getOperations().size() > 0 &&
-//                alternativeGridForm.getAlternatives().size() > 0)
-//            result = true;
-//
-//        return result;
-//    }
 
     public Button getSaveButton() {
         return this.save;
