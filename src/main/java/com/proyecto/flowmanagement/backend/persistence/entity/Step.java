@@ -8,6 +8,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 import springfox.documentation.spring.web.readers.operation.OperationReader;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -86,5 +87,43 @@ public class Step extends AbstractEntity{
 
 	public void setStepDocuments(List<StepDocument> stepDocuments) {
 		this.stepDocuments = stepDocuments;
+	}
+
+	public List<String> validarStep()
+	{
+		List<String> erroresEncontrados = new LinkedList<>();
+
+		if(this.textId.trim().isEmpty())
+			erroresEncontrados.add("El campo StepID es obligatorio");
+
+		if(this.label.trim().isEmpty())
+			erroresEncontrados.add("El campo Label es obligatorio");
+
+		if(this.text.trim().isEmpty())
+			erroresEncontrados.add("El campo Text es obligatorio");
+
+		if(this.getAlternatives() == null || this.getAlternatives().size() == 0)
+			erroresEncontrados.add("El Step no contiene ningun Alternative");
+
+		if(this.getOperations() == null || this.getOperations().size() == 0)
+			erroresEncontrados.add("El Step no contiene ningun Operation");
+
+		return erroresEncontrados;
+	}
+
+	public String validacionIncompleta()
+	{
+		String retorno = "";
+
+		if(this.textId.trim().isEmpty())
+			retorno = "El campo TextId del Step es obligatorio";
+
+		if(this.label.trim().isEmpty())
+			retorno = "El campo Label es obligatorio";
+
+		if(this.textId.trim().isEmpty())
+			retorno = "El campo Text del Step es obligatorio";
+
+		return retorno;
 	}
 }

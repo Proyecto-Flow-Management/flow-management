@@ -6,6 +6,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -24,12 +25,7 @@ public class Alternative  extends AbstractEntity{
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="alternative_unary_id")
 	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<UnaryCondition> conditions;
-
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="alternative_binary_id")
-	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<BinaryCondition> binaryConditions;
+	private List<Condition> conditions;
 
 	public String getGuideName() {
 		return guideName;
@@ -55,19 +51,47 @@ public class Alternative  extends AbstractEntity{
 		this.label = label;
 	}
 
-	public List<UnaryCondition> getConditions() {
+	public List<Condition> getConditions() {
 		return conditions;
 	}
 
-	public void setConditions(List<UnaryCondition> conditions) {
+	public void setConditions(List<Condition> conditions) {
 		this.conditions = conditions;
 	}
 
-	public List<BinaryCondition> getBinaryConditions() {
-		return binaryConditions;
+	public void addCondition(Condition condition)
+	{
+		if(this.getConditions() == null)
+			this.conditions = new LinkedList<>();
+
+		this.conditions.add(condition);
 	}
 
-	public void setBinaryConditions(List<BinaryCondition> binaryConditions) {
-		this.binaryConditions = binaryConditions;
+
+	public void setUnaryCondition(Condition oldCondition, Condition newCondition)
+	{
+		for (Condition actual: this.conditions) {
+			if(actual.setUnaryCondition(oldCondition,newCondition));
+				break;
+		}
 	}
+
+	public void setBinaryCondition(Condition oldCondition, Condition newCondition)
+	{
+		for (Condition actual: this.conditions) {
+			if(actual.setBinaryCondition(oldCondition,newCondition));
+			break;
+		}
+	}
+
+	public void deleteCondition(Condition eliminar)
+	{
+		for (Condition actual: this.conditions) {
+			if(actual == eliminar)
+				conditions.remove(actual);
+			else if(actual.deleteCondition(eliminar));
+			break;
+		}
+	}
+
 }

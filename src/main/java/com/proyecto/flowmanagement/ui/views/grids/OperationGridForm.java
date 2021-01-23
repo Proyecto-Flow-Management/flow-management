@@ -2,8 +2,10 @@ package com.proyecto.flowmanagement.ui.views.grids;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.proyecto.flowmanagement.ui.views.forms.OperationForm;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -12,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @CssImport("./styles/general.css")
-public class OperationGridForm extends VerticalLayout {
+public class OperationGridForm extends HorizontalLayout {
     private Button createOperation;
     public OperationForm operationForm;
 
@@ -20,6 +22,11 @@ public class OperationGridForm extends VerticalLayout {
 
     Grid<Operation> operationGrid;
     List<Operation> operationList;
+
+
+    VerticalLayout operationSecctionLayout = new VerticalLayout();
+    Accordion accordion = new Accordion();
+    FormLayout basicInformation = new FormLayout();
 
     public OperationGridForm()
     {
@@ -50,7 +57,15 @@ public class OperationGridForm extends VerticalLayout {
         createOperationLayout.add(createOperation);
         createOperationLayout.setWidthFull();
 
-        add(createOperationLayout, operationFormLayout, gridLayout);
+        basicInformation.setWidthFull();
+        operationSecctionLayout.setWidthFull();
+        operationSecctionLayout.setId("step-Layout");
+        operationSecctionLayout.add(createOperationLayout, operationFormLayout, gridLayout);
+        setWidthFull();
+        basicInformation.add(operationSecctionLayout);
+        accordion.add("Operations", basicInformation);
+        accordion.close();
+        add(accordion);
     }
 
     private void updateGrid() {
@@ -104,5 +119,10 @@ public class OperationGridForm extends VerticalLayout {
 
     public List<Operation> getOperations() {
         return this.operationList;
+    }
+
+    public void setAsDefault() {
+        this.operationList = new LinkedList<>();
+        updateGrid();
     }
 }

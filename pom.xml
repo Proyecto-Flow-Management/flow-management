@@ -77,6 +77,11 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>com.vaadin.componentfactory</groupId>
+                <artifactId>autocomplete</artifactId>
+                <version>2.3.1</version>
+            </dependency>
+            <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-bom</artifactId>
                 <version>${vaadin.version}</version>
@@ -155,6 +160,21 @@
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.vaadin.filesystemdataprovider</groupId>
+            <artifactId>filesystemdataprovider</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.vaadin.tatu</groupId>
+            <artifactId>tree</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <version>7.6.3</version>
         </dependency>
     </dependencies>
 

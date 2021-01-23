@@ -32,7 +32,7 @@ public class StepForm extends HorizontalLayout {
 //    private Step step = new Step();
     private Step step;
 
-    AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
+    public AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
     DocumentsGridForm documentsGridForm = new DocumentsGridForm();
     OperationGridForm operationGridForm = new OperationGridForm();
 
@@ -49,9 +49,14 @@ public class StepForm extends HorizontalLayout {
 
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
+    public Button delete = new Button("Eliminar");
 
+    public boolean editing;
+    public boolean esValido;
 
     public StepForm() {
+        this.editing = false;
+        this.esValido = false;
 
         setSizeFull();
 
@@ -112,17 +117,19 @@ public class StepForm extends HorizontalLayout {
 
     private void configureElements() {
         addClassName("stepSection");
+        delete.setVisible(false);
+        this.text.setValue(" ");
+        this.textId.setValue(" ");
+        this.label.setValue(" ");
 
         this.text.setRequired(true);
-        this.text.setErrorMessage("Este campo es obligatorio.");
         this.textId.setRequired(true);
-        this.textId.setErrorMessage("Este campo es obligatorio.");
         this.label.setRequired(true);
-        this.label.setErrorMessage("Este campo es obligatorio.");
 
-        this.text.setValue("");
-        this.textId.setValue("");
-        this.label.setValue("");
+
+        this.text.setErrorMessage("Campo obligatorio");
+        this.textId.setErrorMessage("Campo obligatorio");
+        this.label.setErrorMessage("Campo obligatorio");
 
         elements.add(text,textId,label);
         actionsLayout.add(createButtonsLayout());
@@ -136,56 +143,37 @@ public class StepForm extends HorizontalLayout {
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
-        save.addClickListener(click -> validateAndSave());
-        close.addClickListener(click -> fireEvent(new StepForm.CloseEvent(this)));
+        save.addClickListener(click -> saveStep());
 
-        return new HorizontalLayout(save, close);
+        return new HorizontalLayout(save, close, delete);
     }
 
-    private void validateAndSave() {
-      if(isValid())
-      {
+    private void saveStep() {
           this.step = new Step();
           step.setText(text.getValue());
           step.setTextId(textId.getValue());
           step.setLabel(label.getValue());
           step.setAlternatives(alternativeGridForm.getAlternatives());
           step.setStepDocuments(documentsGridForm.getDocuments());
-      }
-      else {
-          Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
-          Notification notification = new Notification(content);
-          notification.setDuration(3000);
-          notification.setPosition(Notification.Position.MIDDLE);
-          notification.open();
-      }
+          
+          String validacionIncompleta = step.validacionIncompleta();
+          
+          if(!validacionIncompleta.isEmpty())
+              MostrarMensajeError(validacionIncompleta);
+
+          this.esValido = validacionIncompleta.isEmpty();
     }
 
-    public boolean isValid() {
-        boolean result = false;
-
-        if(validateFields())
-            result = true;
-
-        return result;
-    }
-
-    public boolean validateFields(){
-        boolean result = false;
-
-        if(!text.getValue().isEmpty() &&
-                !textId.getValue().isEmpty() &&
-                !label.getValue().isEmpty() &&
-                operationGridForm.getOperations().size() > 0 &&
-                alternativeGridForm.getAlternatives().size() > 0)
-            result = true;
-
-        return result;
+    private void MostrarMensajeError(String validacionIncompleta) {
+        Span mensaje = new Span(validacionIncompleta);
+        Notification notification = new Notification(mensaje);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
     }
 
     public void setStep(Step step) {
         this.step = step;
-//        binder.readBean(alternative);
     }
 
     public Step getStep() {
@@ -195,41 +183,12 @@ public class StepForm extends HorizontalLayout {
         return this.save;
     }
 
-    // Events
-    public static abstract class StepFormEvent extends ComponentEvent<StepForm> {
-        private Step step;
-
-        protected StepFormEvent(StepForm source, Step step) {
-            super(source, false);
-            this.step = step;
-        }
-
-        public Step getStep() {
-            return step;
-        }
-    }
-
-    public static class SaveEvent extends StepForm.StepFormEvent {
-        SaveEvent(StepForm source, Step step) {
-            super(source, step);
-        }
-    }
-
-    public static class DeleteEvent extends StepForm.StepFormEvent {
-        DeleteEvent(StepForm source, Step step) {
-            super(source, step);
-        }
-
-    }
-
-    public static class CloseEvent extends StepForm.StepFormEvent {
-        CloseEvent(StepForm source) {
-            super(source, null);
-        }
-    }
-
-    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
-                                                                  ComponentEventListener<T> listener) {
-        return getEventBus().addListener(eventType, listener);
+    public void setAsDefault() {
+        this.label.setValue(" ");
+        this.textId.setValue(" ");
+        this.text.setValue(" ");
+        this.alternativeGridForm.setAsDefault();
+        this.operationGridForm.setAsDefault();
+        this.documentsGridForm.setAsDefault();
     }
 }

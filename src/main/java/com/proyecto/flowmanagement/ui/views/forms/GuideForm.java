@@ -29,8 +29,10 @@ public class GuideForm extends VerticalLayout {
 
     HorizontalLayout guideLayout;
     HorizontalLayout stepSecctionLayout;
+    HorizontalLayout conditionsSecctionLayout;
     HorizontalLayout operationSecctionLayout;
     HorizontalLayout actionsLayout;
+    HorizontalLayout guideDetailsLayout;
 
     Button crearGuia;
 
@@ -41,9 +43,12 @@ public class GuideForm extends VerticalLayout {
 
     StepGridForm stepGridForm;
     OperationGridForm operationGridForm;
+    GuideDetailsForm guideDetailsForm = new GuideDetailsForm();
 
     public GuideForm(GuideServiceImpl guideService)
     {
+        configureGuideDetails();
+
         configureGuideElements();
 
         configureStepElements();
@@ -53,7 +58,14 @@ public class GuideForm extends VerticalLayout {
         configureDocumentsElements();
 
         createForm();
-}
+    }
+
+    private void configureGuideDetails() {
+        guideDetailsLayout = new HorizontalLayout();
+        guideDetailsLayout.setSizeFull();
+        guideDetailsLayout.add(guideDetailsForm);
+    }
+
 
     private void configureDocumentsElements() {
     }
@@ -83,10 +95,8 @@ public class GuideForm extends VerticalLayout {
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         button.addClickListener(event -> notification.open());
-
         botonCrear.add(button);
-//        botonCrear.add(crearGuia);
-        add(guideLayout,stepSecctionLayout,operationSecctionLayout,botonCrear);
+        add(guideDetailsLayout,guideLayout,stepSecctionLayout,operationSecctionLayout,botonCrear);
     }
 
     private void validateAndSave() {

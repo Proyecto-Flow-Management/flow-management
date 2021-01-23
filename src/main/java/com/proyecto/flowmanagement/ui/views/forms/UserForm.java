@@ -107,7 +107,6 @@ public class UserForm extends FormLayout {
         DeleteEvent(UserForm source, User user) {
             super(source, user);
         }
-
     }
 
     public static class CloseEvent extends UserFormEvent {

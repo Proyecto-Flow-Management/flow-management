@@ -395,22 +395,6 @@ public class GuideGeneratorServiceImp {
         guideName.setTextContent(alternative.getGuideName());
         label.setTextContent(alternative.getLabel());
 
-        if(alternative.getConditions() != null)
-        {
-            Node unaryNode = getUnaryCondition(alternative.getConditions().get(0));
-            Node locationAlternative = docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE).item(0);
-            Node unaryImported = docAlternative.importNode(unaryNode,true);
-            locationAlternative.appendChild(unaryImported);
-        }
-
-        if(alternative.getBinaryConditions() != null)
-        {
-            Node binaryCondition = getBinaryCondition(alternative.getBinaryConditions().get(0));
-            Node locationAlternative = docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE).item(0);
-            Node binaryImported = docAlternative.importNode(binaryCondition,true);
-            locationAlternative.appendChild(binaryImported);
-        }
-
         return docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE).item(0);
     }
 
@@ -426,39 +410,9 @@ public class GuideGeneratorServiceImp {
 
         int i = 1;
 
-        for (UnaryCondition unaryCondition : binaryConditions.getConditions()) {
-            Node unaryConditionNode = getUnaryCondition(unaryCondition);
-            Node locationAlternative = docBinary.getElementsByTagName(XMLConstants.BINARY_CONDITION).item(0);
-            Node unaryNodeImported = docBinary.importNode(unaryConditionNode,true);
-            locationAlternative.appendChild(unaryNodeImported);
-            docBinary.renameNode(unaryNodeImported, unaryNodeImported.getNamespaceURI(),XMLConstants.BINARY_OPERATORS);
-            i++;
-        }
 
         return docBinary.getElementsByTagName(XMLConstants.BINARY_CONDITION).item(0);
     }
 
-    private Node getUnaryCondition(UnaryCondition condition) throws IOException, ParserConfigurationException, org.xml.sax.SAXException {
-        File file = new File(XMLConstants.UNARY_CONDITION_XML);
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document docUnary = dBuilder.parse(file);
-
-        Node name = docUnary.getElementsByTagName(XMLConstants.UNARY_CONDITION_OPERATION_NAME).item(0);
-        Node field = docUnary.getElementsByTagName(XMLConstants.UNARY_CONDITION_FIELD).item(0);
-        Node fieldType = docUnary.getElementsByTagName(XMLConstants.UNARY_CONDITION_FIELD_TYPE).item(0);
-        Node operator = docUnary.getElementsByTagName(XMLConstants.UNARY_CONDITION_OPERATOR).item(0);
-        Node value = docUnary.getElementsByTagName(XMLConstants.UNARY_CONDITION_VALUE).item(0);
-
-        name.setTextContent(condition.getOperationName());
-        field.setTextContent(condition.getConditionParameter().getField());
-        fieldType.setTextContent(condition.getConditionParameter().getFieldType());
-        operator.setTextContent(condition.getConditionParameter().getOperator());
-        value.setTextContent(condition.getConditionParameter().getValue());
-
-        Node conditionNode = docUnary.getElementsByTagName(XMLConstants.ALTERNATIVE_CONDITION).item(0);
-
-        return conditionNode;
-    }
 
 }

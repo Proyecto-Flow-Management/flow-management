@@ -2,8 +2,10 @@ package com.proyecto.flowmanagement.ui.views.grids;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
 import com.proyecto.flowmanagement.ui.views.forms.DocumentsForm;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -12,13 +14,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 @CssImport("./styles/general.css")
-public class DocumentsGridForm extends VerticalLayout {
+public class DocumentsGridForm extends HorizontalLayout {
 
     private Button createDocument;
     DocumentsForm documentsForm;
 
     Grid<StepDocument> stepDocumentGrid;
     List<StepDocument> stepDocumentsList;
+
+    VerticalLayout documentSectionLayout = new VerticalLayout();
+    Accordion accordion = new Accordion();
+    FormLayout basicInformation = new FormLayout();
 
     public DocumentsGridForm()
     {
@@ -49,7 +55,15 @@ public class DocumentsGridForm extends VerticalLayout {
         createStepDocumentLayout.add(createDocument);
         createStepDocumentLayout.setWidthFull();
 
-        add(createStepDocumentLayout, stepDocumentFormLayout, gridLayout);
+        basicInformation.setWidthFull();
+        documentSectionLayout.setWidthFull();
+        documentSectionLayout.setId("step-Layout");
+        documentSectionLayout.add(createStepDocumentLayout, stepDocumentFormLayout, gridLayout);
+        setWidthFull();
+        basicInformation.add(documentSectionLayout);
+        accordion.add("Documents", basicInformation);
+        accordion.close();
+        add(accordion);
     }
 
     private void CloseForm() {
@@ -103,5 +117,10 @@ private void configureGrid() {
 
     public List<StepDocument> getDocuments() {
         return this.stepDocumentsList;
+    }
+
+    public void setAsDefault() {
+        this.stepDocumentsList = new LinkedList<>();
+        updateGrid();
     }
 }

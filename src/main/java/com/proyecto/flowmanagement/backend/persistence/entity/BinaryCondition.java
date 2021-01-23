@@ -14,6 +14,10 @@ public class BinaryCondition extends AbstractEntity{
     @JoinColumn(name="binary_condition_id")
     private List<UnaryCondition> conditions;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name="binary_condition_id")
+    private List<BinaryCondition> binaryConditions;
+
     public String getOperator() {
         return operator;
     }

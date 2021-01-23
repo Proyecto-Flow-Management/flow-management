@@ -4,8 +4,10 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.forms.AlternativeForm;
 import com.proyecto.flowmanagement.ui.views.forms.StepForm;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -14,7 +16,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 @CssImport("./styles/general.css")
-public class AlternativeGridForm extends VerticalLayout {
+@CssImport("./styles/step-panel.css")
+public class AlternativeGridForm extends HorizontalLayout {
 
     public AlternativeForm alternativeForm;
     public Button createAlternative;
@@ -22,8 +25,15 @@ public class AlternativeGridForm extends VerticalLayout {
     Grid<Alternative> alternativeGrid;
     List<Alternative> alternativeList;
 
+    List<Step> stepList;
+
+    VerticalLayout stepSecctionLayout = new VerticalLayout();
+    Accordion accordion = new Accordion();
+    FormLayout basicInformation = new FormLayout();
+
     public AlternativeGridForm()
     {
+        stepList = new LinkedList<>();
         setSizeFull();
         configureElements();
     }
@@ -34,7 +44,7 @@ public class AlternativeGridForm extends VerticalLayout {
         configureGrid();
         createAlternative = new Button("Crear Alternative", click -> addAlternative());
 
-        alternativeForm = new AlternativeForm();
+        alternativeForm = new AlternativeForm(stepList);
         alternativeForm.setVisible(false);
         alternativeForm.save.addClickListener(buttonClickEvent -> CreateorSaveAlternative());
         alternativeForm.close.addClickListener(buttonClickEvent -> CloseForm());
@@ -52,7 +62,15 @@ public class AlternativeGridForm extends VerticalLayout {
         createAlternativeLyout.add(createAlternative);
         createAlternativeLyout.setWidthFull();
 
-        add(createAlternativeLyout, alternativeFormLayout, gridLayout);
+        basicInformation.setWidthFull();
+        stepSecctionLayout.setWidthFull();
+        stepSecctionLayout.setId("step-Layout");
+        stepSecctionLayout.add(createAlternativeLyout, alternativeFormLayout, gridLayout);
+        setWidthFull();
+        basicInformation.add(stepSecctionLayout);
+        accordion.add("Alternatives", basicInformation);
+        accordion.close();
+        add(accordion);
     }
 
     private void CloseForm() {
@@ -114,5 +132,10 @@ public class AlternativeGridForm extends VerticalLayout {
 
     public List<Alternative> getAlternatives() {
         return this.alternativeList;
+    }
+
+    public void setAsDefault() {
+        this.alternativeList = new LinkedList<>();
+        updateGrid();
     }
 }

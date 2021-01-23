@@ -7,6 +7,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -32,6 +33,11 @@ public class Guide extends AbstractEntity {
 	@JoinColumn(name="guide_id")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Operation> operations;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="guide_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<Guide> guides;
 
 	public String getName() {
 		return name;
@@ -71,5 +77,45 @@ public class Guide extends AbstractEntity {
 
 	public void setOperations(List<Operation> operations) {
 		this.operations = operations;
+	}
+
+	public List<Guide> getGuides() {
+		return guides;
+	}
+
+	public void setGuides(List<Guide> guides) {
+		this.guides = guides;
+	}
+
+	public List<String> validarGuia()
+	{
+		List<String> erroresEncontrados = new LinkedList<>();
+
+		if(this.name.trim().isEmpty())
+			erroresEncontrados.add("El campo Name es obligatorio");
+
+		if(this.label.trim().isEmpty())
+			erroresEncontrados.add("El campo Label es obligatorio");
+
+		if(this.mainStep.trim().isEmpty())
+			erroresEncontrados.add("El campo MainStep es obligatorio");
+
+		if(this.steps == null || this.steps.size() == 0)
+			erroresEncontrados.add("La Guia no contiene ningun Step");
+
+		return erroresEncontrados;
+	}
+
+	public String validacionIncompleta()
+	{
+		String retorno = "";
+
+		if(this.name.trim().isEmpty())
+			retorno = "El campo Name de la Guia es obligatorio";
+
+		if(this.label.trim().isEmpty())
+			retorno = "El campo Label es obligatorio";
+
+		return retorno;
 	}
 }

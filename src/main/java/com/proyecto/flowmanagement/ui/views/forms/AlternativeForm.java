@@ -1,19 +1,26 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
+import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.grids.ConditionsGridForm;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.Autocomplete;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CssImport("./styles/alternative-form.css")
 public class AlternativeForm extends VerticalLayout {
@@ -21,18 +28,25 @@ public class AlternativeForm extends VerticalLayout {
     public boolean editing;
     private Alternative alternative;
 
-    ConditionForm conditionForm = new ConditionForm();
+    ConditionsForm conditionForm;
 
     TextField guideName = new TextField("Guia Nombre Alternative");
     TextField label = new TextField("Label Alternative");
-    TextField nextStep = new TextField("nextStep Alternative");
+
+    public List<Step> stepList = new LinkedList<>();
+
+    TextField nextStep = new TextField("Tipo");
+    ComboBox<String> option = new ComboBox<>("Referencia");
+    ComboBox<Step> stepComboBox = new ComboBox<>("Steps");
+
+    Autocomplete autocomplete;
 
     public Button save = new Button("Guardar");
     Button delete = new Button("Eliminar");
     public Button close = new Button("Cancelar");
 
 
-    public AlternativeForm() {
+    public AlternativeForm(List<Step> stepList) {
         setClassName("alternativeSection");
         configureElements();
         editing = false;
@@ -53,7 +67,16 @@ public class AlternativeForm extends VerticalLayout {
         this.label.setRequired(true);
         this.label.setErrorMessage("Este campo es obligatorio.");
 
-        elements.add(guideName, label, nextStep);
+        List<String> options = new LinkedList<>();
+        options.add("nextStep Existente");
+        options.add("nextStep Nuevo");
+        options.add("guideName");
+
+        option.addValueChangeListener(b -> configurarOpcion(b.getValue()));
+
+        option.setItems(options);
+        stepComboBox.setVisible(false);
+        elements.add(guideName, label, option, nextStep, stepComboBox);
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -65,11 +88,33 @@ public class AlternativeForm extends VerticalLayout {
 
         conditionsLayout.setWidthFull();
 
+        conditionForm = new ConditionsForm();
+
         conditionsLayout.add(conditionForm);
 
         form.add(elements,conditionsLayout, actionsLayout);
 
         add(form);
+    }
+
+    private void configurarOpcion(String valor) {
+        if(valor == "nextStep Existente")
+        {
+            this.stepComboBox.setItems(this.stepList);
+            this.stepComboBox.setVisible(true);
+            this.nextStep.setVisible(false);
+        }
+        else
+        {
+            this.stepComboBox.setVisible(false);
+            this.nextStep.setVisible(true);
+        }
+    }
+
+    private List<String> findOptions(String text) {
+        return this.stepList.stream().
+                filter(step -> step.getLabel().contains(text)).map(x -> x.getLabel())
+                .collect(Collectors.toList());
     }
 
     private void validateAndSave() {
@@ -95,7 +140,6 @@ public class AlternativeForm extends VerticalLayout {
             this.guideName.setValue(alternative.getGuideName());
             this.nextStep.setValue(alternative.getNextStep());
             this.label.setValue(alternative.getLabel());
-            this.conditionForm.setConditions(alternative);
             editing = true;
             delete.setVisible(true);
         }
@@ -104,7 +148,6 @@ public class AlternativeForm extends VerticalLayout {
             this.guideName.setValue("");
             this.nextStep.setValue("");
             this.label.setValue("");
-            this.conditionForm.setAsDefault();
         }
     }
 
@@ -129,8 +172,6 @@ public class AlternativeForm extends VerticalLayout {
 
     public Alternative getAlternative()
     {
-        this.alternative.setConditions(conditionForm.getUnaryConditions());
-        this.alternative.setBinaryConditions(conditionForm.getBinaryConditions());
         return this.alternative;
     }
 

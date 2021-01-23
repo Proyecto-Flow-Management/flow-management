@@ -93,7 +93,6 @@ public class MockTestServiceImpl {
         conditionParameterUnary.setFieldType("string");
         conditionParameterUnary.setOperator("=");
         conditionParameterUnary.setValue("HABILITADA");
-        unaryCondition.setConditionParameter(conditionParameterUnary);
         //alternative1Step1.setConditions(unaryCondition.);
 
 
@@ -110,8 +109,6 @@ public class MockTestServiceImpl {
         conditionParameterO1A2.setFieldType("string");
         conditionParameterO1A2.setOperator("=");
         conditionParameterO1A2.setValue("OK");
-        unaryCondition1A2.setConditionParameter(conditionParameterO1A2);
-
 
         UnaryCondition unaryCondition2A2 = new UnaryCondition();
         unaryCondition2A2.setOperationName("consultaEstadoGSF");
@@ -120,7 +117,6 @@ public class MockTestServiceImpl {
         conditionParameterO2A2.setFieldType("string");
         conditionParameterO2A2.setOperator("=");
         conditionParameterO2A2.setValue("SIN INFORMACION");
-        unaryCondition2A2.setConditionParameter(conditionParameterO2A2);
 
         listUnary.add(unaryCondition1A2);
         listUnary.add(unaryCondition2A2);
