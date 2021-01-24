@@ -21,7 +21,7 @@ public class OperationGridForm extends HorizontalLayout {
     public List<String> alternatives;
 
     Grid<Operation> operationGrid;
-    List<Operation> operationList;
+    public List<Operation> operationList;
 
 
     VerticalLayout operationSecctionLayout = new VerticalLayout();
@@ -68,7 +68,9 @@ public class OperationGridForm extends HorizontalLayout {
         add(accordion);
     }
 
-    private void updateGrid() {
+    public void updateGrid() {
+        if(operationList == null)
+            operationList = new LinkedList<>();
         operationGrid.setItems(operationList);
     }
 

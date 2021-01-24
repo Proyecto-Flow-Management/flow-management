@@ -97,7 +97,8 @@ public class ConditionsForm extends HorizontalLayout {
         agregarCondition.setClassName("button-add");
 
         agregarCondition.addClickListener(buttonClickEvent -> mostrarFormulrioCorrespondiente());
-
+        unaryConditionForm.close.addClickListener(buttonClickEvent -> this.unaryConditionForm.setVisible(false));
+        binaryConditionForm.close.addClickListener(buttonClickEvent -> this.binaryConditionForm.setVisible(false));
         agregarLayout.setWidthFull();
 
         agregarLayout.add(listType, agregarCondition);
@@ -111,9 +112,11 @@ public class ConditionsForm extends HorizontalLayout {
         if(this.listType.getValue() == TypeOperation.unaryCondition)
         {
             showUnaryForm();
+            unaryConditionForm.isValid = false;
         }
         else {
             showBinaryConditionForm();
+            binaryConditionForm.isValid = false;
         }
     }
 
@@ -230,6 +233,9 @@ public class ConditionsForm extends HorizontalLayout {
     }
 
     private void guardarUnary() {
+        if(!unaryConditionForm.isValid)
+            return;
+
         Condition unaryCondition = unaryConditionForm.getUnaryCondition();
 
         if(editando == null)
@@ -248,7 +254,7 @@ public class ConditionsForm extends HorizontalLayout {
         {
             if(actual.getType() == TypeOperation.unaryCondition)
             {
-                alternative.setUnaryCondition(actual, unaryCondition);
+                alternative.setUnaryCondition(editando, unaryCondition);
                 unaryConditionForm.setVisible(false);
             }
 
@@ -258,6 +264,9 @@ public class ConditionsForm extends HorizontalLayout {
 
         conditionTreeForm.setVisible(true);
         conditionTreeForm.conditions = alternative.getConditions();
+        this.agregarUnaryABinary.setVisible(false);
+        this.agregarBinaryEnBinary.setVisible(false);
+        this.agregarCondition.setVisible(true);
         conditionTreeForm.updateGrid();
     }
 
@@ -294,6 +303,9 @@ public class ConditionsForm extends HorizontalLayout {
     }
 
     private void guardarBinary(){
+        if(!binaryConditionForm.isValid)
+            return;
+
         Condition binaryCondition = binaryConditionForm.getBinaryCondition();
 
         if(actual == null)
@@ -311,6 +323,36 @@ public class ConditionsForm extends HorizontalLayout {
 
     public List<Condition> getConditions(){
         return this.alternative.getConditions();
+    }
+
+    public void setAsDefault() {
+        this.alternative = new Alternative();
+        binaryConditionForm.setAsDefault();
+        unaryConditionForm.setAsDefault();
+        conditionTreeForm.conditions = new LinkedList<>();
+        conditionTreeForm.updateGrid();
+        conditionTreeForm.arbolCondition.deselectAll();
+        conditionTreeForm.setVisible(false);
+    }
+
+    public void updateForm(Alternative alternative) {
+
+        this.alternative = alternative;
+
+        if(alternative.getConditions() != null && this.alternative.getConditions().size() >0)
+        {
+            this.conditionTreeForm.conditions = alternative.getConditions();
+            this.conditionTreeForm.updateGrid();
+            this.conditionTreeForm.setVisible(true);
+        }
+        else
+        {
+            this.conditionTreeForm.setVisible(false);
+        }
+
+        this.agregarUnaryABinary.setVisible(false);
+        this.agregarBinaryEnBinary.setVisible(false);
+        this.agregarCondition.setVisible(true);
     }
 }
 

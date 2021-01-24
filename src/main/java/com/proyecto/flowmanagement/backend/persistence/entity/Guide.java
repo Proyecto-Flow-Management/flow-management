@@ -118,4 +118,38 @@ public class Guide extends AbstractEntity {
 
 		return retorno;
 	}
+
+
+	public void addGuide(Guide newGuide)
+	{
+		this.guides.add(newGuide);
+	}
+
+	public boolean setGuide(Guide oldGuide, Guide newGuide)
+	{
+		boolean flag = false;
+
+		if(this.getGuides() != null)
+		{
+			for (Guide aux : this.getGuides()) {
+
+				if(aux == oldGuide)
+				{
+					aux = newGuide;
+					return true;
+				}
+
+				if(aux.setGuide(oldGuide,newGuide))
+					return true;
+			}
+		}
+
+		return flag;
+	}
+
+	@Override
+	public String toString()
+	{
+		return this.getName();
+	}
 }

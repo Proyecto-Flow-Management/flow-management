@@ -126,7 +126,6 @@ public class StepForm extends HorizontalLayout {
         this.textId.setRequired(true);
         this.label.setRequired(true);
 
-
         this.text.setErrorMessage("Campo obligatorio");
         this.textId.setErrorMessage("Campo obligatorio");
         this.label.setErrorMessage("Campo obligatorio");
@@ -139,6 +138,7 @@ public class StepForm extends HorizontalLayout {
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
@@ -174,6 +174,10 @@ public class StepForm extends HorizontalLayout {
 
     public void setStep(Step step) {
         this.step = step;
+        this.label.setValue(step.getLabel());
+        this.textId.setValue(step.getTextId());
+        this.text.setValue(step.getText());
+        this.alternativeGridForm.loadAlternative(step.getAlternatives());
     }
 
     public Step getStep() {

@@ -20,11 +20,14 @@ public class BinaryConditionForm extends HorizontalLayout {
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
 
+    public boolean isValid;
+
     VerticalLayout form = new VerticalLayout();
     HorizontalLayout fields = new HorizontalLayout();
     HorizontalLayout actions = new HorizontalLayout();
 
     public BinaryConditionForm() {
+        isValid = false;
         editing = false;
 
         setWidthFull();

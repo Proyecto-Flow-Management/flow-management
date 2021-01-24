@@ -12,6 +12,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -26,7 +28,7 @@ import java.util.List;
 @CssImport("./styles/unary-form.css")
 public class UnaryConditionForm extends VerticalLayout {
     public boolean editing;
-
+    public boolean isValid;
     Condition unaryCondition = new Condition();
     ParametersGridForm parametersGridForm = new ParametersGridForm();
 
@@ -71,6 +73,7 @@ public class UnaryConditionForm extends VerticalLayout {
 
     private void configureElements() {
         setSizeFull();
+        this.isValid = false;
         addClassName("unaryForm");
         this.operationNameText.setValue("");
         camposLayout.add(operationNameText);
@@ -82,24 +85,27 @@ public class UnaryConditionForm extends VerticalLayout {
         unaryCondition.setType(TypeOperation.unaryCondition);
         unaryCondition.setOperation(operationNameText.getValue());
         unaryCondition.setConditionParameter(parametersGridForm.getConditionParameterList());
+        
+        String mensajeError = unaryCondition.validarUnaryIncompleto();
+
+        if(!mensajeError.isEmpty())
+            mostrarMensajeError(mensajeError);
+        
+        isValid = mensajeError.isEmpty();
+    }
+
+    private void mostrarMensajeError(String mensajeError) {
+        Span mensaje = new Span(mensajeError);
+        Notification notification = new Notification(mensaje);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
     }
 
 
     public Condition getUnaryCondition()
     {
         return this.unaryCondition;
-    }
-
-    private List<String> isValid() {
-
-        List<String> valores = new LinkedList<>();
-
-        if(operationNameText.getValue().isEmpty())
-        {
-            valores.add("El campo OperatorName es obligatorio");
-        }
-
-        return valores;
     }
 
     public void setAsDefault() {
@@ -111,5 +117,5 @@ public class UnaryConditionForm extends VerticalLayout {
         this.operationNameText.setValue(condition.getOperation());
         this.parametersGridForm.setConditionParameterList(condition.getConditionParameter());
         this.parametersGridForm.updateGrid();
-    }
+    } 
 }

@@ -45,5 +45,4 @@ public abstract class AbstractEntity {
         }
         return getId().equals(other.getId());
     }
-
 }

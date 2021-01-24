@@ -22,6 +22,9 @@ public class Alternative  extends AbstractEntity{
 	@Column(name = "next_step")
 	private String nextStep;
 
+	@Column(name = "newStep")
+	private boolean newStep;
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="alternative_unary_id")
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -71,7 +74,12 @@ public class Alternative  extends AbstractEntity{
 	public void setUnaryCondition(Condition oldCondition, Condition newCondition)
 	{
 		for (Condition actual: this.conditions) {
-			if(actual.setUnaryCondition(oldCondition,newCondition));
+			if(actual == oldCondition)
+			{
+				int index = this.conditions.indexOf(actual);
+				this.conditions.set(index, newCondition);
+			}
+			else if(actual.setUnaryCondition(oldCondition,newCondition));
 				break;
 		}
 	}
@@ -94,4 +102,38 @@ public class Alternative  extends AbstractEntity{
 		}
 	}
 
+	public List<String> validarAltarnative()
+	{
+		List<String> erroresEncontrados = new LinkedList<>();
+
+		if(this.label.trim().isEmpty())
+			erroresEncontrados.add("El campo Label es obligatorio");
+
+		if(this.getNextStep().trim().isEmpty() && this.nextStep.trim().isEmpty())
+			erroresEncontrados.add("Debe seleccionar una guia o un step para el Alternative");
+
+		return erroresEncontrados;
+	}
+
+	public String validacionIncompleta()
+	{
+		String retorno = "";
+
+		if(this.label.trim().isEmpty())
+			retorno = "El campo Label es obligatorio";
+
+		return retorno;
+	}
+
+	public boolean isNewStep() {
+		return newStep;
+	}
+
+	public void setNewStep(boolean newStep) {
+		this.newStep = newStep;
+	}
+
+	public boolean getNewStep() {
+		return this.newStep;
+	}
 }

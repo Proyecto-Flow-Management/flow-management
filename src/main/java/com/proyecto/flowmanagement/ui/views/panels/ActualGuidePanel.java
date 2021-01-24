@@ -7,6 +7,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class ActualGuidePanel extends HorizontalLayout {
@@ -15,6 +16,7 @@ public class ActualGuidePanel extends HorizontalLayout {
     Accordion accordion = new Accordion();
     FormLayout basicInformation = new FormLayout();
     public ComboBox<Guide> actualGuide =new ComboBox<>("Guia Actual");
+    List<Guide> guias = new LinkedList<>();
 
     public ActualGuidePanel()
     {
@@ -41,4 +43,23 @@ public class ActualGuidePanel extends HorizontalLayout {
         this.actualGuide.setValue(actual);
     }
 
+    public void actualizarItems(Guide raiz)
+    {
+        this.actualGuide.setItems(new LinkedList<>());
+        guias = new LinkedList<>();
+        setearLista(raiz);
+        this.actualGuide.setItems(guias);
+    }
+
+    private void setearLista(Guide raiz)
+    {
+        guias.add(raiz);
+
+        if(raiz.getGuides() != null)
+        {
+            for (Guide aux : raiz.getGuides()) {
+                setearLista(aux);
+            }
+        }
+    }
 }

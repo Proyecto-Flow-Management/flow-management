@@ -137,4 +137,45 @@ public class Condition  extends AbstractEntity{
 
         return  false;
     }
+
+    public String validarUnaryIncompleto(){
+
+        String retorno = "";
+
+        if(this.operation.trim().isEmpty())
+            retorno = "El campo Operation es obligatorio";
+
+        return retorno;
+    }
+
+
+    public String validarBinaryIncompleto(){
+
+        String retorno = "";
+
+        if(this.operation.trim().isEmpty())
+            retorno = "El campo Operation es obligatorio";
+
+        return retorno;
+    }
+
+    public String validarBinaryCompleto(){
+
+        String retorno = "";
+
+        if(this.operation.trim().isEmpty())
+            retorno = "El campo Operation es obligatorio";
+
+        return retorno;
+    }
+
+    public String validarUnaryCompleto(){
+
+        String retorno = "";
+
+        if(this.operation.trim().isEmpty())
+            retorno = "El campo Operation es obligatorio";
+
+        return retorno;
+    }
 }

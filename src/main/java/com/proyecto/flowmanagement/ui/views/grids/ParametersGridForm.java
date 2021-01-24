@@ -77,6 +77,9 @@ public class ParametersGridForm extends VerticalLayout {
     }
 
     private void save() {
+        if(!conditionParametersForm.isValid)
+            return;
+
         ConditionParameter actual = conditionParametersForm.getConditionParameter();
 
         if(editing == null)

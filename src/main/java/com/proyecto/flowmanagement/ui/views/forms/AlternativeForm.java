@@ -30,7 +30,6 @@ public class AlternativeForm extends VerticalLayout {
 
     ConditionsForm conditionForm;
 
-    TextField guideName = new TextField("Guia Nombre Alternative");
     TextField label = new TextField("Label Alternative");
 
     public List<Step> stepList = new LinkedList<>();
@@ -39,14 +38,15 @@ public class AlternativeForm extends VerticalLayout {
     ComboBox<String> option = new ComboBox<>("Referencia");
     ComboBox<Step> stepComboBox = new ComboBox<>("Steps");
 
-    Autocomplete autocomplete;
+    public boolean isValid;
 
     public Button save = new Button("Guardar");
-    Button delete = new Button("Eliminar");
+    public Button delete = new Button("Eliminar");
     public Button close = new Button("Cancelar");
 
 
     public AlternativeForm(List<Step> stepList) {
+        isValid = false;
         setClassName("alternativeSection");
         configureElements();
         editing = false;
@@ -54,7 +54,7 @@ public class AlternativeForm extends VerticalLayout {
 
     public void configureElements() {
 
-        save.addClickListener(buttonClickEvent -> validateAndSave());
+        save.addClickListener(buttonClickEvent -> saveAlternative());
 
         VerticalLayout form = new VerticalLayout();
 
@@ -76,7 +76,7 @@ public class AlternativeForm extends VerticalLayout {
 
         option.setItems(options);
         stepComboBox.setVisible(false);
-        elements.add(guideName, label, option, nextStep, stepComboBox);
+        elements.add(label, option, nextStep, stepComboBox);
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -111,63 +111,87 @@ public class AlternativeForm extends VerticalLayout {
         }
     }
 
-    private List<String> findOptions(String text) {
-        return this.stepList.stream().
-                filter(step -> step.getLabel().contains(text)).map(x -> x.getLabel())
-                .collect(Collectors.toList());
+    private void saveAlternative() {
+
+        this.alternative = new Alternative();
+        
+        alternative.setLabel(this.label.getValue());
+        alternative.setConditions(this.conditionForm.getConditions());
+
+        if(this.option.getValue() == "nextStep Existente")
+        {
+            this.alternative.setNextStep(this.stepComboBox.getValue().getTextId());
+            this.alternative.setNewStep(false);
+        }
+        else if(this.option.getValue() == "nextStep Nuevo")
+        {
+            this.alternative.setNextStep(this.nextStep.getValue());
+            this.alternative.setNewStep(true);
+        }
+        else
+        {
+            this.alternative.setGuideName(this.nextStep.getValue());
+            this.alternative.setNewStep(false);
+        }
+
+        String mensajeValidacion = alternative.validacionIncompleta();
+        
+        if(!mensajeValidacion.isEmpty())
+            mostrarMensajeError(mensajeValidacion);
+
+        isValid = mensajeValidacion.isEmpty();
     }
 
-    private void validateAndSave() {
-        if (isValid()){
-            this.alternative = new Alternative();
-            alternative.setLabel(this.label.getValue());
-            alternative.setGuideName(this.guideName.getValue());
-            alternative.setNextStep(this.nextStep.getValue());
-        }
-        else {
-            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
-            Notification notification = new Notification(content);
-            notification.setDuration(3000);
-            notification.setPosition(Notification.Position.MIDDLE);
-            notification.open();
-        }
+    private void mostrarMensajeError(String mensajeValidacion) {
+        Span mensaje = new Span(mensajeValidacion);
+        Notification notification = new Notification(mensaje);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
     }
 
     public void setAlternative(Alternative alternative) {
         if (alternative != null)
         {
             this.alternative = alternative;
-            this.guideName.setValue(alternative.getGuideName());
-            this.nextStep.setValue(alternative.getNextStep());
+
+            if(alternative.getNextStep() != null)
+            {
+                this.nextStep.setValue(alternative.getNextStep());
+
+                if(this.alternative.getNewStep())
+                {
+                    this.option.setValue("nextStep Nuevo");
+                    this.stepComboBox.setVisible(false);
+                    this.nextStep.setVisible(true);
+                }
+                else
+                {
+                    this.stepComboBox.setVisible(true);
+                    this.nextStep.setVisible(false);
+                    this.option.setValue("nextStep Existente");
+                    Step stepSelected = this.stepList.stream().filter(step -> step.getTextId() == alternative.getNextStep()).findFirst().get();
+                    this.stepComboBox.setValue(stepSelected);
+                }
+            }
+            else
+            {
+                this.stepComboBox.setVisible(false);
+                this.nextStep.setVisible(true);
+                this.option.setValue("guideName");
+                this.nextStep.setValue(this.alternative.getGuideName());
+            }
+
             this.label.setValue(alternative.getLabel());
             editing = true;
             delete.setVisible(true);
+            conditionForm.updateForm(alternative);
         }
         else
         {
-            this.guideName.setValue("");
             this.nextStep.setValue("");
             this.label.setValue("");
         }
-    }
-
-    public boolean isValid() {
-        boolean result = false;
-
-        if(validateFields())
-            result = true;
-
-        return result;
-    }
-
-    public boolean validateFields(){
-        boolean result = false;
-
-        if(!this.label.getValue().isEmpty() &&
-                (!this.guideName.getValue().isEmpty() || !this.nextStep.getValue().isEmpty()))
-            result = true;
-
-        return result;
     }
 
     public Alternative getAlternative()
@@ -175,41 +199,14 @@ public class AlternativeForm extends VerticalLayout {
         return this.alternative;
     }
 
-    // Events
-    public static abstract class AlternativeFormEvent extends ComponentEvent<AlternativeForm> {
-        private Alternative alternative;
-
-        protected AlternativeFormEvent(AlternativeForm source, Alternative alternative) {
-            super(source, false);
-            this.alternative = alternative;
-        }
-
-        public Alternative getAlternative() {
-            return alternative;
-        }
-    }
-
-    public static class SaveEvent extends AlternativeForm.AlternativeFormEvent {
-        SaveEvent(AlternativeForm source, Alternative alternative) {
-            super(source, alternative);
-        }
-    }
-
-    public static class DeleteEvent extends AlternativeForm.AlternativeFormEvent {
-        DeleteEvent(AlternativeForm source, Alternative alternative) {
-            super(source, alternative);
-        }
-
-    }
-
-    public static class CloseEvent extends AlternativeForm.AlternativeFormEvent {
-        CloseEvent(AlternativeForm source) {
-            super(source, null);
-        }
-    }
-
-    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
-                                                                  ComponentEventListener<T> listener) {
-        return getEventBus().addListener(eventType, listener);
+    public void setAsDefault() {
+        this.nextStep.setValue("");
+        this.label.setValue("");
+        this.conditionForm.setAsDefault();
+        this.alternative = new Alternative();
+        editing = false;
+        stepComboBox.setVisible(false);
+        option.setValue("nextStep Nuevo");
+        nextStep.setVisible(true);
     }
 }

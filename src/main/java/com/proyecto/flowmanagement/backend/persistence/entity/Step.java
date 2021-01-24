@@ -121,7 +121,7 @@ public class Step extends AbstractEntity{
 		if(this.label.trim().isEmpty())
 			retorno = "El campo Label es obligatorio";
 
-		if(this.textId.trim().isEmpty())
+		if(this.text.trim().isEmpty())
 			retorno = "El campo Text del Step es obligatorio";
 
 		return retorno;

@@ -7,6 +7,8 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -23,7 +25,7 @@ public class ConditionParametersForm  extends VerticalLayout {
     public Button save = new Button("Guardar");
     public Button delete = new Button("Eliminar");
     public Button close = new Button("Cancelar");
-
+    public boolean isValid;
     TextField field;
     TextField fieldType;
     TextField operator;
@@ -53,6 +55,8 @@ public class ConditionParametersForm  extends VerticalLayout {
 
     private void configureElement() {
 
+        isValid = false;
+
         conditionParameter = new ConditionParameter();
 
         field = new TextField("Field");
@@ -80,6 +84,21 @@ public class ConditionParametersForm  extends VerticalLayout {
         newConditionParameter.setField(field.getValue());
         newConditionParameter.setValue(value.getValue());
         conditionParameter = newConditionParameter;
+
+        String mensajesError = conditionParameter.validarConditionParameter();
+
+        isValid = mensajesError.isEmpty();
+
+        if(isValid)
+            mostrarMensajeError(mensajesError);
+    }
+
+    private void mostrarMensajeError(String mensajesError) {
+        Span mensaje = new Span(mensajesError);
+        Notification notification = new Notification(mensaje);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
     }
 
     public ConditionParameter getConditionParameter()
@@ -87,29 +106,6 @@ public class ConditionParametersForm  extends VerticalLayout {
         return this.conditionParameter;
     }
 
-    private List<String> isValid()
-    {
-        List<String> valores = new LinkedList<>();
-
-        if(operator.getValue().trim() == "")
-        {
-            valores.add("El campo Operator es obligatorio");
-        }
-        if(fieldType.getValue().trim() == "")
-        {
-            valores.add("El campo FieldType es obligatorio");
-        }
-        if(field.getValue().trim() == "")
-        {
-            valores.add("El campo Field es obligatorio");
-        }
-        if(value.getValue().trim() == "")
-        {
-            valores.add("El campo Value es obligatorio");
-        }
-
-        return valores;
-    }
 
     public void setAsDefault() {
         this.operator.setValue("");

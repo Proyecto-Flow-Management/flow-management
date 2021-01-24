@@ -54,16 +54,21 @@ public class DetailsPanel  extends HorizontalLayout {
         return div;
     }
 
-    public void updateGridDetails(List<Guide> guideList)
+    public void updateGridDetails(Guide first)
     {
-        for (Guide aux : guideList) {
-            agregarGuia(aux);
-        }
+        data.clear();
+        arbol.getDataProvider().refreshAll();
+
+        agregarGuia(null,first);
+
+        arbol.getDataProvider().refreshAll();
     }
 
-    private void agregarGuia(Guide aux) {
+    private void agregarGuia(CustomNode padre, Guide aux) {
+
         CustomNode guia = new CustomNode("GuideName: " + aux.getName());
-        data.addItem(null,guia);
+
+        data.addItem(padre,guia);
 
         if(aux.getSteps() != null)
         {
@@ -71,6 +76,12 @@ public class DetailsPanel  extends HorizontalLayout {
                 CustomNode stepAux = new CustomNode("StepLabel: " +step.getLabel());
                 data.addItem(guia, stepAux);
                 agregarAlternativs(step, stepAux);
+            }
+        }
+        if(aux.getGuides() != null)
+        {
+            for (Guide temp : aux.getGuides()) {
+                agregarGuia(guia, temp);
             }
         }
     }

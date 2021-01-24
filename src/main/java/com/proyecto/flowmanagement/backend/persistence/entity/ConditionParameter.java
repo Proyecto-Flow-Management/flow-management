@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "condition_parameter")
@@ -56,5 +58,25 @@ public class ConditionParameter  extends AbstractEntity{
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+
+	public String validarConditionParameter()
+	{
+		String erroresEncontrados = "";
+
+		if(this.field.trim().isEmpty())
+			erroresEncontrados = "El campo Field es obligatorio";
+
+		if(this.fieldType.trim().isEmpty())
+			erroresEncontrados = "El campo FieldType es obligatorio";
+
+		if(this.operator.trim().isEmpty())
+			erroresEncontrados = "El campo Operator es obligatorio";
+
+		if(this.value.trim().isEmpty())
+			erroresEncontrados = "El campo Value es obligatorio";
+
+		return erroresEncontrados;
 	}
 }
