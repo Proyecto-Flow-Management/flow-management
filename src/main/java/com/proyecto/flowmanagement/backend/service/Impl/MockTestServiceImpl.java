@@ -61,7 +61,7 @@ public class MockTestServiceImpl {
         operation1Guide.setComment("Probando Comment");
         operation1Guide.setTitle("Probando Title");
         operation1Guide.setPauseExecution(false);
-        operation1Guide.setOperationOrder(true);
+        operation1Guide.setOperationOrder(1);
         operation1Guide.setOperationType(OperationType.simpleOperation);
         operation1Guide.setInParameters(parameters);
         operation1Guide.setNotifyAlternative(true);
@@ -80,8 +80,8 @@ public class MockTestServiceImpl {
         Alternative alternative1Step1 = new Alternative();
         Alternative alternative2Step1 = new Alternative();
 
-        Operation operation1Step1 = new Operation();
-        Operation operation2Step1 = new Operation();
+        //Operation operation1Step1 = new Operation();
+        //Operation operation2Step1 = new Operation();
 
         alternative1Step1.setLabel("CF_EA_CW_GESTIONABLE");
 
@@ -134,13 +134,13 @@ public class MockTestServiceImpl {
         stepAlternative.add(alternative2Step1);
         stepOne.setAlternatives(stepAlternative);
 
-        operation1Step1.setLabel("Label Operation 1 Step 1");
+        /*operation1Step1.setLabel("Label Operation 1 Step 1");
         operation1Step1.setName("Name Operation 1 Step 1");
         operation2Step1.setLabel("Label Operation 2 Step 1");
         operation2Step1.setName("Name Operation 2 Step 1");
 
         stepOperation.add(operation1Step1);
-        stepOperation.add(operation2Step1);
+        stepOperation.add(operation2Step1);*/
         stepOne.setOperations(stepOperation);
 
         stepOne.setLabel("Label TEST 1");

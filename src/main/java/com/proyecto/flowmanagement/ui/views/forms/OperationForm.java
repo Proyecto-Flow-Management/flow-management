@@ -1,9 +1,11 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.def.OperationType;
+import com.proyecto.flowmanagement.backend.def.SimpleOperationType;
+import com.proyecto.flowmanagement.backend.def.TaskOperationType;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
-import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
-import com.proyecto.flowmanagement.ui.views.grids.AlternativeGridForm;
+import com.proyecto.flowmanagement.backend.persistence.entity.SimpleOperation;
+import com.proyecto.flowmanagement.backend.persistence.entity.TaskOperation;
 import com.proyecto.flowmanagement.ui.views.grids.OperationParameterGridForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
@@ -21,49 +23,57 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
-
 import java.util.List;
-
-import static java.lang.Integer.parseInt;
 
 
 @org.springframework.stereotype.Component
 @CssImport("./styles/operation-grid-form.css")
 public class OperationForm extends HorizontalLayout {
+
     private Operation operation;
-    public List<String> alteratives;
-    AlternativeIdsForm alternativeIdsForm;
+    public List<String> alternatives;
+    public Boolean isValid = false;
+    public Boolean editing;
 
-    OperationParameterGridForm inParameterGridForm = new OperationParameterGridForm("Crear IN Operation Parameter");
-    OperationParameterGridForm outParameterGridForm = new OperationParameterGridForm("Crear OUT Operation Parameter");
+    private AlternativeIdsForm alternativeIdsForm;
 
-    VerticalLayout form = new VerticalLayout();
-    FormLayout elements = new FormLayout();
-    HorizontalLayout alternativeIdsFormLayout = new HorizontalLayout();
-    HorizontalLayout inParameterGridLayout = new HorizontalLayout();
-    HorizontalLayout outParameterGridLayout = new HorizontalLayout();
-    HorizontalLayout actionsLayout = new HorizontalLayout();
+    private OperationParameterGridForm inParameterGridForm = new OperationParameterGridForm("Crear IN Operation Parameter");
+    private OperationParameterGridForm outParameterGridForm = new OperationParameterGridForm("Crear OUT Operation Parameter");
+    //private ConditionsGridForm conditionsGridForm = new ConditionsGridForm("Crear Condition");
 
-    TextField name = new TextField("Nombre");
-    TextField label = new TextField("Etiqueta");
-    ComboBox<String> visible = new ComboBox<>("Visible");
-    ComboBox<String> preExecute = new ComboBox<>("Pre Execute");
-    TextField comment = new TextField("Comment");
-    TextField title = new TextField("Title");
-    ComboBox<String> automatic = new ComboBox<>("Automatic");
-    ComboBox<String> pauseExecution = new ComboBox<>("Pause Execution");
-    IntegerField operationOrder = new IntegerField ("Operation Order");
-    ComboBox<OperationType> operationType = new ComboBox<>("Operation Type");
-    ComboBox<String> notifyAlternative = new ComboBox<>("Notify Alternative");
-    ComboBox<String> notifyOperation = new ComboBox<>("Notify Operation");
-    IntegerField notifyOperationDelay = new IntegerField("Notify Operation Delay");
+    private VerticalLayout form = new VerticalLayout();
+    private FormLayout elements = new FormLayout();
+    private HorizontalLayout alternativeIdsFormLayout = new HorizontalLayout();
+    private HorizontalLayout inParameterGridLayout = new HorizontalLayout();
+    private HorizontalLayout outParameterGridLayout = new HorizontalLayout();
+    private HorizontalLayout actionsLayout = new HorizontalLayout();
+
+    private TextField name = new TextField("Name");
+    private TextField label = new TextField("Label");
+    private  ComboBox<String> visible = new ComboBox<>("Visible");
+    private ComboBox<String> preExecute = new ComboBox<>("Pre Execute");
+    private TextField comment = new TextField("Comment");
+    private TextField title = new TextField("Title");
+    private ComboBox<String> automatic = new ComboBox<>("Automatic");
+    private ComboBox<String> pauseExecution = new ComboBox<>("Pause Execution");
+    private IntegerField operationOrder = new IntegerField ("Operation Order");
+    private ComboBox<OperationType> operationType = new ComboBox<>("Operation Type");
+    private ComboBox<String> notifyAlternative = new ComboBox<>("Notify Alternative");
+    private ComboBox<String> notifyOperation = new ComboBox<>("Notify Operation");
+    private IntegerField notifyOperationDelay = new IntegerField("Notify Operation Delay");
+    private ComboBox<SimpleOperationType> simpleOperationType = new ComboBox<>("Type");
+    private TextField service = new TextField("Service");
+    private ComboBox<TaskOperationType> taskOperationType = new ComboBox<>("Type");
+    private TextField targetSystem = new TextField("Target System");
+    private TextField candidateGroups = new TextField("Candidate Groups");
+    private TextField mailTemplate = new TextField("Mail Template");
+    private TextField mailTo = new TextField("Mail To");
+    private TextField mailSubjectPrefix = new TextField("Mail Subject Prefix");
 
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
 
-
     public OperationForm() {
-
         setSizeFull();
 
         configureElements();
@@ -71,24 +81,33 @@ public class OperationForm extends HorizontalLayout {
         configureOperationParameters();
 
         configureForm();
-
     }
 
-    public OperationForm(List<String> alteratives) {
+    public OperationForm(List<String> alternatives) {
 
-        setSizeFull();
+        if (!alternatives.isEmpty()){
+            setSizeFull();
 
-        this.alteratives = alteratives;
+            this.alternatives = alternatives;
 
-        this.alternativeIdsForm = new AlternativeIdsForm(alteratives);
+            this.alternativeIdsForm = new AlternativeIdsForm(alternatives);
 
-        configureElements();
+            configureElements();
 
-        configureAlternatives();
+            configureAlternatives();
 
-        configureOperationParameters();
+            configureOperationParameters();
 
-        configureForm();
+            configureForm();
+        } else {
+            setSizeFull();
+
+            configureElements();
+
+            configureOperationParameters();
+
+            configureForm();
+        }
     }
 
     private void configureElements() {
@@ -99,31 +118,54 @@ public class OperationForm extends HorizontalLayout {
         this.label.setErrorMessage("Este campo es obligatorio.");
         this.operationType.setRequired(true);
         this.operationType.setErrorMessage("Debes seleccionar un tipo.");
-        this.visible.setItems("True","False","Null");
-        this.visible.setValue("Null");
-        this.preExecute.setItems("True","False","Null");
-        this.preExecute.setValue("Null");
-        this.automatic.setItems("True","False","Null");
-        this.automatic.setValue("Null");
-        this.pauseExecution.setItems("True","False","Null");
-        this.pauseExecution.setValue("Null");
-        this.notifyAlternative.setItems("True","False","Null");
-        this.notifyAlternative.setValue("Null");
-        this.notifyOperation.setItems("True","False","Null");
-        this.notifyOperation.setValue("Null");
-
-        this.operationOrder.setPlaceholder("Dejar vacío para no incluir el tag.");
-        this.notifyOperationDelay.setPlaceholder("Dejar vacío para no incluir el tag.");
+        this.visible.setItems("True","False");
+        this.preExecute.setItems("True","False");
+        this.automatic.setItems("True","False");
+        this.pauseExecution.setItems("True","False");
+        this.notifyAlternative.setItems("True","False");
+        this.notifyAlternative.addValueChangeListener(event -> addAlternativeIdsForm(Boolean.valueOf(this.notifyAlternative.getValue())));
+        this.notifyOperation.setItems("True","False");
+        this.operationOrder.setPlaceholder("Dejar vacío si desea no incluir este tag.");
+        this.notifyOperationDelay.setPlaceholder("Dejar vacío si desea no incluir este tag.");
         this.operationType.setItems(OperationType.values());
+        this.operationType.addValueChangeListener(event -> addElements(this.operationType.getValue()));
 
-        elements.add(name,label,comment,title,notifyOperationDelay,operationOrder,operationType,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation);
+        elements.add(name,label,comment,title,notifyOperationDelay,operationOrder,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation,operationType);
         actionsLayout.add(createButtonsLayout());
+    }
+
+    private void addAlternativeIdsForm(Boolean choice){
+        if (choice){
+            elements.add(alternativeIdsForm);
+        }
+    }
+
+    private void addElements(OperationType operationType){
+        if (operationType== OperationType.simpleOperation){
+            this.simpleOperationType.setRequired(true);
+            this.simpleOperationType.setErrorMessage("Debes seleccionar un tipo.");
+            this.simpleOperationType.setItems(SimpleOperationType.values());
+            this.service.setRequired(true);
+            this.service.setErrorMessage("Este campo es obligatorio.");
+
+            elements.remove(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
+            elements.add(simpleOperationType,service);
+        }
+        else if(operationType== OperationType.taskOperation){
+            this.taskOperationType.setRequired(true);
+            this.taskOperationType.setErrorMessage("Debes seleccionar un tipo.");
+            this.taskOperationType.setItems(TaskOperationType.values());
+
+            elements.remove(simpleOperationType,service);
+            elements.add(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
+        }
     }
 
     private void configureAlternatives() {
         alternativeIdsFormLayout.setWidthFull();
-        alternativeIdsFormLayout.setWidthFull();
-        alternativeIdsFormLayout.add(inParameterGridForm);
+        alternativeIdsForm = new AlternativeIdsForm(alternatives);
+        alternativeIdsFormLayout.add(alternativeIdsForm);
+        alternativeIdsFormLayout.setVisible(false);
     }
 
     private void configureOperationParameters() {
@@ -138,7 +180,7 @@ public class OperationForm extends HorizontalLayout {
 
     private void configureForm() {
 
-        if(this.alteratives != null && this.alteratives.size() >0){
+        if(this.alternatives != null && this.alternatives.size() >0){
             form.add(elements,
                     alternativeIdsFormLayout,
                     inParameterGridLayout,
@@ -165,7 +207,7 @@ public class OperationForm extends HorizontalLayout {
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
-        save.addClickListener(click -> validateAndSave());
+        save.addClickListener(click -> saveOperation());
         close.addClickListener(click -> fireEvent(new OperationForm.CloseEvent(this)));
 
         return new HorizontalLayout(save, close);
@@ -175,66 +217,94 @@ public class OperationForm extends HorizontalLayout {
         return this.operation;
     }
 
-    private void validateAndSave() {
-        operation = new Operation();
+    private void saveOperation(){
+        String incompleteValidation = "El campo OperationType es obligatorio";
+        if (operationType.getValue() == OperationType.simpleOperation) {
+            SimpleOperation simpleOperation = new SimpleOperation();
+            simpleOperation.setType(simpleOperationType.getValue());
+            simpleOperation.setService(service.getValue());
+            auxSaveOperation(simpleOperation);
+            incompleteValidation = simpleOperation.incompleteValidation();
+            operation = simpleOperation;
+        }
+        if (operationType.getValue() == OperationType.taskOperation){
+            TaskOperation taskOperation = new TaskOperation();
+            taskOperation.setType(taskOperationType.getValue());
+            if (!targetSystem.isEmpty()){
+                taskOperation.setTargetSystem(targetSystem.getValue());
+            }
+            if (!candidateGroups.isEmpty()){
+                taskOperation.setCandidateGroups(candidateGroups.getValue());
+            }
+            if (!mailTemplate.isEmpty()){
+                taskOperation.setMailTemplate(mailTemplate.getValue());
+            }
+            if (!mailTo.isEmpty()){
+                taskOperation.setMailTo(mailTo.getValue());
+            }
+            if (!mailSubjectPrefix.isEmpty()){
+                taskOperation.setMailSubjectPrefix(mailSubjectPrefix.getValue());
+            }
+            auxSaveOperation(taskOperation);
+            incompleteValidation = taskOperation.incompleteValidation();
+            operation = taskOperation;
+        }
 
-        if(isValid())
-        {
-            operation.setName(name.getValue());
-            operation.setLabel(label.getValue());
-            if (this.visible.getValue() == "True"){
-                operation.setVisible(Boolean.TRUE);
-            }
-            else if (this.visible.getValue() == "False"){
-                operation.setVisible(Boolean.FALSE);
-            }
-            if (this.visible.getValue() == "True"){
-                operation.setPreExecute(Boolean.TRUE);
-            }
-            else if (this.visible.getValue() == "False"){
-                operation.setPreExecute(Boolean.FALSE);
-            }
-            operation.setComment(comment.getValue());
-            operation.setTitle(title.getValue());
-            if (this.visible.getValue() == "True"){
-                operation.setAutomatic(Boolean.TRUE);
-            }
-            else if (this.visible.getValue() == "False"){
-                operation.setAutomatic(Boolean.FALSE);
-            }
-            if (this.visible.getValue() == "True"){
-                operation.setPauseExecution(Boolean.TRUE);
-            }
-            else if (this.visible.getValue() == "False"){
-                operation.setPauseExecution(Boolean.FALSE);
-            }
-            if (!operationOrder.isEmpty()){
-                operation.setOperationOrder(true);
-            }
-            operation.setOperationType(operationType.getValue());
-            if (this.visible.getValue() == "True"){
-                operation.setNotifyAlternative(Boolean.TRUE);
-            }
-            else if (this.visible.getValue() == "False"){
-                operation.setNotifyAlternative(Boolean.FALSE);
-            }
-            if (this.visible.getValue() == "True"){
-                operation.setNotifyOperation(Boolean.TRUE);
-            }
-            else if (this.visible.getValue() == "False"){
-                operation.setNotifyOperation(Boolean.FALSE);
-            }
-            if (!notifyOperationDelay.isEmpty()){
-                operation.setNotifyOperationDelay(notifyOperationDelay.getValue());
-            }
+        if (!incompleteValidation.isEmpty()){
+            showErrorMessage(incompleteValidation);
         }
-        else {
-            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
-            Notification notification = new Notification(content);
-            notification.setDuration(3000);
-            notification.setPosition(Notification.Position.MIDDLE);
-            notification.open();
+
+        this.isValid = incompleteValidation.isEmpty();
+    }
+
+    private void auxSaveOperation(Operation auxOperation){
+        auxOperation.setName(name.getValue());
+        auxOperation.setLabel(label.getValue());
+        auxOperation.setOperationType(operationType.getValue());
+        auxOperation.setInParameters(inParameterGridForm.getOperationsParameter());
+        auxOperation.setOutParameters(outParameterGridForm.getOperationsParameter());
+        //auxOperation.setConditions();
+        //auxOperation.setAlternativeIds();
+        if (!visible.isEmpty()){
+            auxOperation.setVisible(Boolean.valueOf(visible.getValue()));
         }
+        if (!preExecute.isEmpty()){
+            auxOperation.setPreExecute(Boolean.valueOf(preExecute.getValue()));
+        }
+        if (!comment.isEmpty()){
+            auxOperation.setComment(comment.getValue());
+        }
+        if (!title.isEmpty()){
+            auxOperation.setTitle(title.getValue());
+        }
+        if (!automatic.isEmpty()){
+            auxOperation.setAutomatic(Boolean.valueOf(automatic.getValue()));
+        }
+        if (!pauseExecution.isEmpty()){
+            auxOperation.setPauseExecution(Boolean.valueOf(pauseExecution.getValue()));
+        }
+        if (!operationOrder.isEmpty()){
+            auxOperation.setOperationOrder(operationOrder.getValue());
+        }
+        if (!notifyAlternative.isEmpty()){
+            auxOperation.setNotifyAlternative(Boolean.valueOf(notifyAlternative.getValue()));
+        }
+        //if notifyAlternative is true -> verify alternativeIds
+        if (!notifyOperation.isEmpty()){
+            auxOperation.setNotifyOperation(Boolean.valueOf(notifyOperation.getValue()));
+        }
+        //if notifyOperation is true -> verify operationIds
+        if (!notifyOperationDelay.isEmpty()){
+            auxOperation.setNotifyOperationDelay(notifyOperationDelay.getValue());
+        }
+    }
+
+    private void showErrorMessage(String incompleteValidation){
+        Span message = new Span(incompleteValidation);
+        Notification notification = new Notification(message);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
     }
 
     public boolean isValid() {
@@ -246,27 +316,27 @@ public class OperationForm extends HorizontalLayout {
         return result;
     }
 
-    public boolean validateFields(){
-        boolean result = false;
+    private boolean validateFields(){
+        boolean requiredFields = false;
+        boolean positiveInts = true;
 
-        if(!name.getValue().isEmpty() &&
-                !label.getValue().isEmpty() &&
-                !operationType.isEmpty())
-            result = true;
-
-        return result;
-    }
-
-    public static boolean isInteger(String strNum) {
-        if (strNum == null) {
-            return false;
+        if(!name.getValue().isEmpty() && !label.getValue().isEmpty() && !operationType.isEmpty()){
+            if((!simpleOperationType.isEmpty() && !service.getValue().isEmpty()) || !taskOperationType.isEmpty()) {
+                requiredFields = true;
+            }
         }
-        try {
-            int i = parseInt(strNum);
-        } catch (NumberFormatException nfe) {
-            return false;
+        if(!operationOrder.isEmpty()){
+            if (operationOrder.getValue() < 0){
+                positiveInts = false;
+            }
         }
-        return true;
+        if(!notifyOperationDelay.isEmpty()){
+            if (notifyOperationDelay.getValue() < 0){
+                positiveInts = false;
+            }
+        }
+
+        return (requiredFields && positiveInts);
     }
 
     // Events
@@ -305,5 +375,29 @@ public class OperationForm extends HorizontalLayout {
     public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
                                                                   ComponentEventListener<T> listener) {
         return getEventBus().addListener(eventType, listener);
+    }
+
+    public void setAsDefault(){
+        name.clear();
+        label.clear();
+        visible.clear();
+        preExecute.clear();
+        automatic.clear();
+        pauseExecution.clear();
+        notifyAlternative.clear();
+        notifyAlternative.clear();
+        notifyOperation.clear();
+        operationOrder.clear();
+        notifyOperationDelay.clear();
+        operationType.clear();
+        service.clear();
+        targetSystem.clear();
+        candidateGroups.clear();
+        mailTemplate.clear();
+        mailTo.clear();
+        mailSubjectPrefix.clear();
+
+        elements.remove(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
+        elements.remove(simpleOperationType,service);
     }
 }

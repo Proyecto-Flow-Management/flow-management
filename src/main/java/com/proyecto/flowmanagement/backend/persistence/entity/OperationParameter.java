@@ -4,6 +4,7 @@ import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.def.SourceEntity;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -254,4 +255,34 @@ public class OperationParameter extends AbstractEntity {
 	public void setValueWhenInParameterEquals(String valueWhenInParameterEquals) {
 		this.valueWhenInParameterEquals = valueWhenInParameterEquals;
 	}
+
+	public List<String> validateOperationParameter() {
+
+		List<String> encounteredErrors = new LinkedList<>();
+
+		if(name.isEmpty())
+			encounteredErrors.add("El campo Name es obligatorio");
+
+		if (type.isEmpty())
+			encounteredErrors.add("El campo Type es obligatorio");
+
+		if (description.isEmpty())
+			encounteredErrors.add("El campo Description es obligatorio");
+
+		return encounteredErrors;
+	}
+
+
+	public String incompleteValidation(){
+		if (name.isEmpty())
+			return "El campo Name es obligatorio";
+
+		if (type.isEmpty())
+			return "El campo Type es obligatorio";
+
+		if (description.isEmpty())
+			return "El campo Description es obligatorio";
+
+		return "";
+    }
 }

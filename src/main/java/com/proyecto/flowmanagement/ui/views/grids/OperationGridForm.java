@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.proyecto.flowmanagement.ui.views.forms.OperationForm;
 import com.vaadin.flow.component.button.Button;
@@ -14,12 +15,13 @@ import java.util.List;
 @CssImport("./styles/general.css")
 public class OperationGridForm extends VerticalLayout {
     private Button createOperation;
-    public OperationForm operationForm;
+    public OperationForm operationForm = new OperationForm();
 
-    public List<String> alternatives;
+    public List<String> alternatives = new LinkedList<String>();
 
     Grid<Operation> operationGrid;
     List<Operation> operationList;
+    Operation editOperation;
 
     public OperationGridForm()
     {
@@ -33,7 +35,7 @@ public class OperationGridForm extends VerticalLayout {
         configureGrid();
         createOperation = new Button("Crear Operation", click -> addOperation());
 
-        operationForm = new OperationForm();
+        //operationForm = new OperationForm(alternatives);
         operationForm.setVisible(false);
         operationForm.save.addClickListener(buttonClickEvent -> CreateOperation());
         operationForm.close.addClickListener(buttonClickEvent -> CloseForm());
@@ -61,8 +63,24 @@ public class OperationGridForm extends VerticalLayout {
         this.operationForm.setVisible(false);
     }
 
-    private void CreateOperation() {
+    /*private void CreateorSaveOperation() {
         if (operationForm.isValid()) {
+            Operation newOperation = operationForm.getOperation();
+
+            if (operationForm.editing) {
+                int index = operationList.indexOf(editOperation);
+                operationList.set(index, newOperation);
+                updateGrid();
+            } else {
+                operationList.add(newOperation);
+                updateGrid();
+                closeEditor();
+            }
+        }
+    }*/
+
+    private void CreateOperation() {
+        if (operationForm.isValid) {
             Operation newOperation = operationForm.getOperation();
             operationList.add(newOperation);
             updateGrid();
@@ -70,10 +88,28 @@ public class OperationGridForm extends VerticalLayout {
         }
     }
 
+    /*private void CreateOperation() {
+        if (operationForm.isValid) {
+            Operation newOperation = operationForm.getOperation();
+
+            if(!operationForm.editing){
+                operationList.add(newOperation);
+            }
+            else {
+                //OJO!
+                int index = operationList.indexOf(operationForm.editing);
+                this.operationList.set(index, newOperation);
+                operationForm.editing = false;
+            }
+            updateGrid();
+            operationForm.setVisible(false);
+        }
+    }*/
+
     private void addOperation() {
         operationGrid.asSingleSelect().clear();
         operationForm.setVisible(true);
-        operationForm = new OperationForm(alternatives);
+        operationForm.setAsDefault();
         editOperation(new Operation());
     }
 
@@ -89,7 +125,7 @@ public class OperationGridForm extends VerticalLayout {
         if(operation == null) {
             closeEditor();
         } else {
-            this.operationForm.alteratives = this.alternatives;
+            this.operationForm.alternatives = this.alternatives;
             operationForm.setOperation(operation);
             operationForm.setVisible(true);
             addClassName("editing");
