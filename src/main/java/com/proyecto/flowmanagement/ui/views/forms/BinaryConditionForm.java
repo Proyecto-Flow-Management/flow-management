@@ -6,6 +6,8 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -62,6 +64,21 @@ public class BinaryConditionForm extends HorizontalLayout {
         binaryCondition = new Condition();
         binaryCondition.setOperation(operationNameText.getValue());
         binaryCondition.setType(TypeOperation.binaryCondition);
+
+        String mensajeError = binaryCondition.validarUnaryIncompleto();
+
+        isValid = mensajeError.isEmpty();
+
+        if(!isValid)
+            mostrarMensajeError(mensajeError);
+    }
+
+    private void mostrarMensajeError(String mensajeError) {
+        Span mensaje = new Span(mensajeError);
+        Notification notification = new Notification(mensaje);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
     }
 
     public void setBinaryCondition(Condition binaryCondition) {
