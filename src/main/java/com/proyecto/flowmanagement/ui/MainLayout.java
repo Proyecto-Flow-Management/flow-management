@@ -38,7 +38,7 @@ public class MainLayout extends AppLayout {
     }
 
     private void createDrawer() {
-        RouterLink listLink = new RouterLink("List", UserList.class);
+        RouterLink listLink = new RouterLink("Usuarios", UserList.class);
         RouterLink guideLink = new RouterLink("Guide", GuideList.class);
         RouterLink crearGuia = new RouterLink("Crear Guia", GuideCreator.class);
         listLink.setHighlightCondition(HighlightConditions.sameLocation());

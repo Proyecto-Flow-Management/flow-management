@@ -1,7 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.list;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.SecurePasswordStorage;
 import com.proyecto.flowmanagement.backend.persistence.entity.User;
-import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
 import com.proyecto.flowmanagement.backend.service.Impl.RolServiceImpl;
 import com.proyecto.flowmanagement.backend.service.Impl.UserServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
@@ -17,12 +17,17 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Users | Flow Management")
 public class UserList extends VerticalLayout {
 
     private final UserForm form;
+    private SecurePasswordStorage securePasswordStorage;
+    private String oldHash = "";
+
     Grid<User> grid = new Grid<>(User.class);
     TextField filterText = new TextField();
 
@@ -30,6 +35,7 @@ public class UserList extends VerticalLayout {
     RolServiceImpl rolService;
 
     public UserList(UserServiceImpl userService, RolServiceImpl rolService) {
+        this.securePasswordStorage = new SecurePasswordStorage();
         this.userService = userService;
         this.rolService = rolService;
         addClassName("list-view");
@@ -37,9 +43,9 @@ public class UserList extends VerticalLayout {
         configureGrid();
 
 
-        form = new UserForm(rolService.findAll());
-        form.addListener(UserForm.SaveEvent.class, this::saveContact);
-        form.addListener(UserForm.DeleteEvent.class, this::deleteContact);
+        form = new UserForm();
+        form.addListener(UserForm.SaveEvent.class, this::saveUser);
+        form.addListener(UserForm.DeleteEvent.class, this::deleteUser);
         form.addListener(UserForm.CloseEvent.class, e -> closeEditor());
 
         Div content = new Div(grid, form);
@@ -51,16 +57,31 @@ public class UserList extends VerticalLayout {
         closeEditor();
     }
 
-    private void deleteContact(UserForm.DeleteEvent evt) {
+    private void deleteUser(UserForm.DeleteEvent evt) {
         userService.delete(evt.getUser());
         updateList();
         closeEditor();
     }
 
-    private void saveContact(UserForm.SaveEvent evt) {
-        userService.save(evt.getUser());
-        updateList();
-        closeEditor();
+    private void saveUser(UserForm.SaveEvent evt) {
+        List<String> mensajesError = form.validarCampos();
+        if (mensajesError.isEmpty()){
+            User user = evt.getUser();
+            // Cambio la password
+            if (!user.getPassword().equals(this.oldHash)) {
+                try {
+                    String salt = securePasswordStorage.getNewSalt();
+                    user.setSalt(salt);
+                    String encryptedPassword = securePasswordStorage.getEncryptedPassword(user.getPassword(), salt);
+                    user.setPassword(encryptedPassword);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            userService.save(evt.getUser());
+            updateList();
+            closeEditor();
+        }
     }
 
     private void closeEditor() {
@@ -69,13 +90,14 @@ public class UserList extends VerticalLayout {
         removeClassName("editing");
     }
 
+
     private HorizontalLayout getToolBar() {
-        filterText.setPlaceholder("Filter by name...");
+        filterText.setPlaceholder("Filtrar por nombre...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
 
-        Button addUserButton = new Button("Add user", click -> addUser());
+        Button addUserButton = new Button("Crear Usuario", click -> addUser());
 
         HorizontalLayout toolbar = new HorizontalLayout(filterText, addUserButton);
         toolbar.addClassName("toolbar");
@@ -94,12 +116,7 @@ public class UserList extends VerticalLayout {
     private void  configureGrid() {
         grid.addClassName("user-grid");
         grid.setSizeFull();
-        grid.setColumns("firstName", "lastName");
-
-        grid.addColumn(user-> {
-            Rol rol = user.getRol();
-            return rol == null ? "-" : rol.getName();
-        }).setHeader("Rol").setSortable(true);
+        grid.setColumns("email", "firstName", "lastName");
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
@@ -110,6 +127,9 @@ public class UserList extends VerticalLayout {
         if(user == null) {
             closeEditor();
         } else {
+            if (user.getPassword() != null){
+                this.oldHash = user.getPassword();
+            }
             form.setUser(user);
             form.setVisible(true);
             addClassName("editing");
