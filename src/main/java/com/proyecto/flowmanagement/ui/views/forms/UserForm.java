@@ -1,60 +1,65 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
-import com.proyecto.flowmanagement.backend.def.EStatus;
+import com.proyecto.flowmanagement.backend.persistence.entity.SecurePasswordStorage;
 import com.proyecto.flowmanagement.backend.persistence.entity.User;
-import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
 
-import java.util.List;
-
 public class UserForm extends FormLayout {
     private User user;
+    private SecurePasswordStorage securePasswordStorage;
+    private String oldHash = "";
 
-    TextField firstName = new TextField("First name");
-    TextField lastName = new TextField("Last name");
+    TextField firstName = new TextField("Nombre");
+    TextField lastName = new TextField("Apellido");
     EmailField email = new EmailField("Email");
-    ComboBox<EStatus> status = new ComboBox<>("Status");
-    ComboBox<Rol> rol = new ComboBox<>("Rol");
+    PasswordField password = new PasswordField("Contraseña");
 
-    Button save = new Button("Save");
-    Button delete = new Button("Delete");
-    Button close = new Button("Cancel");
+    Button save = new Button("Guardar");
+    Button delete = new Button("Eliminar");
+    Button close = new Button("Cancelar");
 
     Binder<User> binder = new BeanValidationBinder<>(User.class);
 
-    public UserForm(List<Rol> roles) {
+    public UserForm() {
         addClassName("user-form");
+        configureElements();
+    }
 
+    public void configureElements() {
+        this.securePasswordStorage = new SecurePasswordStorage();
+
+        password.setPlaceholder("Ingresa la contraseña.");
+        password.setRevealButtonVisible(false);
         binder.bindInstanceFields(this);
-        status.setItems(EStatus.values());
-        rol.setItems(roles);
-        rol.setItemLabelGenerator(Rol::getName);
 
         add(firstName,
                 lastName,
                 email,
-                rol,
-                status,
+                password,
                 createButtonsLayout());
     }
 
     public void setUser(User user) {
         this.user = user;
         binder.readBean(user);
+    }
+
+    public String getOldHash(){
+        return this.oldHash;
     }
 
     private Component createButtonsLayout() {
