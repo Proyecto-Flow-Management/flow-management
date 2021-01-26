@@ -9,6 +9,8 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -18,11 +20,15 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class UserForm extends FormLayout {
     private User user;
     private SecurePasswordStorage securePasswordStorage;
     private String oldHash = "";
 
+    public boolean isValid;
     TextField firstName = new TextField("Nombre");
     TextField lastName = new TextField("Apellido");
     EmailField email = new EmailField("Email");
@@ -36,14 +42,16 @@ public class UserForm extends FormLayout {
 
     public UserForm() {
         addClassName("user-form");
+        isValid = false;
         configureElements();
     }
 
     public void configureElements() {
         this.securePasswordStorage = new SecurePasswordStorage();
-
-        password.setPlaceholder("Ingresa la contraseña.");
-        password.setRevealButtonVisible(false);
+        this.email.setErrorMessage("Ingresa una dirección de mail correcta.");
+        this.password.setPlaceholder("Ingresa la contraseña.");
+        this.password.setRevealButtonVisible(false);
+        this.password.setRequired(true);
         binder.bindInstanceFields(this);
 
         add(firstName,
@@ -80,12 +88,45 @@ public class UserForm extends FormLayout {
     }
 
     private void validateAndSave() {
-        try {
-            binder.writeBean(user);
-            fireEvent(new SaveEvent(this, user));
-        } catch (ValidationException e) {
-            e.printStackTrace();
+        List<String> mensajesError = validarCampos();
+        if (mensajesError.isEmpty()) {
+            try {
+                binder.writeBean(user);
+                fireEvent(new SaveEvent(this, user));
+            } catch (ValidationException e) {
+                e.printStackTrace();
+            }
         }
+        else{
+            for (String mensaje:mensajesError
+                 ) {
+                mostrarMensajeError(mensaje);
+            }
+        }
+    }
+
+    public List<String> validarCampos(){
+        List<String> mensajesError = new LinkedList<>();
+
+        if (this.email.isEmpty()){
+            mensajesError.add("El campo email es obligatorio");
+        }
+        if (this.password.isEmpty()){
+            mensajesError.add("El campo password es obligatorio");
+        }
+        if (!this.email.getValue().matches("^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$")) {
+            mensajesError.add("No es una dirección de mail válida.");
+        }
+
+        return mensajesError;
+    }
+
+    private void mostrarMensajeError(String mensajeValidacion) {
+        Span mensaje = new Span(mensajeValidacion);
+        Notification notification = new Notification(mensaje);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
     }
 
     // Events

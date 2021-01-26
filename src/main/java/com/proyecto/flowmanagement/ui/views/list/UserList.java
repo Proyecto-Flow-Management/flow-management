@@ -17,6 +17,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Users | Flow Management")
@@ -62,21 +64,24 @@ public class UserList extends VerticalLayout {
     }
 
     private void saveUser(UserForm.SaveEvent evt) {
-        User user = evt.getUser();
-        // Cambio la password
-        if (!user.getPassword().equals(this.oldHash)) {
-            try {
-                String salt = securePasswordStorage.getNewSalt();
-                user.setSalt(salt);
-                String encryptedPassword = securePasswordStorage.getEncryptedPassword(user.getPassword(), salt);
-                user.setPassword(encryptedPassword);
-            } catch (Exception e) {
-                e.printStackTrace();
+        List<String> mensajesError = form.validarCampos();
+        if (mensajesError.isEmpty()){
+            User user = evt.getUser();
+            // Cambio la password
+            if (!user.getPassword().equals(this.oldHash)) {
+                try {
+                    String salt = securePasswordStorage.getNewSalt();
+                    user.setSalt(salt);
+                    String encryptedPassword = securePasswordStorage.getEncryptedPassword(user.getPassword(), salt);
+                    user.setPassword(encryptedPassword);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+            userService.save(evt.getUser());
+            updateList();
+            closeEditor();
         }
-        userService.save(evt.getUser());
-        updateList();
-        closeEditor();
     }
 
     private void closeEditor() {
@@ -84,6 +89,7 @@ public class UserList extends VerticalLayout {
         form.setVisible(false);
         removeClassName("editing");
     }
+
 
     private HorizontalLayout getToolBar() {
         filterText.setPlaceholder("Filtrar por nombre...");
@@ -110,7 +116,7 @@ public class UserList extends VerticalLayout {
     private void  configureGrid() {
         grid.addClassName("user-grid");
         grid.setSizeFull();
-        grid.setColumns("firstName", "lastName");
+        grid.setColumns("email", "firstName", "lastName");
 
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
