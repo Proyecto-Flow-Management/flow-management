@@ -36,6 +36,7 @@ public class OperationForm extends HorizontalLayout {
     public Boolean editing;
 
     private AlternativeIdsForm alternativeIdsForm;
+    private CandidatesGrupsForm candidatesGrupsForm = new CandidatesGrupsForm();
 
     private OperationParameterGridForm inParameterGridForm = new OperationParameterGridForm("Crear IN Operation Parameter");
     private OperationParameterGridForm outParameterGridForm = new OperationParameterGridForm("Crear OUT Operation Parameter");
@@ -46,6 +47,7 @@ public class OperationForm extends HorizontalLayout {
     private HorizontalLayout inParameterGridLayout = new HorizontalLayout();
     private HorizontalLayout outParameterGridLayout = new HorizontalLayout();
     private HorizontalLayout actionsLayout = new HorizontalLayout();
+    private HorizontalLayout groupLayout = new HorizontalLayout();
 
     private TextField name = new TextField("Name");
     private TextField label = new TextField("Label");
@@ -131,6 +133,7 @@ public class OperationForm extends HorizontalLayout {
 
         elements.add(name,label,comment,title,notifyOperationDelay,operationOrder,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation,operationType);
         actionsLayout.add(createButtonsLayout());
+        groupLayout.add(candidatesGrupsForm);
     }
 
     private void addAlternativeIdsForm(Boolean choice){
@@ -147,7 +150,7 @@ public class OperationForm extends HorizontalLayout {
             this.service.setRequired(true);
             this.service.setErrorMessage("Este campo es obligatorio.");
 
-            elements.remove(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
+            elements.remove(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix,groupLayout);
             elements.add(simpleOperationType,service);
         }
         else if(operationType== OperationType.taskOperation){
@@ -156,7 +159,7 @@ public class OperationForm extends HorizontalLayout {
             this.taskOperationType.setItems(TaskOperationType.values());
 
             elements.remove(simpleOperationType,service);
-            elements.add(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
+            elements.add(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix, groupLayout);
         }
     }
 
@@ -184,12 +187,12 @@ public class OperationForm extends HorizontalLayout {
                     alternativeIdsFormLayout,
                     inParameterGridLayout,
                     outParameterGridLayout,
-                    actionsLayout);
+                    actionsLayout,groupLayout);
         }
         else{form.add(elements,
                 inParameterGridLayout,
                 outParameterGridLayout,
-                actionsLayout);
+                actionsLayout,groupLayout);
         }
 
         add(form);
@@ -224,6 +227,7 @@ public class OperationForm extends HorizontalLayout {
             simpleOperation.setService(service.getValue());
             auxSaveOperation(simpleOperation);
             incompleteValidation = simpleOperation.incompleteValidation();
+            simpleOperation.setGroups(this.candidatesGrupsForm.getGroupsNames());
             operation = simpleOperation;
         }
         if (operationType.getValue() == OperationType.taskOperation){

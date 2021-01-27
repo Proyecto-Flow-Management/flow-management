@@ -2,10 +2,10 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.def.SimpleOperationType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,6 +18,11 @@ public class SimpleOperation extends Operation{
 
     @Column(name = "service")
     private String service;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "operation_id")
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Groups> groups;
 
     public SimpleOperationType getType() {
         return type;
@@ -95,5 +100,13 @@ public class SimpleOperation extends Operation{
             return "El campo service es obligatorio";
 
         return "";
+    }
+
+    public List<Groups> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Groups> groups) {
+        this.groups = groups;
     }
 }
