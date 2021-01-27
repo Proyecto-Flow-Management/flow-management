@@ -23,11 +23,9 @@ import com.vaadin.flow.shared.Registration;
 public class OperationParameterForm extends HorizontalLayout {
     private OperationParameter operationParameter;
     private Boolean isValid = false;
-    //private AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
 
     private VerticalLayout form = new VerticalLayout();
     private FormLayout elements = new FormLayout();
-    //private HorizontalLayout alternativeGridLayout = new HorizontalLayout();
     private HorizontalLayout actionsLayout = new HorizontalLayout();
 
     private TextField name = new TextField("Nombre");
@@ -153,12 +151,9 @@ public class OperationParameterForm extends HorizontalLayout {
         if (!sourceValueEntityProperty.isEmpty()){
             operationParameter.setSourceValueEntityProperty(sourceValueEntityProperty.getValue());
         }
-        //properties
         if (!convert.isEmpty()){
             operationParameter.setConvert(Boolean.valueOf(convert.getValue()));
         }
-        //ConvertionCondition
-        //validateCrossFieldCondition
         if (!valueWhenInParameterEquals.isEmpty()){
             operationParameter.setValueWhenInParameterEquals(valueWhenInParameterEquals.getValue());
         }

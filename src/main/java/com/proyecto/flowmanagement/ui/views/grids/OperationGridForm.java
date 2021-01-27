@@ -35,7 +35,6 @@ public class OperationGridForm extends VerticalLayout {
         configureGrid();
         createOperation = new Button("Crear Operation", click -> addOperation());
 
-        //operationForm = new OperationForm(alternatives);
         operationForm.setVisible(false);
         operationForm.save.addClickListener(buttonClickEvent -> CreateOperation());
         operationForm.close.addClickListener(buttonClickEvent -> CloseForm());
@@ -63,22 +62,6 @@ public class OperationGridForm extends VerticalLayout {
         this.operationForm.setVisible(false);
     }
 
-    /*private void CreateorSaveOperation() {
-        if (operationForm.isValid()) {
-            Operation newOperation = operationForm.getOperation();
-
-            if (operationForm.editing) {
-                int index = operationList.indexOf(editOperation);
-                operationList.set(index, newOperation);
-                updateGrid();
-            } else {
-                operationList.add(newOperation);
-                updateGrid();
-                closeEditor();
-            }
-        }
-    }*/
-
     private void CreateOperation() {
         if (operationForm.isValid) {
             Operation newOperation = operationForm.getOperation();
@@ -87,24 +70,6 @@ public class OperationGridForm extends VerticalLayout {
             CloseForm();
         }
     }
-
-    /*private void CreateOperation() {
-        if (operationForm.isValid) {
-            Operation newOperation = operationForm.getOperation();
-
-            if(!operationForm.editing){
-                operationList.add(newOperation);
-            }
-            else {
-                //OJO!
-                int index = operationList.indexOf(operationForm.editing);
-                this.operationList.set(index, newOperation);
-                operationForm.editing = false;
-            }
-            updateGrid();
-            operationForm.setVisible(false);
-        }
-    }*/
 
     private void addOperation() {
         operationGrid.asSingleSelect().clear();

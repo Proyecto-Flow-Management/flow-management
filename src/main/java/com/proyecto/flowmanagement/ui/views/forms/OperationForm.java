@@ -39,7 +39,6 @@ public class OperationForm extends HorizontalLayout {
 
     private OperationParameterGridForm inParameterGridForm = new OperationParameterGridForm("Crear IN Operation Parameter");
     private OperationParameterGridForm outParameterGridForm = new OperationParameterGridForm("Crear OUT Operation Parameter");
-    //private ConditionsGridForm conditionsGridForm = new ConditionsGridForm("Crear Condition");
 
     private VerticalLayout form = new VerticalLayout();
     private FormLayout elements = new FormLayout();
@@ -263,8 +262,7 @@ public class OperationForm extends HorizontalLayout {
         auxOperation.setOperationType(operationType.getValue());
         auxOperation.setInParameters(inParameterGridForm.getOperationsParameter());
         auxOperation.setOutParameters(outParameterGridForm.getOperationsParameter());
-        //auxOperation.setConditions();
-        //auxOperation.setAlternativeIds();
+
         if (!visible.isEmpty()){
             auxOperation.setVisible(Boolean.valueOf(visible.getValue()));
         }
@@ -289,11 +287,9 @@ public class OperationForm extends HorizontalLayout {
         if (!notifyAlternative.isEmpty()){
             auxOperation.setNotifyAlternative(Boolean.valueOf(notifyAlternative.getValue()));
         }
-        //if notifyAlternative is true -> verify alternativeIds
         if (!notifyOperation.isEmpty()){
             auxOperation.setNotifyOperation(Boolean.valueOf(notifyOperation.getValue()));
         }
-        //if notifyOperation is true -> verify operationIds
         if (!notifyOperationDelay.isEmpty()){
             auxOperation.setNotifyOperationDelay(notifyOperationDelay.getValue());
         }
