@@ -34,7 +34,7 @@ public class AlternativeForm extends VerticalLayout {
 
     public List<Step> stepList = new LinkedList<>();
 
-    TextField nextStep = new TextField("Tipo");
+    TextField nextStep = new TextField("Referencia");
     ComboBox<String> option = new ComboBox<>("Referencia");
     ComboBox<Step> stepComboBox = new ComboBox<>("Steps");
 
