@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
+import com.proyecto.flowmanagement.backend.def.SourceEntity;
 import com.proyecto.flowmanagement.backend.persistence.entity.OperationParameter;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
@@ -21,44 +22,39 @@ import com.vaadin.flow.shared.Registration;
 @CssImport("./styles/operation-parameter-grid-form.css")
 public class OperationParameterForm extends HorizontalLayout {
     private OperationParameter operationParameter;
+    private Boolean isValid = false;
 
-//    AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
+    private VerticalLayout form = new VerticalLayout();
+    private FormLayout elements = new FormLayout();
+    private HorizontalLayout actionsLayout = new HorizontalLayout();
 
-    VerticalLayout form = new VerticalLayout();
-    FormLayout elements = new FormLayout();
-//    HorizontalLayout alternativeGridLayout = new HorizontalLayout();
-    HorizontalLayout actionsLayout = new HorizontalLayout();
-
-    TextField name = new TextField("Nombre");
-    TextField label = new TextField("Etiqueta");
-    ComboBox<String> visible = new ComboBox<>("Visible");
-    TextField visibleWhenInParameterEqualsCondition = new TextField("Visisble when In Parameter equals Condition");
-    TextField type = new TextField("Type");
-    TextField description = new TextField("Description");
-    TextField value = new TextField("Value");
-    ComboBox<String> enable = new ComboBox<>("Enable");
-    ComboBox<String> required = new ComboBox<>("Required");
-    TextField validateExpression = new TextField("Validate Expression");
-    TextField validateExpressionErrorDescription = new TextField("Validate Expression Error Description");
-    TextField optionValue = new TextField("Option Value");
-    TextField dateFormat = new TextField("Date Format");
-    TextField dateFormatRangeEnd = new TextField("Date Format Range End");
-    TextField dateFormatFinal = new TextField("Date Format Final");
-    TextField sourceValueEntityProperty = new TextField("Source Value Entity Property");
-    ComboBox<String> convert = new ComboBox<>("Convert");
-    TextField valueWhenInParameterEquals = new TextField("Value When In Parameter Equals");
+    private TextField name = new TextField("Nombre");
+    private TextField label = new TextField("Etiqueta");
+    private ComboBox<String> visible = new ComboBox<>("Visible");
+    private TextField visibleWhenInParameterEqualsCondition = new TextField("Visisble when In Parameter equals Condition");
+    private TextField type = new TextField("Type");
+    private TextField description = new TextField("Description");
+    private TextField value = new TextField("Value");
+    private ComboBox<String> enable = new ComboBox<>("Enable");
+    private ComboBox<String> required = new ComboBox<>("Required");
+    private TextField validateExpression = new TextField("Validate Expression");
+    private TextField validateExpressionErrorDescription = new TextField("Validate Expression Error Description");
+    private TextField optionValue = new TextField("Option Value");
+    private TextField dateFormat = new TextField("Date Format");
+    private TextField dateFormatRangeEnd = new TextField("Date Format Range End");
+    private TextField dateFormatFinal = new TextField("Date Format Final");
+    private ComboBox<SourceEntity> sourceValueEntity = new ComboBox<>("Source Value Entity");
+    private TextField sourceValueEntityProperty = new TextField("Source Value Entity Property");
+    private ComboBox<String> convert = new ComboBox<>("Convert");
+    private TextField valueWhenInParameterEquals = new TextField("Value When In Parameter Equals");
 
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
 
-
     public OperationParameterForm() {
         setSizeFull();
-
         configureElements();
-
         configureForm();
-
     }
 
     private void configureElements() {
@@ -69,23 +65,18 @@ public class OperationParameterForm extends HorizontalLayout {
         this.type.setErrorMessage("Este campo es obligatorio.");
         this.description.setRequired(true);
         this.description.setErrorMessage("Este campo es obligatorio.");
-        this.visible.setItems("True","False","Null");
-        this.visible.setValue("Null");
-        this.enable.setItems("True","False","Null");
-        this.enable.setValue("Null");
-        this.required.setItems("True","False","Null");
-        this.required.setValue("Null");
-        this.convert.setItems("True","False","Null");
-        this.convert.setValue("Null");
+        this.visible.setItems("True","False");
+        this.enable.setItems("True","False");
+        this.required.setItems("True","False");
+        this.sourceValueEntity.setItems(SourceEntity.values());
+        this.convert.setItems("True","False");
 
         elements.add(name,label,visibleWhenInParameterEqualsCondition,type,description,value,validateExpression,validateExpressionErrorDescription,optionValue,dateFormat,dateFormatRangeEnd,dateFormatFinal,sourceValueEntityProperty,valueWhenInParameterEquals,enable,required,visible,convert);
         actionsLayout.add(createButtonsLayout());
     }
 
     private void configureForm() {
-        form.add(elements,
-                actionsLayout);
-
+        form.add(elements, actionsLayout);
         add(form);
     }
 
@@ -100,7 +91,7 @@ public class OperationParameterForm extends HorizontalLayout {
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
-        save.addClickListener(click -> validateAndSave());
+        save.addClickListener(click -> saveOperationParameter());
         close.addClickListener(click -> fireEvent(new OperationParameterForm.CloseEvent(this)));
 
         return new HorizontalLayout(save, close);
@@ -110,55 +101,78 @@ public class OperationParameterForm extends HorizontalLayout {
         return this.operationParameter;
     }
 
-    private void validateAndSave() {
-        if(isValid())
-        {
-            operationParameter.setName(name.getValue());
+    private void saveOperationParameter(){
+        this.operationParameter = new OperationParameter();
+        operationParameter.setName(name.getValue());
+        if (!label.isEmpty()){
             operationParameter.setLabel(label.getValue());
-            if (this.visible.getValue() == "True"){
-                operationParameter.setVisible(Boolean.TRUE);
-            }
-            else if (this.visible.getValue() == "False"){
-                operationParameter.setVisible(Boolean.FALSE);
-            }
+        }
+        if (!visible.isEmpty()){
+            operationParameter.setVisible(Boolean.valueOf(visible.getValue()));
+        }
+        if (!visibleWhenInParameterEqualsCondition.isEmpty()){
             operationParameter.setVisibleWhenInParameterEqualsCondition(visibleWhenInParameterEqualsCondition.getValue());
-            operationParameter.setType(type.getValue());
-            operationParameter.setDescription(description.getValue());
+        }
+        operationParameter.setType(type.getValue());
+        operationParameter.setDescription(description.getValue());
+        if (!value.isEmpty()){
             operationParameter.setValue(value.getValue());
-            if (this.visible.getValue() == "True"){
-                operationParameter.setEnable(Boolean.TRUE);
-            }
-            else if (this.visible.getValue() == "False"){
-                operationParameter.setEnable(Boolean.FALSE);
-            }
-            if (this.visible.getValue() == "True"){
-                operationParameter.setRequired(Boolean.TRUE);
-            }
-            else if (this.visible.getValue() == "False"){
-                operationParameter.setRequired(Boolean.FALSE);
-            }
+        }
+        if (!value.isEmpty()){
+            operationParameter.setValue(value.getValue());
+        }
+        if (!enable.isEmpty()){
+            operationParameter.setEnable(Boolean.valueOf(enable.getValue()));
+        }
+        if (!required.isEmpty()){
+            operationParameter.setRequired(Boolean.valueOf(required.getValue()));
+        }
+        if (!validateExpression.isEmpty()){
             operationParameter.setValidateExpression(validateExpression.getValue());
+        }
+        if (!validateExpressionErrorDescription.isEmpty()){
             operationParameter.setValidateExpressionErrorDescription(validateExpressionErrorDescription.getValue());
+        }
+        if (!optionValue.isEmpty()){
             operationParameter.setOptionValue(optionValue.getValue());
+        }
+        if (!dateFormat.isEmpty()){
             operationParameter.setDateFormat(dateFormat.getValue());
+        }
+        if (!dateFormatRangeEnd.isEmpty()){
             operationParameter.setDateFormatRangeEnd(dateFormatRangeEnd.getValue());
+        }
+        if (!dateFormatFinal.isEmpty()){
             operationParameter.setDateFormatFinal(dateFormatFinal.getValue());
+        }
+        if (!sourceValueEntity.isEmpty()){
+            operationParameter.setSourceValueEntity(sourceValueEntity.getValue());
+        }
+        if (!sourceValueEntityProperty.isEmpty()){
             operationParameter.setSourceValueEntityProperty(sourceValueEntityProperty.getValue());
-            if (this.visible.getValue() == "True"){
-                operationParameter.setConvert(Boolean.TRUE);
-            }
-            else if (this.visible.getValue() == "False"){
-                operationParameter.setConvert(Boolean.FALSE);
-            }
+        }
+        if (!convert.isEmpty()){
+            operationParameter.setConvert(Boolean.valueOf(convert.getValue()));
+        }
+        if (!valueWhenInParameterEquals.isEmpty()){
             operationParameter.setValueWhenInParameterEquals(valueWhenInParameterEquals.getValue());
         }
-        else {
-            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
-            Notification notification = new Notification(content);
-            notification.setDuration(3000);
-            notification.setPosition(Notification.Position.MIDDLE);
-            notification.open();
+
+        String incompleteValidation = operationParameter.incompleteValidation();
+
+        if (!incompleteValidation.isEmpty()){
+            showErrorMessage(incompleteValidation);
         }
+
+        this.isValid = incompleteValidation.isEmpty();
+    }
+
+    private void showErrorMessage(String incompleteValidation){
+        Span message = new Span(incompleteValidation);
+        Notification notification = new Notification(message);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
     }
 
     public boolean isValid() {
