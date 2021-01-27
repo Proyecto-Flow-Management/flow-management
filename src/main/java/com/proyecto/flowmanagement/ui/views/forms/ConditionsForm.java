@@ -21,7 +21,7 @@ public class ConditionsForm extends HorizontalLayout {
     Alternative alternative;
     Condition actual;
 
-    ComboBox<TypeOperation> listType = new ComboBox<>("Tipo Operacion");
+    ComboBox<TypeOperation> listType = new ComboBox<>("Nombre Operacion");
     Button agregarCondition = new Button("Add");
 
     // Panel Acciones Binarys
