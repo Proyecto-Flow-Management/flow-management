@@ -89,7 +89,7 @@ public class ConditionParametersForm  extends VerticalLayout {
 
         isValid = mensajesError.isEmpty();
 
-        if(isValid)
+        if(!isValid)
             mostrarMensajeError(mensajesError);
     }
 
