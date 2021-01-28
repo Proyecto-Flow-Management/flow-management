@@ -147,24 +147,18 @@ public class OperationForm extends VerticalLayout {
         this.operationOrder.setPlaceholder("Dejar vacío si desea no incluir este tag.");
         this.notifyOperationDelay.setPlaceholder("Dejar vacío si desea no incluir este tag.");
         this.operationType.setItems(OperationType.values());
-        this.operationType.addValueChangeListener(event -> addElements(this.operationType.getValue()));
-
-        HorizontalLayout h1 = new HorizontalLayout();
-        h1.setWidthFull();
-        h1.add(name,label,comment,title,notifyOperationDelay);
-        HorizontalLayout h2 = new HorizontalLayout();
-        h2.setWidthFull();
-        h2.add(operationOrder,visible,preExecute,automatic);
-        HorizontalLayout h3 = new HorizontalLayout();
-        h3.setWidthFull();
-        h3.add(pauseExecution,notifyAlternative,notifyOperation,operationType);
-        HorizontalLayout h4 = new HorizontalLayout();
-        h4.setWidthFull();
-        h4.add(groupLayout);
+        this.operationType.addValueChangeListener(event -> addElements(this.operationType.getValue())); 
 
         groupLayout.add(candidatesGrupsForm);
         elements.setWidthFull();
-        elements.add(h1,h2,h3,h4);
+        FormLayout elementsForm = new FormLayout();
+        elementsForm.add(name,label,comment,title,notifyOperationDelay,operationOrder,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation,operationType);
+        elementsForm.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3),
+                new FormLayout.ResponsiveStep("40em", 4));
+        elements.add(elementsForm, groupLayout);
         actionsLayout.add(createButtonsLayout());
     }
 
