@@ -49,6 +49,7 @@ public class OperationForm extends VerticalLayout {
     private CandidatesGrupsForm candidatesGrupsForm = new CandidatesGrupsForm();
     private OptionValueForm optionValueForm = new OptionValueForm();
     private ConvertConditionForm convertConditionForm = new ConvertConditionForm();
+    private PropertiesForm propertiesForm = new PropertiesForm();
 
     private OperationParameterGridForm inParameterGridForm = new OperationParameterGridForm("Crear IN Operation Parameter");
     private OperationParameterGridForm outParameterGridForm = new OperationParameterGridForm("Crear OUT Operation Parameter");
@@ -61,6 +62,7 @@ public class OperationForm extends VerticalLayout {
     private HorizontalLayout groupLayout = new HorizontalLayout();
     private HorizontalLayout optionValueLayout = new HorizontalLayout();
     private HorizontalLayout convertConditionLayout = new HorizontalLayout();
+    private HorizontalLayout propertiesLayout = new HorizontalLayout();
 
     private TextField name = new TextField("Name");
     private TextField label = new TextField("Label");
@@ -82,6 +84,7 @@ public class OperationForm extends VerticalLayout {
     private TextField candidateGroups = new TextField("Candidate Groups");
     private TextField optionValues = new TextField("Option Values");
     private TextField convertConditions = new TextField("Convert Conditions");
+    private TextField properties = new TextField("Properties");
     private TextField mailTemplate = new TextField("Mail Template");
     private TextField mailTo = new TextField("Mail To");
     private TextField mailSubjectPrefix = new TextField("Mail Subject Prefix");
@@ -158,6 +161,7 @@ public class OperationForm extends VerticalLayout {
         groupLayout.add(candidatesGrupsForm);
         optionValueLayout.add(optionValueForm);
         convertConditionLayout.add(convertConditionForm);
+        propertiesLayout.add(propertiesForm);
         elements.setWidthFull();
         FormLayout elementsForm = new FormLayout();
         elementsForm.add(name,label,comment,title,notifyOperationDelay,operationOrder,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation,operationType);
@@ -166,7 +170,7 @@ public class OperationForm extends VerticalLayout {
                 new FormLayout.ResponsiveStep("32em", 2),
                 new FormLayout.ResponsiveStep("40em", 3),
                 new FormLayout.ResponsiveStep("40em", 4));
-        elements.add(elementsForm, groupLayout, optionValueLayout, convertConditionLayout);
+        elements.add(elementsForm, groupLayout, optionValueLayout, convertConditionLayout, propertiesLayout);
         actionsLayout.add(createButtonsLayout());
     }
 
