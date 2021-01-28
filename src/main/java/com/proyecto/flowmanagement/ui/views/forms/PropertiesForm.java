@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
@@ -15,12 +16,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.ui.CheckBox;
 
+import javax.persistence.criteria.From;
 import java.util.LinkedList;
 import java.util.List;
 
 @CssImport("./styles/properties-form.css")
 public class PropertiesForm extends VerticalLayout {
-    HorizontalLayout actionsLayout = new HorizontalLayout();
+    FormLayout actionsLayout = new FormLayout();
     HorizontalLayout buttonsLayout = new HorizontalLayout();
     HorizontalLayout gridLayout = new HorizontalLayout();
 
@@ -54,11 +56,16 @@ public class PropertiesForm extends VerticalLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        HorizontalLayout ppal = new HorizontalLayout();
+        VerticalLayout ppal = new VerticalLayout();
         ppal.setWidthFull();
 
         buttonsLayout.add(add,delete,save,cancel);
         actionsLayout.add(name, label, visible, type);
+        actionsLayout.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3),
+                new FormLayout.ResponsiveStep("40em", 4));
 
         ppal.add(actionsLayout,buttonsLayout);
 
@@ -105,7 +112,7 @@ public class PropertiesForm extends VerticalLayout {
         propertiesGrid.asSingleSelect().addValueChangeListener(evt -> edit(evt.getValue()));
         delete.addClickListener(buttonClickEvent -> eliminar());
         cancel.addClickListener(buttonClickEvent -> cancel());
-        add.addClickListener(buttonClickEvent -> agregar());
+        add.addClickListener(buttonClickEvent -> addProperty());
         save.addClickListener(buttonClickEvent -> guardar());
 
         propertiesGrid.addColumn(value-> {  return value.getName(); }).setHeader("Name").setSortable(true);
@@ -135,18 +142,6 @@ public class PropertiesForm extends VerticalLayout {
             notification.setPosition(Notification.Position.MIDDLE);
             notification.open();
         }
-    }
-
-    private void agregar()
-    {
-        Properties newProperty = new Properties();
-        newProperty.setName(this.name.getValue());
-        newProperty.setLabel(this.label.getValue());
-        newProperty.setVisible(Boolean.valueOf(visible.getValue()));
-        newProperty.setType(this.type.getValue());
-        properties.add(newProperty);
-        updateGrid();
-        configureElements();
     }
 
     private void cancel()
@@ -191,9 +186,9 @@ public class PropertiesForm extends VerticalLayout {
         }
     }
 
-    public void addName()
+    public void addProperty()
     {
-        if(!name.getValue().trim().isEmpty() && !label.getValue().trim().isEmpty() && type.getValue().trim().isEmpty())
+        if(!name.getValue().trim().isEmpty() && !label.getValue().trim().isEmpty() && !type.getValue().trim().isEmpty())
         {
             String nuevoName = this.name.getValue();
             String nuevoLabel = this.label.getValue();

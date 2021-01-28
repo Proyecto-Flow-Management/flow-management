@@ -89,7 +89,7 @@ public class CandidatesGrupsForm extends VerticalLayout {
         groupGrid.asSingleSelect().addValueChangeListener(evt -> edit(evt.getValue()));
         delete.addClickListener(buttonClickEvent -> eliminar());
         cancel.addClickListener(buttonClickEvent -> cancel());
-        add.addClickListener(buttonClickEvent -> agregar());
+        add.addClickListener(buttonClickEvent -> addName());
         save.addClickListener(buttonClickEvent -> guardar());
 
         groupGrid.addColumn(value-> {  return value.getGroupName(); }).setHeader("GroupName").setSortable(true);
@@ -113,15 +113,6 @@ public class CandidatesGrupsForm extends VerticalLayout {
             notification.setPosition(Notification.Position.MIDDLE);
             notification.open();
         }
-    }
-
-    private void agregar()
-    {
-        Groups grupo = new Groups();
-        grupo.setGroupName(this.group.getValue());
-        groupsNames.add(grupo);
-        updateGrid();
-        configureElements();
     }
 
     private void cancel()

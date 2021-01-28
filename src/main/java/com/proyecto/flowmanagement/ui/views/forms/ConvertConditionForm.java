@@ -5,6 +5,7 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Groups;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
@@ -18,7 +19,7 @@ import java.util.List;
 @CssImport("./styles/convert-condition-form.css")
 public class ConvertConditionForm extends VerticalLayout {
 
-    HorizontalLayout actionsLayout = new HorizontalLayout();
+    FormLayout actionsLayout = new FormLayout();
     HorizontalLayout buttonsLayout = new HorizontalLayout();
     HorizontalLayout gridLayout = new HorizontalLayout();
 
@@ -51,11 +52,15 @@ public class ConvertConditionForm extends VerticalLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        HorizontalLayout ppal = new HorizontalLayout();
+        VerticalLayout ppal = new VerticalLayout();
         ppal.setWidthFull();
 
         buttonsLayout.add(add,delete,save,cancel);
         actionsLayout.add(condition, sourceUnit, destinationUnit);
+        actionsLayout.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3));
 
         ppal.add(actionsLayout,buttonsLayout);
 
@@ -97,7 +102,7 @@ public class ConvertConditionForm extends VerticalLayout {
         convertConditionsGrid.asSingleSelect().addValueChangeListener(evt -> edit(evt.getValue()));
         delete.addClickListener(buttonClickEvent -> eliminar());
         cancel.addClickListener(buttonClickEvent -> cancel());
-        add.addClickListener(buttonClickEvent -> agregar());
+        add.addClickListener(buttonClickEvent -> addConvertCondition());
         save.addClickListener(buttonClickEvent -> guardar());
 
         convertConditionsGrid.addColumn(value-> {  return value.getCondition(); }).setHeader("Condition").setSortable(true);
@@ -125,17 +130,6 @@ public class ConvertConditionForm extends VerticalLayout {
             notification.setPosition(Notification.Position.MIDDLE);
             notification.open();
         }
-    }
-
-    private void agregar()
-    {
-        ConvertCondition newConvertCondition = new ConvertCondition();
-        newConvertCondition.setCondition(this.condition.getValue());
-        newConvertCondition.setSourceUnit(this.sourceUnit.getValue());
-        newConvertCondition.setDestinationUnit(this.destinationUnit.getValue());
-        convertConditions.add(newConvertCondition);
-        updateGrid();
-        configureElements();
     }
 
     private void cancel()
@@ -178,7 +172,7 @@ public class ConvertConditionForm extends VerticalLayout {
         }
     }
 
-    public void addName()
+    public void addConvertCondition()
     {
         if(!condition.getValue().isEmpty() && !sourceUnit.getValue().isEmpty() && !destinationUnit.getValue().isEmpty())
         {

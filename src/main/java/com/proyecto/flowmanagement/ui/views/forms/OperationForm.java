@@ -37,19 +37,16 @@ public class OperationForm extends VerticalLayout {
     public Boolean editing;
 
     Accordion accordionBasicInformation = new Accordion();
-    FormLayout basicInformation = new FormLayout();
+    VerticalLayout basicInformation = new VerticalLayout();
 
     Accordion inParameterAccordion = new Accordion();
-    FormLayout inParametersLayout = new FormLayout();
+    VerticalLayout inParametersLayout = new VerticalLayout();
 
     Accordion outParameterAccordion = new Accordion();
-    FormLayout outParametersLayout = new FormLayout();
+    VerticalLayout outParametersLayout = new VerticalLayout();
 
     private AlternativeIdsForm alternativeIdsForm;
     private CandidatesGrupsForm candidatesGrupsForm = new CandidatesGrupsForm();
-    private OptionValueForm optionValueForm = new OptionValueForm();
-    private ConvertConditionForm convertConditionForm = new ConvertConditionForm();
-    private PropertiesForm propertiesForm = new PropertiesForm();
 
     private OperationParameterGridForm inParameterGridForm = new OperationParameterGridForm("Crear IN Operation Parameter");
     private OperationParameterGridForm outParameterGridForm = new OperationParameterGridForm("Crear OUT Operation Parameter");
@@ -60,9 +57,6 @@ public class OperationForm extends VerticalLayout {
     private HorizontalLayout outParameterGridLayout = new HorizontalLayout();
     private HorizontalLayout actionsLayout = new HorizontalLayout();
     private HorizontalLayout groupLayout = new HorizontalLayout();
-    private HorizontalLayout optionValueLayout = new HorizontalLayout();
-    private HorizontalLayout convertConditionLayout = new HorizontalLayout();
-    private HorizontalLayout propertiesLayout = new HorizontalLayout();
 
     private TextField name = new TextField("Name");
     private TextField label = new TextField("Label");
@@ -159,9 +153,6 @@ public class OperationForm extends VerticalLayout {
         this.operationType.addValueChangeListener(event -> addElements(this.operationType.getValue())); 
 
         groupLayout.add(candidatesGrupsForm);
-        optionValueLayout.add(optionValueForm);
-        convertConditionLayout.add(convertConditionForm);
-        propertiesLayout.add(propertiesForm);
         elements.setWidthFull();
         FormLayout elementsForm = new FormLayout();
         elementsForm.add(name,label,comment,title,notifyOperationDelay,operationOrder,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation,operationType);
@@ -170,7 +161,8 @@ public class OperationForm extends VerticalLayout {
                 new FormLayout.ResponsiveStep("32em", 2),
                 new FormLayout.ResponsiveStep("40em", 3),
                 new FormLayout.ResponsiveStep("40em", 4));
-        elements.add(elementsForm, groupLayout, optionValueLayout, convertConditionLayout, propertiesLayout);
+        elements.add(elementsForm, groupLayout);
+
         actionsLayout.add(createButtonsLayout());
     }
 

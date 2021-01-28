@@ -4,6 +4,7 @@ import com.proyecto.flowmanagement.backend.persistence.entity.OptionValue;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
@@ -48,7 +49,7 @@ public class OptionValueForm extends VerticalLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        HorizontalLayout ppal = new HorizontalLayout();
+        VerticalLayout ppal = new VerticalLayout();
         ppal.setWidthFull();
 
         buttonsLayout.add(add,delete,save,cancel);
@@ -88,7 +89,7 @@ public class OptionValueForm extends VerticalLayout {
         optionValuesGrid.asSingleSelect().addValueChangeListener(evt -> edit(evt.getValue()));
         delete.addClickListener(buttonClickEvent -> eliminar());
         cancel.addClickListener(buttonClickEvent -> cancel());
-        add.addClickListener(buttonClickEvent -> agregar());
+        add.addClickListener(buttonClickEvent -> addOptionValue());
         save.addClickListener(buttonClickEvent -> guardar());
 
         optionValuesGrid.addColumn(value-> {  return value.getOptionValueName(); }).setHeader("OptionValue").setSortable(true);
@@ -112,15 +113,6 @@ public class OptionValueForm extends VerticalLayout {
             notification.setPosition(Notification.Position.MIDDLE);
             notification.open();
         }
-    }
-
-    private void agregar()
-    {
-        OptionValue newOptionValue = new OptionValue();
-        newOptionValue.setOptionValueName(this.optionValue.getValue());
-        optionValues.add(newOptionValue);
-        updateGrid();
-        configureElements();
     }
 
     private void cancel()
@@ -159,7 +151,7 @@ public class OptionValueForm extends VerticalLayout {
         }
     }
 
-    public void addName()
+    public void addOptionValue()
     {
         if(!optionValue.getValue().isEmpty())
         {
