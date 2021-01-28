@@ -156,6 +156,7 @@ public class PropertiesForm extends VerticalLayout {
         this.visible.setValue("False");
         this.type.setValue("");
         this.propertiesGrid.deselectAll();
+        configureElements();
     }
 
     private void eliminar()
