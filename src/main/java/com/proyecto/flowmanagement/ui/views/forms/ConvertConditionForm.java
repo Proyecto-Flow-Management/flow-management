@@ -144,6 +144,7 @@ public class ConvertConditionForm extends VerticalLayout {
         this.sourceUnit.setValue("");
         this.destinationUnit.setValue("");
         this.convertConditionsGrid.deselectAll();
+        this.configureElements();
     }
 
     private void eliminar()

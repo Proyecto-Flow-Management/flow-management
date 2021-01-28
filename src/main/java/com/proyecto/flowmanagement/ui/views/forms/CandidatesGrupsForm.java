@@ -128,6 +128,7 @@ public class CandidatesGrupsForm extends VerticalLayout {
     {
         this.group.setValue("");
         this.groupGrid.deselectAll();
+        this.configureElements();
     }
 
     private void eliminar()

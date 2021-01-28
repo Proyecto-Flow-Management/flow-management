@@ -127,6 +127,7 @@ public class OptionValueForm extends VerticalLayout {
     {
         this.optionValue.setValue("");
         this.optionValuesGrid.deselectAll();
+        this.configureElements();
     }
 
     private void eliminar()
