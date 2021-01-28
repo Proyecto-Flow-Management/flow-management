@@ -40,7 +40,6 @@ public class GuideCreator extends VerticalLayout {
     public Button validar = new Button("Validar");
 
     Guide raiz;
-    Guide actual;
     Guide editado;
 
     public GuideCreator()
@@ -87,7 +86,7 @@ public class GuideCreator extends VerticalLayout {
     private void configureElements() {
         editado = new Guide();
         raiz = new Guide();
-        actual = raiz;
+        raiz.editing = true;
     }
 
     private void configureGuidePanel() {
@@ -152,12 +151,21 @@ public class GuideCreator extends VerticalLayout {
 
     private void cargarGuia() {
         Guide valor = actualGuidePanel.actualGuide.getValue();
+
+        raiz.quitarEdicion();
+
+        if(valor == raiz)
+            raiz.editing = true;
+        else
+            raiz.setearParaEditar(valor);
+
         if(valor != null)
         {
-            actual = valor;
             editado = new Guide();
             cargarValorGrilla(valor);
         }
+
+        editado.editing = true;
     }
 
     private void cargarValorGrilla(Guide guide)
@@ -243,7 +251,6 @@ public class GuideCreator extends VerticalLayout {
 
     private void actualizarGuiaActual()
     {
-        // Elementos Guia
         editado.setName(guidePanel.name.getValue());
         editado.setLabel(guidePanel.label.getValue());
 
@@ -260,12 +267,10 @@ public class GuideCreator extends VerticalLayout {
         List<Operation> operationsList = operationGridForm.getOperations();
         editado.setOperations(operationsList);
 
-        if(raiz == actual)
+        if(raiz.editing)
             raiz = editado;
         else
-         raiz.setGuide(actual, editado);
-
-        actual = editado;
+         raiz.setGuide(editado);
 
         detailsPanel.updateGridDetails(raiz);
 
