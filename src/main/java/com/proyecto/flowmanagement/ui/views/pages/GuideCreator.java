@@ -4,6 +4,8 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
+import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
+import com.proyecto.flowmanagement.backend.service.Impl.ValidationServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
 import com.proyecto.flowmanagement.ui.views.panels.*;
@@ -11,6 +13,8 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -29,12 +33,14 @@ public class GuideCreator extends VerticalLayout {
     HorizontalLayout stepPanelLayout;
     HorizontalLayout operationPanelLayout;
     HorizontalLayout guidePanelLayout;
+    HorizontalLayout actionsLayout;
 
     ActualGuidePanel actualGuidePanel;
     OperationGridForm operationGridForm;
     DetailsPanel detailsPanel;
     StepPanel stepPanel;
     GuidePanel guidePanel;
+    GuideServiceImpl servicio = new GuideServiceImpl();
 
     public Button save = new Button("Guardar");
     public Button validar = new Button("Validar");
@@ -60,6 +66,8 @@ public class GuideCreator extends VerticalLayout {
 
         configureOperatorPanel();
 
+        configureActions();
+
         configureInteractivitie();
 
         configureForm();
@@ -69,9 +77,17 @@ public class GuideCreator extends VerticalLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         validar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(buttonClickEvent -> guardarGuias());
+        validar.addClickListener(buttonClickEvent -> validarGuia());
+
+        actionsLayout = new HorizontalLayout();
+        actionsLayout.add(save,validar);
     }
 
-    private void guardarGuias() {
+
+    private void guardarGuias()
+    {
+        actualizarGuiaActual();
+        servicio.add(raiz);
     }
 
     private void configureActualGuidePanel()
@@ -248,7 +264,7 @@ public class GuideCreator extends VerticalLayout {
     }
 
     private void configureForm() {
-        add(actualPanelLaayout,detailsPanelLayout,detailsPanel,guidePanelLayout,stepPanelLayout,operationPanelLayout);
+        add(actualPanelLaayout,detailsPanelLayout,detailsPanel,guidePanelLayout,stepPanelLayout,operationPanelLayout,actionsLayout);
     }
 
     private void actualizacionDeDetalles() {
@@ -294,6 +310,21 @@ public class GuideCreator extends VerticalLayout {
         actualGuidePanel.actualizarItems(raiz);
     }
 
+    private boolean validarGuia()
+    {
+        actualizarGuiaActual();
+        ValidationServiceImpl servicioValidacion = new ValidationServiceImpl();
+        List<String> mensajes = servicioValidacion.validarGuia(raiz);
+        return true;
+    }
+
+    private void mostrarMensajeError(String mensajeValidacion) {
+        Span mensaje = new Span(mensajeValidacion);
+        Notification notification = new Notification(mensaje);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
+    }
 }
 
 
