@@ -124,10 +124,15 @@ public class GuideCreator extends VerticalLayout {
         actualizacionDeDetalles();
         actualizacionAlternativs();
         actualizacionCrecionStep();
+        actualizacionEliminarStep();
         cambioGuia();
         //Actualizar Steps
         // Alternativs
         //Actuaalizar resumen
+    }
+
+    private void actualizacionEliminarStep() {
+        stepPanel.stepGridForm.stepForm.delete.addClickListener(buttonClickEvent -> cargarMainStepsPorEliminacion());
     }
 
     private void actualizacionCrecionStep()
@@ -143,6 +148,9 @@ public class GuideCreator extends VerticalLayout {
         }
     }
 
+    private void cargarMainStepsPorEliminacion() {
+        guidePanel.actualizarSteps(stepPanel.stepGridForm.stepList);
+    }
 
     private void cambioGuia()
     {

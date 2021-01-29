@@ -76,16 +76,19 @@ public class GuidePanel  extends HorizontalLayout {
         else
             this.label.setValue("");
     }
-
+ 
     public void actualizarSteps(List<Step> stepList) {
         String actualValue = mainStep.getValue();
 
         List<String> steps = stepList.stream().map(m -> m.getTextId()).collect(Collectors.toList());
-
         this.mainStep.setItems(steps);
 
-        if(stepList.contains(actualValue))
+        if(steps.contains(actualValue))
+        {
             mainStep.setValue(actualValue);
+        }
+        else
+            mainStep.setValue("");
 
     }
 }

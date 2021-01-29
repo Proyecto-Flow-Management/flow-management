@@ -2,10 +2,8 @@ package com.proyecto.flowmanagement.ui.views.panels;
 
 import com.proyecto.flowmanagement.backend.commun.CustomNode;
 import com.proyecto.flowmanagement.backend.commun.TestDTO;
-import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
-import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
-import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
-import com.proyecto.flowmanagement.backend.persistence.entity.Step;
+import com.proyecto.flowmanagement.backend.def.TypeOperation;
+import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import com.proyecto.flowmanagement.ui.views.grids.StepGridForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.accordion.Accordion;
@@ -92,7 +90,25 @@ public class DetailsPanel  extends HorizontalLayout {
             for (Alternative alternative: step.getAlternatives() ) {
                 CustomNode alternativeNode = new CustomNode("AlternativeLabel: " +alternative.getLabel());
                 data.addItem(stepAux, alternativeNode);
+
+                if(alternative.getConditions() !=null)
+                {
+                    for (Condition condition : alternative.getConditions()) {
+                        agregarCondition(alternativeNode, condition);
+                    }
+                }
             }
         }
+    }
+
+    private void agregarCondition(CustomNode alternativeNode,Condition condition)
+    {
+        CustomNode conditionNode = new CustomNode(condition.getOperation());
+        data.addItem(alternativeNode,conditionNode);
+
+        if(condition.getHijoIzquierdo() != null)
+            agregarCondition(conditionNode, condition.getHijoIzquierdo());
+        if(condition.getHijoDerecho() != null)
+            agregarCondition(conditionNode, condition.getHijoDerecho());
     }
 }
