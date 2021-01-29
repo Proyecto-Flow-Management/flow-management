@@ -28,7 +28,8 @@ public class AlternativeIdsForm extends HorizontalLayout {
     public AlternativeIdsForm(List<String> alternatives)
     {
         this.alternativesId = alternatives;
-        this.alternativesInGrid = new LinkedList<>();
+        this.alternativesInGrid = alternatives;
+        //this.alternativesInGrid = new LinkedList<>();
         setSizeFull();
 
         configureElements();

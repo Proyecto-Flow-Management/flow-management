@@ -75,10 +75,8 @@ public class OperationParameterGridForm extends VerticalLayout {
     }
 
         private void configureGrid() {
-//        operationParameterGrid = new Grid<>(OperationParameter.class);
         operationParameterGrid.addClassName("user-grid");
         operationParameterGrid.setColumns("name", "label");
-//        operationParameterGrid.setSizeFull();
         operationParameterGrid.setWidth("80%");
         operationParameterGrid.asSingleSelect().addValueChangeListener(evt -> editOperationParameter(evt.getValue()));
     }

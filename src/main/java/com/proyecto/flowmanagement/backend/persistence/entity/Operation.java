@@ -37,7 +37,7 @@ public class Operation  extends AbstractEntity{
 	private Boolean pauseExecution;
 
 	@Column(name = "operationOrder")
-	private boolean operationOrder;
+	private int operationOrder;
 
 	@Column(name = "operationType")
 	@JoinColumn(name = "operation_id")
@@ -141,11 +141,11 @@ public class Operation  extends AbstractEntity{
 		this.pauseExecution = pauseExecution;
 	}
 
-	public boolean getOperationOrder() {
+	public Integer getOperationOrder() {
 		return operationOrder;
 	}
 
-	public void setOperationOrder(boolean operationOrder) {
+	public void setOperationOrder(int operationOrder) {
 		this.operationOrder = operationOrder;
 	}
 
@@ -220,4 +220,5 @@ public class Operation  extends AbstractEntity{
 	public void setNotifyOperationDelay(Integer notifyOperationDelay) {
 		this.notifyOperationDelay = notifyOperationDelay;
 	}
+
 }

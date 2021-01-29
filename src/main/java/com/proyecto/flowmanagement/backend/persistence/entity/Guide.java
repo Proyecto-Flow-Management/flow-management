@@ -39,6 +39,8 @@ public class Guide extends AbstractEntity {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Guide> guides;
 
+	public boolean editing;
+
 	public String getName() {
 		return name;
 	}
@@ -125,7 +127,7 @@ public class Guide extends AbstractEntity {
 		this.guides.add(newGuide);
 	}
 
-	public boolean setGuide(Guide oldGuide, Guide newGuide)
+	public boolean setGuide(Guide newGuide)
 	{
 		boolean flag = false;
 
@@ -133,13 +135,14 @@ public class Guide extends AbstractEntity {
 		{
 			for (Guide aux : this.getGuides()) {
 
-				if(aux == oldGuide)
+				if(aux.editing)
 				{
-					aux = newGuide;
+					int index = this.guides.indexOf(aux);
+					this.guides.set(index,newGuide);
 					return true;
 				}
 
-				if(aux.setGuide(oldGuide,newGuide))
+				if(aux.setGuide(newGuide))
 					return true;
 			}
 		}
@@ -151,5 +154,48 @@ public class Guide extends AbstractEntity {
 	public String toString()
 	{
 		return this.getName();
+	}
+
+	public boolean isEditing() {
+		return editing;
+	}
+
+	public void setEditing(boolean editing) {
+		this.editing = editing;
+	}
+
+
+	public void quitarEdicion()
+	{
+		this.editing = false;
+
+		if(this.guides != null)
+		{
+			for (Guide aux : this.guides) {
+				aux.quitarEdicion();
+			}
+		}
+	}
+
+	public boolean setearParaEditar(Guide newGuide)
+	{
+		boolean flag = false;
+
+		if(this.getGuides() != null)
+		{
+			for (Guide aux : this.getGuides()) {
+
+				if(aux == newGuide)
+				{
+					aux.editing = true;
+					return true;
+				}
+
+				if(aux.setGuide(newGuide))
+					return true;
+			}
+		}
+
+		return flag;
 	}
 }

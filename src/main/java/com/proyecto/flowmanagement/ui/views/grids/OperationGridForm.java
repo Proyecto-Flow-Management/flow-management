@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.proyecto.flowmanagement.ui.views.forms.OperationForm;
 import com.vaadin.flow.component.accordion.Accordion;
@@ -16,9 +17,9 @@ import java.util.List;
 @CssImport("./styles/general.css")
 public class OperationGridForm extends HorizontalLayout {
     private Button createOperation;
-    public OperationForm operationForm;
+    public OperationForm operationForm = new OperationForm();
 
-    public List<String> alternatives;
+    public List<String> alternatives = new LinkedList<String>();
 
     Grid<Operation> operationGrid;
     public List<Operation> operationList;
@@ -27,6 +28,7 @@ public class OperationGridForm extends HorizontalLayout {
     VerticalLayout operationSecctionLayout = new VerticalLayout();
     Accordion accordion = new Accordion();
     FormLayout basicInformation = new FormLayout();
+    Operation editOperation;
 
     public OperationGridForm()
     {
@@ -40,7 +42,6 @@ public class OperationGridForm extends HorizontalLayout {
         configureGrid();
         createOperation = new Button("Crear Operation", click -> addOperation());
 
-        operationForm = new OperationForm();
         operationForm.setVisible(false);
         operationForm.save.addClickListener(buttonClickEvent -> CreateOperation());
         operationForm.close.addClickListener(buttonClickEvent -> CloseForm());
@@ -79,7 +80,7 @@ public class OperationGridForm extends HorizontalLayout {
     }
 
     private void CreateOperation() {
-        if (operationForm.isValid()) {
+        if (operationForm.isValid) {
             Operation newOperation = operationForm.getOperation();
             operationList.add(newOperation);
             updateGrid();
@@ -90,7 +91,7 @@ public class OperationGridForm extends HorizontalLayout {
     private void addOperation() {
         operationGrid.asSingleSelect().clear();
         operationForm.setVisible(true);
-        operationForm = new OperationForm(alternatives);
+        operationForm.setAsDefault();
         editOperation(new Operation());
     }
 
@@ -106,7 +107,7 @@ public class OperationGridForm extends HorizontalLayout {
         if(operation == null) {
             closeEditor();
         } else {
-            this.operationForm.alteratives = this.alternatives;
+            this.operationForm.alternatives = this.alternatives;
             operationForm.setOperation(operation);
             operationForm.setVisible(true);
             addClassName("editing");

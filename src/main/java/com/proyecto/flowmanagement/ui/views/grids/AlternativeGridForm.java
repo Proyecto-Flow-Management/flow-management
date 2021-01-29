@@ -119,16 +119,25 @@ public class AlternativeGridForm extends HorizontalLayout {
         alternativeGrid = new Grid<>(Alternative.class);
         alternativeGrid.addClassName("user-grid");
         alternativeGrid.setSizeFull();
-        alternativeGrid.setColumns("label","nextStep");
+        alternativeGrid.setColumns("label");
+
+        alternativeGrid.addColumn(alternative ->
+                {
+                    boolean step = alternative.getGuideName() == null || alternative.getGuideName().isEmpty();
+                    return step ? "" : alternative.getGuideName();}).setHeader("Next Guide");
+
+        alternativeGrid.addColumn(alternative ->
+                { return alternative.getGuideName() != null && !alternative.getGuideName().isEmpty()? "" : alternative.getNextStep();}).setHeader("Next Step");
+
         alternativeGrid.asSingleSelect().addValueChangeListener(evt -> editAlternative(evt.getValue()));
     }
 
     private void editAlternative(Alternative alternative) {
 
-        alternativeForm.setVisible(true);
-        alternativeForm.isValid = false;
-
         if(alternative != null) {
+            alternativeForm.setVisible(true);
+            alternativeForm.isValid = false;
+
             this.editAlternative = alternative;
             alternativeForm.setAlternative(alternative);
             addClassName("editing");

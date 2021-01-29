@@ -2,8 +2,11 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.def.SourceEntity;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -78,6 +81,21 @@ public class OperationParameter extends AbstractEntity {
 
 	@Column(name = "value_when_in_parameter_equals")
 	private String valueWhenInParameterEquals;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "operation_parameter_id")
+	@Fetch(FetchMode.SUBSELECT)
+	private List<OptionValue> optionValues;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "task_operation_id")
+	@Fetch(FetchMode.SUBSELECT)
+	private List<ConvertCondition> convertConditions;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "task_operation_id")
+	@Fetch(FetchMode.SUBSELECT)
+	private List<Properties> propertiesNames;
 
 	public String getName() {
 		return name;
@@ -254,4 +272,58 @@ public class OperationParameter extends AbstractEntity {
 	public void setValueWhenInParameterEquals(String valueWhenInParameterEquals) {
 		this.valueWhenInParameterEquals = valueWhenInParameterEquals;
 	}
+
+	public List<OptionValue> getOptionValues() {
+		return optionValues;
+	}
+
+	public void setOptionValues(List<OptionValue> optionValues) {
+		this.optionValues = optionValues;
+	}
+
+	public List<ConvertCondition> getConvertConditions() {
+		return convertConditions;
+	}
+
+	public void setConvertConditions(List<ConvertCondition> convertConditions) {
+		this.convertConditions = convertConditions;
+	}
+
+	public List<Properties> getPropertiesNames() {
+		return propertiesNames;
+	}
+
+	public void setPropertiesNames(List<Properties> propertiesNames) {
+		this.propertiesNames = propertiesNames;
+	}
+
+	public List<String> validateOperationParameter() {
+
+		List<String> encounteredErrors = new LinkedList<>();
+
+		if(name.isEmpty())
+			encounteredErrors.add("El campo Name es obligatorio");
+
+		if (type.isEmpty())
+			encounteredErrors.add("El campo Type es obligatorio");
+
+		if (description.isEmpty())
+			encounteredErrors.add("El campo Description es obligatorio");
+
+		return encounteredErrors;
+	}
+
+
+	public String incompleteValidation(){
+		if (name.isEmpty())
+			return "El campo Name es obligatorio";
+
+		if (type.isEmpty())
+			return "El campo Type es obligatorio";
+
+		if (description.isEmpty())
+			return "El campo Description es obligatorio";
+
+		return "";
+    }
 }

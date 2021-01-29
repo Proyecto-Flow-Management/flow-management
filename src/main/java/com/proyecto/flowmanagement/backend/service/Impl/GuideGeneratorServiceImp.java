@@ -141,7 +141,8 @@ public class GuideGeneratorServiceImp {
                 Node labelOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_LABEL).item(0);
                 labelOperation.setTextContent(operation.getLabel());
 
-                if (operation.getOperationOrder()) {
+
+                if (operation.getOperationOrder() != null) {
                     Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
                     Node operationOrderOperation = docOperation.createElement(XMLConstants.OPERATION_OPERATION_ORDER);
                     operationOrderOperation.setTextContent(String.valueOf(operation.getOperationOrder()));
