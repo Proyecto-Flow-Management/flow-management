@@ -107,7 +107,6 @@ public class OperationGridForm extends HorizontalLayout {
         if(operation == null) {
             closeEditor();
         } else {
-            this.operationForm.alternatives = this.alternatives;
             operationForm.setOperation(operation);
             operationForm.setVisible(true);
             addClassName("editing");
@@ -127,5 +126,12 @@ public class OperationGridForm extends HorizontalLayout {
     public void setAsDefault() {
         this.operationList = new LinkedList<>();
         updateGrid();
+    }
+
+    public void updateAlternativesIds(List<String> ids)
+    {
+        this.operationForm.alternativesIdsAccordion.setVisible(true);
+        this.operationForm.alternatives = ids;
+        this.operationForm.alternativeIdsForm.updateElements(ids);;
     }
 }

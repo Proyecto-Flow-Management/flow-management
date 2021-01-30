@@ -1,10 +1,10 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Groups;
-import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
+import com.proyecto.flowmanagement.backend.persistence.entity.OptionValue;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
@@ -15,25 +15,25 @@ import com.vaadin.flow.component.textfield.TextField;
 import java.util.LinkedList;
 import java.util.List;
 
-@CssImport("./styles/groups-form.css")
-public class CandidatesGrupsForm extends VerticalLayout {
+@CssImport("./styles/option-value-form.css")
+public class OptionValueForm extends VerticalLayout {
 
     HorizontalLayout actionsLayout = new HorizontalLayout();
     HorizontalLayout buttonsLayout = new HorizontalLayout();
     HorizontalLayout gridLayout = new HorizontalLayout();
 
-    List<Groups> groupsNames = new LinkedList<>();
-    Grid<Groups> groupGrid = new Grid<>();
-    Groups editing = new Groups();
+    List<OptionValue> optionValues = new LinkedList<>();
+    Grid<OptionValue> optionValuesGrid = new Grid<>();
+    OptionValue editing = new OptionValue();
 
-    TextField group = new TextField("GroupName");
-    Button add = new Button("Add");
+    TextField optionValue = new TextField("OptionValue");
+    Button add = new Button("Crear");
     Button delete = new Button("Eliminar");
     Button save = new Button("Guardar");
     Button cancel = new Button("Cancelar");
 
 
-    public CandidatesGrupsForm()
+    public OptionValueForm()
     {
         configureElements();
 
@@ -49,24 +49,24 @@ public class CandidatesGrupsForm extends VerticalLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        HorizontalLayout ppal = new HorizontalLayout();
+        VerticalLayout ppal = new VerticalLayout();
         ppal.setWidthFull();
 
         buttonsLayout.add(add,delete,save,cancel);
-        actionsLayout.add(group);
+        actionsLayout.add(optionValue);
 
         ppal.add(actionsLayout,buttonsLayout);
 
-        gridLayout.add(groupGrid);
+        gridLayout.add(optionValuesGrid);
 
         add(ppal, gridLayout);
     }
 
     private void configureElements()
     {
-        buttonsLayout.setClassName("buttonsLayouts");
-        this.group.setVisible(true);
-        this.group.setValue("");
+        buttonsLayout.setClassName("buttonsLayout");
+        this.optionValue.setVisible(true);
+        this.optionValue.setValue("");
         this.add.setVisible(true);
         this.save.setVisible(false);
         this.delete.setVisible(false);
@@ -76,7 +76,8 @@ public class CandidatesGrupsForm extends VerticalLayout {
 
     private void configureForEditing()
     {
-        this.group.setVisible(true);
+        buttonsLayout.setClassName("buttonsEditingLayout");
+        this.optionValue.setVisible(true);
         this.add.setVisible(false);
         this.save.setVisible(true);
         this.delete.setVisible(true);
@@ -85,22 +86,22 @@ public class CandidatesGrupsForm extends VerticalLayout {
     }
 
     private void configureGrid() {
-        groupGrid.asSingleSelect().addValueChangeListener(evt -> edit(evt.getValue()));
+        optionValuesGrid.asSingleSelect().addValueChangeListener(evt -> edit(evt.getValue()));
         delete.addClickListener(buttonClickEvent -> eliminar());
         cancel.addClickListener(buttonClickEvent -> cancel());
-        add.addClickListener(buttonClickEvent -> addName());
+        add.addClickListener(buttonClickEvent -> addOptionValue());
         save.addClickListener(buttonClickEvent -> guardar());
 
-        groupGrid.addColumn(value-> {  return value.getGroupName(); }).setHeader("GroupName").setSortable(true);
+        optionValuesGrid.addColumn(value-> {  return value.getOptionValueName(); }).setHeader("OptionValue").setSortable(true);
     }
 
     private void guardar()
     {
-        if(!group.getValue().isEmpty())
+        if(!optionValue.getValue().isEmpty())
         {
-            int index = groupsNames.indexOf(this.editing);
-            editing.setGroupName(this.group.getValue());
-            groupsNames.set(index, editing);
+            int index = optionValues.indexOf(this.editing);
+            editing.setOptionValueName(this.optionValue.getValue());
+            optionValues.set(index, editing);
             updateGrid();
             configureElements();
         }
@@ -116,25 +117,25 @@ public class CandidatesGrupsForm extends VerticalLayout {
 
     private void cancel()
     {
-        this.group.setValue("");
-        this.groupGrid.deselectAll();
+        this.optionValue.setValue("");
+        this.optionValuesGrid.deselectAll();
         this.configureElements();
     }
 
     private void eliminar()
     {
-        this.groupsNames.remove(editing);
+        this.optionValues.remove(editing);
         updateGrid();
         configureElements();
     }
 
-    private void edit(Groups value)
+    private void edit(OptionValue value)
     {
         if(value != null)
         {
             configureForEditing();
             this.editing = value;
-            this.group.setValue(value.getGroupName());
+            this.optionValue.setValue(value.getOptionValueName());
         }
     }
 
@@ -142,7 +143,7 @@ public class CandidatesGrupsForm extends VerticalLayout {
     {
         try
         {
-            groupGrid.setItems(groupsNames);
+            optionValuesGrid.setItems(optionValues);
         }
         catch (Exception ex)
         {
@@ -150,17 +151,17 @@ public class CandidatesGrupsForm extends VerticalLayout {
         }
     }
 
-    public void addName()
+    public void addOptionValue()
     {
-        if(!group.getValue().isEmpty())
+        if(!optionValue.getValue().isEmpty())
         {
-            String nuevo = this.group.getValue();
-            Groups grp = new Groups();
+            String nuevo = this.optionValue.getValue();
+            OptionValue opV = new OptionValue();
 
-            grp.setGroupName(nuevo);
-            groupsNames.add(grp);
+            opV.setOptionValueName(nuevo);
+            optionValues.add(opV);
             updateGrid();
-            this.group.setValue("");
+            this.optionValue.setValue("");
         }
         else
         {
@@ -172,8 +173,8 @@ public class CandidatesGrupsForm extends VerticalLayout {
         }
     }
 
-    public List<Groups> getGroupsNames()
+    public List<OptionValue> getOptionValues()
     {
-        return this.groupsNames;
+        return this.optionValues;
     }
 }

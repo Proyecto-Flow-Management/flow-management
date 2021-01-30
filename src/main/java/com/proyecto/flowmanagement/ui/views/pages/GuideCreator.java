@@ -22,6 +22,7 @@ import com.vaadin.flow.router.Route;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Component
 @Route(value = "CrearGuia", layout = MainLayout.class)

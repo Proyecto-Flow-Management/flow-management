@@ -6,6 +6,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -24,9 +25,22 @@ public class OperationParameterForm extends HorizontalLayout {
     private OperationParameter operationParameter;
     private Boolean isValid = false;
 
+    private OptionValueForm optionValueForm = new OptionValueForm();
+    private ConvertConditionForm convertConditionForm = new ConvertConditionForm();
+    private PropertiesForm propertiesForm = new PropertiesForm();
+
     private VerticalLayout form = new VerticalLayout();
     private FormLayout elements = new FormLayout();
     private HorizontalLayout actionsLayout = new HorizontalLayout();
+    private HorizontalLayout optionValueLayout = new HorizontalLayout();
+    private HorizontalLayout convertConditionLayout = new HorizontalLayout();
+    private HorizontalLayout propertiesLayout = new HorizontalLayout();
+    Accordion optionValuesAccordion = new Accordion();
+    Accordion convertConditionsAccordion = new Accordion();
+    Accordion propertiesAccordion = new Accordion();
+    FormLayout basicInformationOptionValues = new FormLayout();
+    FormLayout basicInformationConvertConditions = new FormLayout();
+    FormLayout basicInformationProperties = new FormLayout();
 
     private TextField name = new TextField("Nombre");
     private TextField label = new TextField("Etiqueta");
@@ -72,11 +86,36 @@ public class OperationParameterForm extends HorizontalLayout {
         this.convert.setItems("True","False");
 
         elements.add(name,label,visibleWhenInParameterEqualsCondition,type,description,value,validateExpression,validateExpressionErrorDescription,optionValue,dateFormat,dateFormatRangeEnd,dateFormatFinal,sourceValueEntityProperty,valueWhenInParameterEquals,enable,required,visible,convert);
+        elements.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3),
+                new FormLayout.ResponsiveStep("40em", 4));
+
+        optionValueLayout.add(optionValueForm);
+        convertConditionLayout.add(convertConditionForm);
+        propertiesLayout.add(propertiesForm);
+
+        basicInformationOptionValues.setWidthFull();
+        basicInformationOptionValues.add(optionValueLayout);
+        optionValuesAccordion.add("Option Values", basicInformationOptionValues);
+        optionValuesAccordion.close();
+
+        basicInformationConvertConditions.setWidthFull();
+        basicInformationConvertConditions.add(convertConditionLayout);
+        convertConditionsAccordion.add("Convert Conditions", basicInformationConvertConditions);
+        convertConditionsAccordion.close();
+
+        basicInformationProperties.setWidthFull();
+        basicInformationProperties.add(propertiesLayout);
+        propertiesAccordion.add("Properties", basicInformationProperties);
+        propertiesAccordion.close();
+
         actionsLayout.add(createButtonsLayout());
     }
 
     private void configureForm() {
-        form.add(elements, actionsLayout);
+        form.add(elements, optionValuesAccordion, convertConditionsAccordion, propertiesAccordion, actionsLayout);
         add(form);
     }
 

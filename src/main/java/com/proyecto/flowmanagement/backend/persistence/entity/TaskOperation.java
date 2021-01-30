@@ -2,10 +2,10 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.def.SimpleOperationType;
 import com.proyecto.flowmanagement.backend.def.TaskOperationType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,6 +30,11 @@ public class TaskOperation extends Operation{
 
     @Column(name = "mailSubjectPrefix")
     private String mailSubjectPrefix;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "task_operation_id")
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Groups> groupsNames;
 
     public TaskOperationType getType() {
         return type;
@@ -77,6 +82,14 @@ public class TaskOperation extends Operation{
 
     public void setMailSubjectPrefix(String mailSubjectPrefix) {
         this.mailSubjectPrefix = mailSubjectPrefix;
+    }
+
+    public List<Groups> getGroupsIds() {
+        return groupsNames;
+    }
+
+    public void setGroupsIds(List<Groups> groupsNames) {
+        this.groupsNames = groupsNames;
     }
 
     public List<String> validateOperation() {
