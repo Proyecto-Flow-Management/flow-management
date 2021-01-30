@@ -102,17 +102,21 @@ public class StepForm extends HorizontalLayout {
     public void agregarInteractividad()
     {
         alternativeGridForm.alternativeForm.save.addClickListener(buttonClickEvent -> addToOperationForm());
+        alternativeGridForm.alternativeForm.delete.addClickListener(buttonClickEvent -> addToOperationForm());
     }
 
     private void addToOperationForm() {
         List<String> ids = new LinkedList<>();
 
-        for (Alternative alternative: this.alternativeGridForm.getAlternatives()) {
-            if(alternative.getNextStep() != "")
-                ids.add(alternative.getNextStep());
+        if(this.alternativeGridForm.getAlternatives() != null)
+        {
+            for (Alternative alternative: this.alternativeGridForm.getAlternatives()) {
+                if(alternative.getNextStep() != "")
+                    ids.add(alternative.getNextStep());
+            }
         }
 
-        this.operationGridForm.alternatives = ids;
+        this.operationGridForm.updateAlternativesIds(ids);
     }
 
     private void configureElements() {

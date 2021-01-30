@@ -24,6 +24,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
+
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -45,7 +47,9 @@ public class OperationForm extends VerticalLayout {
     Accordion outParameterAccordion = new Accordion();
     VerticalLayout outParametersLayout = new VerticalLayout();
 
-    private AlternativeIdsForm alternativeIdsForm;
+    Accordion groupsAccordion = new Accordion();
+    public Accordion alternativesIdsAccordion = new Accordion();
+    public AlternativeIdsForm alternativeIdsForm;
     private CandidatesGrupsForm candidatesGrupsForm = new CandidatesGrupsForm();
 
     private OperationParameterGridForm inParameterGridForm = new OperationParameterGridForm("Crear IN Operation Parameter");
@@ -56,7 +60,7 @@ public class OperationForm extends VerticalLayout {
     private HorizontalLayout inParameterGridLayout = new HorizontalLayout();
     private HorizontalLayout outParameterGridLayout = new HorizontalLayout();
     private HorizontalLayout actionsLayout = new HorizontalLayout();
-    private HorizontalLayout groupLayout = new HorizontalLayout();
+    private FormLayout groupLayout = new FormLayout();
 
     private TextField name = new TextField("Name");
     private TextField label = new TextField("Label");
@@ -87,7 +91,12 @@ public class OperationForm extends VerticalLayout {
     public Button close = new Button("Cancelar");
 
     public OperationForm() {
+
+        setClassName("operationSection");
+
         setSizeFull();
+
+        configureAlternatives();
 
         configureElements();
 
@@ -105,15 +114,17 @@ public class OperationForm extends VerticalLayout {
 
             this.alternativeIdsForm = new AlternativeIdsForm(alternatives);
 
-            configureElements();
-
             configureAlternatives();
+
+            configureElements();
 
             configureOperationParameters();
 
             configureForm();
         } else {
             setSizeFull();
+
+            configureAlternatives();
 
             configureElements();
 
@@ -150,9 +161,21 @@ public class OperationForm extends VerticalLayout {
         this.operationOrder.setPlaceholder("Dejar vacío si desea no incluir este tag.");
         this.notifyOperationDelay.setPlaceholder("Dejar vacío si desea no incluir este tag.");
         this.operationType.setItems(OperationType.values());
-        this.operationType.addValueChangeListener(event -> addElements(this.operationType.getValue())); 
+        this.operationType.addValueChangeListener(event -> addElements(this.operationType.getValue()));
 
-        groupLayout.add(candidatesGrupsForm);
+        FormLayout basicInformation = new FormLayout();
+        basicInformation.setWidthFull();
+        basicInformation.add(candidatesGrupsForm);
+        groupsAccordion.add("GroupsLayout", basicInformation);
+        groupsAccordion.close();
+
+        FormLayout alternativesIdsFormLaayout = new FormLayout();
+        alternativesIdsFormLaayout.setWidthFull();
+        alternativesIdsFormLaayout.add(alternativeIdsForm);
+        alternativesIdsAccordion.add("AlternativesIds", alternativesIdsFormLaayout);
+        alternativesIdsAccordion.close();
+        alternativesIdsAccordion.setVisible(false);
+
         elements.setWidthFull();
         FormLayout elementsForm = new FormLayout();
         elementsForm.add(name,label,comment,title,notifyOperationDelay,operationOrder,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation,operationType);
@@ -161,7 +184,7 @@ public class OperationForm extends VerticalLayout {
                 new FormLayout.ResponsiveStep("32em", 2),
                 new FormLayout.ResponsiveStep("40em", 3),
                 new FormLayout.ResponsiveStep("40em", 4));
-        elements.add(elementsForm, groupLayout);
+        elements.add(elementsForm, groupsAccordion, alternativesIdsAccordion);
 
         actionsLayout.add(createButtonsLayout());
     }
@@ -194,10 +217,9 @@ public class OperationForm extends VerticalLayout {
     }
 
     private void configureAlternatives() {
-        alternativeIdsFormLayout.setWidthFull();
+        if(this.alternatives == null)
+            alternatives = new LinkedList<>();
         alternativeIdsForm = new AlternativeIdsForm(alternatives);
-        alternativeIdsFormLayout.add(alternativeIdsForm);
-        alternativeIdsFormLayout.setVisible(false);
     }
 
     private void configureOperationParameters() {
@@ -216,7 +238,7 @@ public class OperationForm extends VerticalLayout {
         accordionBasicInformation.setWidthFull();
         accordionBasicInformation.setId("step-Layout");
         setWidthFull();
-        basicInformation.add(elements,alternativeIdsFormLayout, groupLayout);
+        basicInformation.add(elements, groupLayout);
         accordionBasicInformation.close();
         accordionBasicInformation.add("Elements", basicInformation);
 

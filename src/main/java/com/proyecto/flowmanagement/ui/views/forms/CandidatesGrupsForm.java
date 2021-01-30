@@ -64,7 +64,7 @@ public class CandidatesGrupsForm extends VerticalLayout {
 
     private void configureElements()
     {
-        buttonsLayout.setClassName("buttonsLayout");
+        buttonsLayout.setClassName("buttonsLayouts");
         this.group.setVisible(true);
         this.group.setValue("");
         this.add.setVisible(true);
@@ -76,7 +76,6 @@ public class CandidatesGrupsForm extends VerticalLayout {
 
     private void configureForEditing()
     {
-        buttonsLayout.setClassName("buttonsEditingLayout");
         this.group.setVisible(true);
         this.add.setVisible(false);
         this.save.setVisible(true);
