@@ -38,7 +38,13 @@ public class OperationForm extends VerticalLayout {
     public Boolean isValid = false;
     public Boolean editing;
 
+    public ConditionsForm conditionForm = new ConditionsForm();
+
+    Accordion conditionFormAccordion = new Accordion();
+    VerticalLayout conditionFormLayout = new VerticalLayout();
+
     FormLayout elementsForm = new FormLayout();
+
     Accordion accordionBasicInformation = new Accordion();
     VerticalLayout basicInformation = new VerticalLayout();
 
@@ -103,7 +109,12 @@ public class OperationForm extends VerticalLayout {
 
         configureOperationParameters();
 
+        configureConditions();
+
         configureForm();
+    }
+
+    private void configureConditions() {
     }
 
     public OperationForm(List<String> alternatives) {
@@ -261,7 +272,15 @@ public class OperationForm extends VerticalLayout {
         outParameterAccordion.close();
         outParameterAccordion.add("OutOperation", outParametersLayout);
 
-        add(accordionBasicInformation,inParameterAccordion,outParameterAccordion,actionsLayout);
+        conditionFormLayout.setWidthFull();
+        conditionFormAccordion.setWidthFull();
+        outParameterAccordion.setId("step-Layout");
+        setWidthFull();
+        conditionFormLayout.add(conditionForm);
+        conditionFormAccordion.close();
+        conditionFormAccordion.add("Conditions", conditionFormLayout);
+
+        add(accordionBasicInformation,inParameterAccordion,outParameterAccordion,conditionFormAccordion,actionsLayout);
     }
 
     public void setOperation(Operation operation) {
@@ -318,6 +337,8 @@ public class OperationForm extends VerticalLayout {
             incompleteValidation = taskOperation.incompleteValidation();
             operation = taskOperation;
         }
+
+        operation.setConditions(conditionForm.getConditions());
 
         if (!incompleteValidation.isEmpty()){
             showErrorMessage(incompleteValidation);

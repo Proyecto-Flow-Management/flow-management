@@ -28,7 +28,7 @@ public class AlternativeForm extends VerticalLayout {
     public boolean editing;
     private Alternative alternative;
 
-    ConditionsForm conditionForm;
+    public ConditionsForm conditionForm;
 
     TextField label = new TextField("Label Alternative");
 

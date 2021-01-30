@@ -22,20 +22,20 @@ public class ConditionsForm extends HorizontalLayout {
     Condition actual;
 
     ComboBox<TypeOperation> listType = new ComboBox<>("Tipo Operacion");
-    Button agregarCondition = new Button("Add");
+    public Button agregarCondition = new Button("Add");
 
     // Panel Acciones Binarys
-    Button agregarBinaryEnBinary = new Button("Add Binary");
-    Button agregarUnaryABinary = new Button("Add Unary");
-    Button editarBinary = new Button("Editar");
-    Button eliminarBinary = new Button("Eliminar");
+    public Button agregarBinaryEnBinary = new Button("Add Binary");
+    public Button agregarUnaryABinary = new Button("Add Unary");
+    public Button editarBinary = new Button("Editar");
+    public Button eliminarBinary = new Button("Eliminar");
 
     // Panel Acciones Binarys
-    Button editarUnary = new Button("Editar");
-    Button eliminarUnary = new Button("Eliminar");
+    public Button editarUnary = new Button("Editar");
+    public Button eliminarUnary = new Button("Eliminar");
 
-    UnaryConditionForm unaryConditionForm = new UnaryConditionForm();
-    BinaryConditionForm binaryConditionForm;
+    public UnaryConditionForm unaryConditionForm = new UnaryConditionForm();
+    public BinaryConditionForm binaryConditionForm;
     ConditionTreeForm conditionTreeForm = new ConditionTreeForm();
 
     Condition editando;
@@ -165,7 +165,7 @@ public class ConditionsForm extends HorizontalLayout {
         this.opcionesBinary.setWidthFull();
         this.opcionesBinary.add(agregarBinaryEnBinary,
                                 agregarUnaryABinary,
-                                editarBinary);
+                                editarBinary,eliminarBinary);
 
         agregarBinaryEnBinary.addClickListener(buttonClickEvent -> showBinaryConditionForm());
         agregarUnaryABinary.addClickListener(buttonClickEvent -> showUnaryForm());
@@ -175,7 +175,7 @@ public class ConditionsForm extends HorizontalLayout {
 
         this.opcionesUnary = new HorizontalLayout();
         this.opcionesUnary.setWidthFull();
-        this.opcionesUnary.add(editarUnary);
+        this.opcionesUnary.add(editarUnary, eliminarUnary);
         this.opcionesUnary.setVisible(false);
         editarUnary.addClickListener(buttonClickEvent -> editarUnary());
 
@@ -185,6 +185,13 @@ public class ConditionsForm extends HorizontalLayout {
     private void deleteCondition()
     {
         alternative.deleteCondition(actual);
+        unaryConditionForm.setVisible(false);
+        binaryConditionForm.setVisible(false);
+        conditionTreeForm.conditions = alternative.getConditions();
+        conditionTreeForm.updateGrid();
+        this.opcionesBinary.setVisible(false);
+        this.opcionesUnary.setVisible(false);
+        this.agregarLayout.setVisible(true);
     }
 
     private void editarUnary() {

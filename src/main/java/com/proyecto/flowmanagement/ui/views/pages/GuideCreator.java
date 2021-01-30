@@ -142,10 +142,18 @@ public class GuideCreator extends VerticalLayout {
         actualizacionAlternativs();
         actualizacionCrecionStep();
         actualizacionEliminarStep();
+        actualizacionConditionsAlternatives();
         cambioGuia();
         //Actualizar Steps
         // Alternativs
         //Actuaalizar resumen
+    }
+
+    private void actualizacionConditionsAlternatives() {
+        stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.conditionForm.unaryConditionForm.save.addClickListener(buttonClickEvent -> actualizarGuiaActual());
+        stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.conditionForm.binaryConditionForm.save.addClickListener(buttonClickEvent -> actualizarGuiaActual());
+        stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.conditionForm.eliminarBinary.addClickListener(buttonClickEvent -> actualizarGuiaActual());
+        stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.conditionForm.eliminarUnary.addClickListener(buttonClickEvent -> actualizarGuiaActual());
     }
 
     private void actualizacionEliminarStep() {
