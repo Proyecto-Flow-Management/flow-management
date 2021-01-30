@@ -38,6 +38,7 @@ public class OperationForm extends VerticalLayout {
     public Boolean isValid = false;
     public Boolean editing;
 
+    FormLayout elementsForm = new FormLayout();
     Accordion accordionBasicInformation = new Accordion();
     VerticalLayout basicInformation = new VerticalLayout();
 
@@ -177,7 +178,7 @@ public class OperationForm extends VerticalLayout {
         alternativesIdsAccordion.setVisible(false);
 
         elements.setWidthFull();
-        FormLayout elementsForm = new FormLayout();
+
         elementsForm.add(name,label,comment,title,notifyOperationDelay,operationOrder,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation,operationType);
         elementsForm.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1),
@@ -203,16 +204,18 @@ public class OperationForm extends VerticalLayout {
             this.service.setRequired(true);
             this.service.setErrorMessage("Este campo es obligatorio.");
 
-            elements.remove(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix,groupLayout);
-            elements.add(simpleOperationType,service);
+            elementsForm.remove(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
+            elementsForm.add(simpleOperationType,service);
+            elements.remove(groupLayout);
         }
         else if(operationType== OperationType.taskOperation){
             this.taskOperationType.setRequired(true);
             this.taskOperationType.setErrorMessage("Debes seleccionar un tipo.");
             this.taskOperationType.setItems(TaskOperationType.values());
 
-            elements.remove(simpleOperationType,service);
-            elements.add(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix, groupLayout);
+            elementsForm.remove(simpleOperationType,service);
+            elementsForm.add(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
+            elements.add(groupLayout);
         }
     }
 
@@ -249,7 +252,6 @@ public class OperationForm extends VerticalLayout {
         inParametersLayout.add(inParameterGridLayout);
         inParameterAccordion.close();
         inParameterAccordion.add("InOperation", inParametersLayout);
-
 
         outParametersLayout.setWidthFull();
         outParameterAccordion.setWidthFull();
