@@ -11,6 +11,10 @@ public class ValidationServiceImpl
 {
     public List<String> validarGuia(Guide guide)
     {
-        return new LinkedList<>();
+        List<String> errores = new LinkedList<>();
+
+        errores.addAll(guide.validarGuia());
+
+        return  errores;
     }
 }

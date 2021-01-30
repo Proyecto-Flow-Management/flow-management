@@ -32,6 +32,7 @@ public class GuideCreator extends VerticalLayout {
     HorizontalLayout actualPanelLaayout;
     HorizontalLayout detailsPanelLayout;
     HorizontalLayout stepPanelLayout;
+    HorizontalLayout validatorPanelLayout;
     HorizontalLayout operationPanelLayout;
     HorizontalLayout guidePanelLayout;
     HorizontalLayout actionsLayout;
@@ -40,6 +41,7 @@ public class GuideCreator extends VerticalLayout {
     OperationGridForm operationGridForm;
     DetailsPanel detailsPanel;
     StepPanel stepPanel;
+    ValidatorPanel validatorPanel;
     GuidePanel guidePanel;
     GuideServiceImpl servicio = new GuideServiceImpl();
 
@@ -55,8 +57,6 @@ public class GuideCreator extends VerticalLayout {
         
         configureActualGuidePanel();
 
-        configureActions();
-
         configureElements();
 
         configureDetailsPanel();
@@ -67,11 +67,20 @@ public class GuideCreator extends VerticalLayout {
 
         configureOperatorPanel();
 
+        configureValidatorPanel();
+
         configureActions();
 
         configureInteractivitie();
 
         configureForm();
+    }
+
+    private void configureValidatorPanel() {
+        validatorPanelLayout = new HorizontalLayout();
+        validatorPanelLayout.setWidthFull();
+        validatorPanel = new ValidatorPanel();
+        validatorPanelLayout.add(validatorPanel);
     }
 
     private void configureActions() {
@@ -88,6 +97,7 @@ public class GuideCreator extends VerticalLayout {
     private void guardarGuias()
     {
         actualizarGuiaActual();
+        raiz.setGuides(new LinkedList<>());
         servicio.add(raiz);
     }
 
@@ -273,7 +283,14 @@ public class GuideCreator extends VerticalLayout {
     }
 
     private void configureForm() {
-        add(actualPanelLaayout,detailsPanelLayout,detailsPanel,guidePanelLayout,stepPanelLayout,operationPanelLayout,actionsLayout);
+        add(actualPanelLaayout,
+                detailsPanelLayout,
+                detailsPanel,
+                guidePanelLayout,
+                stepPanelLayout,
+                operationPanelLayout,
+                validatorPanelLayout,
+                actionsLayout);
     }
 
     private void actualizacionDeDetalles() {
@@ -319,12 +336,11 @@ public class GuideCreator extends VerticalLayout {
         actualGuidePanel.actualizarItems(raiz);
     }
 
-    private boolean validarGuia()
+    private void validarGuia()
     {
         actualizarGuiaActual();
-        ValidationServiceImpl servicioValidacion = new ValidationServiceImpl();
-        List<String> mensajes = servicioValidacion.validarGuia(raiz);
-        return true;
+
+        this.validatorPanel.actualizarGrilla(raiz);
     }
 
     private void mostrarMensajeError(String mensajeValidacion) {

@@ -104,9 +104,19 @@ public class Step extends AbstractEntity{
 
 		if(this.getAlternatives() == null || this.getAlternatives().size() == 0)
 			erroresEncontrados.add("El Step no contiene ningun Alternative");
+		else{
+			for (Alternative alternative: this.alternatives) {
+				erroresEncontrados.addAll(alternative.validarAltarnative());
+			}
+		}
 
 		if(this.getOperations() == null || this.getOperations().size() == 0)
 			erroresEncontrados.add("El Step no contiene ningun Operation");
+		else{
+			for (Operation operation: this.operations) {
+				//erroresEncontrados.addAll(operation.());
+			}
+		}
 
 		return erroresEncontrados;
 	}

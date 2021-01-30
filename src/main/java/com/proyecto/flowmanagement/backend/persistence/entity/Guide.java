@@ -103,7 +103,16 @@ public class Guide extends AbstractEntity {
 			erroresEncontrados.add("El campo MainStep es obligatorio");
 
 		if(this.steps == null || this.steps.size() == 0)
+		{
 			erroresEncontrados.add("La Guia no contiene ningun Step");
+		}
+		else
+		{
+			for (Step step:this.steps)
+			{
+				erroresEncontrados.addAll(step.validarStep());
+			}
+		}
 
 		return erroresEncontrados;
 	}
@@ -197,5 +206,27 @@ public class Guide extends AbstractEntity {
 		}
 
 		return flag;
+	}
+
+	public List<String>  validacionesEspeciales()
+	{
+		List<String> erroresEncontrados = new LinkedList<>();
+
+		erroresEncontrados = validarMainStep(erroresEncontrados);
+
+		return erroresEncontrados;
+	}
+
+	private List<String> validarMainStep(List<String> erroresEncontrados)
+	{
+		for (Step step:this.steps) {
+			if(step.getTextId()==this.mainStep)
+			{
+				return erroresEncontrados;
+			}
+		}
+		erroresEncontrados.add("La Guia de Name: " + this.name + " Tiene un Main Step el cual no corresponde con ningun Stap");
+
+		return erroresEncontrados;
 	}
 }
