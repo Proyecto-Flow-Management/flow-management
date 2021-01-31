@@ -4,6 +4,7 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
+import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
 import com.proyecto.flowmanagement.ui.views.panels.*;
@@ -11,10 +12,10 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +23,20 @@ import java.util.List;
 @org.springframework.stereotype.Component
 @Route(value = "CrearGuia", layout = MainLayout.class)
 @PageTitle("Crear Guia | Flow Management")
-public class GuideCreator extends VerticalLayout {
+public class GuideCreator extends VerticalLayout implements HasUrlParameter<String> {
+
+    @Override
+    public void setParameter(BeforeEvent event
+            , @OptionalParameter String parameter) {
+        if(parameter!=null) {
+            add(new H4("Parametro:" + parameter));
+            this.guideId = Integer.parseInt(parameter);
+        }
+    }
+
+    private int guideId;
+    private Guide guide;
+    GuideServiceImpl guideService = new GuideServiceImpl();
 
     HorizontalLayout actualPanelLaayout;
     HorizontalLayout detailsPanelLayout;
@@ -44,6 +58,10 @@ public class GuideCreator extends VerticalLayout {
 
     public GuideCreator()
     {
+//        if (guideId!=null) {
+//            this.guide = guideService.getById((long) guideId);
+//        }
+
         setSizeFull();
         
         configureActualGuidePanel();
