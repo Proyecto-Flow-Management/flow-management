@@ -1,5 +1,10 @@
 package com.proyecto.flowmanagement.ui.views.pages;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
+import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
+import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
+import com.proyecto.flowmanagement.backend.persistence.entity.Step;
+import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
 import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
 import com.proyecto.flowmanagement.backend.service.Impl.UserServiceImpl;
@@ -11,10 +16,12 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +33,18 @@ import java.util.stream.Collectors;
 @org.springframework.stereotype.Component
 @Route(value = "CrearGuia", layout = MainLayout.class)
 @PageTitle("Crear Guia | Flow Management")
-public class GuideCreator extends VerticalLayout {
+public class GuideCreator extends VerticalLayout implements HasUrlParameter<String> {
 
+    @Override
+    public void setParameter(BeforeEvent event
+            , @OptionalParameter String parameter) {
+        if(parameter!=null)
+            configureEditing(Long.parseLong(parameter));
+        else
+            setAsDefault();
+    }
+
+    boolean editing;
     GuideServiceImpl guideService;
 
     HorizontalLayout actualPanelLaayout;
@@ -76,19 +93,22 @@ public class GuideCreator extends VerticalLayout {
         configureInteractivitie();
 
         configureForm();
-
-        configureEditing();
     }
 
-    private void configureEditing() {
-        if(true)
-        {
-            raiz = new Guide();
-            raiz.editing = true;
-            cargarValorGrilla(raiz);
-            actualGuidePanel.actualizarItems(raiz);
-            actualGuidePanel.setVisible(raiz.getGuides() != null && raiz.getGuides().size() > 0);
-        }
+    private void configureEditing(long id) {
+        raiz = guideService.getById(id);
+        raiz.editing = true;
+        cargarValorGrilla(raiz);
+        actualGuidePanel.actualizarItems(raiz);
+        actualGuidePanel.setVisible(raiz.getGuides() != null && raiz.getGuides().size() > 0);
+        editing = true;
+    }
+
+    private void setAsDefault() {
+        raiz = new Guide();
+        raiz.editing = true;
+        cargarValorGrilla(raiz);
+        editing = false;
     }
 
     private void configureValidatorPanel() {
@@ -113,7 +133,11 @@ public class GuideCreator extends VerticalLayout {
     {
         actualizarGuiaActual();
         raiz.setGuides(new LinkedList<>());
-        guideService.add(raiz);
+
+        if(!editing)
+            guideService.add(raiz);
+        else
+            guideService.update(raiz);
     }
 
     private void configureActualGuidePanel()
@@ -237,7 +261,11 @@ public class GuideCreator extends VerticalLayout {
         this.operationGridForm.updateGrid();
 
         this.guidePanel.actualizarAtributos(guide);
-        this.guidePanel.name.setValue(guide.getName());
+
+        if(guide.getName() != null)
+             this.guidePanel.name.setValue(guide.getName());
+        else
+            this.guidePanel.name.setValue("");
     }
 
     private void actualizacionAlternativs()

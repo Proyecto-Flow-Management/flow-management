@@ -12,12 +12,18 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamRegistration;
+import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.VaadinSession;
 import org.springframework.stereotype.Component;
+import org.vaadin.stefan.LazyDownloadButton;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @Component
@@ -68,11 +74,9 @@ public class GuideList extends VerticalLayout {
 
         grid.addComponentColumn(guide ->{
                     Icon icon = new Icon("vaadin", "edit");
-                    Button botonEliminar = new Button(icon);
-                    icon.addClickListener(e -> {
-                        editGuide(guide.getId());
-                    });
-                    return  botonEliminar;
+                    Button botonEditar = new Button("", event -> UI.getCurrent().navigate("CrearGuia/" + guide.getId()));
+                    botonEditar.setIcon(icon);
+                    return  botonEditar;
                 }).setHeader("Editar");
 
         grid.addComponentColumn(guide ->{
@@ -86,11 +90,17 @@ public class GuideList extends VerticalLayout {
 
         grid.addComponentColumn(guide ->{
                     Icon icon = new Icon("vaadin", "external-link");
-                    Button botonEliminar = new Button(icon);
-                    botonEliminar.addClickListener(e -> {
-                        export(guide.getId());
-                    });
-                    return  botonEliminar;
+//                    Button botonEliminar = new Button(icon);
+                    LazyDownloadButton downloadButton = new LazyDownloadButton("",
+                            () -> guide.getName() + ".txt",
+                            () -> new ByteArrayInputStream(guide.getName().getBytes()) // ... create the input stream here
+                    );
+                    downloadButton.setIcon(icon);
+
+//                    botonEliminar.addClickListener(e -> {
+//                        export(guide.getId());
+//                    });
+                    return  downloadButton;
         }).setHeader("Exportar");
     }
 
