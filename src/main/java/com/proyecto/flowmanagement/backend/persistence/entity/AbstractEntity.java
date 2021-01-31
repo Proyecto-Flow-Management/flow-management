@@ -1,15 +1,15 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
+//Table NO
 
+    //auto
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Basic(fetch = FetchType.EAGER)
     private Long id;
 
     public Long getId() {

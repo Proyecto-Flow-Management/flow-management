@@ -1,10 +1,8 @@
 package com.proyecto.flowmanagement.ui.views.pages;
 
-import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
-import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
-import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
-import com.proyecto.flowmanagement.backend.persistence.entity.Step;
+import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
+import com.proyecto.flowmanagement.backend.service.Impl.UserServiceImpl;
 import com.proyecto.flowmanagement.backend.service.Impl.ValidationServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
@@ -19,6 +17,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +27,8 @@ import java.util.stream.Collectors;
 @Route(value = "CrearGuia", layout = MainLayout.class)
 @PageTitle("Crear Guia | Flow Management")
 public class GuideCreator extends VerticalLayout {
+
+    GuideServiceImpl guideService;
 
     HorizontalLayout actualPanelLaayout;
     HorizontalLayout detailsPanelLayout;
@@ -43,7 +44,6 @@ public class GuideCreator extends VerticalLayout {
     StepPanel stepPanel;
     ValidatorPanel validatorPanel;
     GuidePanel guidePanel;
-    GuideServiceImpl servicio = new GuideServiceImpl();
 
     public Button save = new Button("Guardar");
     public Button validar = new Button("Validar");
@@ -51,8 +51,10 @@ public class GuideCreator extends VerticalLayout {
     Guide raiz;
     Guide editado;
 
-    public GuideCreator()
+    public GuideCreator(@Autowired GuideServiceImpl guideService)
     {
+        this.guideService = guideService;
+
         setSizeFull();
         
         configureActualGuidePanel();
@@ -98,7 +100,7 @@ public class GuideCreator extends VerticalLayout {
     {
         actualizarGuiaActual();
         raiz.setGuides(new LinkedList<>());
-        servicio.add(raiz);
+        guideService.add(raiz);
     }
 
     private void configureActualGuidePanel()
