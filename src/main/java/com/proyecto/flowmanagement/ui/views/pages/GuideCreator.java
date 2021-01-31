@@ -76,6 +76,19 @@ public class GuideCreator extends VerticalLayout {
         configureInteractivitie();
 
         configureForm();
+
+        configureEditing();
+    }
+
+    private void configureEditing() {
+        if(true)
+        {
+            raiz = new Guide();
+            raiz.editing = true;
+            cargarValorGrilla(raiz);
+            actualGuidePanel.actualizarItems(raiz);
+            actualGuidePanel.setVisible(raiz.getGuides() != null && raiz.getGuides().size() > 0);
+        }
     }
 
     private void configureValidatorPanel() {
