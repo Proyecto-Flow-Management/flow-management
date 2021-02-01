@@ -29,7 +29,6 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     public void setParameter(BeforeEvent event
             , @OptionalParameter String parameter) {
         if(parameter!=null) {
-            add(new H4("Parametro:" + parameter));
             this.guideId = Integer.parseInt(parameter);
         }
     }
