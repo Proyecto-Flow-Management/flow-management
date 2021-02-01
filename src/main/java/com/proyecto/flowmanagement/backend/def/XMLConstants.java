@@ -10,8 +10,14 @@ public final class XMLConstants {
     public static final String IN_PARAMETER_XML_LOCATION = "src/main/resources/XMLResources/InParameterXML.xml";
     public static final String OUT_PARAMETER_XML_LOCATION = "src/main/resources/XMLResources/OutParameterXML.xml";
     public static final String ALTERNATIVE_XML_LOCATION = "src/main/resources/XMLResources/AlternativeXML.xml";
-    public static final String UNARY_CONDITION_XML = "src/main/resources/XMLResources/UnaryConditionForm.xml";
-    public static final String BINARY_CONDITION_XML = "src/main/resources/XMLResources/BinaryConditionXML.xml";
+    public static final String UNARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/UnaryConditionXML.xml";
+    public static final String BINARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/BinaryConditionXML.xml";
+    public static final String OPERATOR_UNO_UNARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/Operator1UnaryXML.xml";
+    public static final String OPERATOR_DOS_UNARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/Operator2UnaryXML.xml";
+    public static final String OPERATOR_UNO_BINARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/Operator1BinaryXML.xml";
+    public static final String OPERATOR_DOS_BINARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/Operator2BinaryXML.xml";
+    public static final String CONDITION_ENABLE_ALTERNATIVE_LOCATION = "src/main/resources/XMLResources/ConditionParameterXML.xml";
+
 
     //GUIDE ATTRIBUTES
     public static final String GUIDE_ELEMENT = "ttg:guide";
@@ -25,29 +31,33 @@ public final class XMLConstants {
     //STEPS ATTRIBUTES
     public static final String STEP_ELEMENT = "ttg:step";
     public static final String STEP_ID = "ttg:stepId";
-    public static final String  STEP_LABEL = "ttg:label";
-    public static final String  STEP_TEXT = "ttg:text";
+    public static final String STEP_LABEL = "ttg:label";
+    public static final String STEP_TEXT = "ttg:text";
 
     //ALTERNATIVES ATTRIBUTES
-    public static final String ALTERNATIVE = "ttg:alternative";
+    public static final String ALTERNATIVE_ELEMENT = "ttg:alternative";
     public static final String ALTERNATIVE_STEP_ID = "ttg:stepId";
     public static final String ALTERNATIVE_GUIDE_NAME = "ttg:guideName";
     public static final String ALTERNATIVE_LABEL = "ttg:label";
 
     //CONDITIONS
-    public static final String ALTERNATIVE_CONDITION = "ttg:condition";
+    public static final String UNARY_CONDITION_ELEMENT = "ttg:condition";
+    public static final String BINARY_CONDITION_ELEMENT = "ttg:condition";
+    public static final String CONDITION_ENABLE_ALTERNATIVE = "ttg:conditionsEnableAlternative";
 
     //UnaryConditions
     public static final String UNARY_CONDITION_OPERATION_NAME= "ttg:operationName";
+    public static final String UNARY_CONDITION_OPERATOR_UNO = "ttg:operator1";
+    public static final String UNARY_CONDITION_OPERATOR_DOS = "ttg:operator2";
     public static final String UNARY_CONDITION_FIELD= "ttg:field";
     public static final String UNARY_CONDITION_FIELD_TYPE= "ttg:fieldType";
     public static final String UNARY_CONDITION_OPERATOR= "ttg:operator";
     public static final String UNARY_CONDITION_VALUE= "ttg:value";
 
     //BinaryCondition
-    public static final String BINARY_CONDITION = "ttg:condition";
-    public static final String BINARY_OPERATOR = "ttg:operation";
-    public static final String BINARY_OPERATORS = "operator";
+    public static final String BINARY_CONDITION_OPERATION = "ttg:operation";
+    public static final String BINARY_CONDITION_OPERATOR_UNO = "ttg:operator1";
+    public static final String BINARY_CONDITION_OPERATOR_DOS = "ttg:operator2";
 
 
     //OPERATION ATTRIBUTES
@@ -68,7 +78,7 @@ public final class XMLConstants {
     public static final String OPERATION_NOTIFY_ALTERNATIVE = "ttg:notifyAlternative";
     public static final String OPERATION_ALTERNATIVE_IDS = "ttg:alternativeIds";
     public static final String OPERATION_NOTIFY_OPERATION = "ttg:notifyOperation";
-    public static final String OPERATION_OPERATION_IDS = "ttg:operationIds";
+    public static final String OPERATION_OPERATION_NOTIFY_IDS = "ttg:operationNotifyIds";
     public static final String OPERATION_NOTIFY_OPERATION_DELAY = "ttg:notifyOperationDelay";
     public static final String OPERATION_TYPE = "ttg:type";
     public static final String OPERATION_SERVICE = "ttg:servicio";
@@ -106,5 +116,6 @@ public final class XMLConstants {
 
     // AUX
     public static final String GUIDE_RESULT = "src/main/resources/XMLResources/GuideResult.xml";
+    public static final String AUX = "ttg:auxiliar";
 
 }

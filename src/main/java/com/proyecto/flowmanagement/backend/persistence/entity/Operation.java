@@ -2,6 +2,7 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
+import org.hibernate.ScrollableResults;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -37,7 +38,7 @@ public class Operation  extends AbstractEntity{
 	private Boolean pauseExecution;
 
 	@Column(name = "operationOrder")
-	private boolean operationOrder;
+	private String operationOrder;
 
 	@Column(name = "operationType")
 	@JoinColumn(name = "operation_id")
@@ -141,11 +142,11 @@ public class Operation  extends AbstractEntity{
 		this.pauseExecution = pauseExecution;
 	}
 
-	public boolean getOperationOrder() {
+	public String getOperationOrder() {
 		return operationOrder;
 	}
 
-	public void setOperationOrder(boolean operationOrder) {
+	public void setOperationOrder(String operationOrder) {
 		this.operationOrder = operationOrder;
 	}
 

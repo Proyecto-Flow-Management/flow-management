@@ -3,6 +3,7 @@ package com.proyecto.flowmanagement.backend.service.Impl;
 import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.def.SimpleOperationType;
 import com.proyecto.flowmanagement.backend.def.TaskOperationType;
+import com.proyecto.flowmanagement.backend.def.TypeOperation;
 import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import org.springframework.stereotype.Service;
 
@@ -14,139 +15,64 @@ public class MockTestServiceImpl {
 
     public Guide GetGuide(String name, String label, String mainStep)
     {
-
-        Guide guideNew = new Guide();
-
-        guideNew.setName(name);
-        guideNew.setLabel(label);
-        guideNew.setMainStep(mainStep);
+        Guide guide = new Guide();
+        guide.setName(name);
+        guide.setLabel(label);
+        guide.setMainStep(mainStep);
 
         List<Step> steps = new LinkedList<Step>();
 
-        Step stepOne = new Step();
+        Step step = new Step();
+        step.setTextId("StepId");
+        step.setLabel("Label");
+        step.setText("Description");
 
-        List<Alternative> stepAlternative = new LinkedList<Alternative>();
+        SimpleOperation simpleOperation = new SimpleOperation();
+        simpleOperation.setName("operationName");
+        simpleOperation.setLabel("operationLabel");
+        simpleOperation.setVisible(true);
+        simpleOperation.setOperationType(OperationType.simpleOperation);
+        simpleOperation.setType(SimpleOperationType.query);
+        simpleOperation.setService("query");
+        simpleOperation.setOperationOrder("1");
+        simpleOperation.setNotifyOperationDelay(20);
 
-        Alternative alternative1 = new Alternative();
-        alternative1.setNextStep("Prueba1");
-        Alternative alternative2 = new Alternative();
-        alternative2.setNextStep("Prueba2");
+        List<Condition> conditions = new LinkedList<Condition>();
 
-        stepAlternative.add(alternative1);
-        stepAlternative.add(alternative2);
+        Condition condition1 = new Condition();
+        condition1.setType(TypeOperation.unaryCondition);
+        condition1.setOperation("TINCO");
 
-        List<Operation> stepOperation = new LinkedList<Operation>();
+        ConditionParameter conditionParameter = new ConditionParameter();
+        conditionParameter.setField("descEstado");
+        conditionParameter.setFieldType("string");
+        conditionParameter.setOperator("=");
+        conditionParameter.setValue("ACTIVO");
 
-        List<Operation> guideOperation = new LinkedList<Operation>();
+        List<ConditionParameter> conditionParameters = new LinkedList<>();
+        conditionParameters.add(conditionParameter);
 
-        SimpleOperation operation1Guide = new SimpleOperation();
-        TaskOperation operation2Guide = new TaskOperation();
+        condition1.setConditionParameter(conditionParameters);
+        conditions.add(condition1);
 
-        OperationParameter operationParameter1 = new OperationParameter();
-        OperationParameter operationParameter2 = new OperationParameter();
-        operationParameter1.setName("parametro 1");
-        operationParameter1.setType("collection");
-        operationParameter1.setDescription("prueba 1");
-        operationParameter2.setName("parametro 2");
-        operationParameter2.setType("date");
-        operationParameter2.setDescription("prueba 2");
-        List<OperationParameter> parameters = new LinkedList<>();
-        parameters.add(operationParameter1);
-        parameters.add(operationParameter2);
+        simpleOperation.setConditions(conditions);
 
-        operation1Guide.setLabel("Label Operation 1 Guide Chito");
-        operation1Guide.setName("Name Operation 1 Guide");
-        operation1Guide.setVisible(true);
-        operation1Guide.setPreExecute(false);
-        operation1Guide.setComment("Probando Comment");
-        operation1Guide.setTitle("Probando Title");
-        operation1Guide.setPauseExecution(false);
-        operation1Guide.setOperationOrder(true);
-        operation1Guide.setOperationType(OperationType.simpleOperation);
-        operation1Guide.setInParameters(parameters);
-        operation1Guide.setNotifyAlternative(true);
-        operation1Guide.setAlternativeIds(stepAlternative);
-        operation1Guide.setType(SimpleOperationType.configuration);
-        operation1Guide.setService("service");
+        OperationParameter operationParameter = new OperationParameter();
+        operationParameter.setName("NameParameter");
+        operationParameter.setType("TypeParameter");
+        operationParameter.setDescription("DescriptionParameter");
 
-        operation2Guide.setLabel("Label Operation 2 Guide");
-        operation2Guide.setName("Name Operation 2 Guide");
-        operation2Guide.setOperationType(OperationType.taskOperation);
-        operation2Guide.setType(TaskOperationType.close);
+        List<OperationParameter> operationParameterList = new LinkedList<>();
+        operationParameterList.add(operationParameter);
 
+        simpleOperation.setInParameters(operationParameterList);
 
-        guideOperation.add(operation1Guide);
-        guideOperation.add(operation2Guide);
-        Alternative alternative1Step1 = new Alternative();
-        Alternative alternative2Step1 = new Alternative();
+        List<Operation> operations = new LinkedList<>();
+        operations.add(simpleOperation);
 
-        Operation operation1Step1 = new Operation();
-        Operation operation2Step1 = new Operation();
+        guide.setSteps(steps);
+        guide.setOperations(operations);
 
-        alternative1Step1.setLabel("CF_EA_CW_GESTIONABLE");
-
-        //Unary
-        UnaryCondition unaryCondition = new UnaryCondition();
-        unaryCondition.setOperationName("ACS_getCPEidByInternalNumber");
-        ConditionParameter conditionParameterUnary = new ConditionParameter();
-        conditionParameterUnary.setField("gestionable");
-        conditionParameterUnary.setFieldType("string");
-        conditionParameterUnary.setOperator("=");
-        conditionParameterUnary.setValue("HABILITADA");
-        //alternative1Step1.setConditions(unaryCondition.);
-
-
-        // BinaryCondition
-        List<UnaryCondition> listUnary = new LinkedList<>();
-
-        BinaryCondition binaryCondition = new BinaryCondition();
-        binaryCondition.setOperator("OR");
-
-        UnaryCondition unaryCondition1A2 = new UnaryCondition();
-        unaryCondition1A2.setOperationName("consultaEstadoGSF");
-        ConditionParameter conditionParameterO1A2 = new ConditionParameter();
-        conditionParameterO1A2.setField("consultaEstadoGSF.estado_pon.phase_state");
-        conditionParameterO1A2.setFieldType("string");
-        conditionParameterO1A2.setOperator("=");
-        conditionParameterO1A2.setValue("OK");
-
-        UnaryCondition unaryCondition2A2 = new UnaryCondition();
-        unaryCondition2A2.setOperationName("consultaEstadoGSF");
-        ConditionParameter conditionParameterO2A2 = new ConditionParameter();
-        conditionParameterO2A2.setField("consultaEstadoGSF.estado_pon.phase_state");
-        conditionParameterO2A2.setFieldType("string");
-        conditionParameterO2A2.setOperator("=");
-        conditionParameterO2A2.setValue("SIN INFORMACION");
-
-        listUnary.add(unaryCondition1A2);
-        listUnary.add(unaryCondition2A2);
-
-        binaryCondition.setConditions(listUnary);
-        //alternative2Step1.setBinaryConditions(binaryCondition);
-
-        alternative2Step1.setLabel("Label Alternative 2 Step 1");
-
-        stepAlternative.add(alternative1Step1);
-        stepAlternative.add(alternative2Step1);
-        stepOne.setAlternatives(stepAlternative);
-
-        operation1Step1.setLabel("Label Operation 1 Step 1");
-        operation1Step1.setName("Name Operation 1 Step 1");
-        operation2Step1.setLabel("Label Operation 2 Step 1");
-        operation2Step1.setName("Name Operation 2 Step 1");
-
-        stepOperation.add(operation1Step1);
-        stepOperation.add(operation2Step1);
-        stepOne.setOperations(stepOperation);
-
-        stepOne.setLabel("Label TEST 1");
-        stepOne.setText("Name TEST 1");
-
-        steps.add(stepOne);
-
-        guideNew.setOperations(guideOperation);
-        guideNew.setSteps(steps);
-
-        return guideNew;
+        return guide;
     }
 }

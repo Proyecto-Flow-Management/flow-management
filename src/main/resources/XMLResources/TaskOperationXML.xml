@@ -1,6 +1,24 @@
 <ttg:operation xsi:type="ttg:TaskOperation">
     <ttg:name></ttg:name>
     <ttg:label></ttg:label>
+    <ttg:visible></ttg:visible>
+    <ttg:preExecute></ttg:preExecute>
+    <ttg:comment></ttg:comment>
+    <ttg:title></ttg:title>
+    <ttg:automatic></ttg:automatic>
+    <ttg:pauseExecution></ttg:pauseExecution>
+    <ttg:operationOrder></ttg:operationOrder>
     <ttg:operationType></ttg:operationType>
     <ttg:type></ttg:type>
+    <ttg:targetSystem></ttg:targetSystem>
+    <ttg:candidateGroups></ttg:candidateGroups>
+    <ttg:mailTemplate></ttg:mailTemplate>
+    <ttg:mailTo></ttg:mailTo>
+    <ttg:mailSubjectPrefix></ttg:mailSubjectPrefix>
+    <ttg:outParameters></ttg:outParameters>
+    <ttg:notifyAlternative></ttg:notifyAlternative>
+    <ttg:alternativeIds></ttg:alternativeIds>
+    <ttg:notifyOperation></ttg:notifyOperation>
+    <ttg:operationNotifyIds></ttg:operationNotifyIds>
+    <ttg:notifyOperationDelay></ttg:notifyOperationDelay>
 </ttg:operation>

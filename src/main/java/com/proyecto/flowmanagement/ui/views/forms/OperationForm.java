@@ -209,7 +209,7 @@ public class OperationForm extends HorizontalLayout {
                 operation.setPauseExecution(Boolean.FALSE);
             }
             if (!operationOrder.isEmpty()){
-                operation.setOperationOrder(true);
+                operation.setOperationOrder("");
             }
             operation.setOperationType(operationType.getValue());
             if (this.visible.getValue() == "True"){

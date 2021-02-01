@@ -1,89 +1,32 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide" xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide"
+           xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <ttg:name>Configuracion Equipo Antel</ttg:name>
-    <ttg:label>Conf_equipo_antel</ttg:label>
-    <ttg:mainStepId>CF_EQUIPO_ANTEL</ttg:mainStepId>
+    <ttg:mainStepId>MainStep</ttg:mainStepId>
 
-    <ttg:step>
-        <ttg:stepId>CF_EQUIPO_ANTEL</ttg:stepId>
-        <ttg:label>Equipo Antel</ttg:label>
-        <ttg:text>Consultar al cliente qué desea configurar</ttg:text>
-
-        <ttg:alternative>
-            <ttg:stepId>CF_EA_CLAVE_WIFI</ttg:stepId>
-            <ttg:guideName>guide_internet_Conf_EqAntel_Wifi</ttg:guideName>
-            <ttg:label>Cambio clave wifi</ttg:label>
-            <ttg:condition xsi:type="ttg:UnaryCondition">
-                <ttg:operationName>consultaEstadoGSF</ttg:operationName>
-                <ttg:conditionsEnableAlternative>
-                    <ttg:field>consultaEstadoGSF.estado_pon.phase_state</ttg:field>
-                    <ttg:fieldType>string</ttg:fieldType>
-                    <ttg:operator>=</ttg:operator>
-                    <ttg:value>OK</ttg:value>
-                </ttg:conditionsEnableAlternative>
-            </ttg:condition>
-        </ttg:alternative>
-
-        <ttg:operation xsi:type="ttg:TaskOperation">
-            <ttg:name>gpr-post</ttg:name>
-            <ttg:targetSystem>GPR</ttg:targetSystem>
-            <ttg:label>Configurar IPv6</ttg:label>
-            <ttg:automatic>false</ttg:automatic>
-            <ttg:operationOrder>1</ttg:operationOrder>
-            <ttg:title>Deriva reclamo a ATSM</ttg:title>
-            <ttg:comment>Se debe informar al cliente que personal tecnico lo llamara a la brevedad.</ttg:comment>
-            <ttg:inParameters>
-                <ttg:name>diagnosticCode</ttg:name>
-                <ttg:label>Diagnostico</ttg:label>
-                <ttg:required>true</ttg:required>
-                <ttg:visible>true</ttg:visible>
-                <ttg:type>string</ttg:type>
-                <ttg:enable>false</ttg:enable>
-                <ttg:value>CONFIGURACION</ttg:value>
-            </ttg:inParameters>
-            <ttg:inParameters>
-                <ttg:name>contact_contactName</ttg:name>
-                <ttg:visible>true</ttg:visible>
-                <ttg:label>Nombre de contacto</ttg:label>
-                <ttg:enable>true</ttg:enable>
-                <ttg:type>string</ttg:type>
-                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-                <ttg:sourceValueEntityProperty>contactClaimant:contactName</ttg:sourceValueEntityProperty>
-            </ttg:inParameters>
-            <ttg:inParameters>
-                <ttg:name>contactTime_from</ttg:name>
-                <ttg:visible>false</ttg:visible>
-                <ttg:label>Hora desde</ttg:label>
-                <ttg:enable>false</ttg:enable>
-                <ttg:type>string</ttg:type>
-                <ttg:value>00:00</ttg:value>
-            </ttg:inParameters>
-            <ttg:inParameters>
-                <ttg:name>contactTime_to</ttg:name>
-                <ttg:visible>false</ttg:visible>
-                <ttg:label>Hora hasta</ttg:label>
-                <ttg:enable>false</ttg:enable>
-                <ttg:type>string</ttg:type>
-                <ttg:value>23:59</ttg:value>
-            </ttg:inParameters>
-            <ttg:inParameters>
-                <ttg:name>contactTime_daysOfWeek</ttg:name>
-                <ttg:visible>false</ttg:visible>
-                <ttg:enable>false</ttg:enable>
-                <ttg:type>string</ttg:type>
-                <ttg:value>[1]</ttg:value>
-            </ttg:inParameters>
-            <ttg:inParameters>
-                <ttg:name>contact_contactMechanisms_Phone</ttg:name>
-                <ttg:visible>true</ttg:visible>
-                <ttg:label>Telefono de contacto</ttg:label>
-                <ttg:enable>true</ttg:enable>
-                <ttg:type>string</ttg:type>
-                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-                <ttg:sourceValueEntityProperty>contactClaimant:contactMechanisms.Phone</ttg:sourceValueEntityProperty>
-            </ttg:inParameters>
-            <ttg:operationType>taskOperation</ttg:operationType>
-            <ttg:type>delegate</ttg:type>
-        </ttg:operation>
-    </ttg:step>
+    <ttg:operation xsi:type="ttg:SimpleOperation">
+        <ttg:name>operationName</ttg:name>
+        <ttg:label>operationLabel</ttg:label>
+        <ttg:visible>true</ttg:visible>
+        <ttg:operationOrder>1</ttg:operationOrder>
+        <ttg:operationType>simpleOperation</ttg:operationType>
+        <ttg:type>query</ttg:type>
+        <ttg:servicio>query</ttg:servicio>
+        <ttg:inParameters>
+            <ttg:name>NameParameter</ttg:name>
+            <ttg:type>TypeParameter</ttg:type>
+            <ttg:description>DescriptionParameter</ttg:description>
+        </ttg:inParameters>
+        <ttg:condition xsi:type="ttg:UnaryCondition">
+            <ttg:operationName>TINCO</ttg:operationName>
+            <ttg:conditionsEnableAlternative>
+                <ttg:field>descEstado</ttg:field>
+                <ttg:fieldType>string</ttg:fieldType>
+                <ttg:operator>=</ttg:operator>
+                <ttg:value>ACTIVO</ttg:value>
+            </ttg:conditionsEnableAlternative>
+        </ttg:condition>
+        <ttg:notifyOperationDelay>20</ttg:notifyOperationDelay>
+    </ttg:operation>
 </ttg:guide>

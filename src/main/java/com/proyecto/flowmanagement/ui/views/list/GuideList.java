@@ -31,7 +31,7 @@ public class GuideList extends VerticalLayout {
 
     public GuideList(GuideServiceImpl guideService) {
         this.guideService = guideService;
-        //test();
+        test();
         addClassName("create-guide-view");
         setSizeFull();
         configureGrid();
@@ -56,11 +56,8 @@ public class GuideList extends VerticalLayout {
     public void test(){
         GuideGeneratorServiceImp test = new GuideGeneratorServiceImp();
         MockTestServiceImpl mock = new MockTestServiceImpl();
-        List<Guide> myGuide = guideService.getAll();
-        if (!myGuide.isEmpty())
-        {
-            test.GuidePrint(myGuide.get(0));
-        }
+        Guide guide = mock.GetGuide("Guia","Label", "MainStep");
+        test.GuidePrint(guide);
     }
 
     private void updateList() {
