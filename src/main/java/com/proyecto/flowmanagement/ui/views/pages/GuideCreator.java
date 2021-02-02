@@ -237,6 +237,9 @@ public class GuideCreator extends VerticalLayout {
         this.operationGridForm.updateGrid();
 
         this.guidePanel.actualizarAtributos(guide);
+        if (guide.getName() == null) {
+            guide.setName("");
+        }
         this.guidePanel.name.setValue(guide.getName());
     }
 

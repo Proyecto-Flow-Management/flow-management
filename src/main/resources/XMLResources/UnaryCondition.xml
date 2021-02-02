@@ -1,9 +1,0 @@
-<ttg:condition xsi:type="ttg:UnaryCondition">
-    <ttg:operationName></ttg:operationName>
-    <ttg:conditionsEnableAlternative>
-        <ttg:field></ttg:field>
-        <ttg:fieldType></ttg:fieldType>
-        <ttg:operator></ttg:operator>
-        <ttg:value></ttg:value>
-    </ttg:conditionsEnableAlternative>
-</ttg:condition>

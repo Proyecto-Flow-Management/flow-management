@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ttg:guide xmlns:vc="test"
-       xmlns:ttg="test"
+           xmlns:ttg="test"
            xmlns:xsi=""
            xmlns:schemaLocation="test">
 
             <ttg:mainStepId></ttg:mainStepId>
-
+            <ttg:auxiliar></ttg:auxiliar>
 </ttg:guide>
