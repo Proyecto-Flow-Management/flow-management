@@ -55,6 +55,22 @@ public class MockTestServiceImpl {
         condition1.setConditionParameter(conditionParameters);
         conditions.add(condition1);
 
+        List<Alternative> alternatives = new LinkedList<>();
+        Alternative alternative1 = new Alternative();
+        alternative1.setNextStep("alternative1");
+        Alternative alternative2 = new Alternative();
+        alternative2.setNextStep("alternative2");
+        Alternative alternative3 = new Alternative();
+        alternative3.setNextStep("alternative3");
+        Alternative alternative4 = new Alternative();
+        alternative4.setNextStep("alternative4");
+        alternatives.add(alternative1);
+        alternatives.add(alternative2);
+        alternatives.add(alternative3);
+        alternatives.add(alternative4);
+
+        simpleOperation.setAlternativeIds(alternatives);
+
         simpleOperation.setConditions(conditions);
 
         OperationParameter operationParameter = new OperationParameter();
@@ -70,8 +86,10 @@ public class MockTestServiceImpl {
         List<Operation> operations = new LinkedList<>();
         operations.add(simpleOperation);
 
+        step.setOperations(operations);
+        steps.add(step);
         guide.setSteps(steps);
-        guide.setOperations(operations);
+        //guide.setOperations(operations);
 
         return guide;
     }

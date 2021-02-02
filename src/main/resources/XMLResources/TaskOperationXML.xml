@@ -17,8 +17,6 @@
     <ttg:mailSubjectPrefix></ttg:mailSubjectPrefix>
     <ttg:outParameters></ttg:outParameters>
     <ttg:notifyAlternative></ttg:notifyAlternative>
-    <ttg:alternativeIds></ttg:alternativeIds>
     <ttg:notifyOperation></ttg:notifyOperation>
-    <ttg:operationNotifyIds></ttg:operationNotifyIds>
     <ttg:notifyOperationDelay></ttg:notifyOperationDelay>
 </ttg:operation>

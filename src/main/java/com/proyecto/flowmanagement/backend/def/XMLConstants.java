@@ -10,6 +10,7 @@ public final class XMLConstants {
     public static final String IN_PARAMETER_XML_LOCATION = "src/main/resources/XMLResources/InParameterXML.xml";
     public static final String OUT_PARAMETER_XML_LOCATION = "src/main/resources/XMLResources/OutParameterXML.xml";
     public static final String ALTERNATIVE_XML_LOCATION = "src/main/resources/XMLResources/AlternativeXML.xml";
+    public static final String REFERENCE_DOC_XML_LOCATION = "src/main/resources/XMLResources/ReferenceDocXML.xml";
     public static final String UNARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/UnaryConditionXML.xml";
     public static final String BINARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/BinaryConditionXML.xml";
     public static final String OPERATOR_UNO_UNARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/Operator1UnaryXML.xml";
@@ -17,7 +18,11 @@ public final class XMLConstants {
     public static final String OPERATOR_UNO_BINARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/Operator1BinaryXML.xml";
     public static final String OPERATOR_DOS_BINARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/Operator2BinaryXML.xml";
     public static final String CONDITION_ENABLE_ALTERNATIVE_LOCATION = "src/main/resources/XMLResources/ConditionParameterXML.xml";
-
+    public static final String ALTERNATIVE_IDS_XML_LOCATION = "src/main/resources/XMLResources/AlternativeIdsXML.xml";
+    public static final String OPERATION_NOTIFY_IDS_XML_LOCATION = "src/main/resources/XMLResources/OperationNotifyIdsXML.xml";
+    public static final String CANDIDATE_GROUPS_XML_LOCATION = "src/main/resources/XMLResources/CandidateGroupsXML.xml";
+    public static final String CONVERTION_XML_LOCATION = "src/main/resources/XMLResources/ConvertionXML.xml";
+    public static final String VALIDATE_CROSS_FIELD_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/ValidateCrossFieldConditionXML.xml";
 
     //GUIDE ATTRIBUTES
     public static final String GUIDE_ELEMENT = "ttg:guide";
@@ -39,6 +44,11 @@ public final class XMLConstants {
     public static final String ALTERNATIVE_STEP_ID = "ttg:stepId";
     public static final String ALTERNATIVE_GUIDE_NAME = "ttg:guideName";
     public static final String ALTERNATIVE_LABEL = "ttg:label";
+
+    //ReferenceDocs Attributes
+    public static final String REFERENCE_DOC_ELEMENT = "ttg:referenceDoc";
+    public static final String REFERENCE_DOC_MIME_TYPE = "ttg:mimeType";
+    public static final String REFERENCE_DOC_URL = "ttg:url";
 
     //CONDITIONS
     public static final String UNARY_CONDITION_ELEMENT = "ttg:condition";
@@ -74,7 +84,6 @@ public final class XMLConstants {
     public static final String OPERATION_OPERATION_TYPE = "ttg:operationType";
     public static final String OPERATION_IN_PARAMETERS = "ttg:inParameters";
     public static final String OPERATION_OUT_PARAMETERS = "ttg:outParameters";
-    public static final String OPERATION_CONDITION = "ttg:condition";
     public static final String OPERATION_NOTIFY_ALTERNATIVE = "ttg:notifyAlternative";
     public static final String OPERATION_ALTERNATIVE_IDS = "ttg:alternativeIds";
     public static final String OPERATION_NOTIFY_OPERATION = "ttg:notifyOperation";
@@ -87,6 +96,8 @@ public final class XMLConstants {
     public static final String OPERATION_MAIL_TEMPLATE = "ttg:mailTemplate";
     public static final String OPERATION_MAIL_TO = "ttg:mailTo";
     public static final String OPERATION_MAIL_SUBJECT_PREFIX = "ttg:mailSubjectPrefix";
+
+    public static final String CANDIDATE_GROUPS_GROUP_NAME = "ttg:groupName";
 
     //OPERATION PARAMETER ATTRIBUTES
     public static final String PARAMETER_IN_ELEMENT = "ttg:inParameters";
@@ -113,6 +124,16 @@ public final class XMLConstants {
     public static final String PARAMETER_CONVERT_CONDITION = "ttg:convertCondition";
     public static final String PARAMETER_VALIDATE_CROSS_FIELD_CONDITION = "ttg:validateCrossFieldCondition";
     public static final String PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS = "ttg:valueWhenInParameterEquals";
+
+    //Convertion Attributes
+    public static final String CONVERTION_CONDITION = "ttg:condition";
+    public static final String CONVERTION_SOURCE_UNIT = "ttg:sourceUnit";
+    public static final String CONVERTION_DESTINATION_UNIT = "ttg:destinationUnit";
+
+    //ValidateCrossFieldCondition Attributes
+    public static final String VALIDATE_CROSS_FIELD_CONDITION_FIELD_NAME_ = "ttg:fieldName";
+    public static final String VALIDATE_CROSS_FIELD_CONDITION_CONDITION_ = "ttg:condition";
+    public static final String VALIDATE_CROSS_FIELD_CONDITION_MESSAGE_ERROR = "ttg:messageError";
 
     // AUX
     public static final String GUIDE_RESULT = "src/main/resources/XMLResources/GuideResult.xml";

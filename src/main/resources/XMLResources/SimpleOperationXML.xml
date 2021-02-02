@@ -11,10 +11,7 @@
     <ttg:operationType></ttg:operationType>
     <ttg:type></ttg:type>
     <ttg:servicio></ttg:servicio>
-    <ttg:outParameters></ttg:outParameters>
     <ttg:notifyAlternative></ttg:notifyAlternative>
-    <ttg:alternativeIds></ttg:alternativeIds>
     <ttg:notifyOperation></ttg:notifyOperation>
-    <ttg:operationNotifyIds></ttg:operationNotifyIds>
     <ttg:notifyOperationDelay></ttg:notifyOperationDelay>
 </ttg:operation>

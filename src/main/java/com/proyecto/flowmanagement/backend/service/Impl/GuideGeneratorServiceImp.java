@@ -5,24 +5,20 @@ import com.proyecto.flowmanagement.backend.def.TypeOperation;
 import com.proyecto.flowmanagement.backend.def.XMLConstants;
 import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import org.springframework.stereotype.Service;
-import com.google.common.collect.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
+import javax.xml.transform.*;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Parameter;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -40,8 +36,6 @@ public class GuideGeneratorServiceImp {
 
             doc = configureStepsXML(doc, guide);
 
-            doc = configureOperationsXML(doc, guide);
-
             printResult(doc);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -56,8 +50,9 @@ public class GuideGeneratorServiceImp {
         transformer.transform(domSource, streamResult);
     }
 
-    private Document configureGuidXML(Document doc, Guide guide) {
+    private Document configureGuidXML(Document doc, Guide guide) throws ParserConfigurationException, TransformerException, SAXException, IOException {
         Node guideHeader = doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT).item(0);
+
         Node mainStepID = doc.getElementsByTagName(XMLConstants.MAIN_STEP_ID).item(0);
         mainStepID.setTextContent(guide.getMainStep());
 
@@ -72,6 +67,21 @@ public class GuideGeneratorServiceImp {
         xmlnsttg.setTextContent(XMLConstants.XMLNS_TTG);
         xmlnsxsi.setTextContent(XMLConstants.XMLNS_XSI);
         schemaLocation.setTextContent(XMLConstants.XMLNS_SCHEMALOCATION);
+
+        Node newOperation = doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT).item(0);
+        Node refNode = doc.getElementsByTagName(XMLConstants.AUX).item(0);
+
+        if (guide.getOperations() != null){
+            for (Operation operation : guide.getOperations()) {
+                Node op = configureOperationsXML(doc, operation, guide.getOperations());
+                newOperation.insertBefore(doc.importNode(op,true), refNode);
+            }
+        }
+
+        Node docOp = doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT).item(0);
+        Node node = doc.getElementsByTagName(XMLConstants.AUX).item(0);
+        docOp.removeChild(node.getNextSibling());
+        docOp.removeChild(node);
 
         return doc;
     }
@@ -91,13 +101,28 @@ public class GuideGeneratorServiceImp {
                 Node textStep = docStep.getElementsByTagName(XMLConstants.STEP_TEXT).item(0);
                 textStep.setTextContent(step.getText());
 
-
                 Node newStep = docStep.getElementsByTagName(XMLConstants.STEP_ELEMENT).item(0);
                 Node refNode = docStep.getElementsByTagName(XMLConstants.AUX).item(0);
 
-                for (Alternative alternative : step.getAlternatives()) {
-                    Node alt = configureAlternativesXML(doc, alternative);
-                    newStep.insertBefore(docStep.importNode(alt,true), refNode);
+                if(step.getAlternatives() != null){
+                    for (Alternative alternative : step.getAlternatives()) {
+                        Node alt = configureAlternativesXML(doc, alternative);
+                        newStep.insertBefore(docStep.importNode(alt,true), refNode);
+                    }
+                }
+
+                if (step.getOperations() != null){
+                    for (Operation operation : step.getOperations()) {
+                        Node op = configureOperationsXML(doc, operation, null);
+                        newStep.insertBefore(docStep.importNode(op,true), refNode);
+                    }
+                }
+
+                if(step.getStepDocuments() != null){
+                    for (StepDocument referenceDoc : step.getStepDocuments()) {
+                        Node refDoc = configureReferenceDocsXML(doc, referenceDoc);
+                        newStep.insertBefore(docStep.importNode(refDoc,true), refNode);
+                    }
                 }
 
                 Node docOp = docStep.getElementsByTagName(XMLConstants.STEP_ELEMENT).item(0);
@@ -111,6 +136,23 @@ public class GuideGeneratorServiceImp {
             System.out.println(ex.getMessage());
         }
         return doc;
+    }
+
+    private Node configureReferenceDocsXML(Document doc, StepDocument referenceDoc) throws ParserConfigurationException, IOException, SAXException {
+        File file = new File(XMLConstants.REFERENCE_DOC_XML_LOCATION);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document docReferenceDocs = dBuilder.parse(file);
+
+        Node mimeType = docReferenceDocs.getElementsByTagName(XMLConstants.REFERENCE_DOC_MIME_TYPE).item(0);
+        Node url = docReferenceDocs.getElementsByTagName(XMLConstants.REFERENCE_DOC_URL).item(0);
+
+        //mimeType.setTextContent(referenceDoc.getMimeType());
+        url.setTextContent(referenceDoc.getUrl());
+
+        Node newRefDoc = docReferenceDocs.getElementsByTagName(XMLConstants.REFERENCE_DOC_ELEMENT).item(0);
+
+        return newRefDoc;
     }
 
     private Node configureAlternativesXML(Document doc, Alternative alternative) throws ParserConfigurationException, IOException, org.xml.sax.SAXException, TransformerException {
@@ -135,7 +177,6 @@ public class GuideGeneratorServiceImp {
             for (Condition condition : alternative.getConditions()) {
                 Node cond = configureConditions(doc, condition, "");
                 newAlt.insertBefore(docAlternative.importNode(cond,true), refNode);
-                //newAlt.appendChild(docAlternative.importNode(cond, true));
             }
         }
 
@@ -147,305 +188,306 @@ public class GuideGeneratorServiceImp {
         return newAlt;
     }
 
-    private Document configureOperationsXML(Document doc, Guide guide) {
-        try {
-            for (Operation operation : guide.getOperations()) {
-                File file = null;
-                if (operation.getOperationType() == OperationType.simpleOperation) {
-                    file = new File(XMLConstants.SIMPLE_OPERATION_XML_LOCATION);
-                } else if (operation.getOperationType() == OperationType.taskOperation) {
-                    file = new File(XMLConstants.TASK_OPERATION_XML_LOCATION);
-                }
+    private Node configureOperationsXML(Document doc, Operation operation, List<Operation> operations) throws ParserConfigurationException, IOException, SAXException, TransformerException {
 
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                Document docOperation = dBuilder.parse(file);
-
-                Node nameOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_NAME).item(0);
-                nameOperation.setTextContent(operation.getName());
-                Node labelOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_LABEL).item(0);
-                labelOperation.setTextContent(operation.getLabel());
-
-                if (operation.getVisible() != null){
-                    Node visible = docOperation.getElementsByTagName(XMLConstants.OPERATION_VISIBLE).item(0);
-                    visible.setTextContent(String.valueOf(operation.getVisible()));
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_VISIBLE).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getPreExecute() != null){
-                    Node preExecute = docOperation.getElementsByTagName(XMLConstants.OPERATION_PRE_EXECUTE).item(0);
-                    preExecute.setTextContent(String.valueOf(operation.getPreExecute()));
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_PRE_EXECUTE).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getComment() != null){
-                    Node comment = docOperation.getElementsByTagName(XMLConstants.OPERATION_COMMENT).item(0);
-                    comment.setTextContent(operation.getComment());
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_COMMENT).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getTitle() != null){
-                    Node title = docOperation.getElementsByTagName(XMLConstants.OPERATION_TITLE).item(0);
-                    title.setTextContent(operation.getTitle());
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_TITLE).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getAutomatic() != null){
-                    Node automatic = docOperation.getElementsByTagName(XMLConstants.OPERATION_AUTOMATIC).item(0);
-                    automatic.setTextContent(String.valueOf(operation.getAutomatic()));
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_AUTOMATIC).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getPauseExecution() != null){
-                    Node pauseExecution = docOperation.getElementsByTagName(XMLConstants.OPERATION_PAUSE_EXECUTION).item(0);
-                    pauseExecution.setTextContent(String.valueOf(operation.getPauseExecution()));
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_PAUSE_EXECUTION).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getOperationOrder() != null){
-                    Node operationOrder = docOperation.getElementsByTagName(XMLConstants.OPERATION_OPERATION_ORDER).item(0);
-                    operationOrder.setTextContent(operation.getOperationOrder());
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_OPERATION_ORDER).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                Node operationTypeOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_OPERATION_TYPE).item(0);
-                operationTypeOperation.setTextContent(operation.getOperationType().name());
-
-                if (operation.getOperationType() == OperationType.simpleOperation) {
-                    SimpleOperation simpleOperation = (SimpleOperation) operation;
-                    Node typeOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_TYPE).item(0);
-                    typeOperation.setTextContent(simpleOperation.getType().name());
-                    Node serviceOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_SERVICE).item(0);
-                    serviceOperation.setTextContent(simpleOperation.getService());
-                } else if (operation.getOperationType() == OperationType.taskOperation) {
-                    TaskOperation taskOperation = (TaskOperation) operation;
-                    Node typeOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_TYPE).item(0);
-                    typeOperation.setTextContent(taskOperation.getType().name());
-
-                    if (taskOperation.getTargetSystem() != null){
-                        Node targetSystem = docOperation.getElementsByTagName(XMLConstants.OPERATION_TARGET_SYSTEM).item(0);
-                        targetSystem.setTextContent(taskOperation.getTargetSystem());
-                    }else{
-                        Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                        Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_TARGET_SYSTEM).item(0);
-                        docOp.removeChild(node.getNextSibling());
-                        docOp.removeChild(node);
-                    }
-
-                    if (taskOperation.getCandidateGroups() != null){
-                        //candidategroups
-                    }else{
-                        Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                        Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_CANDIDATE_GROUPS).item(0);
-                        docOp.removeChild(node.getNextSibling());
-                        docOp.removeChild(node);
-                    }
-
-                    if (taskOperation.getMailTemplate() != null){
-                        Node mailTemplate = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TEMPLATE).item(0);
-                        mailTemplate.setTextContent(taskOperation.getMailTemplate());
-                    }else{
-                        Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                        Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TEMPLATE).item(0);
-                        docOp.removeChild(node.getNextSibling());
-                        docOp.removeChild(node);
-                    }
-
-                    if (taskOperation.getMailTo() != null){
-                        Node mailTo = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TO).item(0);
-                        mailTo.setTextContent(taskOperation.getMailTo());
-                    }else{
-                        Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                        Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TO).item(0);
-                        docOp.removeChild(node.getNextSibling());
-                        docOp.removeChild(node);
-                    }
-
-                    if (taskOperation.getMailSubjectPrefix() != null){
-                        Node mailSubjectPrefix = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_SUBJECT_PREFIX).item(0);
-                        mailSubjectPrefix.setTextContent(taskOperation.getMailSubjectPrefix());
-                    }else{
-                        Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                        Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_SUBJECT_PREFIX).item(0);
-                        docOp.removeChild(node.getNextSibling());
-                        docOp.removeChild(node);
-                    }
-                }
-
-                if (operation.getInParameters() != null){
-
-                    Node newPar = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
-
-                    for (OperationParameter operationParameter : operation.getInParameters()) {
-                        Node param = configureParameter(doc, operationParameter, XMLConstants.PARAMETER_IN_ELEMENT);
-                        newPar.insertBefore(docOperation.importNode(param, true), refNode);
-                    }
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_IN_PARAMETERS).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getOutParameters() != null){
-
-                    Node newPar = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
-
-                    for (OperationParameter operationParameter : operation.getOutParameters()) {
-                        Node param = configureParameter(doc, operationParameter, XMLConstants.PARAMETER_OUT_ELEMENT);
-                        newPar.insertBefore(docOperation.importNode(param, true), refNode);
-                    }
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_OUT_PARAMETERS).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getConditions() != null){
-
-                    Node newCond = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
-
-                    for (Condition condition : operation.getConditions()) {
-                        Node cond = configureConditions(doc, condition, "");
-                        newCond.insertBefore(docOperation.importNode(cond, true), refNode);
-                    }
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_CONDITION).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getNotifyAlternative() != null){
-                    Node notifyAlternative = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
-                    notifyAlternative.setTextContent(String.valueOf(operation.getNotifyAlternative()));
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getAlternativeIds() != null){
-                    //alternativeIds
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_ALTERNATIVE_IDS).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getNotifyOperation() != null){
-                    Node notifyOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION).item(0);
-                    notifyOperation.setTextContent(String.valueOf(operation.getNotifyOperation()));
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getOperationNotifyIds() != null){
-                    //operationIds
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_OPERATION_NOTIFY_IDS).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-                if (operation.getNotifyOperationDelay() != null){
-                    Node notifyOperationDelay = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY).item(0);
-                    notifyOperationDelay.setTextContent(String.valueOf(operation.getNotifyOperationDelay()));
-                }else{
-                    Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY).item(0);
-                    docOp.removeChild(node.getNextSibling());
-                    docOp.removeChild(node);
-                }
-
-
-                /*if (operation.getNotifyOperation() != null) {
-                    Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node notifyOperationOperation = docOperation.createElement(XMLConstants.OPERATION_NOTIFY_OPERATION);
-                    notifyOperationOperation.setTextContent(operation.getNotifyOperation().toString());
-                    newOperation.insertBefore(notifyOperationOperation, operationTypeOperation.getNextSibling());
-
-                    for (Operation operation1 : operation.getOperationNotifyIds()) {
-                        Node operationIdsOperation = docOperation.createElement(XMLConstants.OPERATION_OPERATION_NOTIFY_IDS);
-                        operationIdsOperation.setTextContent(operation1.getName());
-                        newOperation.insertBefore(operationIdsOperation, notifyOperationOperation.getNextSibling());
-                    }
-                }
-
-                if (operation.getNotifyAlternative() != null) {
-                    Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                    Node notifyAlternativeOperation = docOperation.createElement(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE);
-                    notifyAlternativeOperation.setTextContent(operation.getNotifyAlternative().toString());
-                    newOperation.insertBefore(notifyAlternativeOperation, operationTypeOperation.getNextSibling());
-
-                    for (Alternative alternative : operation.getAlternativeIds()) {
-                        Node alternativeIdsOperation = docOperation.createElement(XMLConstants.OPERATION_ALTERNATIVE_IDS);
-                        alternativeIdsOperation.setTextContent(alternative.getNextStep());
-                        newOperation.insertBefore(alternativeIdsOperation, notifyAlternativeOperation.getNextSibling());
-                    }
-                }*/
-
-
-
-                Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-
-                doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT).item(0).appendChild(doc.importNode(newOperation, true));
-            }
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+        File file = null;
+        if (operation.getOperationType() == OperationType.simpleOperation) {
+            file = new File(XMLConstants.SIMPLE_OPERATION_XML_LOCATION);
+        } else if (operation.getOperationType() == OperationType.taskOperation) {
+            file = new File(XMLConstants.TASK_OPERATION_XML_LOCATION);
         }
 
-        return doc;
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document docOperation = dBuilder.parse(file);
+
+        Node nameOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_NAME).item(0);
+        nameOperation.setTextContent(operation.getName());
+        Node labelOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_LABEL).item(0);
+        labelOperation.setTextContent(operation.getLabel());
+
+        if (operation.getVisible() != null){
+            Node visible = docOperation.getElementsByTagName(XMLConstants.OPERATION_VISIBLE).item(0);
+            visible.setTextContent(String.valueOf(operation.getVisible()));
+        }else{
+            Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_VISIBLE).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
+
+        if (operation.getPreExecute() != null){
+            Node preExecute = docOperation.getElementsByTagName(XMLConstants.OPERATION_PRE_EXECUTE).item(0);
+            preExecute.setTextContent(String.valueOf(operation.getPreExecute()));
+        }else{
+            Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_PRE_EXECUTE).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
+
+        if (operation.getComment() != null){
+            Node comment = docOperation.getElementsByTagName(XMLConstants.OPERATION_COMMENT).item(0);
+            comment.setTextContent(operation.getComment());
+        }else{
+            Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_COMMENT).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
+
+        if (operation.getTitle() != null){
+            Node title = docOperation.getElementsByTagName(XMLConstants.OPERATION_TITLE).item(0);
+            title.setTextContent(operation.getTitle());
+        }else{
+            Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_TITLE).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
+
+        if (operation.getAutomatic() != null){
+            Node automatic = docOperation.getElementsByTagName(XMLConstants.OPERATION_AUTOMATIC).item(0);
+            automatic.setTextContent(String.valueOf(operation.getAutomatic()));
+        }else{
+            Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_AUTOMATIC).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
+
+        if (operation.getPauseExecution() != null){
+            Node pauseExecution = docOperation.getElementsByTagName(XMLConstants.OPERATION_PAUSE_EXECUTION).item(0);
+            pauseExecution.setTextContent(String.valueOf(operation.getPauseExecution()));
+        }else{
+            Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_PAUSE_EXECUTION).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
+
+        if (operation.getOperationOrder() != null){
+            Node operationOrder = docOperation.getElementsByTagName(XMLConstants.OPERATION_OPERATION_ORDER).item(0);
+            operationOrder.setTextContent(operation.getOperationOrder());
+        }else{
+            Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_OPERATION_ORDER).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
+
+        Node operationTypeOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_OPERATION_TYPE).item(0);
+        operationTypeOperation.setTextContent(operation.getOperationType().name());
+
+        if (operation.getOperationType() == OperationType.simpleOperation) {
+            SimpleOperation simpleOperation = (SimpleOperation) operation;
+            Node typeOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_TYPE).item(0);
+            typeOperation.setTextContent(simpleOperation.getType().name());
+            Node serviceOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_SERVICE).item(0);
+            serviceOperation.setTextContent(simpleOperation.getService());
+        } else if (operation.getOperationType() == OperationType.taskOperation) {
+            TaskOperation taskOperation = (TaskOperation) operation;
+            Node typeOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_TYPE).item(0);
+            typeOperation.setTextContent(taskOperation.getType().name());
+
+            if (taskOperation.getTargetSystem() != null){
+                Node targetSystem = docOperation.getElementsByTagName(XMLConstants.OPERATION_TARGET_SYSTEM).item(0);
+                targetSystem.setTextContent(taskOperation.getTargetSystem());
+            }else{
+                Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+                Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_TARGET_SYSTEM).item(0);
+                docOp.removeChild(node.getNextSibling());
+                docOp.removeChild(node);
+            }
+
+            if (taskOperation.getCandidateGroups() != null){
+                Node newCand = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+                Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TEMPLATE).item(0);
+
+                /*for (String candidate : taskOperation.getCandidateGroups()) {
+                    Node cand = configureCandidate(doc, candidate);
+                    newCand.insertBefore(docOperation.importNode(cand, true), refNode);
+                }*/
+            }else{
+                Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+                Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_CANDIDATE_GROUPS).item(0);
+                docOp.removeChild(node.getNextSibling());
+                docOp.removeChild(node);
+            }
+
+            if (taskOperation.getMailTemplate() != null){
+                Node mailTemplate = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TEMPLATE).item(0);
+                mailTemplate.setTextContent(taskOperation.getMailTemplate());
+            }else{
+                Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+                Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TEMPLATE).item(0);
+                docOp.removeChild(node.getNextSibling());
+                docOp.removeChild(node);
+            }
+
+            if (taskOperation.getMailTo() != null){
+                Node mailTo = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TO).item(0);
+                mailTo.setTextContent(taskOperation.getMailTo());
+            }else{
+                Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+                Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TO).item(0);
+                docOp.removeChild(node.getNextSibling());
+                docOp.removeChild(node);
+            }
+
+            if (taskOperation.getMailSubjectPrefix() != null){
+                Node mailSubjectPrefix = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_SUBJECT_PREFIX).item(0);
+                mailSubjectPrefix.setTextContent(taskOperation.getMailSubjectPrefix());
+            }else{
+                Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+                Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_SUBJECT_PREFIX).item(0);
+                docOp.removeChild(node.getNextSibling());
+                docOp.removeChild(node);
+            }
+        }
+
+        if (operation.getInParameters() != null){
+
+            Node newPar = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
+
+            for (OperationParameter operationParameter : operation.getInParameters()) {
+                Node param = configureParameter(doc, operationParameter, XMLConstants.PARAMETER_IN_ELEMENT);
+                newPar.insertBefore(docOperation.importNode(param, true), refNode);
+            }
+        }
+
+        if (operation.getOutParameters() != null){
+
+            Node newPar = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
+
+            for (OperationParameter operationParameter : operation.getOutParameters()) {
+                Node param = configureParameter(doc, operationParameter, XMLConstants.PARAMETER_OUT_ELEMENT);
+                newPar.insertBefore(docOperation.importNode(param, true), refNode);
+            }
+        }
+
+        if (operation.getConditions() != null){
+
+            Node newCond = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
+
+            for (Condition condition : operation.getConditions()) {
+                Node cond = configureConditions(doc, condition, "");
+                newCond.insertBefore(docOperation.importNode(cond, true), refNode);
+            }
+        }
+
+        if (operation.getNotifyAlternative() != null){
+            Node notifyAlternative = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
+            notifyAlternative.setTextContent(String.valueOf(operation.getNotifyAlternative()));
+        }else{
+            Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
+
+        if (operation.getAlternativeIds() != null){
+            Node newAlt = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION).item(0);
+
+            for (Alternative alternative : operation.getAlternativeIds()) {
+                Node altId = configureAlternativeId(doc, alternative);
+                newAlt.insertBefore(docOperation.importNode(altId, true), refNode);
+            }
+        }
+
+        if (operation.getNotifyOperation() != null){
+            Node notifyOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION).item(0);
+            notifyOperation.setTextContent(String.valueOf(operation.getNotifyOperation()));
+        }else{
+            Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
+
+        if (operation.getOperationNotifyIds() != null){
+            Node newOpIds = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY).item(0);
+
+            for (Operation operationGuide : operations) {
+                Node opId = configureOperationId(doc, operationGuide);
+                newOpIds.insertBefore(docOperation.importNode(opId, true), refNode);
+            }
+        }
+
+        if (operation.getNotifyOperationDelay() != null){
+            Node notifyOperationDelay = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY).item(0);
+            notifyOperationDelay.setTextContent(String.valueOf(operation.getNotifyOperationDelay()));
+        }else{
+            Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+            Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
+
+        Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
+
+        return newOperation;
+    }
+
+    private Node configureCandidate(Document doc, String candidate) throws ParserConfigurationException, IOException, SAXException {
+        File file = new File(XMLConstants.CANDIDATE_GROUPS_XML_LOCATION);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document docCandidateGroups = dBuilder.parse(file);
+
+        Node groupName = docCandidateGroups.getElementsByTagName(XMLConstants.CANDIDATE_GROUPS_GROUP_NAME).item(0);
+        groupName.setTextContent(candidate);
+
+        Node newCand = docCandidateGroups.getElementsByTagName(XMLConstants.OPERATION_CANDIDATE_GROUPS).item(0);
+
+        return newCand;
+    }
+
+    private Node configureAlternativeId(Document doc, Alternative alternative) throws ParserConfigurationException, IOException, SAXException {
+        File file = new File(XMLConstants.ALTERNATIVE_IDS_XML_LOCATION);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document docAlternativeIds = dBuilder.parse(file);
+
+        Node alternativeId = docAlternativeIds.getElementsByTagName(XMLConstants.OPERATION_ALTERNATIVE_IDS).item(0);
+        alternativeId.setTextContent(alternative.getNextStep());
+
+        return alternativeId;
+    }
+
+    private Node configureOperationId(Document doc, Operation operation) throws ParserConfigurationException, IOException, SAXException {
+        File file = new File(XMLConstants.OPERATION_NOTIFY_IDS_XML_LOCATION);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document docOperationId = dBuilder.parse(file);
+
+        Node operationId = docOperationId.getElementsByTagName(XMLConstants.OPERATION_OPERATION_NOTIFY_IDS).item(0);
+        operationId.setTextContent(operation.getName());
+
+        return operationId;
     }
 
     private Node configureParameter(Document doc, OperationParameter parameter, String constantTypeParameter) throws ParserConfigurationException, IOException, TransformerException, org.xml.sax.SAXException {
 
         File file = null;
 
-        if (constantTypeParameter == XMLConstants.OPERATION_IN_PARAMETERS) {
-            file = new File(XMLConstants.IN_PARAMETER_XML_LOCATION);
-        } else {
-            if (constantTypeParameter == XMLConstants.OPERATION_OUT_PARAMETERS) {
+        switch (constantTypeParameter) {
+
+            case XMLConstants.OPERATION_IN_PARAMETERS :
+                file = new File(XMLConstants.IN_PARAMETER_XML_LOCATION);
+                break;
+
+            case XMLConstants.OPERATION_OUT_PARAMETERS :
                 file = new File(XMLConstants.OUT_PARAMETER_XML_LOCATION);
-            }
+                break;
+
+            default :
+                file = new File(XMLConstants.PARAMETER_PROPERTIES);
         }
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -602,7 +644,13 @@ public class GuideGeneratorServiceImp {
         }
 
         if (parameter.getProperties() != null){
-            //properties
+            Node newProp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node refNode = docParameter.getElementsByTagName(XMLConstants.PARAMETER_CONVERT).item(0);
+
+            for (OperationParameter properties : parameter.getProperties()) {
+                Node property = configureParameter(doc, properties, XMLConstants.PARAMETER_PROPERTIES);
+                newProp.insertBefore(docParameter.importNode(property, true), refNode);
+            }
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
             Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_PROPERTIES).item(0);
@@ -621,7 +669,13 @@ public class GuideGeneratorServiceImp {
         }
 
         if (parameter.getConvertCondition() != null){
-            //convertCondition
+            Node newConv = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node refNode = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_CROSS_FIELD_CONDITION).item(0);
+
+            for (Convertion convertion : parameter.getConvertCondition()) {
+                Node convertCondition = configureConvertCondition(doc, convertion);
+                newConv.insertBefore(docParameter.importNode(convertCondition, true), refNode);
+            }
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
             Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_CONVERT_CONDITION).item(0);
@@ -630,7 +684,13 @@ public class GuideGeneratorServiceImp {
         }
 
         if (parameter.getValidateCrossFieldCondition() != null){
-            //validateCrossFieldCondition
+            Node newVal = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node refNode = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS).item(0);
+
+            for (ValidateCrossFieldCondition validateCrossFieldCondition : parameter.getValidateCrossFieldCondition()) {
+                Node validateCondition = configureValidateCrossFieldCondition(doc, validateCrossFieldCondition);
+                newVal.insertBefore(docParameter.importNode(validateCondition, true), refNode);
+            }
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
             Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_CROSS_FIELD_CONDITION).item(0);
@@ -651,6 +711,42 @@ public class GuideGeneratorServiceImp {
         Node newPar = docParameter.getElementsByTagName(constantTypeParameter).item(0);
 
         return  newPar;
+    }
+
+    private Node configureValidateCrossFieldCondition(Document doc, ValidateCrossFieldCondition validateCrossFieldCondition) throws ParserConfigurationException, IOException, SAXException {
+        File file = new File(XMLConstants.VALIDATE_CROSS_FIELD_CONDITION_XML_LOCATION);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document docValidate = dBuilder.parse(file);
+
+        /*Node fieldName = docValidate.getElementsByTagName(XMLConstants.VALIDATE_CROSS_FIELD_CONDITION_FIELD_NAME_).item(0);
+        fieldName.setTextContent(validateCrossFieldCondition.getFieldName());
+        Node condition = docValidate.getElementsByTagName(XMLConstants.VALIDATE_CROSS_FIELD_CONDITION_CONDITION_).item(0);
+        condition.setTextContent(validateCrossFieldCondition.getCondition());
+        Node messageError = docValidate.getElementsByTagName(XMLConstants.VALIDATE_CROSS_FIELD_CONDITION_MESSAGE_ERROR).item(0);
+        messageError.setTextContent(validateCrossFieldCondition.getMessageError());*/
+
+        Node newVal = docValidate.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_CROSS_FIELD_CONDITION).item(0);
+
+        return newVal;
+    }
+
+    private Node configureConvertCondition(Document doc, Convertion convertion) throws ParserConfigurationException, IOException, SAXException {
+        File file = new File(XMLConstants.CONVERTION_XML_LOCATION);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document docConvertCondition = dBuilder.parse(file);
+
+        Node condition = docConvertCondition.getElementsByTagName(XMLConstants.CONVERTION_CONDITION).item(0);
+        condition.setTextContent(convertion.getCondition());
+        Node sourceUnit = docConvertCondition.getElementsByTagName(XMLConstants.CONVERTION_SOURCE_UNIT).item(0);
+        sourceUnit.setTextContent(convertion.getSourceUnit());
+        Node destinationUnit = docConvertCondition.getElementsByTagName(XMLConstants.CONVERTION_DESTINATION_UNIT).item(0);
+        destinationUnit.setTextContent(convertion.getDestinationUnit());
+
+        Node newConv = docConvertCondition.getElementsByTagName(XMLConstants.PARAMETER_CONVERT_CONDITION).item(0);
+
+        return newConv;
     }
 
     private Node configureConditions(Document doc, Condition condition, String operator) throws ParserConfigurationException, TransformerException, SAXException, IOException {
