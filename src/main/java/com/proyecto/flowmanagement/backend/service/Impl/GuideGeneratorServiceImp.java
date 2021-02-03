@@ -17,14 +17,27 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class GuideGeneratorServiceImp {
 
-    public void GuidePrint(Guide guide) {
+    public List<byte[]> guidePrints (Guide mainGuide){
+        List<byte[]> docs = new LinkedList<>();
+        docs.add(GuidePrint(mainGuide));
+        if(mainGuide.getGuides()!= null){
+            for(Guide guide : mainGuide.getGuides()){
+                docs.add(GuidePrint(guide));
+            }
+        }
+        return docs;
+    }
+
+    public byte[] GuidePrint(Guide guide) {
         try {
             File file = new File(XMLConstants.GUIDE_XML_LOCATION);
 
@@ -36,10 +49,13 @@ public class GuideGeneratorServiceImp {
 
             doc = configureStepsXML(doc, guide);
 
-            printResult(doc);
+            //printResult(doc);
+
+            return printResultByte(doc);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+        return null;
     }
 
     private void printResult(Document doc) throws IOException, TransformerException {
@@ -48,6 +64,17 @@ public class GuideGeneratorServiceImp {
         DOMSource domSource = new DOMSource(doc);
         StreamResult streamResult = new StreamResult(new File(XMLConstants.GUIDE_RESULT));
         transformer.transform(domSource, streamResult);
+    }
+
+    private byte[] printResultByte(Document doc) throws IOException, TransformerException {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource domSource = new DOMSource(doc);
+        ByteArrayOutputStream bos=new ByteArrayOutputStream();
+        StreamResult result=new StreamResult(bos);
+        transformer.transform(domSource, result);
+        byte[] array = bos.toByteArray();
+        return array;
     }
 
     private Document configureGuidXML(Document doc, Guide guide) throws ParserConfigurationException, TransformerException, SAXException, IOException {
