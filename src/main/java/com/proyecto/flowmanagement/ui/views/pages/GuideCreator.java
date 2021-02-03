@@ -35,7 +35,6 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
 
     private int guideId;
     private Guide guide;
-    GuideServiceImpl guideService = new GuideServiceImpl();
 
     HorizontalLayout actualPanelLaayout;
     HorizontalLayout detailsPanelLayout;
@@ -57,9 +56,6 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
 
     public GuideCreator()
     {
-//        if (guideId!=null) {
-//            this.guide = guideService.getById((long) guideId);
-//        }
 
         setSizeFull();
         
