@@ -342,6 +342,16 @@ public class ConditionsForm extends HorizontalLayout {
         conditionTreeForm.setVisible(false);
     }
 
+    public void setConditions(List<Condition> conditions) {
+        this.alternative = new Alternative();
+        binaryConditionForm.setAsDefault();
+        unaryConditionForm.setAsDefault();
+        conditionTreeForm.conditions = conditions;
+        conditionTreeForm.updateGrid();
+        conditionTreeForm.arbolCondition.deselectAll();
+//        conditionTreeForm.setVisible(false);
+    }
+
     public void updateForm(Alternative alternative) {
 
         this.alternative = alternative;

@@ -2,6 +2,7 @@ package com.proyecto.flowmanagement.ui.views.grids;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
+import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.forms.OperationForm;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
@@ -17,8 +18,8 @@ import java.util.List;
 @CssImport("./styles/general.css")
 public class OperationGridForm extends HorizontalLayout {
     private Button createOperation;
-    public OperationForm operationForm = new OperationForm();
-
+    public OperationForm operationForm;
+    Operation editing;
     public List<String> alternatives = new LinkedList<String>();
 
     Grid<Operation> operationGrid;
@@ -42,9 +43,12 @@ public class OperationGridForm extends HorizontalLayout {
         configureGrid();
         createOperation = new Button("Crear Operation", click -> addOperation());
 
+        editing = null;
+        operationForm = new OperationForm();
         operationForm.setVisible(false);
         operationForm.save.addClickListener(buttonClickEvent -> CreateOperation());
         operationForm.close.addClickListener(buttonClickEvent -> CloseForm());
+        operationForm.delete.addClickListener(buttonClickEvent -> deleteOperation());
 
         HorizontalLayout gridLayout = new HorizontalLayout();
         gridLayout.add(operationGrid);
@@ -75,24 +79,42 @@ public class OperationGridForm extends HorizontalLayout {
         operationGrid.setItems(operationList);
     }
 
+    public void deleteOperation()
+    {
+        this.operationList.remove(editing);
+        CloseForm();
+        updateGrid();
+    }
+
     private void CloseForm() {
         this.operationForm.setVisible(false);
     }
 
     private void CreateOperation() {
+        this.operationGrid.deselectAll();
+
         if (operationForm.isValid) {
             Operation newOperation = operationForm.getOperation();
-            operationList.add(newOperation);
+            if (!operationForm.editing) {
+                operationList.add(newOperation);
+            }
+            else {
+                int index = operationList.indexOf(editing);
+                this.operationList.set(index, newOperation);
+                operationForm.editing = false;
+            }
             updateGrid();
             CloseForm();
         }
     }
 
     private void addOperation() {
+        operationForm.editing = false;
         operationGrid.asSingleSelect().clear();
         operationForm.setVisible(true);
         operationForm.setAsDefault();
-        editOperation(new Operation());
+        operationForm.delete.setVisible(false);
+//        editOperation(new Operation());
     }
 
     private void configureGrid() {
@@ -108,15 +130,18 @@ public class OperationGridForm extends HorizontalLayout {
             closeEditor();
         } else {
             operationForm.setOperation(operation);
+            operationForm.editing = true;
             operationForm.setVisible(true);
+            editing = operation;
+            operationForm.delete.setVisible(true);
             addClassName("editing");
         }
     }
 
     private void closeEditor() {
-        operationForm.setOperation(null);
         operationForm.setVisible(false);
-        removeClassName("editing");
+        operationForm.setAsDefault();
+        removeClassName("editing" );
     }
 
     public List<Operation> getOperations() {

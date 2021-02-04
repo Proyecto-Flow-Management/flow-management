@@ -2,6 +2,7 @@ package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.ConvertCondition;
 import com.proyecto.flowmanagement.backend.persistence.entity.Groups;
+import com.proyecto.flowmanagement.backend.persistence.entity.OptionValue;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -108,6 +109,19 @@ public class ConvertConditionForm extends VerticalLayout {
         convertConditionsGrid.addColumn(value-> {  return value.getCondition(); }).setHeader("Condition").setSortable(true);
         convertConditionsGrid.addColumn(value-> {  return value.getSourceUnit(); }).setHeader("SourceUnit").setSortable(true);
         convertConditionsGrid.addColumn(value-> {  return value.getDestinationUnit(); }).setHeader("DestinationUnit").setSortable(true);
+    }
+
+    public void setAsDefault() {
+        this.condition.clear();
+        this.sourceUnit.clear();
+        this.destinationUnit.clear();
+        this.convertConditions = new LinkedList<>();
+        updateGrid();
+    }
+
+    public void setConvertConditions(List<ConvertCondition> convertConditions) {
+        this.convertConditions = convertConditions;
+        updateGrid();
     }
 
     private void guardar()

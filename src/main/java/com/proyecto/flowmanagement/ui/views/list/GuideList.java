@@ -42,9 +42,11 @@ public class GuideList extends VerticalLayout {
 
     Grid<Guide> grid = new Grid<>(Guide.class);
     GuideServiceImpl guideService;
+    GuideGeneratorServiceImp guideGeneratorService;
 
     public GuideList(GuideServiceImpl guideService) {
         this.guideService = guideService;
+        this.guideGeneratorService = new GuideGeneratorServiceImp();
         //test();
         addClassName("create-guide-view");
         setSizeFull();
@@ -117,7 +119,7 @@ public class GuideList extends VerticalLayout {
         Button button = new Button();
         Icon icon = new Icon("vaadin", "download");
         button.setIcon(icon);
-        List<Pair<String, String>> files = getFiles(guide);
+        List<Pair<String, byte[]>> files = getFiles(guide);
 
         FileDownloadWrapper buttonWrapper = new FileDownloadWrapper(
                 new StreamResource(guide.getName() + ".zip", () -> {
@@ -127,27 +129,31 @@ public class GuideList extends VerticalLayout {
                         e.printStackTrace();
                     }
                 return null;}));
-//        FileDownloadWrapper buttonWrapper = new FileDownloadWrapper(
-//                new StreamResource(guide.getName() + ".txt", () -> new ByteArrayInputStream(guide.getName().getBytes())));
         buttonWrapper.wrapComponent(button);
         return buttonWrapper;
     }
 
-    private List<Pair<String, String>> getFiles(Guide guide){
-        List<Pair<String, String>> files = new LinkedList<>();
-        files.add(new Pair<>("archivo1.txt","contendido archivo 1, guia: " + guide.getName()));
-        files.add(new Pair<>("archivo2.txt","contendido archivo 2, guia: " + guide.getName()));
-        files.add(new Pair<>("archivo3.txt","contendido archivo 2, guia: " + guide.getName()));
+    private List<Pair<String, byte[]>> getFiles(Guide guide){
+        List<Pair<String, byte[]>> files = new LinkedList<>();
+
+        int num = 0;
+        List<byte[]> guideContents = guideGeneratorService.guidePrints(guide);
+        for (byte[] content: guideContents
+             ) {
+                String fileName = "archivo" + num + ".xml";
+                files.add(new Pair<>(fileName, content));
+                num += 1;
+        }
         return files;
     }
 
-    public byte[] zipFiles(List<Pair<String, String>> files) throws IOException {
+    public byte[] zipFiles(List<Pair<String, byte[]>> files) throws IOException {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ZipOutputStream  zos = new ZipOutputStream(baos)) {
 
-            for (Pair<String, String> file : files) {
+            for (Pair<String, byte[]> file : files) {
                 String filename = file.getFirst();
-                byte[] content = file.getSecond().getBytes();
+                byte[] content = file.getSecond();
                 ZipEntry entry = new ZipEntry(filename);
                 entry.setSize(content.length);
                 zos.putNextEntry(entry);

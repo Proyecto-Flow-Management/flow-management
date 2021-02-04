@@ -35,7 +35,7 @@ public class OperationForm extends VerticalLayout {
 
     private Operation operation;
     public List<String> alternatives;
-    public Boolean isValid = false;
+    public Boolean isValid;
     public Boolean editing;
 
     public ConditionsForm conditionForm = new ConditionsForm();
@@ -96,8 +96,11 @@ public class OperationForm extends VerticalLayout {
 
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
+    public Button delete = new Button("Eliminar");
 
     public OperationForm() {
+        this.editing = false;
+        this.isValid = false;
 
         setClassName("operationSection");
 
@@ -148,6 +151,7 @@ public class OperationForm extends VerticalLayout {
 
     private void configureElements() {
         addClassName("operationSection");
+        delete.setVisible(false);
         this.name.setRequired(true);
         name.addClassName("vaadin-text-field-container");
         this.name.setErrorMessage("Este campo es obligatorio.");
@@ -217,7 +221,7 @@ public class OperationForm extends VerticalLayout {
 
             elementsForm.remove(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
             elementsForm.add(simpleOperationType,service);
-            elements.remove(groupLayout);
+            elements.remove(groupsAccordion);
         }
         else if(operationType== OperationType.taskOperation){
             this.taskOperationType.setRequired(true);
@@ -226,7 +230,7 @@ public class OperationForm extends VerticalLayout {
 
             elementsForm.remove(simpleOperationType,service);
             elementsForm.add(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
-            elements.add(groupLayout);
+            elements.add(groupsAccordion);
         }
     }
 
@@ -285,11 +289,136 @@ public class OperationForm extends VerticalLayout {
 
     public void setOperation(Operation operation) {
         this.operation = operation;
+        this.name.setValue(operation.getName());
+        this.label.setValue(operation.getLabel());
+        if (operation.getOperationType() != null){
+            addElements(operationType.getValue());
+        }
+        if (operation.getVisible()!=null) {
+            this.visible.setValue(operation.getVisible().toString());
+        }
+        else{
+            this.visible.clear();
+        }
+        if (operation.getVisible()!=null) {
+            this.preExecute.setValue(operation.getPreExecute().toString());
+        }
+        else{
+            this.preExecute.clear();
+        }
+        if (operation.getComment()!=null) {
+            this.comment.setValue(operation.getComment());
+        }
+        else {
+            this.comment.clear();
+        }
+        if (operation.getTitle()!=null) {
+            this.title.setValue(operation.getTitle());
+        }
+        else {
+            this.title.clear();
+        }
+        if (operation.getAutomatic()!=null) {
+            this.automatic.setValue(operation.getAutomatic().toString());
+        }
+        else{
+            this.automatic.clear();
+        }
+        if (operation.getPauseExecution()!=null) {
+            this.pauseExecution.setValue(operation.getPauseExecution().toString());
+        }
+        else{
+            this.pauseExecution.clear();
+        }
+        this.operationOrder.setValue(operation.getOperationOrder());
+        this.operationType.setValue(operation.getOperationType());
+        if (operation.getNotifyAlternative()!=null) {
+            this.notifyAlternative.setValue(operation.getNotifyAlternative().toString());
+        }
+        else {
+            this.notifyAlternative.clear();
+        }
+        if (operation.getNotifyOperation()!=null) {
+            this.notifyOperation.setValue(operation.getNotifyOperation().toString());
+        }
+        else{
+            this.notifyOperation.clear();
+        }
+        this.notifyOperationDelay.setValue(operation.getNotifyOperationDelay());
+
+        if(operation.getOperationType()!=null){
+            this.operationType.setValue(operation.getOperationType());
+            if (operationType.getValue() == OperationType.simpleOperation) {
+                SimpleOperation simpleOperation = (SimpleOperation) operation;
+                if(simpleOperation.getType() != null){
+                    this.simpleOperationType.setValue(simpleOperation.getType());
+                }
+                else {
+                    this.simpleOperationType.clear();
+                }
+                if(simpleOperation.getService() != null) {
+                    this.service.setValue(simpleOperation.getService());
+                }
+                else{
+                    this.service.clear();
+                }
+            }
+            if (operationType.getValue() == OperationType.taskOperation) {
+                TaskOperation taskOperation = (TaskOperation) operation;
+                if (taskOperation.getType() != null){
+                    this.taskOperationType.setValue(taskOperation.getType());
+                }
+                else {
+                    this.taskOperationType.clear();
+                }
+                if (taskOperation.getMailTemplate() != null) {
+                    this.mailTemplate.setValue(taskOperation.getMailTemplate());
+                }
+                else{
+                    this.mailTemplate.clear();
+                }
+                if (taskOperation.getMailTo() != null) {
+                    this.mailTo.setValue(taskOperation.getMailTo());
+                }
+                else {
+                    this.mailTo.clear();
+                }
+                if (taskOperation.getMailSubjectPrefix() != null) {
+                    this.mailSubjectPrefix.setValue(taskOperation.getMailSubjectPrefix());
+                }
+                else {
+                    this.mailSubjectPrefix.clear();
+                }
+                if (taskOperation.getTargetSystem() != null) {
+                    this.targetSystem.setValue(taskOperation.getTargetSystem());
+                }
+                else {
+                    this.targetSystem.clear();
+                }
+
+                this.candidatesGrupsForm.setGroupsNames(taskOperation.getGroupsIds());
+
+            }
+            addElements(this.operationType.getValue());
+        }
+        else{
+            this.operationType.clear();
+            this.simpleOperationType.clear();
+            this.taskOperationType.clear();
+            this.candidatesGrupsForm.setAsDefault();
+        }
+
+        this.inParameterGridForm.setOperationsParameters(operation.getInParameters());
+        this.outParameterGridForm.setOperationsParameters(operation.getOutParameters());
+        if (operation.getConditions() != null){
+            this.conditionForm.setConditions(operation.getConditions());
+        }
     }
 
     private Component createButtonsLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
@@ -297,7 +426,7 @@ public class OperationForm extends VerticalLayout {
         save.addClickListener(click -> saveOperation());
         close.addClickListener(click -> fireEvent(new OperationForm.CloseEvent(this)));
 
-        return new HorizontalLayout(save, close);
+        return new HorizontalLayout(save, close, delete);
     }
 
     public Operation getOperation() {
@@ -394,6 +523,39 @@ public class OperationForm extends VerticalLayout {
         notification.open();
     }
 
+    public void setAsDefault(){
+        name.clear();
+        label.clear();
+        comment.clear();
+        title.clear();
+        visible.clear();
+        preExecute.clear();
+        automatic.clear();
+        pauseExecution.clear();
+        notifyAlternative.clear();
+        notifyAlternative.clear();
+        notifyOperation.clear();
+        operationOrder.clear();
+        notifyOperationDelay.clear();
+        if (!operationType.isEmpty()){
+            addElements(operationType.getValue());
+        }
+        operationType.clear();
+        service.clear();
+        targetSystem.clear();
+        candidateGroups.clear();
+        mailTemplate.clear();
+        mailTo.clear();
+        mailSubjectPrefix.clear();
+        inParameterGridForm.setAsDefault();
+        outParameterGridForm.setAsDefault();
+        candidatesGrupsForm.setAsDefault();
+        conditionForm.setAsDefault();
+
+//        elements.remove(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
+//        elements.remove(simpleOperationType,service);
+    }
+
     public boolean isValid() {
         boolean result = false;
 
@@ -464,27 +626,5 @@ public class OperationForm extends VerticalLayout {
         return getEventBus().addListener(eventType, listener);
     }
 
-    public void setAsDefault(){
-        name.clear();
-        label.clear();
-        visible.clear();
-        preExecute.clear();
-        automatic.clear();
-        pauseExecution.clear();
-        notifyAlternative.clear();
-        notifyAlternative.clear();
-        notifyOperation.clear();
-        operationOrder.clear();
-        notifyOperationDelay.clear();
-        operationType.clear();
-        service.clear();
-        targetSystem.clear();
-        candidateGroups.clear();
-        mailTemplate.clear();
-        mailTo.clear();
-        mailSubjectPrefix.clear();
 
-        elements.remove(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
-        elements.remove(simpleOperationType,service);
-    }
 }

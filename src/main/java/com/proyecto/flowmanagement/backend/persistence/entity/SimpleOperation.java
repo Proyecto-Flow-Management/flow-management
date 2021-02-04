@@ -83,10 +83,10 @@ public class SimpleOperation extends Operation{
         if (this.getOperationType() == null)
             return "El campo OperationType es obligatorio";
 
-        if (this.getOperationOrder() != null){
-            if (this.getOperationOrder() <= 0)
-                return "El campo OperationOrder debe ser un entero positivo";
-        }
+//        if (this.getOperationOrder() != null){
+//            if (this.getOperationOrder() <= 0)
+//                return "El campo OperationOrder debe ser un entero positivo";
+//        }
 
         if (this.getNotifyOperationDelay() != null){
             if (this.getNotifyOperationDelay() <= 0)

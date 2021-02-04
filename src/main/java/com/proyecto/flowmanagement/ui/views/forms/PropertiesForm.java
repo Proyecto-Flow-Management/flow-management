@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Groups;
+import com.proyecto.flowmanagement.backend.persistence.entity.OptionValue;
 import com.proyecto.flowmanagement.backend.persistence.entity.Properties;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -119,6 +120,20 @@ public class PropertiesForm extends VerticalLayout {
         propertiesGrid.addColumn(value-> {  return value.getLabel(); }).setHeader("Label").setSortable(true);
         propertiesGrid.addColumn(value-> {  return value.getVisible(); }).setHeader("Visible").setSortable(true);
         propertiesGrid.addColumn(value-> {  return value.getType(); }).setHeader("Type").setSortable(true);
+    }
+
+    public void setAsDefault() {
+        this.name.clear();
+        this.label.clear();
+        this.visible.clear();
+        this.type.clear();
+        this.properties = new LinkedList<>();
+        updateGrid();
+    }
+
+    public void setProperties(List<Properties> properties) {
+        this.properties = properties;
+        updateGrid();
     }
 
     private void guardar()

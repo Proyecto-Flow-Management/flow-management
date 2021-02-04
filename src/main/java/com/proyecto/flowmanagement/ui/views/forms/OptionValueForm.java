@@ -95,6 +95,17 @@ public class OptionValueForm extends VerticalLayout {
         optionValuesGrid.addColumn(value-> {  return value.getOptionValueName(); }).setHeader("OptionValue").setSortable(true);
     }
 
+    public void setAsDefault() {
+        this.optionValue.clear();
+        this.optionValues = new LinkedList<>();
+        updateGrid();
+    }
+
+    public void setOptionValues(List<OptionValue> optionValues) {
+        this.optionValues = optionValues;
+        updateGrid();
+    }
+
     private void guardar()
     {
         if(!optionValue.getValue().isEmpty())
