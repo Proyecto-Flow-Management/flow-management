@@ -122,17 +122,17 @@ public class StepForm extends HorizontalLayout {
     private void configureElements() {
         addClassName("stepSection");
         delete.setVisible(false);
-        this.text.setValue(" ");
-        this.textId.setValue(" ");
-        this.label.setValue(" ");
+//        this.text.setValue(" ");
+//        this.textId.setValue(" ");
+//        this.label.setValue(" ");
 
         this.text.setRequired(true);
-        this.textId.setRequired(true);
-        this.label.setRequired(true);
-
         this.text.setErrorMessage("Campo obligatorio");
+        this.textId.setRequired(true);
         this.textId.setErrorMessage("Campo obligatorio");
+        this.label.setRequired(true);
         this.label.setErrorMessage("Campo obligatorio");
+
 
         elements.add(text,textId,label);
         actionsLayout.add(createButtonsLayout());

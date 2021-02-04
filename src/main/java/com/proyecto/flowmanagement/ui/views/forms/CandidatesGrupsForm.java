@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Groups;
+import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.proyecto.flowmanagement.backend.persistence.entity.Rol;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -24,7 +25,7 @@ public class CandidatesGrupsForm extends VerticalLayout {
 
     List<Groups> groupsNames = new LinkedList<>();
     Grid<Groups> groupGrid = new Grid<>();
-    Groups editing = new Groups();
+    Groups editing;
 
     TextField group = new TextField("GroupName");
     Button add = new Button("Add");
@@ -65,6 +66,7 @@ public class CandidatesGrupsForm extends VerticalLayout {
     private void configureElements()
     {
         buttonsLayout.setClassName("buttonsLayouts");
+        editing = null;
         this.group.setVisible(true);
         this.group.setValue("");
         this.add.setVisible(true);
@@ -96,6 +98,7 @@ public class CandidatesGrupsForm extends VerticalLayout {
 
     private void guardar()
     {
+        this.groupGrid.deselectAll();
         if(!group.getValue().isEmpty())
         {
             int index = groupsNames.indexOf(this.editing);
@@ -172,8 +175,19 @@ public class CandidatesGrupsForm extends VerticalLayout {
         }
     }
 
+    public void setAsDefault() {
+        group.clear();
+        this.groupsNames = new LinkedList<>();
+        updateGrid();
+    }
+
     public List<Groups> getGroupsNames()
     {
         return this.groupsNames;
+    }
+
+    public void setGroupsNames(List<Groups> groupsNames){
+        this.groupsNames = groupsNames;
+        updateGrid();
     }
 }

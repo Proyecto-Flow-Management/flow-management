@@ -2,6 +2,7 @@ package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.def.SourceEntity;
 import com.proyecto.flowmanagement.backend.persistence.entity.OperationParameter;
+import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -23,7 +24,9 @@ import com.vaadin.flow.shared.Registration;
 @CssImport("./styles/operation-parameter-grid-form.css")
 public class OperationParameterForm extends HorizontalLayout {
     private OperationParameter operationParameter;
-    private Boolean isValid = false;
+    public boolean isValid;
+    public boolean editing;
+
 
     private OptionValueForm optionValueForm = new OptionValueForm();
     private ConvertConditionForm convertConditionForm = new ConvertConditionForm();
@@ -53,7 +56,6 @@ public class OperationParameterForm extends HorizontalLayout {
     private ComboBox<String> required = new ComboBox<>("Required");
     private TextField validateExpression = new TextField("Validate Expression");
     private TextField validateExpressionErrorDescription = new TextField("Validate Expression Error Description");
-    private TextField optionValue = new TextField("Option Value");
     private TextField dateFormat = new TextField("Date Format");
     private TextField dateFormatRangeEnd = new TextField("Date Format Range End");
     private TextField dateFormatFinal = new TextField("Date Format Final");
@@ -64,8 +66,11 @@ public class OperationParameterForm extends HorizontalLayout {
 
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
+    public Button delete = new Button("Eliminar");
 
     public OperationParameterForm() {
+        this.editing = false;
+        this.isValid = false;
         setSizeFull();
         configureElements();
         configureForm();
@@ -73,6 +78,7 @@ public class OperationParameterForm extends HorizontalLayout {
 
     private void configureElements() {
         addClassName("operationParameterSection");
+        delete.setVisible(false);
         this.name.setRequired(true);
         this.name.setErrorMessage("Este campo es obligatorio.");
         this.type.setRequired(true);
@@ -85,7 +91,7 @@ public class OperationParameterForm extends HorizontalLayout {
         this.sourceValueEntity.setItems(SourceEntity.values());
         this.convert.setItems("True","False");
 
-        elements.add(name,label,visibleWhenInParameterEqualsCondition,type,description,value,validateExpression,validateExpressionErrorDescription,optionValue,dateFormat,dateFormatRangeEnd,dateFormatFinal,sourceValueEntityProperty,valueWhenInParameterEquals,enable,required,visible,convert);
+        elements.add(name,label,visibleWhenInParameterEqualsCondition,type,description,value,validateExpression,validateExpressionErrorDescription,dateFormat,dateFormatRangeEnd,dateFormatFinal,sourceValueEntityProperty,valueWhenInParameterEquals,enable,required,visible,convert);
         elements.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1),
                 new FormLayout.ResponsiveStep("32em", 2),
@@ -121,11 +127,140 @@ public class OperationParameterForm extends HorizontalLayout {
 
     public void setOperationParameter(OperationParameter operationParameter) {
         this.operationParameter = operationParameter;
+        if (operationParameter.getName() != null){
+            this.name.setValue(operationParameter.getName());
+        }
+        else {
+            this.name.clear();
+        }
+        if (operationParameter.getLabel() != null){
+            this.label.setValue(operationParameter.getLabel());
+        }
+        else {
+            this.label.clear();
+        }
+        if (operationParameter.getVisibleWhenInParameterEqualsCondition() != null){
+            this.visibleWhenInParameterEqualsCondition.setValue(operationParameter.getVisibleWhenInParameterEqualsCondition().toString());
+        }
+        else {
+            this.visibleWhenInParameterEqualsCondition.clear();
+        }
+        if (operationParameter.getType() != null){
+            this.type.setValue(operationParameter.getType());
+        }
+        else {
+            this.type.clear();
+        }
+        if (operationParameter.getDescription() != null){
+            this.description.setValue(operationParameter.getDescription());
+        }
+        else {
+            this.description.clear();
+        }
+        if (operationParameter.getValue() != null){
+            this.value.setValue(operationParameter.getValue());
+        }
+        else {
+            this.value.clear();
+        }
+        if (operationParameter.getValidateExpression() != null){
+            this.validateExpression.setValue(operationParameter.getValidateExpression());
+        }
+        else {
+            this.validateExpression.clear();
+        }
+        if (operationParameter.getValidateExpressionErrorDescription() != null){
+            this.validateExpressionErrorDescription.setValue(operationParameter.getValidateExpressionErrorDescription());
+        }
+        else {
+            this.validateExpressionErrorDescription.clear();
+        }
+        if (operationParameter.getDateFormat() != null){
+            this.dateFormat.setValue(operationParameter.getDateFormat());
+        }
+        else {
+            this.dateFormat.clear();
+        }
+        if (operationParameter.getDateFormatRangeEnd() != null){
+            this.dateFormatRangeEnd.setValue(operationParameter.getDateFormatRangeEnd());
+        }
+        else {
+            this.dateFormatRangeEnd.clear();
+        }
+        if (operationParameter.getDateFormatFinal() != null){
+            this.dateFormatFinal.setValue(operationParameter.getDateFormatFinal());
+        }
+        else {
+            this.dateFormatFinal.clear();
+        }
+        if (operationParameter.getSourceValueEntity() != null){
+            this.sourceValueEntity.setValue(operationParameter.getSourceValueEntity());
+        }
+        else {
+            this.sourceValueEntity.clear();
+        }
+        if (operationParameter.getValueWhenInParameterEquals() != null){
+            this.valueWhenInParameterEquals.setValue(operationParameter.getValueWhenInParameterEquals());
+        }
+        else {
+            this.valueWhenInParameterEquals.clear();
+        }
+        if (operationParameter.getEnable() != null){
+            this.enable.setValue(operationParameter.getEnable().toString());
+        }
+        else {
+            this.enable.clear();
+        }
+        if (operationParameter.getRequired() != null){
+            this.required.setValue(operationParameter.getRequired().toString());
+        }
+        else {
+            this.required.clear();
+        }
+        if (operationParameter.getVisible() != null){
+            this.visible.setValue(operationParameter.getVisible().toString());
+        }
+        else {
+            this.visible.clear();
+        }
+        if (operationParameter.getConvert() != null){
+            this.convert.setValue(operationParameter.getConvert().toString());
+        }
+        else {
+            this.convert.clear();
+        }
+        this.optionValueForm.setOptionValues(operationParameter.getOptionValues());
+        this.convertConditionForm.setConvertConditions(operationParameter.getConvertConditions());
+//        this.propertiesForm.setProperties(operationParameter.getProperties());
+    }
+
+    public void setAsDefault() {
+        this.name.clear();
+        this.label.clear();
+        this.visibleWhenInParameterEqualsCondition.clear();
+        this.type.clear();
+        this.description.clear();
+        this.value.clear();
+        this.validateExpression.clear();
+        this.validateExpressionErrorDescription.clear();
+        this.dateFormat.clear();
+        this.dateFormatRangeEnd.clear();
+        this.dateFormatFinal.clear();
+        this.sourceValueEntity.clear();
+        this.valueWhenInParameterEquals.clear();
+        this.enable.clear();
+        this.required.clear();
+        this.visible.clear();
+        this.convert.clear();
+        this.optionValueForm.setAsDefault();
+        this.convertConditionForm.setAsDefault();
+        this.propertiesForm.setAsDefault();
     }
 
     private Component createButtonsLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
@@ -133,7 +268,7 @@ public class OperationParameterForm extends HorizontalLayout {
         save.addClickListener(click -> saveOperationParameter());
         close.addClickListener(click -> fireEvent(new OperationParameterForm.CloseEvent(this)));
 
-        return new HorizontalLayout(save, close);
+        return new HorizontalLayout(save, close, delete);
     }
 
     public OperationParameter getOperationParameter() {
@@ -172,9 +307,6 @@ public class OperationParameterForm extends HorizontalLayout {
         if (!validateExpressionErrorDescription.isEmpty()){
             operationParameter.setValidateExpressionErrorDescription(validateExpressionErrorDescription.getValue());
         }
-        if (!optionValue.isEmpty()){
-            operationParameter.setOptionValue(optionValue.getValue());
-        }
         if (!dateFormat.isEmpty()){
             operationParameter.setDateFormat(dateFormat.getValue());
         }
@@ -197,6 +329,9 @@ public class OperationParameterForm extends HorizontalLayout {
             operationParameter.setValueWhenInParameterEquals(valueWhenInParameterEquals.getValue());
         }
 
+        operationParameter.setOptionValues(optionValueForm.getOptionValues());
+        operationParameter.setConvertConditions(convertConditionForm.getConvertConditions());
+
         String incompleteValidation = operationParameter.incompleteValidation();
 
         if (!incompleteValidation.isEmpty()){
@@ -214,25 +349,25 @@ public class OperationParameterForm extends HorizontalLayout {
         notification.open();
     }
 
-    public boolean isValid() {
-        boolean result = false;
-
-        if(validateFields())
-            result = true;
-
-        return result;
-    }
-
-    public boolean validateFields(){
-        boolean result = false;
-
-        if(!name.getValue().isEmpty() &&
-                !type.getValue().isEmpty() &&
-                !description.getValue().isEmpty())
-            result = true;
-
-        return result;
-    }
+//    public boolean isValid() {
+//        boolean result = false;
+//
+//        if(validateFields())
+//            result = true;
+//
+//        return result;
+//    }
+//
+//    public boolean validateFields(){
+//        boolean result = false;
+//
+//        if(!name.getValue().isEmpty() &&
+//                !type.getValue().isEmpty() &&
+//                !description.getValue().isEmpty())
+//            result = true;
+//
+//        return result;
+//    }
 
     // Events
     public static abstract class OperationParameterFormEvent extends ComponentEvent<OperationParameterForm> {
