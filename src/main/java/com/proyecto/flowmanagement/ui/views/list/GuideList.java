@@ -134,16 +134,7 @@ public class GuideList extends VerticalLayout {
     }
 
     private List<Pair<String, byte[]>> getFiles(Guide guide){
-        List<Pair<String, byte[]>> files = new LinkedList<>();
-
-        int num = 0;
-        List<byte[]> guideContents = guideGeneratorService.guidePrints(guide);
-        for (byte[] content: guideContents
-             ) {
-                String fileName = "archivo" + num + ".xml";
-                files.add(new Pair<>(fileName, content));
-                num += 1;
-        }
+        List<Pair<String, byte[]>> files = guideGeneratorService.guidePrints(guide);
         return files;
     }
 

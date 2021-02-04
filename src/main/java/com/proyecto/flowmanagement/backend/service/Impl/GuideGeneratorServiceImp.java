@@ -4,6 +4,7 @@ import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.def.TypeOperation;
 import com.proyecto.flowmanagement.backend.def.XMLConstants;
 import com.proyecto.flowmanagement.backend.persistence.entity.*;
+import com.vaadin.flow.internal.Pair;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -26,15 +27,17 @@ import java.util.List;
 @Service
 public class GuideGeneratorServiceImp {
 
-    public List<byte[]> guidePrints (Guide mainGuide){
-        List<byte[]> docs = new LinkedList<>();
-        docs.add(GuidePrint(mainGuide));
+    public List<Pair<String, byte[]>> guidePrints (Guide mainGuide){
+
+        List<Pair<String, byte[]>> files = new LinkedList<>();
+        files.add(new Pair<>(mainGuide.getName(), (GuidePrint(mainGuide))));
+
         if(mainGuide.getGuides()!= null){
             for(Guide guide : mainGuide.getGuides()){
-                docs.add(GuidePrint(guide));
+                files.add(new Pair<>(guide.getName() + ".xml", (GuidePrint(mainGuide))));
             }
         }
-        return docs;
+        return files;
     }
 
     public byte[] GuidePrint(Guide guide) {
