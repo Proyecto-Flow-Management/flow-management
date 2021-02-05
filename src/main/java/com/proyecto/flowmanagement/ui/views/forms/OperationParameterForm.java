@@ -331,6 +331,9 @@ public class OperationParameterForm extends HorizontalLayout {
 
         operationParameter.setOptionValues(optionValueForm.getOptionValues());
         operationParameter.setConvertConditions(convertConditionForm.getConvertConditions());
+        this.optionValuesAccordion.close();
+        this.convertConditionsAccordion.close();
+        this.propertiesAccordion.close();
 
         String incompleteValidation = operationParameter.incompleteValidation();
 

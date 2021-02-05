@@ -28,7 +28,7 @@ public class CandidatesGrupsForm extends VerticalLayout {
     Groups editing;
 
     TextField group = new TextField("GroupName");
-    Button add = new Button("Add");
+    Button add = new Button("+");
     Button delete = new Button("Eliminar");
     Button save = new Button("Guardar");
     Button cancel = new Button("Cancelar");

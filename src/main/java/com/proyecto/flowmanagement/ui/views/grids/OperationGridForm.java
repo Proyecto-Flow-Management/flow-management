@@ -12,6 +12,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -146,6 +147,15 @@ public class OperationGridForm extends HorizontalLayout {
 
     public List<Operation> getOperations() {
         return this.operationList;
+    }
+
+    public void loadOperations(List<Operation> operations)
+    {
+        this.operationList = operations;
+        if(operationList == null)
+            operationList = new LinkedList<>();
+        updateGrid();
+        this.accordion.close();
     }
 
     public void setAsDefault() {

@@ -30,7 +30,7 @@ public class GuideGeneratorServiceImp {
     public List<Pair<String, byte[]>> guidePrints (Guide mainGuide){
 
         List<Pair<String, byte[]>> files = new LinkedList<>();
-        files.add(new Pair<>(mainGuide.getName(), (GuidePrint(mainGuide))));
+        files.add(new Pair<>(mainGuide.getName() + ".xml", (GuidePrint(mainGuide))));
 
         if(mainGuide.getGuides()!= null){
             for(Guide guide : mainGuide.getGuides()){

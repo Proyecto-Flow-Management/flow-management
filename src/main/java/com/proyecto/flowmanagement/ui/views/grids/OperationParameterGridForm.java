@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.OperationParameter;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.forms.OperationParameterForm;

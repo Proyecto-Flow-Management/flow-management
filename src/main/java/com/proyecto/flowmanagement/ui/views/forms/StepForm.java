@@ -158,6 +158,7 @@ public class StepForm extends HorizontalLayout {
           step.setTextId(textId.getValue());
           step.setLabel(label.getValue());
           step.setAlternatives(alternativeGridForm.getAlternatives());
+          step.setOperations(operationGridForm.getOperations());
           step.setStepDocuments(documentsGridForm.getDocuments());
           
           String validacionIncompleta = step.validacionIncompleta();
@@ -182,6 +183,8 @@ public class StepForm extends HorizontalLayout {
         this.textId.setValue(step.getTextId());
         this.text.setValue(step.getText());
         this.alternativeGridForm.loadAlternative(step.getAlternatives());
+        this.operationGridForm.loadOperations(step.getOperations());
+        this.documentsGridForm.loadStepDocuments(step.getStepDocuments());
     }
 
     public Step getStep() {

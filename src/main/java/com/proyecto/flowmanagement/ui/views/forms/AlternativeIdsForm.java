@@ -11,7 +11,6 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import sun.invoke.util.VerifyType;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -96,6 +95,8 @@ public class AlternativeIdsForm extends VerticalLayout {
     }
 
     private void configureGrids() {
+
+        gridAlternatives.addColumn(nombre -> nombre).setHeader("Alternative Id");
         gridAlternatives.asSingleSelect().addValueChangeListener(evt -> edit(evt.getValue()));
         deleteAlternative.addClickListener(buttonClickEvent -> deleteEvent());
     }
@@ -127,5 +128,10 @@ public class AlternativeIdsForm extends VerticalLayout {
     {
         this.alternativesId = alternativesId;
         this.comboAlternatives.setItems(alternativesId);
+    }
+
+    public void setAsDefault(){
+        alternativesInGrid = new LinkedList<>();
+        gridAlternatives.setItems(alternativesInGrid);
     }
 }
