@@ -3,7 +3,9 @@ package com.proyecto.flowmanagement.ui.views.panels;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.ui.views.grids.StepGridForm;
 import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.crud.CrudI18n;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
@@ -16,6 +18,7 @@ public class ActualGuidePanel extends HorizontalLayout {
     Accordion accordion = new Accordion();
     FormLayout basicInformation = new FormLayout();
     public ComboBox<Guide> actualGuide =new ComboBox<>("Guia Actual");
+    Button eliminarGuia = new Button("Eliminar");
     List<Guide> guias = new LinkedList<>();
 
     public ActualGuidePanel()

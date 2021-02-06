@@ -11,7 +11,7 @@ public class ValidateCrossFieldCondition extends AbstractEntity{
     @Column(name = "field_name")
     private String fieldName;
 
-    @Column(name = "condition")
+    @Column(name = "condition_name")
     private String condition;
 
     @Column(name = "message_error")

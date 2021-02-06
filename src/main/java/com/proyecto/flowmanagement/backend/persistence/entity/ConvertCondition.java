@@ -8,7 +8,7 @@ import javax.persistence.Table;
 @Table(name= "convert_condition_parameter")
 public class ConvertCondition extends AbstractEntity{
 
-    @Column(name = "condition")
+    @Column(name = "condition_name")
     private String condition;
 
     @Column(name = "source_unit")

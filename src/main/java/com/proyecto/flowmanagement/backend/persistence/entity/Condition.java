@@ -1,39 +1,39 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.commun.ValidationDTO;
-import com.proyecto.flowmanagement.backend.def.EStatus;
 import com.proyecto.flowmanagement.backend.def.TypeOperation;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 
 @Entity
-@Table(name = "condition")
+@Table(name = "condition_table")
 public class Condition  extends AbstractEntity  implements Serializable {
 
-    @Column(name = "operation_name")
+    @Column(name = "operation_names")
     private String operation;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "operation_type")
     private TypeOperation type;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name="condition_id")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<ConditionParameter> conditionParameter;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="condition_id_derecho")
     @LazyCollection(LazyCollectionOption.FALSE)
     private Condition hijoDerecho;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="condition_id_izquierdo")
     @LazyCollection(LazyCollectionOption.FALSE)
-    private Condition HijoIzquierdo;
+    private Condition hijoIzquierdo;
 
     public String getOperation() {
         return operation;
@@ -68,11 +68,11 @@ public class Condition  extends AbstractEntity  implements Serializable {
     }
 
     public Condition getHijoIzquierdo() {
-        return HijoIzquierdo;
+        return hijoIzquierdo;
     }
 
     public void setHijoIzquierdo(Condition hijoIzquierdo) {
-        HijoIzquierdo = hijoIzquierdo;
+        this.hijoIzquierdo = hijoIzquierdo;
     }
 
     public boolean setUnaryCondition(Condition forEdit, Condition newCondition)
@@ -86,7 +86,7 @@ public class Condition  extends AbstractEntity  implements Serializable {
             this.setHijoDerecho(newCondition);
             return true;
         }
-        else if(HijoIzquierdo!= null && HijoIzquierdo.setUnaryCondition(forEdit,newCondition))
+        else if(hijoIzquierdo!= null && hijoIzquierdo.setUnaryCondition(forEdit,newCondition))
         {
             this.setHijoIzquierdo(newCondition);
             return true;
@@ -107,9 +107,9 @@ public class Condition  extends AbstractEntity  implements Serializable {
             this.hijoDerecho.setOperation(newCondition.operation);
             return true;
         }
-        else if(HijoIzquierdo!= null && HijoIzquierdo.setUnaryCondition(forEdit,newCondition))
+        else if(hijoIzquierdo!= null && hijoIzquierdo.setUnaryCondition(forEdit,newCondition))
         {
-            this.HijoIzquierdo.setOperation(newCondition.operation);
+            this.hijoIzquierdo.setOperation(newCondition.operation);
             return true;
         }
 
@@ -128,13 +128,13 @@ public class Condition  extends AbstractEntity  implements Serializable {
                 return true;
         }
 
-        if(HijoIzquierdo != null)
+        if(hijoIzquierdo != null)
         {
-            if(HijoIzquierdo == eliminar)
+            if(hijoIzquierdo == eliminar)
             {
-                this.HijoIzquierdo = null;
+                this.hijoIzquierdo = null;
             }
-            else if(HijoIzquierdo.deleteCondition(eliminar));
+            else if(hijoIzquierdo.deleteCondition(eliminar));
             return true;
         }
 
@@ -204,17 +204,17 @@ public class Condition  extends AbstractEntity  implements Serializable {
                 }
             }
 
-            if(HijoIzquierdo !=null)
+            if(hijoIzquierdo !=null)
             {
-                if(HijoIzquierdo.getType() == TypeOperation.binaryCondition)
+                if(hijoIzquierdo.getType() == TypeOperation.binaryCondition)
                 {
-                    ValidationDTO validacionBinary = HijoIzquierdo.validarUnaryCompleto();
+                    ValidationDTO validacionBinary = hijoIzquierdo.validarUnaryCompleto();
                     if(validacionBinary.getError().size() > 0 || validacionBinary.getValidationDTOList().size() > 0)
                         validationGuide.addList(validacionBinary);
                 }
                 else
                 {
-                    ValidationDTO validacionUnary = HijoIzquierdo.validarUnaryCompleto();
+                    ValidationDTO validacionUnary = hijoIzquierdo.validarUnaryCompleto();
                     if(validacionUnary.getError().size() > 0 || validacionUnary.getValidationDTOList().size() > 0)
                         validationGuide.addList(validacionUnary);
                 }

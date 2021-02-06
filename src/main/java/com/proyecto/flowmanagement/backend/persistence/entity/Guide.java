@@ -255,4 +255,30 @@ public class Guide extends AbstractEntity implements Serializable {
 
 		return erroresEncontrados;
 	}
+
+	public Guide eliminarGuiaRecursivo()
+	{
+		if(this.getGuides() != null)
+		{
+			for (Guide aux : this.getGuides()) {
+
+				if(aux.editing)
+				{
+					return aux;
+				}
+
+				if(aux.eliminarGuiaRecursivo() == null)
+					return null;
+			}
+		}
+		return  null;
+	}
+
+	public void eliminarGuia()
+	{
+		Guide paraEliminar = this.eliminarGuiaRecursivo();
+		if(paraEliminar != null)
+			this.guides.remove(paraEliminar);
+	}
+
 }

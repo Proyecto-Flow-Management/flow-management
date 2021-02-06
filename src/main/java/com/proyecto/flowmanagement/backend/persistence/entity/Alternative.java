@@ -29,7 +29,7 @@ public class Alternative  extends AbstractEntity   implements Serializable {
 	private boolean newStep;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="alternative_unary_id")
+	@JoinColumn(name="alternative_id")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Condition> conditions;
 

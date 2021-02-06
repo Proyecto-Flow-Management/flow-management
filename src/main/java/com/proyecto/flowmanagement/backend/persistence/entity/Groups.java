@@ -8,7 +8,7 @@ import javax.persistence.Table;
 @Table(name= "groups_operations")
 public class Groups extends AbstractEntity {
 
-    @Column(name = "condition")
+    @Column(name = "condition_name")
     private String groupName;
 
     public String getGroupName() {

@@ -67,6 +67,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
 
     public Button save = new Button("Guardar");
     public Button validar = new Button("Validar");
+    public Button delete = new Button("Eliminar");
 
     Guide raiz;
     Guide editado;
@@ -124,11 +125,18 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     private void configureActions() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         validar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         save.addClickListener(buttonClickEvent -> guardarGuias());
         validar.addClickListener(buttonClickEvent -> validarGuia());
-
+        delete.setVisible(false);
+        delete.addClickListener(buttonClickEvent -> deleteGuide());
         actionsLayout = new HorizontalLayout();
-        actionsLayout.add(save,validar);
+        actionsLayout.add(save,validar,delete);
+    }
+
+    private void deleteGuide()
+    {
+        raiz.eliminarGuia();
     }
 
 
@@ -254,7 +262,10 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         if(valor == raiz)
             raiz.editing = true;
         else
+        {
             raiz.setearParaEditar(valor);
+            delete.setVisible(true);
+        }
 
         if(valor != null)
         {
