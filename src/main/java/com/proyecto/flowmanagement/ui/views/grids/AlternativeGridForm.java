@@ -127,10 +127,10 @@ public class AlternativeGridForm extends HorizontalLayout {
         alternativeGrid.addColumn(alternative ->
                 {
                     boolean step = alternative.getGuideName() == null || alternative.getGuideName().isEmpty();
-                    return step ? "" : alternative.getGuideName();}).setHeader("Next Guide");
+                    return step ? "" : alternative.getGuideName();}).setHeader("Next Guide").setSortable(true);
 
         alternativeGrid.addColumn(alternative ->
-                { return alternative.getGuideName() != null && !alternative.getGuideName().isEmpty()? "" : alternative.getNextStep();}).setHeader("Next Step");
+                { return alternative.getGuideName() != null && !alternative.getGuideName().isEmpty()? "" : alternative.getNextStep();}).setHeader("Next Step").setSortable(true);
 
         alternativeGrid.asSingleSelect().addValueChangeListener(evt -> editAlternative(evt.getValue()));
     }

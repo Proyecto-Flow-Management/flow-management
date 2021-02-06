@@ -131,13 +131,18 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
 
     private void guardarGuias()
     {
-        actualizarGuiaActual();
-        raiz.setGuides(new LinkedList<>());
+        if (!guidePanel.name.getValue().trim().isEmpty()) {
+            actualizarGuiaActual();
+            raiz.setGuides(new LinkedList<>());
 
-        if(!editing)
-            guideService.add(raiz);
-        else
-            guideService.update(raiz);
+            if (!editing)
+                guideService.add(raiz);
+            else
+                guideService.update(raiz);
+        }
+        else{
+            mostrarMensajeError("La guía debe tener un nombre al menos!");
+        }
     }
 
     private void configureActualGuidePanel()

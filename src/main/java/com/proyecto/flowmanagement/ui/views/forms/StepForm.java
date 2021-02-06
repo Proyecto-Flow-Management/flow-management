@@ -12,10 +12,12 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.shared.Registration;
@@ -37,15 +39,15 @@ public class StepForm extends HorizontalLayout {
     OperationGridForm operationGridForm = new OperationGridForm();
 
     VerticalLayout form = new VerticalLayout();
-    HorizontalLayout elements = new HorizontalLayout();
+    FormLayout elements = new FormLayout();
     HorizontalLayout alternativeGridLayout = new HorizontalLayout();
     HorizontalLayout stepDocumentsLayout = new HorizontalLayout();
     HorizontalLayout operationsLayout = new HorizontalLayout();
     HorizontalLayout actionsLayout = new HorizontalLayout();
 
-    TextField text = new TextField("Texto Step");
-    TextField textId = new TextField("TextId Step");
-    TextField label = new TextField("Label Step");
+    TextArea text = new TextArea("Text");
+    TextField textId = new TextField("StepId");
+    TextField label = new TextField("Label");
 
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
@@ -122,10 +124,8 @@ public class StepForm extends HorizontalLayout {
     private void configureElements() {
         addClassName("stepSection");
         delete.setVisible(false);
-//        this.text.setValue(" ");
-//        this.textId.setValue(" ");
-//        this.label.setValue(" ");
 
+        this.text.setPlaceholder("Descripción de la guía...");
         this.text.setRequired(true);
         this.text.setErrorMessage("Campo obligatorio");
         this.textId.setRequired(true);
@@ -133,8 +133,12 @@ public class StepForm extends HorizontalLayout {
         this.label.setRequired(true);
         this.label.setErrorMessage("Campo obligatorio");
 
-
-        elements.add(text,textId,label);
+        elements.add(textId,label,text);
+        elements.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3));
+        elements.setWidthFull();
         actionsLayout.add(createButtonsLayout());
     }
 
@@ -158,6 +162,7 @@ public class StepForm extends HorizontalLayout {
           step.setTextId(textId.getValue());
           step.setLabel(label.getValue());
           step.setAlternatives(alternativeGridForm.getAlternatives());
+          step.setOperations(operationGridForm.getOperations());
           step.setStepDocuments(documentsGridForm.getDocuments());
           
           String validacionIncompleta = step.validacionIncompleta();
@@ -182,6 +187,8 @@ public class StepForm extends HorizontalLayout {
         this.textId.setValue(step.getTextId());
         this.text.setValue(step.getText());
         this.alternativeGridForm.loadAlternative(step.getAlternatives());
+        this.operationGridForm.loadOperations(step.getOperations());
+        this.documentsGridForm.loadStepDocuments(step.getStepDocuments());
     }
 
     public Step getStep() {
@@ -192,9 +199,9 @@ public class StepForm extends HorizontalLayout {
     }
 
     public void setAsDefault() {
-        this.label.setValue(" ");
-        this.textId.setValue(" ");
-        this.text.setValue(" ");
+        this.label.clear();
+        this.textId.clear();
+        this.text.clear();
         this.alternativeGridForm.setAsDefault();
         this.operationGridForm.setAsDefault();
         this.documentsGridForm.setAsDefault();
