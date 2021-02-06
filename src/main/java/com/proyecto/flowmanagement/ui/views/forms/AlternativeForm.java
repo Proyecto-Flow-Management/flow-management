@@ -17,6 +17,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.Autocomplete;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.ui.Window;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +40,6 @@ public class AlternativeForm extends VerticalLayout {
     ComboBox<Step> stepComboBox = new ComboBox<>("Steps");
 
     public boolean isValid;
-
     public Button save = new Button("Guardar");
     public Button delete = new Button("Eliminar");
     public Button close = new Button("Cancelar");

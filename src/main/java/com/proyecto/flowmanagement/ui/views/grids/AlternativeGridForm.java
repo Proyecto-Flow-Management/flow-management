@@ -11,6 +11,9 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.server.Sizeable;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Window;
 
 import java.util.LinkedList;
 import java.util.List;
