@@ -7,12 +7,13 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 @Entity
 @Table(name = "condition")
-public class Condition  extends AbstractEntity{
+public class Condition  extends AbstractEntity  implements Serializable {
 
     @Column(name = "operation_name")
     private String operation;

@@ -8,12 +8,13 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 @Entity
 @Table(name = "alternative")
-public class Alternative  extends AbstractEntity{
+public class Alternative  extends AbstractEntity   implements Serializable {
 	
 	@Column(name = "guide_name")
 	private String guideName;

@@ -9,12 +9,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 @Entity
 @Table(name = "condition_parameter")
-public class ConditionParameter  extends AbstractEntity{
+public class ConditionParameter  extends AbstractEntity   implements Serializable {
 	
 	@Column(name = "field")
     private String field;

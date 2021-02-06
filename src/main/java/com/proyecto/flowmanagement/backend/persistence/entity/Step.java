@@ -9,12 +9,13 @@ import org.hibernate.annotations.LazyCollectionOption;
 import springfox.documentation.spring.web.readers.operation.OperationReader;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 @Entity
 @Table(name = "step")
-public class Step extends AbstractEntity{
+public class Step extends AbstractEntity  implements Serializable {
 
 	@Column(name = "label")
 	private String label;

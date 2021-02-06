@@ -6,12 +6,13 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 @Entity
 @Table(name = "operation_parameter")
-public class OperationParameter extends AbstractEntity {
+public class OperationParameter extends AbstractEntity   implements Serializable {
 
 	@Column(name = "name")
     private String name;
