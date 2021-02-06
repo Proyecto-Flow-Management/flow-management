@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
+import com.proyecto.flowmanagement.backend.commun.ValidationDTO;
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -90,32 +91,56 @@ public class Guide extends AbstractEntity implements Serializable {
 		this.guides = guides;
 	}
 
-	public List<String> validarGuia()
+	public ValidationDTO validarGuia()
 	{
-		List<String> erroresEncontrados = new LinkedList<>();
+		ValidationDTO validationGuide = new ValidationDTO();
+		validationGuide.setLabel("Guide-Name: " + this.getName());
 
 		if(this.name.trim().isEmpty())
-			erroresEncontrados.add("El campo Name es obligatorio");
+			validationGuide.addError("El campo Name es obligatorio");
 
 		if(this.label.trim().isEmpty())
-			erroresEncontrados.add("El campo Label es obligatorio");
+			validationGuide.addError("El campo Label es obligatorio");
 
 		if(this.mainStep.trim().isEmpty())
-			erroresEncontrados.add("El campo MainStep es obligatorio");
+			validationGuide.addError("El campo MainStep es obligatorio");
 
 		if(this.steps == null || this.steps.size() == 0)
 		{
-			erroresEncontrados.add("La Guia no contiene ningun Step");
+			validationGuide.addError("La Guia no contiene ningun Step");
 		}
 		else
 		{
 			for (Step step:this.steps)
 			{
-				erroresEncontrados.addAll(step.validarStep());
+				ValidationDTO vaalidacionStep = step.validarStep();
+				if(vaalidacionStep.getValidationDTOList().size() > 0 || vaalidacionStep.getError().size() >0)
+					validationGuide.addList(vaalidacionStep);
 			}
 		}
 
-		return erroresEncontrados;
+		if(operations != null && operations.size() > 0)
+		{
+			for (Operation operation : this.operations)
+			{
+				if(this.operations instanceof TaskOperation)
+				{
+					ValidationDTO validarOperation = ((TaskOperation )operations).validateOperation();
+					if(validarOperation.getValidationDTOList().size() > 0 && validarOperation.getError().size() >0)
+						validationGuide.addList(validarOperation);
+				}
+				else
+				{
+					ValidationDTO validarOperation = ((SimpleOperation )operations).validateOperation();
+					if(validarOperation.getValidationDTOList().size() > 0 && validarOperation.getError().size() >0)
+						validationGuide.addList(validarOperation);
+				}
+			}
+		}
+
+		validationGuide.addListError(validacionesEspeciales());
+
+		return validationGuide;
 	}
 
 	public String validacionIncompleta()

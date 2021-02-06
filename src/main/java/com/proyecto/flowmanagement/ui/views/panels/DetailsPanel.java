@@ -24,7 +24,6 @@ public class DetailsPanel  extends HorizontalLayout {
     Accordion accordion = new Accordion();
     FormLayout basicInformation = new FormLayout();
     TreeGrid<CustomNode> arbol = new TreeGrid<CustomNode>(CustomNode.class);
-
     TreeDataProvider<CustomNode> dataProvider = (TreeDataProvider<CustomNode>) arbol.getDataProvider();
     TreeData<CustomNode> data = dataProvider.getTreeData();
 

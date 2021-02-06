@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
+import com.proyecto.flowmanagement.backend.commun.ValidationDTO;
 import com.proyecto.flowmanagement.backend.def.SimpleOperationType;
 import com.proyecto.flowmanagement.backend.def.TaskOperationType;
 import org.hibernate.annotations.Fetch;
@@ -92,32 +93,34 @@ public class TaskOperation extends Operation{
         this.groupsNames = groupsNames;
     }
 
-    public List<String> validateOperation() {
-        List<String> encounteredErrors = new LinkedList<>();
+    public ValidationDTO validateOperation() {
+
+        ValidationDTO validationGuide = new ValidationDTO();
+        validationGuide.setLabel("Op-Label: " + getLabel() );
 
         if(this.getName().isEmpty())
-            encounteredErrors.add("El campo Name es obligatorio");
+            validationGuide.addError("El campo Name es obligatorio");
 
         if (this.getLabel().isEmpty())
-            encounteredErrors.add("El campo Label es obligatorio");
+            validationGuide.addError("El campo Label es obligatorio");
 
         if (this.getOperationType().toString() == null)
-            encounteredErrors.add("El campo OperationType es obligatorio");
+            validationGuide.addError("El campo OperationType es obligatorio");
 
         if (this.getOperationOrder() != null){
             if (this.getOperationOrder() <= 0)
-                encounteredErrors.add("El campo OperationOrder debe ser un entero positivo");
+                validationGuide.addError("El campo OperationOrder debe ser un entero positivo");
         }
 
         if (this.getNotifyOperationDelay() != null){
             if (this.getNotifyOperationDelay() <= 0)
-                encounteredErrors.add("El campo NotifyOperationDelay debe ser un entero positivo");
+                validationGuide.addError("El campo NotifyOperationDelay debe ser un entero positivo");
         }
 
         if (this.type.toString().isEmpty())
-            encounteredErrors.add("El campo Type es obligatorio");
+            validationGuide.addError("El campo Type es obligatorio");
 
-        return encounteredErrors;
+        return validationGuide;
     }
 
     public String incompleteValidation() {

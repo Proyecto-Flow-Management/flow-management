@@ -26,10 +26,10 @@ public class MainLayout extends AppLayout {
         H1 logo = new H1("Flow Management");
         logo.addClassName("logo");
 
-        Anchor logout = new Anchor("logout", "Log out");
+        Anchor logout = new Anchor("login", "Log out");
 
         HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, logout);
-        header.addClassName("header");
+header.addClassName("header");
         header.setWidth("100%");
         header.expand(logo);
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);

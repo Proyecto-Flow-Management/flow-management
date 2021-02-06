@@ -1,11 +1,13 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
+import com.proyecto.flowmanagement.backend.commun.ValidationDTO;
 import com.proyecto.flowmanagement.backend.def.EStatus;
 import com.proyecto.flowmanagement.backend.def.TypeOperation;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -159,23 +161,65 @@ public class Condition  extends AbstractEntity{
         return retorno;
     }
 
-    public String validarBinaryCompleto(){
+    public ValidationDTO validarUnaryCompleto(){
 
-        String retorno = "";
+        ValidationDTO validationGuide = new ValidationDTO();
+        validationGuide.setLabel("UnCond-Operator: " + this.getOperation());
 
         if(this.operation.trim().isEmpty())
-            retorno = "El campo Operation es obligatorio";
+            validationGuide.addError("El campo Operation es obligatorio");
 
-        return retorno;
+        return validationGuide;
     }
 
-    public String validarUnaryCompleto(){
 
-        String retorno = "";
+    public ValidationDTO validarBinaryCompleto(){
+
+        ValidationDTO validationGuide = new ValidationDTO();
+        validationGuide.setLabel("BinCond-Operator: " + this.getOperation());
 
         if(this.operation.trim().isEmpty())
-            retorno = "El campo Operation es obligatorio";
+            validationGuide.addError("El campo Operation es obligatorio");
 
-        return retorno;
+        if(this.hijoDerecho ==null || this.getHijoIzquierdo() == null)
+        {
+            validationGuide.addError("Las condiciones de tipo 'BinaryCondition', deben tener 2 hijos asociados.");
+        }
+        else
+        {
+            if(hijoDerecho != null)
+            {
+                if(hijoDerecho.getType() == TypeOperation.binaryCondition)
+                {
+                    ValidationDTO validacionBinary = hijoDerecho.validarUnaryCompleto();
+                    if(validacionBinary.getError().size() > 0 || validacionBinary.getValidationDTOList().size() > 0)
+                        validationGuide.addList(validacionBinary);
+                }
+                else
+                {
+                    ValidationDTO validacionUnary = hijoDerecho.validarUnaryCompleto();
+                    if(validacionUnary.getError().size() > 0 || validacionUnary.getValidationDTOList().size() > 0)
+                        validationGuide.addList(validacionUnary);
+                }
+            }
+
+            if(HijoIzquierdo !=null)
+            {
+                if(HijoIzquierdo.getType() == TypeOperation.binaryCondition)
+                {
+                    ValidationDTO validacionBinary = HijoIzquierdo.validarUnaryCompleto();
+                    if(validacionBinary.getError().size() > 0 || validacionBinary.getValidationDTOList().size() > 0)
+                        validationGuide.addList(validacionBinary);
+                }
+                else
+                {
+                    ValidationDTO validacionUnary = HijoIzquierdo.validarUnaryCompleto();
+                    if(validacionUnary.getError().size() > 0 || validacionUnary.getValidationDTOList().size() > 0)
+                        validationGuide.addList(validacionUnary);
+                }
+            }
+        }
+
+        return validationGuide;
     }
 }

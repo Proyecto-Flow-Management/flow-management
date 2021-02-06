@@ -1,5 +1,6 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
+import com.proyecto.flowmanagement.backend.commun.ValidationDTO;
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -89,36 +90,39 @@ public class Step extends AbstractEntity{
 		this.stepDocuments = stepDocuments;
 	}
 
-	public List<String> validarStep()
+	public ValidationDTO validarStep()
 	{
-		List<String> erroresEncontrados = new LinkedList<>();
+		ValidationDTO validationGuide = new ValidationDTO();
+		validationGuide.setLabel("Step-Label: " + getLabel() );
 
 		if(this.textId.trim().isEmpty())
-			erroresEncontrados.add("El campo StepID es obligatorio");
+			validationGuide.addError("El campo StepID es obligatorio");
 
 		if(this.label.trim().isEmpty())
-			erroresEncontrados.add("El campo Label es obligatorio");
+			validationGuide.addError("El campo Label es obligatorio");
 
 		if(this.text.trim().isEmpty())
-			erroresEncontrados.add("El campo Text es obligatorio");
+			validationGuide.addError("El campo Text es obligatorio");
 
 		if(this.getAlternatives() == null || this.getAlternatives().size() == 0)
-			erroresEncontrados.add("El Step no contiene ningun Alternative");
+			validationGuide.addError("El Step no contiene ningun Alternative");
 		else{
 			for (Alternative alternative: this.alternatives) {
-				erroresEncontrados.addAll(alternative.validarAltarnative());
+				ValidationDTO validacionAlternative = alternative.validarAltarnative();
+				if(validacionAlternative.getError().size()>0 || validacionAlternative.getValidationDTOList().size() > 0)
+					validationGuide.addList(alternative.validarAltarnative());
 			}
 		}
 
 		if(this.getOperations() == null || this.getOperations().size() == 0)
-			erroresEncontrados.add("El Step no contiene ningun Operation");
+			validationGuide.addError("El Step no contiene ningun Operation");
 		else{
 			for (Operation operation: this.operations) {
 				//erroresEncontrados.addAll(operation.());
 			}
 		}
 
-		return erroresEncontrados;
+		return validationGuide;
 	}
 
 	public String validacionIncompleta()

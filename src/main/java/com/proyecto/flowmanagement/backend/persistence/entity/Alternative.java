@@ -1,5 +1,7 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
+import com.proyecto.flowmanagement.backend.commun.ValidationDTO;
+import com.proyecto.flowmanagement.backend.def.TypeOperation;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
@@ -109,17 +111,35 @@ public class Alternative  extends AbstractEntity{
 		}
 	}
 
-	public List<String> validarAltarnative()
+	public ValidationDTO validarAltarnative()
 	{
-		List<String> erroresEncontrados = new LinkedList<>();
+		ValidationDTO validationGuide = new ValidationDTO();
+		validationGuide.setLabel("Alt-Label: " + this.getLabel());
 
 		if(this.label.trim().isEmpty())
-			erroresEncontrados.add("El campo Label es obligatorio");
+			validationGuide.addError("El campo Label es obligatorio");
 
 		if(this.getNextStep().trim().isEmpty() && this.nextStep.trim().isEmpty())
-			erroresEncontrados.add("Debe seleccionar una guia o un step para el Alternative");
+			validationGuide.addError("Debe seleccionar una guia o un step para el Alternative");
 
-		return erroresEncontrados;
+		if(this.conditions != null && this.conditions.size() > 0)
+		{
+			for (Condition condition: this.conditions) {
+				if(condition.getType() == TypeOperation.unaryCondition)
+				{
+					ValidationDTO validacionUnary = condition.validarUnaryCompleto();
+					if(validacionUnary.getError().size() > 0 || validacionUnary.getValidationDTOList().size() > 0)
+						validationGuide.addList(condition.validarUnaryCompleto());
+				}
+				else
+				{
+					ValidationDTO validacionBinary = condition.validarBinaryCompleto();
+					if(validacionBinary.getError().size() > 0 || validacionBinary.getValidationDTOList().size() >0)
+						validationGuide.addList(condition.validarBinaryCompleto());
+				}
+			}
+		}
+		return validationGuide;
 	}
 
 	public String validacionIncompleta()
