@@ -191,7 +191,9 @@ public class ConditionsForm extends HorizontalLayout {
         conditionTreeForm.updateGrid();
         this.opcionesBinary.setVisible(false);
         this.opcionesUnary.setVisible(false);
-        this.agregarLayout.setVisible(true);
+        actual = null;
+        if(alternative.getConditions().size()==0)
+            agregarLayout.setVisible(true);
     }
 
     private void editarUnary() {
@@ -324,10 +326,9 @@ public class ConditionsForm extends HorizontalLayout {
                 actual.setHijoIzquierdo(binaryCondition);
         }
         else
-            {
-                alternative.setBinaryCondition(editando, binaryCondition);
-
-            }
+        {
+            alternative.setBinaryCondition(editando, binaryCondition);
+        }
 
         this.binaryConditionForm.setVisible(false);
         conditionTreeForm.setVisible(true);

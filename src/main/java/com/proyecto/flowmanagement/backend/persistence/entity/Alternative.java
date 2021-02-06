@@ -76,8 +76,9 @@ public class Alternative  extends AbstractEntity{
 		for (Condition actual: this.conditions) {
 			if(actual == oldCondition)
 			{
+				actual.setOperation(newCondition.getOperation());
 				int index = this.conditions.indexOf(actual);
-				this.conditions.set(index, newCondition);
+				this.conditions.set(index, actual);
 			}
 			else if(actual.setUnaryCondition(oldCondition,newCondition));
 				break;
@@ -90,7 +91,8 @@ public class Alternative  extends AbstractEntity{
 			if(actual == oldCondition)
 			{
 				int index = this.conditions.indexOf(actual);
-				this.conditions.set(index, newCondition);
+				actual.setOperation(newCondition.getOperation());
+				this.conditions.set(index, actual);
 			}
 			else if(actual.setBinaryCondition(oldCondition,newCondition));
 				break;
