@@ -86,7 +86,6 @@ public class OperationForm extends VerticalLayout {
     private TextField service = new TextField("Service");
     private ComboBox<TaskOperationType> taskOperationType = new ComboBox<>("Type");
     private TextField targetSystem = new TextField("Target System");
-    private TextField candidateGroups = new TextField("Candidate Groups");
     private TextField optionValues = new TextField("Option Values");
     private TextField convertConditions = new TextField("Convert Conditions");
     private TextField properties = new TextField("Properties");
@@ -206,9 +205,10 @@ public class OperationForm extends VerticalLayout {
     }
 
     private void addAlternativeIdsForm(Boolean choice){
-        if (choice){
-            elements.add(alternativeIdsForm);
-        }
+//        if (choice){
+//            elements.add(alternativeIdsForm);
+//        }
+        alternativesIdsAccordion.setVisible(choice);
     }
 
     private void addElements(OperationType operationType){
@@ -219,9 +219,10 @@ public class OperationForm extends VerticalLayout {
             this.service.setRequired(true);
             this.service.setErrorMessage("Este campo es obligatorio.");
 
-            elementsForm.remove(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
+            elementsForm.remove(taskOperationType,targetSystem,mailTemplate,mailTo,mailSubjectPrefix);
             elementsForm.add(simpleOperationType,service);
-            elements.remove(groupsAccordion);
+            groupsAccordion.setVisible(false);
+//            elements.remove(groupsAccordion);
         }
         else if(operationType== OperationType.taskOperation){
             this.taskOperationType.setRequired(true);
@@ -229,8 +230,9 @@ public class OperationForm extends VerticalLayout {
             this.taskOperationType.setItems(TaskOperationType.values());
 
             elementsForm.remove(simpleOperationType,service);
-            elementsForm.add(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
-            elements.add(groupsAccordion);
+            elementsForm.add(taskOperationType,targetSystem,mailTemplate,mailTo,mailSubjectPrefix);
+            groupsAccordion.setVisible(true);
+//            elements.add(groupsAccordion);
         }
     }
 
@@ -334,9 +336,11 @@ public class OperationForm extends VerticalLayout {
         this.operationType.setValue(operation.getOperationType());
         if (operation.getNotifyAlternative()!=null) {
             this.notifyAlternative.setValue(operation.getNotifyAlternative().toString());
+            addAlternativeIdsForm(operation.getNotifyAlternative());
         }
         else {
             this.notifyAlternative.clear();
+            addAlternativeIdsForm(false);
         }
         if (operation.getNotifyOperation()!=null) {
             this.notifyOperation.setValue(operation.getNotifyOperation().toString());
@@ -362,6 +366,7 @@ public class OperationForm extends VerticalLayout {
                 else{
                     this.service.clear();
                 }
+                groupsAccordion.setVisible(false);
             }
             if (operationType.getValue() == OperationType.taskOperation) {
                 TaskOperation taskOperation = (TaskOperation) operation;
@@ -395,8 +400,8 @@ public class OperationForm extends VerticalLayout {
                 else {
                     this.targetSystem.clear();
                 }
-
                 this.candidatesGrupsForm.setGroupsNames(taskOperation.getGroupsIds());
+                groupsAccordion.setVisible(true);
 
             }
             addElements(this.operationType.getValue());
@@ -406,13 +411,19 @@ public class OperationForm extends VerticalLayout {
             this.simpleOperationType.clear();
             this.taskOperationType.clear();
             this.candidatesGrupsForm.setAsDefault();
+            groupsAccordion.setVisible(false);
         }
 
         this.inParameterGridForm.setOperationsParameters(operation.getInParameters());
         this.outParameterGridForm.setOperationsParameters(operation.getOutParameters());
+        this.inParameterAccordion.close();
+        this.outParameterAccordion.close();
+        this.alternativesIdsAccordion.close();
+        this.groupsAccordion.close();
         if (operation.getConditions() != null){
             this.conditionForm.setConditions(operation.getConditions());
         }
+        this.conditionFormAccordion.close();
     }
 
     private Component createButtonsLayout() {
@@ -449,9 +460,6 @@ public class OperationForm extends VerticalLayout {
             taskOperation.setType(taskOperationType.getValue());
             if (!targetSystem.isEmpty()){
                 taskOperation.setTargetSystem(targetSystem.getValue());
-            }
-            if (!candidateGroups.isEmpty()){
-                taskOperation.setCandidateGroups(candidateGroups.getValue());
             }
             if (!mailTemplate.isEmpty()){
                 taskOperation.setMailTemplate(mailTemplate.getValue());
@@ -543,14 +551,20 @@ public class OperationForm extends VerticalLayout {
         operationType.clear();
         service.clear();
         targetSystem.clear();
-        candidateGroups.clear();
         mailTemplate.clear();
         mailTo.clear();
         mailSubjectPrefix.clear();
         inParameterGridForm.setAsDefault();
         outParameterGridForm.setAsDefault();
         candidatesGrupsForm.setAsDefault();
+        groupsAccordion.setVisible(false);
         conditionForm.setAsDefault();
+        conditionFormAccordion.close();
+        alternativeIdsForm.setAsDefault();
+        addAlternativeIdsForm(false);
+        alternativesIdsAccordion.close();
+        groupsAccordion.close();
+
 
 //        elements.remove(taskOperationType,targetSystem,candidateGroups,mailTemplate,mailTo,mailSubjectPrefix);
 //        elements.remove(simpleOperationType,service);

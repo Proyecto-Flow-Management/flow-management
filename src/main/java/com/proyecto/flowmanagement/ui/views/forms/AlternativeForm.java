@@ -6,10 +6,12 @@ import com.proyecto.flowmanagement.ui.views.grids.ConditionsGridForm;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -30,6 +32,7 @@ public class AlternativeForm extends VerticalLayout {
     private Alternative alternative;
 
     public ConditionsForm conditionForm;
+    Accordion conditionFormAccordion = new Accordion();
 
     TextField label = new TextField("Label Alternative");
 
@@ -92,9 +95,13 @@ public class AlternativeForm extends VerticalLayout {
 
         conditionsLayout.add(conditionForm);
 
-        form.add(elements,conditionsLayout, actionsLayout);
+        conditionFormAccordion.setWidthFull();
+        conditionFormAccordion.close();
+        conditionFormAccordion.add("Conditions", conditionsLayout);
 
-        add(form);
+        form.add(elements);
+
+        add(form, conditionFormAccordion, actionsLayout);
     }
 
     private void configurarOpcion(String valor) {
@@ -209,5 +216,6 @@ public class AlternativeForm extends VerticalLayout {
         option.setValue("nextStep Nuevo");
         nextStep.setVisible(true);
         conditionForm.agregarLayout.setVisible(true);
+        conditionFormAccordion.close();
     }
 }

@@ -113,7 +113,10 @@ public class StepGridForm  extends VerticalLayout {
 
     private void configureGrid() {
         stepGrid.addClassName("user-grid");
-        stepGrid.setColumns("text", "textId","label");
+        stepGrid.setColumns();
+        stepGrid.addColumn(step ->step.getTextId()).setHeader("Step Id").setSortable(true);
+        stepGrid.addColumn(step ->step.getLabel()).setHeader("Label").setSortable(true);
+
         stepGrid.setWidth("80%");
 
         stepGrid.getColumns().forEach(col -> col.setAutoWidth(true));

@@ -67,7 +67,7 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         grid.setItems(guideService.getAll());
     }
 
-    private void updateGrid(){
+    public void updateGrid(){
         grid.setItems(guideService.getAll());
     }
 
@@ -164,7 +164,7 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         }
     }
 
-    private void duplicateGuide(Guide guide){
+    public void duplicateGuide(Guide guide){
         Guide newGuide =  SerializationUtils.clone(guide);
         newGuide.setName("Copia-" + guide.getName());
         guideService.add(newGuide);

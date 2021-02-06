@@ -26,6 +26,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
+import sun.plugin2.main.server.JVMHealthData;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 @Route(value = "CrearGuia", layout = MainLayout.class)
 @PageTitle("Crear Guia | Flow Management")
 public class GuideCreator extends VerticalLayout implements HasUrlParameter<String> {
+
 
     @Override
     public void setParameter(BeforeEvent event
@@ -132,15 +134,25 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
 
     private void guardarGuias()
     {
-        actualizarGuiaActual();
-        raiz.setGuides(new LinkedList<>());
+        if (!guidePanel.name.getValue().trim().isEmpty()) {
+            actualizarGuiaActual();
+            raiz.setGuides(new LinkedList<>());
+
+            if (!editing)
+                guideService.add(raiz);
+            else
+                guideService.update(raiz);
+        }
+        else{
+            mostrarMensajeError("La guía debe tener un nombre al menos!");
+        }
 
         if(!editing)
             guideService.add(raiz);
         else
             guideService.update(raiz);
 
-        UI.getCurrent().navigate("GuideList/" + 1);
+        UI.getCurrent().navigate("GuideList/" +1);
     }
 
     private void configureActualGuidePanel()
