@@ -136,4 +136,10 @@ public class Step extends AbstractEntity{
 
 		return retorno;
 	}
+
+	@Override
+	public String toString(){
+		return this.getText();
+	}
+
 }

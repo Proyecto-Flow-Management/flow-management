@@ -40,7 +40,7 @@ public class ConditionsForm extends HorizontalLayout {
 
     Condition editando;
 
-    HorizontalLayout agregarLayout = new HorizontalLayout();
+    public HorizontalLayout agregarLayout = new HorizontalLayout();
     HorizontalLayout opcionesUnary = new HorizontalLayout();
     HorizontalLayout opcionesBinary = new HorizontalLayout();
     HorizontalLayout unaryLayout = new HorizontalLayout();
@@ -201,25 +201,24 @@ public class ConditionsForm extends HorizontalLayout {
     }
 
     private void editarBinary() {
+        editando = actual;
         showBinaryConditionForm();
         binaryConditionForm.setBinaryCondition(actual);
     }
 
     private void cargarOperaciones(Condition value) {
-        if(value == null)
-        {
-            actual = null;
-            this.opcionesUnary.setVisible(false);
-            this.opcionesBinary.setVisible(false);
-            this.agregarLayout.setVisible(true);
-        }
-        else
+        if(value != null)
         {
             actual = value;
             if(value.getType() == TypeOperation.binaryCondition)
                 mostrarOpcionesBinary(actual);
             else
                 mostrarOpcionesUnary();
+        }
+        else
+        {
+            this.opcionesUnary.setVisible(false);
+            this.opcionesBinary.setVisible(false);
         }
     }
 
@@ -273,8 +272,8 @@ public class ConditionsForm extends HorizontalLayout {
         conditionTreeForm.conditions = alternative.getConditions();
         this.agregarUnaryABinary.setVisible(false);
         this.agregarBinaryEnBinary.setVisible(false);
-        this.agregarCondition.setVisible(true);
         conditionTreeForm.updateGrid();
+        agregarLayout.setVisible(false);
     }
 
     private void modificarUnaryCondicion(Condition actual, Condition editado) {
@@ -315,17 +314,26 @@ public class ConditionsForm extends HorizontalLayout {
 
         Condition binaryCondition = binaryConditionForm.getBinaryCondition();
 
-        if(actual == null)
-           this.alternative.addCondition(binaryCondition);
-        else if(actual.getHijoDerecho() == null)
-            actual.setHijoDerecho(binaryCondition);
-        else if(actual.getHijoIzquierdo() == null)
-            actual.setHijoIzquierdo(binaryCondition);
+        if(editando == null)
+        {
+            if(actual == null)
+                this.alternative.addCondition(binaryCondition);
+            else if(actual.getHijoDerecho() == null)
+                actual.setHijoDerecho(binaryCondition);
+            else if(actual.getHijoIzquierdo() == null)
+                actual.setHijoIzquierdo(binaryCondition);
+        }
+        else
+            {
+                alternative.setBinaryCondition(editando, binaryCondition);
+
+            }
 
         this.binaryConditionForm.setVisible(false);
         conditionTreeForm.setVisible(true);
         conditionTreeForm.conditions = alternative.getConditions();
         conditionTreeForm.updateGrid();
+        agregarLayout.setVisible(false);
     }
 
     public List<Condition> getConditions(){

@@ -208,5 +208,6 @@ public class AlternativeForm extends VerticalLayout {
         stepComboBox.setVisible(false);
         option.setValue("nextStep Nuevo");
         nextStep.setVisible(true);
+        conditionForm.agregarLayout.setVisible(true);
     }
 }

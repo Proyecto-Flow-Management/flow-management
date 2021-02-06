@@ -86,9 +86,14 @@ public class Alternative  extends AbstractEntity{
 
 	public void setBinaryCondition(Condition oldCondition, Condition newCondition)
 	{
-		for (Condition actual: this.conditions) {
-			if(actual.setBinaryCondition(oldCondition,newCondition));
-			break;
+		for (Condition actual : this.conditions) {
+			if(actual == oldCondition)
+			{
+				int index = this.conditions.indexOf(actual);
+				this.conditions.set(index, newCondition);
+			}
+			else if(actual.setBinaryCondition(oldCondition,newCondition));
+				break;
 		}
 	}
 

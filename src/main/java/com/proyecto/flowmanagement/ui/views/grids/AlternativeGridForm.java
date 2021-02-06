@@ -136,6 +136,7 @@ public class AlternativeGridForm extends HorizontalLayout {
 
         if(alternative != null) {
             alternativeForm.setVisible(true);
+            alternativeForm.conditionForm.agregarLayout.setVisible(false);
             alternativeForm.isValid = false;
 
             this.editAlternative = alternative;
