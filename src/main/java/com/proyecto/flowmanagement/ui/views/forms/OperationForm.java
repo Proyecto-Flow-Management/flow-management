@@ -322,7 +322,7 @@ public class OperationForm extends VerticalLayout {
                 taskOperation.setTargetSystem(targetSystem.getValue());
             }
             if (!candidateGroups.isEmpty()){
-                taskOperation.setCandidateGroups(candidateGroups.getValue());
+                //taskOperation.setCandidateGroups(candidateGroups.getValue());
             }
             if (!mailTemplate.isEmpty()){
                 taskOperation.setMailTemplate(mailTemplate.getValue());

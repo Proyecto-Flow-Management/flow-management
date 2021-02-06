@@ -23,9 +23,9 @@ import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.stereotype.Component;
-import org.vaadin.olli.FileDownloadWrapper;
-import org.vaadin.stefan.LazyDownloadButton;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -43,9 +43,9 @@ public class GuideList extends VerticalLayout {
     Grid<Guide> grid = new Grid<>(Guide.class);
     GuideServiceImpl guideService;
 
-    public GuideList(GuideServiceImpl guideService) {
+    public GuideList(GuideServiceImpl guideService) throws IOException, SAXException, ParserConfigurationException {
         this.guideService = guideService;
-        //test();
+        test2();
         addClassName("create-guide-view");
         setSizeFull();
         configureGrid();
@@ -78,6 +78,12 @@ public class GuideList extends VerticalLayout {
         test.GuidePrint(guide);
     }
 
+    public void test2() throws ParserConfigurationException, SAXException, IOException {
+        GuideGeneratorServiceImp test = new GuideGeneratorServiceImp();
+        MockTestServiceImpl mock = new MockTestServiceImpl();
+        test.importGuide("/Users/hebarnada/Tesis/flow-management/src/main/resources/XMLResources/GuideResult.xml");
+    }
+
     private void updateList() {
         grid.setColumns("name", "label", "mainStep");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
@@ -85,7 +91,7 @@ public class GuideList extends VerticalLayout {
         grid.addComponentColumn(guide -> generateEditButton(guide)).setHeader("Editar");
         grid.addComponentColumn(guide -> generateDuplicateButton(guide)).setHeader("Duplicar");
         grid.addComponentColumn(guide -> generateDeleteButton(guide)).setHeader("Eliminar");
-        grid.addComponentColumn(guide -> generateExportButton(guide)).setHeader("Exportar");
+        //grid.addComponentColumn(guide -> generateExportButton(guide)).setHeader("Exportar");
     }
 
     private Button generateEditButton(Guide guide){
@@ -113,7 +119,7 @@ public class GuideList extends VerticalLayout {
         return  botonEliminar;
     }
 
-    private FileDownloadWrapper generateExportButton(Guide guide) {
+    /*private FileDownloadWrapper generateExportButton(Guide guide) {
         Button button = new Button();
         Icon icon = new Icon("vaadin", "download");
         button.setIcon(icon);
@@ -131,7 +137,7 @@ public class GuideList extends VerticalLayout {
 //                new StreamResource(guide.getName() + ".txt", () -> new ByteArrayInputStream(guide.getName().getBytes())));
         buttonWrapper.wrapComponent(button);
         return buttonWrapper;
-    }
+    }*/
 
     private List<Pair<String, String>> getFiles(Guide guide){
         List<Pair<String, String>> files = new LinkedList<>();

@@ -1,28 +1,40 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide" xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide"
+           xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-            <ttg:mainStepId>MainStep</ttg:mainStepId>
-            <ttg:step>
-    <ttg:stepId>Description</ttg:stepId>
-    <ttg:label>Label</ttg:label>
-    <ttg:text>Description</ttg:text>
-    <ttg:operation xsi:type="ttg:SimpleOperation">
-    <ttg:name>operationName</ttg:name>
-    <ttg:label>operationLabel</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:operationOrder>1</ttg:operationOrder>
-    <ttg:operationType>simpleOperation</ttg:operationType>
-    <ttg:type>query</ttg:type>
-    <ttg:servicio>query</ttg:servicio>
-    <ttg:inParameters>
-    <ttg:name>NameParameter</ttg:name>
-    <ttg:type>TypeParameter</ttg:type>
-    <ttg:description>DescriptionParameter</ttg:description>
-    </ttg:inParameters><ttg:condition xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>TINCO</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>descEstado</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>ACTIVO</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:condition><ttg:alternativeIds>alternative1</ttg:alternativeIds><ttg:alternativeIds>alternative2</ttg:alternativeIds><ttg:alternativeIds>alternative3</ttg:alternativeIds><ttg:alternativeIds>alternative4</ttg:alternativeIds><ttg:notifyOperationDelay>20</ttg:notifyOperationDelay>
-</ttg:operation></ttg:step></ttg:guide>
+    <ttg:mainStepId>MainStep</ttg:mainStepId>
+    <ttg:step>
+        <ttg:stepId>StepId</ttg:stepId>
+        <ttg:label>Label</ttg:label>
+        <ttg:text>Description</ttg:text>
+        <ttg:operation xsi:type="ttg:SimpleOperation">
+            <ttg:name>operationName</ttg:name>
+            <ttg:label>operationLabel</ttg:label>
+            <ttg:visible>true</ttg:visible>
+            <ttg:operationOrder>1</ttg:operationOrder>
+            <ttg:operationType>simpleOperation</ttg:operationType>
+            <ttg:type>query</ttg:type>
+            <ttg:servicio>query</ttg:servicio>
+            <ttg:inParameters>
+                <ttg:name>NameParameter</ttg:name>
+                <ttg:type>TypeParameter</ttg:type>
+                <ttg:description>DescriptionParameter</ttg:description>
+            </ttg:inParameters>
+            <ttg:condition xsi:type="ttg:UnaryCondition">
+                <ttg:operationName>TINCO</ttg:operationName>
+                <ttg:conditionsEnableAlternative>
+                    <ttg:field>descEstado</ttg:field>
+                    <ttg:fieldType>string</ttg:fieldType>
+                    <ttg:operator>=</ttg:operator>
+                    <ttg:value>ACTIVO</ttg:value>
+                </ttg:conditionsEnableAlternative>
+            </ttg:condition>
+            <ttg:alternativeIds>alternative1</ttg:alternativeIds>
+            <ttg:alternativeIds>alternative2</ttg:alternativeIds>
+            <ttg:alternativeIds>alternative3</ttg:alternativeIds>
+            <ttg:alternativeIds>alternative4</ttg:alternativeIds>
+            <ttg:notifyOperationDelay>20</ttg:notifyOperationDelay>
+        </ttg:operation>
+    </ttg:step>
+</ttg:guide>

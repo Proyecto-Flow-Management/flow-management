@@ -8,8 +8,19 @@ import javax.persistence.Table;
 @Table(name = "step_document")
 public class StepDocument  extends AbstractEntity{
 
+    @Column(name = "mime_type")
+    private String mimeType;
+
     @Column(name = "url")
     private String url;
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
 
     public String getUrl() {
         return url;

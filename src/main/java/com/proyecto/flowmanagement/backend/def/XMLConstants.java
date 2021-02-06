@@ -51,6 +51,7 @@ public final class XMLConstants {
     public static final String REFERENCE_DOC_URL = "ttg:url";
 
     //CONDITIONS
+    public static final String CONDITION_ELEMENT = "ttg:condition";
     public static final String UNARY_CONDITION_ELEMENT = "ttg:condition";
     public static final String BINARY_CONDITION_ELEMENT = "ttg:condition";
     public static final String CONDITION_ENABLE_ALTERNATIVE = "ttg:conditionsEnableAlternative";
