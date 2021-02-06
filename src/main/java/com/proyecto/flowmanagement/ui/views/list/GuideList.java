@@ -16,8 +16,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.internal.Pair;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinSession;
@@ -38,7 +37,14 @@ import java.util.zip.ZipOutputStream;
 @Component
 @Route(value = "GuideList", layout = MainLayout.class)
 @PageTitle("Crear Guia | Flow Management")
-public class GuideList extends VerticalLayout {
+public class GuideList extends VerticalLayout implements HasUrlParameter<String> {
+
+    @Override
+    public void setParameter(BeforeEvent event
+            , @OptionalParameter String parameter) {
+        if(parameter!=null)
+            updateGrid();
+    }
 
     Grid<Guide> grid = new Grid<>(Guide.class);
     GuideServiceImpl guideService;

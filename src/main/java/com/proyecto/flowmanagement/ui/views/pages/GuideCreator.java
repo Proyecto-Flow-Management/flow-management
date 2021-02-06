@@ -13,6 +13,7 @@ import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
 import com.proyecto.flowmanagement.ui.views.panels.*;
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -138,6 +139,8 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
             guideService.add(raiz);
         else
             guideService.update(raiz);
+
+        UI.getCurrent().navigate("GuideList/" + 1);
     }
 
     private void configureActualGuidePanel()
