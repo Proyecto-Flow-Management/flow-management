@@ -90,7 +90,7 @@ public class OperationParameterForm extends VerticalLayout {
         this.sourceValueEntity.setItems(SourceEntity.values());
         this.convert.setItems("True","False");
 
-        elements.add(name,label,visibleWhenInParameterEqualsCondition,type,description,value,validateExpression,validateExpressionErrorDescription,dateFormat,dateFormatRangeEnd,dateFormatFinal,sourceValueEntityProperty,valueWhenInParameterEquals,enable,required,visible,convert);
+        elements.add(name,label,visible,type,visibleWhenInParameterEqualsCondition,description,value,validateExpression,validateExpressionErrorDescription,dateFormat,dateFormatRangeEnd,dateFormatFinal,sourceValueEntity,sourceValueEntityProperty,valueWhenInParameterEquals,enable,required,convert);
         elements.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1),
                 new FormLayout.ResponsiveStep("32em", 2),
