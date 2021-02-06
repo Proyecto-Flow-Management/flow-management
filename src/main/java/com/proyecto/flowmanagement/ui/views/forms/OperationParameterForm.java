@@ -22,28 +22,27 @@ import com.vaadin.flow.shared.Registration;
 
 @org.springframework.stereotype.Component
 @CssImport("./styles/operation-parameter-grid-form.css")
-public class OperationParameterForm extends HorizontalLayout {
+public class OperationParameterForm extends VerticalLayout {
     private OperationParameter operationParameter;
     public boolean isValid;
     public boolean editing;
-
 
     private OptionValueForm optionValueForm = new OptionValueForm();
     private ConvertConditionForm convertConditionForm = new ConvertConditionForm();
     private PropertiesForm propertiesForm = new PropertiesForm();
 
-    private VerticalLayout form = new VerticalLayout();
     private FormLayout elements = new FormLayout();
     private HorizontalLayout actionsLayout = new HorizontalLayout();
-    private HorizontalLayout optionValueLayout = new HorizontalLayout();
-    private HorizontalLayout convertConditionLayout = new HorizontalLayout();
-    private HorizontalLayout propertiesLayout = new HorizontalLayout();
+
     Accordion optionValuesAccordion = new Accordion();
     Accordion convertConditionsAccordion = new Accordion();
     Accordion propertiesAccordion = new Accordion();
-    FormLayout basicInformationOptionValues = new FormLayout();
-    FormLayout basicInformationConvertConditions = new FormLayout();
-    FormLayout basicInformationProperties = new FormLayout();
+    VerticalLayout optionValueLayout = new VerticalLayout();
+    HorizontalLayout optionValueGridLayout = new HorizontalLayout();
+    VerticalLayout convertConditionLayout = new VerticalLayout();
+    HorizontalLayout convertConditionGridLayout = new HorizontalLayout();
+    VerticalLayout propertiesLayout = new VerticalLayout();
+    HorizontalLayout propertiesGridLayout = new HorizontalLayout();
 
     private TextField name = new TextField("Nombre");
     private TextField label = new TextField("Etiqueta");
@@ -98,31 +97,35 @@ public class OperationParameterForm extends HorizontalLayout {
                 new FormLayout.ResponsiveStep("40em", 3),
                 new FormLayout.ResponsiveStep("40em", 4));
 
-        optionValueLayout.add(optionValueForm);
-        convertConditionLayout.add(convertConditionForm);
-        propertiesLayout.add(propertiesForm);
-
-        basicInformationOptionValues.setWidthFull();
-        basicInformationOptionValues.add(optionValueLayout);
-        optionValuesAccordion.add("Option Values", basicInformationOptionValues);
+        optionValueLayout.setWidthFull();
+        optionValueGridLayout.setWidthFull();
+        optionValueGridLayout.add(optionValueForm);
+        optionValueLayout.add(optionValueGridLayout);
+        optionValuesAccordion.setWidthFull();
+        optionValuesAccordion.add("Option Values", optionValueLayout);
         optionValuesAccordion.close();
 
-        basicInformationConvertConditions.setWidthFull();
-        basicInformationConvertConditions.add(convertConditionLayout);
-        convertConditionsAccordion.add("Convert Conditions", basicInformationConvertConditions);
+        convertConditionLayout.setWidthFull();
+        convertConditionGridLayout.setWidthFull();
+        convertConditionGridLayout.add(convertConditionForm);
+        convertConditionLayout.add(convertConditionGridLayout);
+        convertConditionsAccordion.setWidthFull();
+        convertConditionsAccordion.add("Convert Conditions", convertConditionLayout);
         convertConditionsAccordion.close();
 
-        basicInformationProperties.setWidthFull();
-        basicInformationProperties.add(propertiesLayout);
-        propertiesAccordion.add("Properties", basicInformationProperties);
+        propertiesLayout.setWidthFull();
+        propertiesGridLayout.setWidthFull();
+        propertiesGridLayout.add(propertiesForm);
+        propertiesLayout.add(propertiesGridLayout);
+        propertiesAccordion.setWidthFull();
+        propertiesAccordion.add("Properties", propertiesLayout);
         propertiesAccordion.close();
 
         actionsLayout.add(createButtonsLayout());
     }
 
     private void configureForm() {
-        form.add(elements, optionValuesAccordion, convertConditionsAccordion, propertiesAccordion, actionsLayout);
-        add(form);
+        add(elements, optionValuesAccordion, convertConditionsAccordion, propertiesAccordion, actionsLayout);
     }
 
     public void setOperationParameter(OperationParameter operationParameter) {
@@ -255,6 +258,9 @@ public class OperationParameterForm extends HorizontalLayout {
         this.optionValueForm.setAsDefault();
         this.convertConditionForm.setAsDefault();
         this.propertiesForm.setAsDefault();
+        this.propertiesAccordion.close();
+        this.optionValuesAccordion.close();
+        this.convertConditionsAccordion.close();
     }
 
     private Component createButtonsLayout() {
@@ -351,26 +357,6 @@ public class OperationParameterForm extends HorizontalLayout {
         notification.setPosition(Notification.Position.MIDDLE);
         notification.open();
     }
-
-//    public boolean isValid() {
-//        boolean result = false;
-//
-//        if(validateFields())
-//            result = true;
-//
-//        return result;
-//    }
-//
-//    public boolean validateFields(){
-//        boolean result = false;
-//
-//        if(!name.getValue().isEmpty() &&
-//                !type.getValue().isEmpty() &&
-//                !description.getValue().isEmpty())
-//            result = true;
-//
-//        return result;
-//    }
 
     // Events
     public static abstract class OperationParameterFormEvent extends ComponentEvent<OperationParameterForm> {

@@ -55,11 +55,11 @@ public class OptionValueForm extends VerticalLayout {
         buttonsLayout.add(add,delete,save,cancel);
         actionsLayout.add(optionValue);
 
-        ppal.add(actionsLayout,buttonsLayout);
-
         gridLayout.add(optionValuesGrid);
 
-        add(ppal, gridLayout);
+        HorizontalLayout form = new HorizontalLayout();
+        form.add(actionsLayout, buttonsLayout);
+        add(form, gridLayout);
     }
 
     private void configureElements()
@@ -93,6 +93,7 @@ public class OptionValueForm extends VerticalLayout {
         save.addClickListener(buttonClickEvent -> guardar());
 
         optionValuesGrid.addColumn(value-> {  return value.getOptionValueName(); }).setHeader("OptionValue").setSortable(true);
+        optionValuesGrid.getColumns().forEach(col -> col.setAutoWidth(true));
     }
 
     public void setAsDefault() {

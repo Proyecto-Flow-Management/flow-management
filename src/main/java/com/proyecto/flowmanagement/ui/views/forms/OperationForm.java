@@ -559,6 +559,7 @@ public class OperationForm extends VerticalLayout {
         candidatesGrupsForm.setAsDefault();
         groupsAccordion.setVisible(false);
         conditionForm.setAsDefault();
+        conditionFormAccordion.close();
         alternativeIdsForm.setAsDefault();
         addAlternativeIdsForm(false);
         alternativesIdsAccordion.close();
