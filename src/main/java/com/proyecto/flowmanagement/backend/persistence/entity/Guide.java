@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -121,19 +122,21 @@ public class Guide extends AbstractEntity implements Serializable {
 
 		if(operations != null && operations.size() > 0)
 		{
+			List<String> operationsActuales = this.operations.stream().map(o -> o.getName()).collect(Collectors.toList());
+
 			for (Operation operation : this.operations)
 			{
 				if(this.operations instanceof TaskOperation)
 				{
-					ValidationDTO validarOperation = ((TaskOperation )operations).validateOperation();
+					ValidationDTO validarOperation = ((TaskOperation )operation).validateOperation(operationsActuales);
 					if(validarOperation.getValidationDTOList().size() > 0 && validarOperation.getError().size() >0)
-						validationGuide.addList(validarOperation);
+						validationGuide.addListSecond(validarOperation);
 				}
 				else
 				{
-					ValidationDTO validarOperation = ((SimpleOperation )operations).validateOperation();
+					ValidationDTO validarOperation = ((SimpleOperation )operation).validateOperation(operationsActuales);
 					if(validarOperation.getValidationDTOList().size() > 0 && validarOperation.getError().size() >0)
-						validationGuide.addList(validarOperation);
+						validationGuide.addListSecond(validarOperation);
 				}
 			}
 		}

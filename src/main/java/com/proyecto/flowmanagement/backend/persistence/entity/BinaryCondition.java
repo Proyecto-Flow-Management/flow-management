@@ -1,11 +1,12 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "binary_condition")
-public class BinaryCondition extends AbstractEntity{
+public class BinaryCondition extends AbstractEntity  implements Serializable {
 
     @Column(name = "operator_name")
     private String operator;

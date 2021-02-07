@@ -3,10 +3,11 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name= "convert_condition_parameter")
-public class ConvertCondition extends AbstractEntity{
+public class ConvertCondition extends AbstractEntity  implements Serializable {
 
     @Column(name = "condition_name")
     private String condition;

@@ -4,11 +4,12 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "unary_condition")
-public class UnaryCondition  extends AbstractEntity{
+public class UnaryCondition  extends AbstractEntity  implements Serializable {
 
     @Column(name = "operation_name")
     private String operationName;

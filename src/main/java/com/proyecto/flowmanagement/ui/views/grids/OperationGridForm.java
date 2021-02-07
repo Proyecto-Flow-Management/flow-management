@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CssImport("./styles/general.css")
 public class OperationGridForm extends HorizontalLayout {
@@ -22,6 +23,7 @@ public class OperationGridForm extends HorizontalLayout {
     public OperationForm operationForm;
     Operation editing;
     public List<String> alternatives = new LinkedList<String>();
+    public List<String> operations = new LinkedList<String>();
 
     Grid<Operation> operationGrid;
     public List<Operation> operationList;
@@ -115,6 +117,7 @@ public class OperationGridForm extends HorizontalLayout {
         operationForm.setVisible(true);
         operationForm.setAsDefault();
         operationForm.delete.setVisible(false);
+        operationForm.operationNotifyIdsForm.updateElements(this.operations);
 //        editOperation(new Operation());
     }
 
@@ -131,6 +134,14 @@ public class OperationGridForm extends HorizontalLayout {
             closeEditor();
         } else {
             operationForm.setOperation(operation);
+            List<String> operationsIntoOperaation;
+            if(operation.getOperationNotifyIds() != null && operation.getOperationNotifyIds().size() >0)
+                operationsIntoOperaation = operation.getOperationNotifyIds().stream().map(o -> o.getName()).collect(Collectors.toList());
+            else
+                operationsIntoOperaation = new LinkedList<>();
+
+            List<String> correctsOperations = operations.stream().filter(o -> !operationsIntoOperaation.contains(o)).collect(Collectors.toList());
+            operationForm.operationNotifyIdsForm.updateElements(correctsOperations);
             operationForm.editing = true;
             operationForm.setVisible(true);
             editing = operation;
@@ -168,5 +179,13 @@ public class OperationGridForm extends HorizontalLayout {
         this.operationForm.alternativesIdsAccordion.setVisible(true);
         this.operationForm.alternatives = ids;
         this.operationForm.alternativeIdsForm.updateElements(ids);;
+    }
+
+
+
+    public void updateOperationsIds(List<String> ids)
+    {
+        this.operationForm.operations = ids;
+        this.operationForm.operationNotifyIdsForm.updateElements(ids);;
     }
 }

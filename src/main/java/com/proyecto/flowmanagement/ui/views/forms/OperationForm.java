@@ -35,6 +35,7 @@ public class OperationForm extends VerticalLayout {
 
     private Operation operation;
     public List<String> alternatives;
+    public List<String> operations;
     public Boolean isValid;
     public Boolean editing;
 
@@ -57,6 +58,10 @@ public class OperationForm extends VerticalLayout {
     Accordion groupsAccordion = new Accordion();
     public Accordion alternativesIdsAccordion = new Accordion();
     public AlternativeIdsForm alternativeIdsForm;
+
+    public Accordion operationNotifyIdsFormAccordion = new Accordion();
+    public OperationNotifyIdsForm operationNotifyIdsForm;
+
     private CandidatesGrupsForm candidatesGrupsForm = new CandidatesGrupsForm();
 
     private OperationParameterGridForm inParameterGridForm = new OperationParameterGridForm("Crear IN Operation Parameter");
@@ -107,6 +112,8 @@ public class OperationForm extends VerticalLayout {
 
         configureAlternatives();
 
+        configureOperations();
+
         configureElements();
 
         configureOperationParameters();
@@ -114,6 +121,12 @@ public class OperationForm extends VerticalLayout {
         configureConditions();
 
         configureForm();
+    }
+
+    private void configureOperations() {
+        if(this.operations == null)
+            operations = new LinkedList<>();
+        operationNotifyIdsForm = new OperationNotifyIdsForm(operations);
     }
 
     private void configureConditions() {
@@ -190,6 +203,13 @@ public class OperationForm extends VerticalLayout {
         alternativesIdsAccordion.add("AlternativesIds", alternativesIdsFormLaayout);
         alternativesIdsAccordion.close();
         alternativesIdsAccordion.setVisible(false);
+
+
+        FormLayout operationIdsFormLaayout = new FormLayout();
+        operationIdsFormLaayout.setWidthFull();
+        operationIdsFormLaayout.add(operationNotifyIdsForm);
+        operationNotifyIdsFormAccordion.add("OperationNotifyId", operationIdsFormLaayout);
+        operationNotifyIdsFormAccordion.close();
 
         elements.setWidthFull();
 
@@ -286,15 +306,16 @@ public class OperationForm extends VerticalLayout {
         conditionFormAccordion.close();
         conditionFormAccordion.add("Conditions", conditionFormLayout);
 
-        add(accordionBasicInformation,inParameterAccordion,outParameterAccordion,conditionFormAccordion,actionsLayout);
+        add(accordionBasicInformation,inParameterAccordion,outParameterAccordion,conditionFormAccordion,operationNotifyIdsFormAccordion,actionsLayout);
     }
 
     public void setOperation(Operation operation) {
         this.operation = operation;
         this.name.setValue(operation.getName());
         this.label.setValue(operation.getLabel());
+
         if (operation.getOperationType() != null){
-            addElements(operationType.getValue());
+            addElements(operation.getOperationType());
         }
         if (operation.getVisible()!=null) {
             this.visible.setValue(operation.getVisible().toString());
@@ -302,7 +323,7 @@ public class OperationForm extends VerticalLayout {
         else{
             this.visible.clear();
         }
-        if (operation.getVisible()!=null) {
+        if (operation.getPreExecute()!=null) {
             this.preExecute.setValue(operation.getPreExecute().toString());
         }
         else{
@@ -332,7 +353,9 @@ public class OperationForm extends VerticalLayout {
         else{
             this.pauseExecution.clear();
         }
-        this.operationOrder.setValue(operation.getOperationOrder());
+        if(operation.getOperationOrder() != 0)
+             this.operationOrder.setValue(operation.getOperationOrder());
+
         this.operationType.setValue(operation.getOperationType());
         if (operation.getNotifyAlternative()!=null) {
             this.notifyAlternative.setValue(operation.getNotifyAlternative().toString());
@@ -355,6 +378,8 @@ public class OperationForm extends VerticalLayout {
             if (operationType.getValue() == OperationType.simpleOperation) {
                 SimpleOperation simpleOperation = (SimpleOperation) operation;
                 if(simpleOperation.getType() != null){
+                    SimpleOperationType test = simpleOperation.getType();
+                    this.simpleOperationType.setValue(test);
                     this.simpleOperationType.setValue(simpleOperation.getType());
                 }
                 else {
@@ -446,6 +471,7 @@ public class OperationForm extends VerticalLayout {
 
     private void saveOperation(){
         String incompleteValidation = "El campo OperationType es obligatorio";
+
         if (operationType.getValue() == OperationType.simpleOperation) {
             SimpleOperation simpleOperation = new SimpleOperation();
             simpleOperation.setType(simpleOperationType.getValue());

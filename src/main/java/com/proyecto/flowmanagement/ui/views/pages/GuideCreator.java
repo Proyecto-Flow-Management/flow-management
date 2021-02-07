@@ -216,9 +216,45 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         actualizacionEliminarStep();
         actualizacionConditionsAlternatives();
         cambioGuia();
+        actualizacionOperations();
         //Actualizar Steps
         // Alternativs
         //Actuaalizar resumen
+    }
+
+    private void actualizacionOperations()
+    {
+        operationGridForm.operationForm.save.addClickListener(buttonClickEvent -> actualizarOperationsIdsGuia());
+        stepPanel.stepGridForm.stepForm.operationGridForm.operationForm.save.addClickListener(buttonClickEvent -> actualizarOperaationsSteps());
+        stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.save.addClickListener(buttonClickEvent -> actualizarAlternativesIds());
+    }
+
+    private void actualizarAlternativesIds()
+    {
+
+    }
+
+    private void actualizarOperaationsSteps()
+    {
+        if(stepPanel.stepGridForm.stepForm.operationGridForm.operationForm.isValid)
+        {
+            List<String> operationsList = stepPanel.stepGridForm.stepForm.operationGridForm.getOperations().stream().map(o -> o.getName()).collect(Collectors.toList());
+            stepPanel.stepGridForm.stepForm.operationGridForm.updateOperationsIds(operationsList);
+        }
+    }
+
+    private void actualizarOperationsIdsGuia()
+    {
+        actualizarGuiaActual();
+        List<String> operationsList = operationGridForm.getOperations().stream().map(o -> o.getName()).collect(Collectors.toList());
+        operationGridForm.operations = operationsList;
+    }
+
+    private void actualizarOperationsIdsStep()
+    {
+        actualizarGuiaActual();
+        List<String> operationsList =  operationGridForm.getOperations().stream().map(o -> o.getName()).collect(Collectors.toList());
+        operationGridForm.operations = operationsList;
     }
 
     private void actualizacionConditionsAlternatives() {

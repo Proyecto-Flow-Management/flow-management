@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "step")
@@ -118,8 +119,15 @@ public class Step extends AbstractEntity  implements Serializable {
 		if(this.getOperations() == null || this.getOperations().size() == 0)
 			validationGuide.addError("El Step no contiene ningun Operation");
 		else{
+
+			List<String> operationsActuales = this.operations.stream().map(o -> o.getName()).collect(Collectors.toList());
+
 			for (Operation operation: this.operations) {
-				//erroresEncontrados.addAll(operation.());
+
+				if(operation instanceof TaskOperation)
+				{
+					validationGuide.addList(((TaskOperation)  operation).validateOperation(operationsActuales));
+				}
 			}
 		}
 

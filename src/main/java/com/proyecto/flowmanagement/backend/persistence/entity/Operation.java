@@ -73,7 +73,7 @@ public class Operation  extends AbstractEntity   implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "operation_id")
 	@Fetch(FetchMode.SUBSELECT)
-	private List<Operation> operationNotifyIds;
+	private List<OperationNotifyId> operationNotifyIds;
 
 	@Column(name = "notifyOperationDelay")
 	private Integer notifyOperationDelay;
@@ -206,11 +206,11 @@ public class Operation  extends AbstractEntity   implements Serializable {
 		this.notifyOperation = notifyOperation;
 	}
 
-	public List<Operation> getOperationNotifyIds() {
+	public List<OperationNotifyId> getOperationNotifyIds() {
 		return operationNotifyIds;
 	}
 
-	public void setOperationNotifyIds(List<Operation> operationNotifyIds) {
+	public void setOperationNotifyIds(List<OperationNotifyId> operationNotifyIds) {
 		this.operationNotifyIds = operationNotifyIds;
 	}
 

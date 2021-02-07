@@ -36,7 +36,7 @@ public class StepForm extends HorizontalLayout {
 
     public AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
     DocumentsGridForm documentsGridForm = new DocumentsGridForm();
-    OperationGridForm operationGridForm = new OperationGridForm();
+    public OperationGridForm operationGridForm = new OperationGridForm();
 
     VerticalLayout form = new VerticalLayout();
     FormLayout elements = new FormLayout();

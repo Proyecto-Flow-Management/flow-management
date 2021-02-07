@@ -3,10 +3,11 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name= "user")
-public class User extends AbstractEntity implements Cloneable {
+public class User extends AbstractEntity implements Cloneable, Serializable {
 
     @Column(name = "firstName")
     private String firstName;

@@ -7,12 +7,14 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "task_operation")
-public class TaskOperation extends Operation{
+public class TaskOperation extends Operation  implements Serializable {
 
     @Column(name = "type")
     private TaskOperationType type;
@@ -93,7 +95,7 @@ public class TaskOperation extends Operation{
         this.groupsNames = groupsNames;
     }
 
-    public ValidationDTO validateOperation() {
+    public ValidationDTO validateOperation( List<String> operationsActuales ) {
 
         ValidationDTO validationGuide = new ValidationDTO();
         validationGuide.setLabel("Op-Label: " + getLabel() );
@@ -119,6 +121,15 @@ public class TaskOperation extends Operation{
 
         if (this.type.toString().isEmpty())
             validationGuide.addError("El campo Type es obligatorio");
+
+        if(this.getOperationNotifyIds() != null && this.getOperationNotifyIds().size()>0)
+        {
+            List<String> operationsErrors= this.getOperationNotifyIds().stream().filter(on -> !operationsActuales.contains(on.getName())).map(r -> r.getName()).collect(Collectors.toList());
+            for (String notifyError: operationsErrors ) {
+                validationGuide.addError("Hay un OperationNotify ("+ notifyError +") haciendo referencia a un Operation que no existe");
+            }
+        }
+
 
         return validationGuide;
     }

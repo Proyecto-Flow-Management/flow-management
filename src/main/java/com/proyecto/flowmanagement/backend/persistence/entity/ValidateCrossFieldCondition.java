@@ -3,10 +3,11 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "validate_cross_field_condition")
-public class ValidateCrossFieldCondition extends AbstractEntity{
+public class ValidateCrossFieldCondition extends AbstractEntity implements Serializable {
 
     @Column(name = "field_name")
     private String fieldName;

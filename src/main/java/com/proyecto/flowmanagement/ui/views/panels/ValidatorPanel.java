@@ -117,6 +117,37 @@ public class ValidatorPanel extends HorizontalLayout {
 
     private void agregarOperation(ValidationDTO validacion)
     {
+        if(validacion.getValidationDTOListSecond().size()>0)
+        {
+            ValidationDTO operation = new ValidationDTO();
+            operation.setLabel("Operations");
+            data.addItem(validacion,operation);
+
+            for (ValidationDTO val : validacion.getValidationDTOList())
+            {
+                ValidationDTO operationAux = new ValidationDTO();
+                operationAux.setLabel(val.getLabel());
+                data.addItem(operation,operationAux);
+                agregarOperationPuntual(operationAux, val);
+            }
+        }
+    }
+
+    private void agregarOperationPuntual(ValidationDTO operationAux, ValidationDTO val)
+    {
+        if(val.getError().size()>0)
+        {
+            ValidationDTO error = new ValidationDTO();
+            error.setLabel("Errores");
+            data.addItem(operationAux,error);
+
+            for (String str: val.getError())
+            {
+                ValidationDTO errorStep = new ValidationDTO();
+                errorStep.setLabel(str);
+                data.addItem(error, errorStep);
+            }
+        }
     }
 
     private void agregarSteps(ValidationDTO validacion)
@@ -150,6 +181,21 @@ public class ValidatorPanel extends HorizontalLayout {
                 ValidationDTO errorStep = new ValidationDTO();
                 errorStep.setLabel(str);
                 data.addItem(error, errorStep);
+            }
+        }
+
+        if(val.getValidationDTOListSecond().size()>0)
+        {
+            ValidationDTO operation = new ValidationDTO();
+            operation.setLabel("Operations");
+            data.addItem(val,operation);
+
+            for (ValidationDTO opAux : val.getValidationDTOList())
+            {
+                ValidationDTO operationAux = new ValidationDTO();
+                operationAux.setLabel(opAux.getLabel());
+                data.addItem(operation,operationAux);
+                agregarOperationPuntual(operationAux, opAux);
             }
         }
 

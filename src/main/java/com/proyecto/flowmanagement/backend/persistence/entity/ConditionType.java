@@ -1,11 +1,12 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "condition_type")
-public class ConditionType  extends AbstractEntity{
+public class ConditionType  extends AbstractEntity implements Serializable {
 	
 	@Column(name = "name")
     private String name;
