@@ -65,6 +65,9 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     ValidatorPanel validatorPanel;
     GuidePanel guidePanel;
 
+    List<Guide> guideList = new LinkedList<>();
+    List<Guide> systemGuideList = new LinkedList<>();
+
     public Button save = new Button("Guardar");
     public Button validar = new Button("Validar");
 
@@ -168,6 +171,16 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         editado = new Guide();
         raiz = new Guide();
         raiz.editing = true;
+
+
+    }
+
+    private void actualizarListaGuidesExistentes()
+    {
+        this.guideList = raiz.getGuides();
+        this.systemGuideList = guideService.getAll();
+        this.stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.guideList = this.guideList;
+        this.stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.systemGuideList = this.systemGuideList;
     }
 
     private void configureGuidePanel() {
@@ -189,6 +202,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         stepPanelLayout.setWidthFull();
         stepPanel = new StepPanel();
         stepPanelLayout.add(stepPanel);
+        stepPanel.stepGridForm.stepForm.alternativeGridForm.createAlternative.addClickListener( buttonClickEvent ->  actualizarListaGuidesExistentes());
     }
 
     private void configureOperatorPanel() {

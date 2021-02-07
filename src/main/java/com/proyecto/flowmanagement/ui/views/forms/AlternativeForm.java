@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
+import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.grids.ConditionsGridForm;
 import com.vaadin.flow.component.ComponentEvent;
@@ -37,10 +38,14 @@ public class AlternativeForm extends VerticalLayout {
     TextField label = new TextField("Label Alternative");
 
     public List<Step> stepList = new LinkedList<>();
+    public List<Guide> guideList = new LinkedList<>();
+    public List<Guide> systemGuideList = new LinkedList<>();
 
     TextField nextStep = new TextField("Referencia");
     ComboBox<String> option = new ComboBox<>("Referencia");
     ComboBox<Step> stepComboBox = new ComboBox<>("Steps");
+    ComboBox<Guide> guideComboBox = new ComboBox<>("Guias");
+    ComboBox<Guide> systemGuideComboBox = new ComboBox<>("Guias Sistema");
 
     public boolean isValid;
     public Button save = new Button("Guardar");
@@ -74,12 +79,16 @@ public class AlternativeForm extends VerticalLayout {
         options.add("nextStep Existente");
         options.add("nextStep Nuevo");
         options.add("guideName");
+        options.add("Guia Existente");
+        options.add("Guia Sistema");
 
         option.addValueChangeListener(b -> configurarOpcion(b.getValue()));
 
         option.setItems(options);
         stepComboBox.setVisible(false);
-        elements.add(label, option, nextStep, stepComboBox);
+        guideComboBox.setVisible(false);
+        systemGuideComboBox.setVisible(false);
+        elements.add(label, option, nextStep, stepComboBox, guideComboBox, systemGuideComboBox);
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -110,10 +119,30 @@ public class AlternativeForm extends VerticalLayout {
             this.stepComboBox.setItems(this.stepList);
             this.stepComboBox.setVisible(true);
             this.nextStep.setVisible(false);
+            this.guideComboBox.setVisible(false);
+            this.systemGuideComboBox.setVisible(false);
+        }
+        else if(valor == "Guia Existente"){
+            if (this.guideList!=null){
+                this.guideComboBox.setItems(this.guideList);
+            }
+            this.guideComboBox.setVisible(true);
+            this.nextStep.setVisible(false);
+            this.systemGuideComboBox.setVisible(false);
+        }
+        else if(valor == "Guia Sistema"){
+            if (this.systemGuideList!=null){
+                this.systemGuideComboBox.setItems(this.systemGuideList);
+            }
+            this.systemGuideComboBox.setVisible(true);
+            this.nextStep.setVisible(false);
+            this.guideComboBox.setVisible(false);
         }
         else
         {
             this.stepComboBox.setVisible(false);
+            this.guideComboBox.setVisible(false);
+            this.systemGuideComboBox.setVisible(false);
             this.nextStep.setVisible(true);
         }
     }
@@ -128,6 +157,16 @@ public class AlternativeForm extends VerticalLayout {
         if(this.option.getValue() == "nextStep Existente")
         {
             this.alternative.setNextStep(this.stepComboBox.getValue().getTextId());
+            this.alternative.setNewStep(false);
+        }
+        else if(this.option.getValue() == "Guia Existente")
+        {
+            this.alternative.setGuideName(this.guideComboBox.getValue().getName());
+            this.alternative.setNewStep(false);
+        }
+        else if(this.option.getValue() == "Guia Sistema")
+        {
+            this.alternative.setGuideName(this.systemGuideComboBox.getValue().getName());
             this.alternative.setNewStep(false);
         }
         else if(this.option.getValue() == "nextStep Nuevo")
@@ -170,12 +209,16 @@ public class AlternativeForm extends VerticalLayout {
                 {
                     this.option.setValue("nextStep Nuevo");
                     this.stepComboBox.setVisible(false);
+                    this.guideComboBox.setVisible(false);
+                    this.systemGuideComboBox.setVisible(false);
                     this.nextStep.setVisible(true);
                 }
                 else
                 {
                     this.stepComboBox.setVisible(true);
                     this.nextStep.setVisible(false);
+                    this.guideComboBox.setVisible(false);
+                    this.systemGuideComboBox.setVisible(false);
                     this.option.setValue("nextStep Existente");
                     Step stepSelected = this.stepList.stream().filter(step -> step.getTextId() == alternative.getNextStep()).findFirst().get();
                     this.stepComboBox.setValue(stepSelected);
@@ -184,6 +227,8 @@ public class AlternativeForm extends VerticalLayout {
             else
             {
                 this.stepComboBox.setVisible(false);
+                this.guideComboBox.setVisible(false);
+                this.systemGuideComboBox.setVisible(false);
                 this.nextStep.setVisible(true);
                 this.option.setValue("guideName");
                 this.nextStep.setValue(this.alternative.getGuideName());
@@ -196,8 +241,8 @@ public class AlternativeForm extends VerticalLayout {
         }
         else
         {
-            this.nextStep.setValue("");
-            this.label.setValue("");
+            this.nextStep.clear();
+            this.label.clear();
         }
     }
 
@@ -213,6 +258,8 @@ public class AlternativeForm extends VerticalLayout {
         this.alternative = new Alternative();
         editing = false;
         stepComboBox.setVisible(false);
+        guideComboBox.setVisible(false);
+        systemGuideComboBox.setVisible(false);
         option.setValue("nextStep Nuevo");
         nextStep.setVisible(true);
         conditionForm.agregarLayout.setVisible(true);
