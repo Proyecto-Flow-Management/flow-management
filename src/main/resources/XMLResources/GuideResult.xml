@@ -1,26 +1,103 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide"
-           xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd"
-           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<ttg:guide xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd">
 
-    <ttg:mainStepId>MainStep</ttg:mainStepId>
+    <ttg:mainStepId>DIAGNOSTICO</ttg:mainStepId>
+
+    <!-- CHEQUEO INICIAL SIN CONEXION ADSL -->
     <ttg:step>
-        <ttg:stepId>StepId</ttg:stepId>
-        <ttg:label>Label</ttg:label>
-        <ttg:text>Description</ttg:text>
+        <ttg:stepId>DIAGNOSTICO</ttg:stepId>
+        <ttg:label>Diagnóstico</ttg:label>
+        <ttg:text><![CDATA[Verificar en las pestañas  'Estado AAA' y 'Estado Tinco' que el servicio esté ACTIVO, sino presionar 'Bloqueado'.
+Superados estos chequeos presione 'Continuar' para seguir con el diagnóstico. Si alguno de los servicios falla, verifique manualmente.]]></ttg:text>
+
+        <!-- Estado AAA: el telefono no lo usa para nada, por lo cual se pone el comercial -->
         <ttg:operation xsi:type="ttg:SimpleOperation">
-            <ttg:name>operationName</ttg:name>
-            <ttg:label>operationLabel</ttg:label>
-            <ttg:visible>true</ttg:visible>
+            <ttg:name>consultaSaldoAAA</ttg:name>
+            <ttg:label>Estado AAA</ttg:label>
+            <ttg:automatic>true</ttg:automatic>
             <ttg:operationOrder>1</ttg:operationOrder>
             <ttg:operationType>simpleOperation</ttg:operationType>
             <ttg:type>query</ttg:type>
-            <ttg:servicio>query</ttg:servicio>
+            <ttg:servicio>consultaSaldoAAA</ttg:servicio>
             <ttg:inParameters>
-                <ttg:name>NameParameter</ttg:name>
-                <ttg:type>TypeParameter</ttg:type>
-                <ttg:description>DescriptionParameter</ttg:description>
+                <ttg:name>usuario</ttg:name>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:usuarioAAA</ttg:sourceValueEntityProperty>
             </ttg:inParameters>
+            <ttg:inParameters>
+                <ttg:name>servicio</ttg:name>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:commercialServiceId</ttg:sourceValueEntityProperty>
+            </ttg:inParameters>
+            <ttg:inParameters>
+                <ttg:name>fecha</ttg:name>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>ticket:creationDateAsString</ttg:sourceValueEntityProperty>
+            </ttg:inParameters>
+            <ttg:inParameters>
+                <ttg:name>timestamp</ttg:name>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>ticket:dateTimestamp</ttg:sourceValueEntityProperty>
+            </ttg:inParameters>
+            <ttg:outParameters>
+                <ttg:name>subscriberStatusConsultaSaldoAAA</ttg:name>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>guide</ttg:sourceValueEntity>
+            </ttg:outParameters>
+
+            <ttg:condition xsi:type="ttg:UnaryCondition">
+                <ttg:operationName>consultaSaldoAAA</ttg:operationName>
+                <ttg:conditionsEnableAlternative>
+                    <ttg:field>subscriberStatusConsultaSaldoAAA</ttg:field>
+                    <ttg:fieldType>string</ttg:fieldType>
+                    <ttg:operator>=</ttg:operator>
+                    <ttg:value>ACTIVO</ttg:value>
+                </ttg:conditionsEnableAlternative>
+            </ttg:condition>
+
+            <ttg:notifyAlternative>true</ttg:notifyAlternative>
+            <ttg:alternativeIds>PRINCIPAL</ttg:alternativeIds>
+
+            <ttg:notifyOperation>true</ttg:notifyOperation>
+            <ttg:operationNotifyIds>Cerrar</ttg:operationNotifyIds>
+        </ttg:operation>
+
+        <!-- Estado Tinco -->
+        <ttg:operation xsi:type="ttg:SimpleOperation">
+            <ttg:name>TINCO</ttg:name>
+            <ttg:label>Estado Tinco</ttg:label>
+            <ttg:automatic>true</ttg:automatic>
+            <ttg:operationOrder>1</ttg:operationOrder>
+            <ttg:operationType>simpleOperation</ttg:operationType>
+            <ttg:type>query</ttg:type>
+            <ttg:servicio>TINCO</ttg:servicio>
+            <ttg:inParameters>
+                <ttg:name>expediente</ttg:name>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:productNumber</ttg:sourceValueEntityProperty>
+            </ttg:inParameters>
+            <ttg:outParameters>
+                <ttg:name>descEstado</ttg:name>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:estadoTinco</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+
             <ttg:condition xsi:type="ttg:UnaryCondition">
                 <ttg:operationName>TINCO</ttg:operationName>
                 <ttg:conditionsEnableAlternative>
@@ -30,11 +107,104 @@
                     <ttg:value>ACTIVO</ttg:value>
                 </ttg:conditionsEnableAlternative>
             </ttg:condition>
-            <ttg:alternativeIds>alternative1</ttg:alternativeIds>
-            <ttg:alternativeIds>alternative2</ttg:alternativeIds>
-            <ttg:alternativeIds>alternative3</ttg:alternativeIds>
-            <ttg:alternativeIds>alternative4</ttg:alternativeIds>
-            <ttg:notifyOperationDelay>20</ttg:notifyOperationDelay>
+
+            <ttg:notifyAlternative>true</ttg:notifyAlternative>
+            <ttg:alternativeIds>PRINCIPAL</ttg:alternativeIds>
+
+            <ttg:notifyOperation>true</ttg:notifyOperation>
+            <ttg:operationNotifyIds>Cerrar</ttg:operationNotifyIds>
         </ttg:operation>
+
+        <!-- Continuar -->
+        <ttg:alternative>
+            <ttg:stepId>PRINCIPAL</ttg:stepId>
+            <ttg:guideName>guide_internet_FTTH_Query_Main</ttg:guideName>
+            <ttg:label>Continuar</ttg:label>
+
+            <ttg:condition xsi:type="ttg:UnaryCondition">
+                <ttg:operationName>consultaSaldoAAA</ttg:operationName>
+                <ttg:conditionsEnableAlternative>
+                    <ttg:field>subscriberStatusConsultaSaldoAAA</ttg:field>
+                    <ttg:fieldType>string</ttg:fieldType>
+                    <ttg:operator>=</ttg:operator>
+                    <ttg:value>ACTIVO</ttg:value>
+                </ttg:conditionsEnableAlternative>
+            </ttg:condition>
+            <ttg:condition xsi:type="ttg:UnaryCondition">
+                <ttg:operationName>TINCO</ttg:operationName>
+                <ttg:conditionsEnableAlternative>
+                    <ttg:field>descEstado</ttg:field>
+                    <ttg:fieldType>string</ttg:fieldType>
+                    <ttg:operator>=</ttg:operator>
+                    <ttg:value>ACTIVO</ttg:value>
+                </ttg:conditionsEnableAlternative>
+            </ttg:condition>
+        </ttg:alternative>
+
+        <!-- Cambio de guía -->
+        <ttg:alternative>
+            <ttg:stepId>CAMBIO_GUIA</ttg:stepId>
+            <ttg:guideName>guide_internet_FTTH_Cambio_Guia</ttg:guideName>
+            <ttg:label>Cambiar Motivo</ttg:label>
+        </ttg:alternative>
+
+        <!-- Bloqueado: Cierra reclamo Rechazado -->
+        <ttg:operation xsi:type="ttg:TaskOperation">
+            <ttg:name>Cerrar</ttg:name>
+            <ttg:label>Bloqueado</ttg:label>
+            <ttg:automatic>false</ttg:automatic>
+            <ttg:operationOrder>1</ttg:operationOrder>
+            <ttg:title>Finaliza reclamo</ttg:title>
+            <ttg:comment>Se ha detectado un inconveniente comercial en su servicio, el cual no permite proseguir con la atención de su reclamo. Para solucionar el inconveniente se debe comunicar con el 123.</ttg:comment>
+            <ttg:inParameters>
+                <ttg:name>completionCode</ttg:name>
+                <ttg:label>Tipo cierre</ttg:label>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:enable>false</ttg:enable>
+                <ttg:value>Rechazado</ttg:value>
+            </ttg:inParameters>
+            <ttg:inParameters>
+                <ttg:name>completionSubCode</ttg:name>
+                <ttg:label>Código cierre</ttg:label>
+                <ttg:required>true</ttg:required>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:enable>false</ttg:enable>
+                <ttg:value>Bloqueado</ttg:value>
+            </ttg:inParameters>
+            <ttg:inParameters>
+                <ttg:name>completionLabel</ttg:name>
+                <ttg:label>Comentario</ttg:label>
+                <ttg:required>false</ttg:required>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+            </ttg:inParameters>
+            <ttg:operationType>taskOperation</ttg:operationType>
+            <ttg:type>close</ttg:type>
+
+            <ttg:condition xsi:type="ttg:BinaryCondition">
+                <ttg:operation>OR</ttg:operation>
+                <ttg:operator1 xsi:type="ttg:UnaryCondition">
+                    <ttg:operationName>consultaSaldoAAA</ttg:operationName>
+                    <ttg:conditionsEnableAlternative>
+                        <ttg:field>subscriberStatusConsultaSaldoAAA</ttg:field>
+                        <ttg:fieldType>string</ttg:fieldType>
+                        <ttg:operator>=</ttg:operator>
+                        <ttg:value>BLOQUEADO</ttg:value>
+                    </ttg:conditionsEnableAlternative>
+                </ttg:operator1>
+                <ttg:operator2 xsi:type="ttg:UnaryCondition">
+                    <ttg:operationName>TINCO</ttg:operationName>
+                    <ttg:conditionsEnableAlternative>
+                        <ttg:field>descEstado</ttg:field>
+                        <ttg:fieldType>string</ttg:fieldType>
+                        <ttg:operator>=</ttg:operator>
+                        <ttg:value>BLOQUEADO</ttg:value>
+                    </ttg:conditionsEnableAlternative>
+                </ttg:operator2>
+            </ttg:condition>
+        </ttg:operation>
+
     </ttg:step>
 </ttg:guide>

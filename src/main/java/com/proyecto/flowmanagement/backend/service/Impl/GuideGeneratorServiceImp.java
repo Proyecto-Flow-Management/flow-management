@@ -41,7 +41,7 @@ public class GuideGeneratorServiceImp {
                         guide.setMainStep(mainStep.getFirstChild().getNodeValue());
                     }
 
-                    Document docGuide = guideNode.getOwnerDocument();
+                    Document docGuide = nodeToDocument(guideNode);
                     guide.setSteps(importStep(docGuide));
                     guide.setOperations(importOperation(docGuide));
                 }
@@ -50,7 +50,7 @@ public class GuideGeneratorServiceImp {
         return null;
     }
 
-    private List<Step> importStep(Document doc){
+    private List<Step> importStep(Document doc) throws ParserConfigurationException {
 
         List<Step> steps = new LinkedList<>();
 
@@ -79,7 +79,7 @@ public class GuideGeneratorServiceImp {
                         step.setText(text.getFirstChild().getNodeValue());
                     }
 
-                    Document docStep = stepNode.getOwnerDocument();
+                    Document docStep = nodeToDocument(stepNode);
                     step.setOperations(importOperation(docStep));
                     step.setAlternatives(importAlternatives(docStep));
                     step.setStepDocuments(importStepDocuments(docStep));
@@ -121,7 +121,7 @@ public class GuideGeneratorServiceImp {
         return documents;
     }
 
-    private List<Alternative> importAlternatives(Document doc) {
+    private List<Alternative> importAlternatives(Document doc) throws ParserConfigurationException {
         List<Alternative> alternatives = new LinkedList<>();
 
         if(doc != null){
@@ -149,7 +149,7 @@ public class GuideGeneratorServiceImp {
                         alternative.setLabel(label.getFirstChild().getNodeValue());
                     }
 
-                    Document docAlternative = alternativeNode.getOwnerDocument();
+                    Document docAlternative = nodeToDocument(alternativeNode);
                     alternative.setConditions(importConditions(docAlternative));
 
                     alternatives.add(alternative);
@@ -159,7 +159,7 @@ public class GuideGeneratorServiceImp {
         return alternatives;
     }
 
-    private List<Operation> importOperation(Document doc) {
+    private List<Operation> importOperation(Document doc) throws ParserConfigurationException {
         List<Operation> operations = new LinkedList<>();
 
         if(doc != null){
@@ -185,15 +185,16 @@ public class GuideGeneratorServiceImp {
                                 break;
                         }
                     }
-
-                    operations.add(operation);
+                    if (operation.getName() != null){
+                        operations.add(operation);
+                    }
                 }
             }
         }
         return operations;
     }
 
-    private Operation importSimpleOperation(Node operationNode) {
+    private Operation importSimpleOperation(Node operationNode) throws ParserConfigurationException {
         SimpleOperation operation = new SimpleOperation();
         operation.setOperationType(OperationType.simpleOperation);
 
@@ -282,7 +283,7 @@ public class GuideGeneratorServiceImp {
             operation.setService(servicio.getFirstChild().getNodeValue());
         }
 
-        Document docOperation = operationNode.getOwnerDocument();
+        Document docOperation = nodeToDocument(operationNode);
         operation.setAlternativeIds(importAlternativesIds(docOperation));
         operation.setOperationNotifyIds(importOperationIds(docOperation));
         operation.setInParameters(importParameters(docOperation, "in"));
@@ -292,7 +293,17 @@ public class GuideGeneratorServiceImp {
         return operation;
     }
 
-    private Operation importTaskOperation(Node operationNode) {
+    private Document nodeToDocument(Node node) throws ParserConfigurationException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document newDocument = builder.newDocument();
+        Node importedNode = newDocument.importNode(node, true);
+        newDocument.appendChild(importedNode);
+        return newDocument;
+    }
+
+    private Operation importTaskOperation(Node operationNode) throws ParserConfigurationException {
         TaskOperation operation = new TaskOperation();
         operation.setOperationType(OperationType.taskOperation);
 
@@ -400,7 +411,7 @@ public class GuideGeneratorServiceImp {
             operation.setMailSubjectPrefix(mailSubjectPrefix.getFirstChild().getNodeValue());
         }
 
-        Document docOperation = operationNode.getOwnerDocument();
+        Document docOperation = nodeToDocument(operationNode);
         operation.setAlternativeIds(importAlternativesIds(docOperation));
         operation.setOperationNotifyIds(importOperationIds(docOperation));
         operation.setInParameters(importParameters(docOperation, "in"));
@@ -461,7 +472,7 @@ public class GuideGeneratorServiceImp {
         return operations;
     }
 
-    private List<OperationParameter> importParameters(Document doc, String in) {
+    private List<OperationParameter> importParameters(Document doc, String in) throws ParserConfigurationException {
         List<OperationParameter> parameters = new LinkedList<>();
 
         if(doc != null){
@@ -596,7 +607,7 @@ public class GuideGeneratorServiceImp {
                         parameter.setValueWhenInParameterEquals(valueWhenInParameterEquals.getFirstChild().getNodeValue());
                     }
 
-                    Document docParameter = parameterNode.getOwnerDocument();
+                    Document docParameter = nodeToDocument(parameterNode);
                     parameter.setProperties(importParameters(docParameter,"properties"));
                     parameter.setConvertCondition(importConvertCondition(docParameter));
                     parameter.setValidateCrossFieldCondition(importValidateCrossFieldCondition(docParameter));
@@ -678,7 +689,7 @@ public class GuideGeneratorServiceImp {
         return validateCrossFieldConditions;
     }
 
-    private List<Condition> importConditions(Document doc) {
+    private List<Condition> importConditions(Document doc) throws ParserConfigurationException {
         List<Condition> conditions = new LinkedList<>();
 
         if(doc != null){
@@ -686,31 +697,108 @@ public class GuideGeneratorServiceImp {
             if(conditionNodeList != null){
                 for (int i = 0; i < conditionNodeList.getLength(); i++)
                 {
-                    Condition condition = new Condition();
-
                     Node conditionNode = conditionNodeList.item(i);
-                    Element conditionElement = (Element) conditionNode;
-
-                    Node conditionType = conditionElement.getAttributeNode("xsi:type");
-                    conditionType.getNodeValue();
-                    /*if (conditionType != null) {
-                        switch (conditionType.getFirstChild().getNodeValue()) {
-
-                            case "simpleOperation" :
-                                condition = importSimpleOperation(conditionNode);
-                                break;
-
-                            case "taskOperation" :
-                                condition = importTaskOperation(conditionNode);
-                                break;
-                        }
-                    }*/
-
+                    Document docCondition = nodeToDocument(conditionNode);
+                    Condition condition = importCondition(docCondition,"condition");
                     conditions.add(condition);
                 }
             }
         }
         return conditions;
+    }
+
+    private Condition importCondition(Document doc, String operator) throws ParserConfigurationException {
+        Condition condition = new Condition();
+        NodeList conditionNodeList;
+
+        switch (operator) {
+
+            case "operator1" :
+                conditionNodeList = doc.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATOR_UNO);
+                break;
+
+            case "operator2" :
+                conditionNodeList = doc.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATOR_DOS);
+                break;
+
+            default:
+                conditionNodeList = doc.getElementsByTagName(XMLConstants.CONDITION_ELEMENT);
+        }
+
+        Node conditionNode = conditionNodeList.item(0);
+        Element conditionElement = (Element) conditionNode;
+
+        Node conditionType = conditionElement.getAttributeNode("xsi:type");
+        String tagCondition = conditionType.getNodeValue();
+        if (tagCondition != null) {
+            switch (tagCondition) {
+
+                case "ttg:UnaryCondition" :
+                    condition.setType(TypeOperation.unaryCondition);
+                    Node operationName = conditionElement.getElementsByTagName(XMLConstants.UNARY_CONDITION_OPERATION_NAME).item(0);
+                    if (operationName != null) {
+                        condition.setOperation(operationName.getFirstChild().getNodeValue());
+                    }
+                    Document docUnaryCondition = nodeToDocument(conditionNode);
+                    condition.setConditionParameter(importConditionParameters(docUnaryCondition));
+                    break;
+
+                case "ttg:BinaryCondition" :
+                    condition.setType(TypeOperation.binaryCondition);
+                    Node binaryOperator = conditionElement.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATION).item(0);
+                    if (binaryOperator != null) {
+                        condition.setOperation(binaryOperator.getFirstChild().getNodeValue());
+                    }
+                    Node operator1 = conditionElement.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATOR_UNO).item(0);
+                    Node operator2 = conditionElement.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATOR_DOS).item(0);
+                    Document docOperator1 = nodeToDocument(operator1);
+                    Document docOperator2 = nodeToDocument(operator2);
+                    condition.setHijoIzquierdo(importCondition(docOperator1, "operator1"));
+                    condition.setHijoDerecho(importCondition(docOperator2, "operator2"));
+                    break;
+            }
+        }
+        return condition;
+    }
+
+    private List<ConditionParameter> importConditionParameters(Document doc) {
+        List<ConditionParameter> conditionParameters = new LinkedList<>();
+
+        if(doc != null){
+            NodeList conditionParameterNodeList = doc.getElementsByTagName(XMLConstants.CONDITION_ENABLE_ALTERNATIVE);
+            if(conditionParameterNodeList != null){
+                for (int i = 0; i < conditionParameterNodeList.getLength(); i++)
+                {
+                    ConditionParameter conditionParameter = new ConditionParameter();
+
+                    Node conditionParameterNode = conditionParameterNodeList.item(i);
+                    Element conditionParameterElement = (Element) conditionParameterNode;
+
+                    Node field = conditionParameterElement.getElementsByTagName(XMLConstants.UNARY_CONDITION_FIELD).item(0);
+                    if (field != null) {
+                        conditionParameter.setField(field.getFirstChild().getNodeValue());
+                    }
+
+                    Node fieldType = conditionParameterElement.getElementsByTagName(XMLConstants.UNARY_CONDITION_FIELD_TYPE).item(0);
+                    if (fieldType != null) {
+                        conditionParameter.setFieldType(fieldType.getFirstChild().getNodeValue());
+                    }
+
+                    Node operator = conditionParameterElement.getElementsByTagName(XMLConstants.UNARY_CONDITION_OPERATOR).item(0);
+                    if (operator != null) {
+                        conditionParameter.setOperator(operator.getFirstChild().getNodeValue());
+                    }
+
+                    Node value = conditionParameterElement.getElementsByTagName(XMLConstants.UNARY_CONDITION_VALUE).item(0);
+                    if (value != null) {
+                        conditionParameter.setValue(value.getFirstChild().getNodeValue());
+                    }
+
+                    conditionParameters.add(conditionParameter);
+                }
+            }
+        }
+        return conditionParameters;
     }
 
     private List<String> importCandidateGroups(Document doc) {
