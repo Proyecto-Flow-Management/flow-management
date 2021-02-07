@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-@Component
+//@Component
 @Route(value = "GuideList", layout = MainLayout.class)
 @PageTitle("Crear Guia | Flow Management")
 public class GuideList extends VerticalLayout implements HasUrlParameter<String> {
@@ -72,7 +72,7 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
     }
 
     private HorizontalLayout getToolBar() {
-        Button addGuideButton = new Button("Crear Guia", event -> UI.getCurrent().navigate("CreateGuide"));
+        Button addGuideButton = new Button("Crear Guia", event -> UI.getCurrent().navigate("CrearGuia"));
         HorizontalLayout toolbar = new HorizontalLayout(addGuideButton);
         toolbar.addClassName("toolbar");
         return toolbar;
