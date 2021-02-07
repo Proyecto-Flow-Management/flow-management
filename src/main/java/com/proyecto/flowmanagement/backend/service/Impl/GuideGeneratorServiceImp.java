@@ -23,6 +23,9 @@ import java.util.List;
 @Service
 public class GuideGeneratorServiceImp {
 
+    private int stepOperations = 0;
+    private int tagType;
+
     public Guide importGuide (String source) throws IOException, SAXException, ParserConfigurationException {
         Document doc = parseXML(source);
 
@@ -43,7 +46,8 @@ public class GuideGeneratorServiceImp {
 
                     Document docGuide = nodeToDocument(guideNode);
                     guide.setSteps(importStep(docGuide));
-                    guide.setOperations(importOperation(docGuide));
+                    guide.setOperations(importOperation(docGuide, stepOperations));
+                    guide.getName();
                 }
             }
         }
@@ -80,11 +84,13 @@ public class GuideGeneratorServiceImp {
                     }
 
                     Document docStep = nodeToDocument(stepNode);
-                    step.setOperations(importOperation(docStep));
+                    List<Operation> operations = importOperation(docStep, -1);
+                    step.setOperations(operations);
                     step.setAlternatives(importAlternatives(docStep));
                     step.setStepDocuments(importStepDocuments(docStep));
 
                     steps.add(step);
+                    stepOperations = stepOperations + operations.size();
                 }
             }
         }
@@ -159,13 +165,18 @@ public class GuideGeneratorServiceImp {
         return alternatives;
     }
 
-    private List<Operation> importOperation(Document doc) throws ParserConfigurationException {
+    private List<Operation> importOperation(Document doc, int index) throws ParserConfigurationException {
         List<Operation> operations = new LinkedList<>();
 
         if(doc != null){
             NodeList operationNodeList = doc.getElementsByTagName(XMLConstants.OPERATION_ELEMENT);
             if(operationNodeList != null){
-                for (int i = 0; i < operationNodeList.getLength(); i++)
+                if (index == -1){
+                    index = operationNodeList.getLength();
+                }else{
+                    index = operationNodeList.getLength() - index;
+                }
+                for (int i = 0; i < index; i++)
                 {
                     Operation operation = new Operation();
 
@@ -286,8 +297,8 @@ public class GuideGeneratorServiceImp {
         Document docOperation = nodeToDocument(operationNode);
         operation.setAlternativeIds(importAlternativesIds(docOperation));
         operation.setOperationNotifyIds(importOperationIds(docOperation));
-        operation.setInParameters(importParameters(docOperation, "in"));
-        operation.setOutParameters(importParameters(docOperation, "out"));
+        operation.setInParameters(importParameters(docOperation, "in", false));
+        operation.setOutParameters(importParameters(docOperation, "out", false));
         operation.setConditions(importConditions(docOperation));
 
         return operation;
@@ -304,6 +315,7 @@ public class GuideGeneratorServiceImp {
     }
 
     private Operation importTaskOperation(Node operationNode) throws ParserConfigurationException {
+        tagType = 0;
         TaskOperation operation = new TaskOperation();
         operation.setOperationType(OperationType.taskOperation);
 
@@ -369,28 +381,6 @@ public class GuideGeneratorServiceImp {
             operation.setNotifyOperationDelay(Integer.parseInt(notifyOperationDelay.getFirstChild().getNodeValue()));
         }
 
-        Node type = operationElement.getElementsByTagName(XMLConstants.OPERATION_TYPE).item(0);
-        if (type != null) {
-            switch (type.getFirstChild().getNodeValue()) {
-
-                case "delegate" :
-                    operation.setType(TaskOperationType.delegate);
-                    break;
-
-                case "close" :
-                    operation.setType(TaskOperationType.close);
-                    break;
-
-                case "schedule" :
-                    operation.setType(TaskOperationType.schedule);
-                    break;
-
-                case "internalDerivation" :
-                    operation.setType(TaskOperationType.internalDerivation);
-                    break;
-            }
-        }
-
         Node targetSystem = operationElement.getElementsByTagName(XMLConstants.OPERATION_TARGET_SYSTEM).item(0);
         if (targetSystem != null) {
             operation.setTargetSystem(targetSystem.getFirstChild().getNodeValue());
@@ -414,8 +404,31 @@ public class GuideGeneratorServiceImp {
         Document docOperation = nodeToDocument(operationNode);
         operation.setAlternativeIds(importAlternativesIds(docOperation));
         operation.setOperationNotifyIds(importOperationIds(docOperation));
-        operation.setInParameters(importParameters(docOperation, "in"));
-        operation.setOutParameters(importParameters(docOperation, "out"));
+        operation.setInParameters(importParameters(docOperation, "in", false));
+        operation.setOutParameters(importParameters(docOperation, "out", false));
+
+        Node type = operationElement.getElementsByTagName(XMLConstants.OPERATION_TYPE).item(tagType);
+        if (type != null) {
+            switch (type.getFirstChild().getNodeValue()) {
+
+                case "delegate" :
+                    operation.setType(TaskOperationType.delegate);
+                    break;
+
+                case "close" :
+                    operation.setType(TaskOperationType.close);
+                    break;
+
+                case "schedule" :
+                    operation.setType(TaskOperationType.schedule);
+                    break;
+
+                case "internalDerivation" :
+                    operation.setType(TaskOperationType.internalDerivation);
+                    break;
+            }
+        }
+
         operation.setConditions(importConditions(docOperation));
         //operation.setCandidateGroups(importCandidateGroups(docOperation));
 
@@ -472,7 +485,8 @@ public class GuideGeneratorServiceImp {
         return operations;
     }
 
-    private List<OperationParameter> importParameters(Document doc, String in) throws ParserConfigurationException {
+    private List<OperationParameter> importParameters(Document doc, String in, Boolean property) throws ParserConfigurationException {
+
         List<OperationParameter> parameters = new LinkedList<>();
 
         if(doc != null){
@@ -522,6 +536,7 @@ public class GuideGeneratorServiceImp {
                     Node type = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_TYPE).item(0);
                     if (type != null) {
                         parameter.setType(type.getFirstChild().getNodeValue());
+                        tagType = tagType + 1;
                     }
 
                     Node description = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DESCRIPTION).item(0);
@@ -608,7 +623,9 @@ public class GuideGeneratorServiceImp {
                     }
 
                     Document docParameter = nodeToDocument(parameterNode);
-                    parameter.setProperties(importParameters(docParameter,"properties"));
+                    if (!property){
+                        parameter.setProperties(importParameters(docParameter,"properties", true));
+                    }
                     parameter.setConvertCondition(importConvertCondition(docParameter));
                     parameter.setValidateCrossFieldCondition(importValidateCrossFieldCondition(docParameter));
 
@@ -748,6 +765,7 @@ public class GuideGeneratorServiceImp {
                     Node binaryOperator = conditionElement.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATION).item(0);
                     if (binaryOperator != null) {
                         condition.setOperation(binaryOperator.getFirstChild().getNodeValue());
+                        stepOperations = stepOperations + 1;
                     }
                     Node operator1 = conditionElement.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATOR_UNO).item(0);
                     Node operator2 = conditionElement.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATOR_DOS).item(0);
