@@ -26,13 +26,13 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
-import sun.plugin2.main.server.JVMHealthData;
+
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@org.springframework.stereotype.Component
+//@org.springframework.stereotype.Component
 @Route(value = "CrearGuia", layout = MainLayout.class)
 @PageTitle("Crear Guia | Flow Management")
 public class GuideCreator extends VerticalLayout implements HasUrlParameter<String> {
