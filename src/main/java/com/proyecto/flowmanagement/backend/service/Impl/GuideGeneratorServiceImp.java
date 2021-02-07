@@ -47,7 +47,6 @@ public class GuideGeneratorServiceImp {
                     Document docGuide = nodeToDocument(guideNode);
                     guide.setSteps(importStep(docGuide));
                     guide.setOperations(importOperation(docGuide, stepOperations));
-                    guide.getName();
                 }
             }
         }
