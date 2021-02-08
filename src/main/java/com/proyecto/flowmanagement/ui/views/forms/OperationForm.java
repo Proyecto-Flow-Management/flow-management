@@ -311,6 +311,7 @@ public class OperationForm extends VerticalLayout {
 
     public void setOperation(Operation operation) {
         this.operation = operation;
+        addElements(this.operationType.getValue());
         this.name.setValue(operation.getName());
         this.label.setValue(operation.getLabel());
 
@@ -429,7 +430,6 @@ public class OperationForm extends VerticalLayout {
                 groupsAccordion.setVisible(true);
 
             }
-            addElements(this.operationType.getValue());
         }
         else{
             this.operationType.clear();
