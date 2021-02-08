@@ -19,7 +19,7 @@ import java.util.List;
 
 @CssImport("./styles/convert-condition-form.css")
 public class ConvertConditionForm extends VerticalLayout {
-
+    HorizontalLayout campos = new HorizontalLayout();
     FormLayout actionsLayout = new FormLayout();
     HorizontalLayout buttonsLayout = new HorizontalLayout();
     HorizontalLayout gridLayout = new HorizontalLayout();
@@ -57,7 +57,10 @@ public class ConvertConditionForm extends VerticalLayout {
         ppal.setWidthFull();
 
         buttonsLayout.add(add,delete,save,cancel);
-        actionsLayout.add(condition, sourceUnit, destinationUnit);
+
+
+        campos.add(condition, sourceUnit, destinationUnit);
+//        actionsLayout.add(condition, sourceUnit, destinationUnit);
         actionsLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1),
                 new FormLayout.ResponsiveStep("32em", 2),
@@ -67,7 +70,11 @@ public class ConvertConditionForm extends VerticalLayout {
 
         gridLayout.add(convertConditionsGrid);
 
-        add(ppal, gridLayout);
+        HorizontalLayout form = new HorizontalLayout();
+        form.add(campos, buttonsLayout);
+        add(form, gridLayout);
+
+//        add(ppal, gridLayout);
     }
 
     private void configureElements()

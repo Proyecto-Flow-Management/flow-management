@@ -28,6 +28,12 @@ public class Alternative  extends AbstractEntity   implements Serializable {
 	@Column(name = "newStep")
 	private boolean newStep;
 
+	@Column(name = "isNewGuide")
+	private boolean isNewGuide;
+
+	@Column(name = "isSystemGuide")
+	private boolean isSystemGuide;
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="alternative_id")
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -163,5 +169,21 @@ public class Alternative  extends AbstractEntity   implements Serializable {
 
 	public boolean getNewStep() {
 		return this.newStep;
+	}
+
+	public boolean isNewGuide() {
+		return isNewGuide;
+	}
+
+	public void setNewGuide(boolean newGuide) {
+		isNewGuide = newGuide;
+	}
+
+	public boolean isSystemGuide() {
+		return isSystemGuide;
+	}
+
+	public void setSystemGuide(boolean systemGuide) {
+		isSystemGuide = systemGuide;
 	}
 }
