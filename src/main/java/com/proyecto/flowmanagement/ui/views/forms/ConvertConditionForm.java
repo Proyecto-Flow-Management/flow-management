@@ -53,33 +53,19 @@ public class ConvertConditionForm extends VerticalLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        VerticalLayout ppal = new VerticalLayout();
-        ppal.setWidthFull();
-
         buttonsLayout.add(add,delete,save,cancel);
-
-
         campos.add(condition, sourceUnit, destinationUnit);
-//        actionsLayout.add(condition, sourceUnit, destinationUnit);
-        actionsLayout.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("25em", 1),
-                new FormLayout.ResponsiveStep("32em", 2),
-                new FormLayout.ResponsiveStep("40em", 3));
-
-        ppal.add(actionsLayout,buttonsLayout);
 
         gridLayout.add(convertConditionsGrid);
 
         HorizontalLayout form = new HorizontalLayout();
         form.add(campos, buttonsLayout);
         add(form, gridLayout);
-
-//        add(ppal, gridLayout);
     }
 
     private void configureElements()
     {
-        buttonsLayout.setClassName("buttonsLayout");
+        buttonsLayout.setClassName("buttonsConvertConditionLayout");
         this.condition.setVisible(true);
         this.condition.setValue("");
         this.sourceUnit.setVisible(true);
@@ -95,7 +81,7 @@ public class ConvertConditionForm extends VerticalLayout {
 
     private void configureForEditing()
     {
-        buttonsLayout.setClassName("buttonsEditingLayout");
+        buttonsLayout.setClassName("buttonsConvertConditionEditingLayout");
         this.condition.setVisible(true);
         this.sourceUnit.setVisible(true);
         this.destinationUnit.setVisible(true);
