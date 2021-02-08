@@ -1,14 +1,10 @@
 package com.proyecto.flowmanagement.backend.service.Impl;
 
-import com.proyecto.flowmanagement.backend.def.OperationType;
-import com.proyecto.flowmanagement.backend.def.TypeOperation;
-import com.proyecto.flowmanagement.backend.def.XMLConstants;
+import com.proyecto.flowmanagement.backend.def.*;
 import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import com.vaadin.flow.internal.Pair;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,11 +17,836 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Parameter;
 import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class GuideGeneratorServiceImp {
+
+    private int stepOperations = 0;
+    private int tagType;
+
+    public Guide importGuide (String source) throws IOException, SAXException, ParserConfigurationException {
+        Document doc = parseXML(source);
+
+        if(doc != null){
+            NodeList guideNodeList = doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT);
+            if (guideNodeList != null){
+                for (int i = 0; i < guideNodeList.getLength(); i++)
+                {
+                    Guide guide = new Guide();
+
+                    Node guideNode = guideNodeList.item(i);
+                    Element guideElement = (Element) guideNode;
+
+                    Node mainStep = guideElement.getElementsByTagName(XMLConstants.MAIN_STEP_ID).item(0);
+                    if (mainStep != null) {
+                        guide.setMainStep(mainStep.getFirstChild().getNodeValue());
+                    }
+
+                    Document docGuide = nodeToDocument(guideNode);
+                    guide.setSteps(importStep(docGuide));
+                    guide.setOperations(importOperation(docGuide, stepOperations));
+                }
+            }
+        }
+        return null;
+    }
+
+    private List<Step> importStep(Document doc) throws ParserConfigurationException {
+
+        List<Step> steps = new LinkedList<>();
+
+        if(doc != null){
+            NodeList stepNodeList = doc.getElementsByTagName(XMLConstants.STEP_ELEMENT);
+            if(stepNodeList != null){
+                for (int i = 0; i < stepNodeList.getLength(); i++)
+                {
+                    Step step = new Step();
+
+                    Node stepNode = stepNodeList.item(i);
+                    Element stepElement = (Element) stepNode;
+
+                    Node stepId = stepElement.getElementsByTagName(XMLConstants.STEP_ID).item(0);
+                    if (stepId != null) {
+                        step.setTextId(stepId.getFirstChild().getNodeValue());
+                    }
+
+                    Node label = stepElement.getElementsByTagName(XMLConstants.STEP_LABEL).item(0);
+                    if (label != null) {
+                        step.setLabel(label.getFirstChild().getNodeValue());
+                    }
+
+                    Node text = stepElement.getElementsByTagName(XMLConstants.STEP_TEXT).item(0);
+                    if (text != null) {
+                        step.setText(text.getFirstChild().getNodeValue());
+                    }
+
+                    Document docStep = nodeToDocument(stepNode);
+                    List<Operation> operations = importOperation(docStep, -1);
+                    step.setOperations(operations);
+                    step.setAlternatives(importAlternatives(docStep));
+                    step.setStepDocuments(importStepDocuments(docStep));
+
+                    steps.add(step);
+                    stepOperations = stepOperations + operations.size();
+                }
+            }
+        }
+        return steps;
+    }
+
+    private List<StepDocument> importStepDocuments(Document doc) {
+        List<StepDocument> documents = new LinkedList<>();
+
+        if(doc != null){
+            NodeList documentNodeList = doc.getElementsByTagName(XMLConstants.REFERENCE_DOC_ELEMENT);
+            if(documentNodeList != null){
+                for (int i = 0; i < documentNodeList.getLength(); i++)
+                {
+                    StepDocument document = new StepDocument();
+
+                    Node documentNode = documentNodeList.item(i);
+                    Element documentElement = (Element) documentNode;
+
+                    Node mimeType = documentElement.getElementsByTagName(XMLConstants.REFERENCE_DOC_MIME_TYPE).item(0);
+                    if (mimeType != null) {
+                        document.setMimeType(mimeType.getFirstChild().getNodeValue());
+                    }
+
+                    Node url = documentElement.getElementsByTagName(XMLConstants.REFERENCE_DOC_URL).item(0);
+                    if (url != null) {
+                        document.setUrl(url.getFirstChild().getNodeValue());
+                    }
+
+                    documents.add(document);
+                }
+            }
+        }
+        return documents;
+    }
+
+    private List<Alternative> importAlternatives(Document doc) throws ParserConfigurationException {
+        List<Alternative> alternatives = new LinkedList<>();
+
+        if(doc != null){
+            NodeList alternativeNodeList = doc.getElementsByTagName(XMLConstants.ALTERNATIVE_ELEMENT);
+            if(alternativeNodeList != null){
+                for (int i = 0; i < alternativeNodeList.getLength(); i++)
+                {
+                    Alternative alternative = new Alternative();
+
+                    Node alternativeNode = alternativeNodeList.item(i);
+                    Element alternativeElement = (Element) alternativeNode;
+
+                    Node guideName = alternativeElement.getElementsByTagName(XMLConstants.ALTERNATIVE_GUIDE_NAME).item(0);
+                    if (guideName != null) {
+                        alternative.setGuideName(guideName.getFirstChild().getNodeValue());
+                    }
+
+                    Node stepId = alternativeElement.getElementsByTagName(XMLConstants.ALTERNATIVE_STEP_ID).item(0);
+                    if (stepId != null) {
+                        alternative.setNextStep(stepId.getFirstChild().getNodeValue());
+                    }
+
+                    Node label = alternativeElement.getElementsByTagName(XMLConstants.ALTERNATIVE_LABEL).item(0);
+                    if (label != null) {
+                        alternative.setLabel(label.getFirstChild().getNodeValue());
+                    }
+
+                    Document docAlternative = nodeToDocument(alternativeNode);
+                    alternative.setConditions(importConditions(docAlternative));
+
+                    alternatives.add(alternative);
+                }
+            }
+        }
+        return alternatives;
+    }
+
+    private List<Operation> importOperation(Document doc, int index) throws ParserConfigurationException {
+        List<Operation> operations = new LinkedList<>();
+
+        if(doc != null){
+            NodeList operationNodeList = doc.getElementsByTagName(XMLConstants.OPERATION_ELEMENT);
+            if(operationNodeList != null){
+                if (index == -1){
+                    index = operationNodeList.getLength();
+                }else{
+                    index = operationNodeList.getLength() - index;
+                }
+                for (int i = 0; i < index; i++)
+                {
+                    Operation operation = new Operation();
+
+                    Node operationNode = operationNodeList.item(i);
+                    Element operationElement = (Element) operationNode;
+
+                    Node operationType = operationElement.getElementsByTagName(XMLConstants.OPERATION_OPERATION_TYPE).item(0);
+                    if (operationType != null) {
+                        switch (operationType.getFirstChild().getNodeValue()) {
+
+                            case "simpleOperation" :
+                                operation = importSimpleOperation(operationNode);
+                                break;
+
+                            case "taskOperation" :
+                                operation = importTaskOperation(operationNode);
+                                break;
+                        }
+                    }
+                    if (operation.getName() != null){
+                        operations.add(operation);
+                    }
+                }
+            }
+        }
+        return operations;
+    }
+
+    private Operation importSimpleOperation(Node operationNode) throws ParserConfigurationException {
+        SimpleOperation operation = new SimpleOperation();
+        operation.setOperationType(OperationType.simpleOperation);
+
+        Element operationElement = (Element) operationNode;
+
+        Node name = operationElement.getElementsByTagName(XMLConstants.OPERATION_NAME).item(0);
+        if (name != null){
+            operation.setName(name.getFirstChild().getNodeValue());
+        }
+
+        Node label = operationElement.getElementsByTagName(XMLConstants.OPERATION_LABEL).item(0);
+        if (label != null) {
+            operation.setLabel(label.getFirstChild().getNodeValue());
+        }
+
+        Node visible = operationElement.getElementsByTagName(XMLConstants.OPERATION_VISIBLE).item(0);
+        if (visible != null) {
+            operation.setVisible(Boolean.valueOf(visible.getFirstChild().getNodeValue()));
+        }
+
+        Node preExecute = operationElement.getElementsByTagName(XMLConstants.OPERATION_PRE_EXECUTE).item(0);
+        if (preExecute != null) {
+            operation.setPreExecute(Boolean.valueOf(preExecute.getFirstChild().getNodeValue()));
+        }
+
+        Node comment = operationElement.getElementsByTagName(XMLConstants.OPERATION_COMMENT).item(0);
+        if (comment != null) {
+            operation.setComment(comment.getFirstChild().getNodeValue());
+        }
+
+        Node title = operationElement.getElementsByTagName(XMLConstants.OPERATION_TITLE).item(0);
+        if (title != null) {
+            operation.setTitle(title.getFirstChild().getNodeValue());
+        }
+
+        Node automatic = operationElement.getElementsByTagName(XMLConstants.OPERATION_AUTOMATIC).item(0);
+        if (automatic != null) {
+            operation.setAutomatic(Boolean.valueOf(automatic.getFirstChild().getNodeValue()));
+        }
+
+        Node pauseExecution = operationElement.getElementsByTagName(XMLConstants.OPERATION_PAUSE_EXECUTION).item(0);
+        if (pauseExecution != null) {
+            operation.setPauseExecution(Boolean.valueOf(pauseExecution.getFirstChild().getNodeValue()));
+        }
+
+        Node operationOrder = operationElement.getElementsByTagName(XMLConstants.OPERATION_OPERATION_ORDER).item(0);
+        if (operationOrder != null) {
+            operation.setOperationOrder(Integer.parseInt(operationOrder.getFirstChild().getNodeValue()));
+        }
+
+        Node notifyAlternative = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
+        if (notifyAlternative != null) {
+            operation.setNotifyAlternative(Boolean.valueOf(notifyAlternative.getFirstChild().getNodeValue()));
+        }
+
+        Node notifyOperation = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION).item(0);
+        if (notifyOperation != null) {
+            operation.setNotifyOperation(Boolean.valueOf(notifyOperation.getFirstChild().getNodeValue()));
+        }
+
+        Node notifyOperationDelay = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY).item(0);
+        if (notifyOperationDelay != null) {
+            operation.setNotifyOperationDelay(Integer.parseInt(notifyOperationDelay.getFirstChild().getNodeValue()));
+        }
+
+        Node type = operationElement.getElementsByTagName(XMLConstants.OPERATION_TYPE).item(0);
+        if (type != null) {
+            switch (type.getFirstChild().getNodeValue()) {
+
+                case "configuration" :
+                    operation.setType(SimpleOperationType.configuration);
+                    break;
+
+                case "diagnostic" :
+                    operation.setType(SimpleOperationType.diagnostic);
+                    break;
+
+                case "query" :
+                    operation.setType(SimpleOperationType.query);
+                    break;
+            }
+        }
+
+        Node servicio = operationElement.getElementsByTagName(XMLConstants.OPERATION_SERVICE).item(0);
+        if (servicio != null) {
+            operation.setService(servicio.getFirstChild().getNodeValue());
+        }
+
+        Document docOperation = nodeToDocument(operationNode);
+        operation.setAlternativeIds(importAlternativesIds(docOperation));
+        operation.setOperationNotifyIds(importOperationIds(docOperation));
+        operation.setInParameters(importParameters(docOperation, "in", false));
+        operation.setOutParameters(importParameters(docOperation, "out", false));
+        operation.setConditions(importConditions(docOperation));
+
+        return operation;
+    }
+
+    private Document nodeToDocument(Node node) throws ParserConfigurationException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document newDocument = builder.newDocument();
+        Node importedNode = newDocument.importNode(node, true);
+        newDocument.appendChild(importedNode);
+        return newDocument;
+    }
+
+    private Operation importTaskOperation(Node operationNode) throws ParserConfigurationException {
+        tagType = 0;
+        TaskOperation operation = new TaskOperation();
+        operation.setOperationType(OperationType.taskOperation);
+
+        Element operationElement = (Element) operationNode;
+
+        Node name = operationElement.getElementsByTagName(XMLConstants.OPERATION_NAME).item(0);
+        if (name != null){
+            operation.setName(name.getFirstChild().getNodeValue());
+        }
+
+        Node label = operationElement.getElementsByTagName(XMLConstants.OPERATION_LABEL).item(0);
+        if (label != null) {
+            operation.setLabel(label.getFirstChild().getNodeValue());
+        }
+
+        Node visible = operationElement.getElementsByTagName(XMLConstants.OPERATION_VISIBLE).item(0);
+        if (visible != null) {
+            operation.setVisible(Boolean.valueOf(visible.getFirstChild().getNodeValue()));
+        }
+
+        Node preExecute = operationElement.getElementsByTagName(XMLConstants.OPERATION_PRE_EXECUTE).item(0);
+        if (preExecute != null) {
+            operation.setPreExecute(Boolean.valueOf(preExecute.getFirstChild().getNodeValue()));
+        }
+
+        Node comment = operationElement.getElementsByTagName(XMLConstants.OPERATION_COMMENT).item(0);
+        if (comment != null) {
+            operation.setComment(comment.getFirstChild().getNodeValue());
+        }
+
+        Node title = operationElement.getElementsByTagName(XMLConstants.OPERATION_TITLE).item(0);
+        if (title != null) {
+            operation.setTitle(title.getFirstChild().getNodeValue());
+        }
+
+        Node automatic = operationElement.getElementsByTagName(XMLConstants.OPERATION_AUTOMATIC).item(0);
+        if (automatic != null) {
+            operation.setAutomatic(Boolean.valueOf(automatic.getFirstChild().getNodeValue()));
+        }
+
+        Node pauseExecution = operationElement.getElementsByTagName(XMLConstants.OPERATION_PAUSE_EXECUTION).item(0);
+        if (pauseExecution != null) {
+            operation.setPauseExecution(Boolean.valueOf(pauseExecution.getFirstChild().getNodeValue()));
+        }
+
+        Node operationOrder = operationElement.getElementsByTagName(XMLConstants.OPERATION_OPERATION_ORDER).item(0);
+        if (operationOrder != null) {
+            operation.setOperationOrder(Integer.parseInt(operationOrder.getFirstChild().getNodeValue()));
+        }
+
+        Node notifyAlternative = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
+        if (notifyAlternative != null) {
+            operation.setNotifyAlternative(Boolean.valueOf(notifyAlternative.getFirstChild().getNodeValue()));
+        }
+
+        Node notifyOperation = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION).item(0);
+        if (notifyOperation != null) {
+            operation.setNotifyOperation(Boolean.valueOf(notifyOperation.getFirstChild().getNodeValue()));
+        }
+
+        Node notifyOperationDelay = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY).item(0);
+        if (notifyOperationDelay != null) {
+            operation.setNotifyOperationDelay(Integer.parseInt(notifyOperationDelay.getFirstChild().getNodeValue()));
+        }
+
+        Node targetSystem = operationElement.getElementsByTagName(XMLConstants.OPERATION_TARGET_SYSTEM).item(0);
+        if (targetSystem != null) {
+            operation.setTargetSystem(targetSystem.getFirstChild().getNodeValue());
+        }
+
+        Node mailTemplate = operationElement.getElementsByTagName(XMLConstants.OPERATION_MAIL_TEMPLATE).item(0);
+        if (mailTemplate != null) {
+            operation.setMailTemplate(mailTemplate.getFirstChild().getNodeValue());
+        }
+
+        Node mailTo = operationElement.getElementsByTagName(XMLConstants.OPERATION_MAIL_TO).item(0);
+        if (mailTo != null) {
+            operation.setMailTo(mailTo.getFirstChild().getNodeValue());
+        }
+
+        Node mailSubjectPrefix = operationElement.getElementsByTagName(XMLConstants.OPERATION_MAIL_SUBJECT_PREFIX).item(0);
+        if (mailSubjectPrefix != null) {
+            operation.setMailSubjectPrefix(mailSubjectPrefix.getFirstChild().getNodeValue());
+        }
+
+        Document docOperation = nodeToDocument(operationNode);
+        operation.setAlternativeIds(importAlternativesIds(docOperation));
+        operation.setOperationNotifyIds(importOperationIds(docOperation));
+        operation.setInParameters(importParameters(docOperation, "in", false));
+        operation.setOutParameters(importParameters(docOperation, "out", false));
+
+        Node type = operationElement.getElementsByTagName(XMLConstants.OPERATION_TYPE).item(tagType);
+        if (type != null) {
+            switch (type.getFirstChild().getNodeValue()) {
+
+                case "delegate" :
+                    operation.setType(TaskOperationType.delegate);
+                    break;
+
+                case "close" :
+                    operation.setType(TaskOperationType.close);
+                    break;
+
+                case "schedule" :
+                    operation.setType(TaskOperationType.schedule);
+                    break;
+
+                case "internalDerivation" :
+                    operation.setType(TaskOperationType.internalDerivation);
+                    break;
+            }
+        }
+
+        operation.setConditions(importConditions(docOperation));
+        //operation.setCandidateGroups(importCandidateGroups(docOperation));
+
+        return operation;
+    }
+
+    private List<Alternative> importAlternativesIds(Document doc) {
+        List<Alternative> alternatives = new LinkedList<>();
+
+        if(doc != null){
+            NodeList alternativeNodeList = doc.getElementsByTagName(XMLConstants.OPERATION_ALTERNATIVE_IDS);
+            if(alternativeNodeList != null){
+                for (int i = 0; i < alternativeNodeList.getLength(); i++)
+                {
+                    Alternative alternative = new Alternative();
+
+                    Node alternativeNode = alternativeNodeList.item(i);
+                    Element alternativeElement = (Element) alternativeNode;
+
+                    Node alternativeId = alternativeElement.getElementsByTagName(XMLConstants.OPERATION_ALTERNATIVE_IDS).item(0);
+                    if (alternativeId != null) {
+                        alternative.setNextStep(alternativeId.getFirstChild().getNodeValue());
+                    }
+
+                    alternatives.add(alternative);
+                }
+            }
+        }
+        return alternatives;
+    }
+
+    private List<OperationNotifyId> importOperationIds(Document doc) {
+        List<OperationNotifyId> operations = new LinkedList<>();
+
+        if(doc != null){
+            NodeList operationNodeList = doc.getElementsByTagName(XMLConstants.OPERATION_OPERATION_NOTIFY_IDS);
+            if(operationNodeList != null){
+                for (int i = 0; i < operationNodeList.getLength(); i++)
+                {
+                    OperationNotifyId operation = new OperationNotifyId();
+
+                    Node operationNode = operationNodeList.item(i);
+                    Element operationElement = (Element) operationNode;
+
+                    Node operationId = operationElement.getElementsByTagName(XMLConstants.OPERATION_OPERATION_NOTIFY_IDS).item(0);
+                    if (operationId != null) {
+                        operation.setName(operationId.getFirstChild().getNodeValue());
+                    }
+
+                    operations.add(operation);
+                }
+            }
+        }
+        return operations;
+    }
+
+    private List<OperationParameter> importParameters(Document doc, String in, Boolean property) throws ParserConfigurationException {
+
+        List<OperationParameter> parameters = new LinkedList<>();
+
+        if(doc != null){
+            NodeList parameterNodeList = null;
+            switch (in) {
+
+                case "in" :
+                    parameterNodeList = doc.getElementsByTagName(XMLConstants.PARAMETER_IN_ELEMENT);
+                    break;
+
+                case "out" :
+                    parameterNodeList = doc.getElementsByTagName(XMLConstants.PARAMETER_OUT_ELEMENT);
+                    break;
+
+                case "properties" :
+                    parameterNodeList = doc.getElementsByTagName(XMLConstants.PARAMETER_PROPERTIES);
+                    break;
+            }
+            if(parameterNodeList != null){
+                for (int i = 0; i < parameterNodeList.getLength(); i++)
+                {
+                    OperationParameter parameter = new OperationParameter();
+
+                    Node parameterNode = parameterNodeList.item(i);
+                    Element parameterElement = (Element) parameterNode;
+
+                    Node name = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_NAME).item(0);
+                    if (name != null){
+                        parameter.setName(name.getFirstChild().getNodeValue());
+                    }
+
+                    Node label = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_LABEL).item(0);
+                    if (label != null) {
+                        parameter.setLabel(label.getFirstChild().getNodeValue());
+                    }
+
+                    Node visible = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VISIBLE).item(0);
+                    if (visible != null) {
+                        parameter.setVisible(Boolean.valueOf(visible.getFirstChild().getNodeValue()));
+                    }
+
+                    Node visibleWhenIn = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VISIBLE_WHEN_IN_PARAMETER_EQUALS_CONDITION).item(0);
+                    if (visibleWhenIn != null){
+                        parameter.setVisibleWhenInParameterEqualsCondition(visibleWhenIn.getFirstChild().getNodeValue());
+                    }
+
+                    Node type = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_TYPE).item(0);
+                    if (type != null) {
+                        parameter.setType(type.getFirstChild().getNodeValue());
+                        tagType = tagType + 1;
+                    }
+
+                    Node description = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DESCRIPTION).item(0);
+                    if (description != null){
+                        parameter.setDescription(description.getFirstChild().getNodeValue());
+                    }
+
+                    Node value = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VALUE).item(0);
+                    if (value != null) {
+                        parameter.setValue(value.getFirstChild().getNodeValue());
+                    }
+
+                    Node enable = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_ENABLE).item(0);
+                    if (enable != null) {
+                        parameter.setEnable(Boolean.valueOf(enable.getFirstChild().getNodeValue()));
+                    }
+
+                    Node required = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_REQUIRED).item(0);
+                    if (required != null) {
+                        parameter.setRequired(Boolean.valueOf(required.getFirstChild().getNodeValue()));
+                    }
+
+                    Node validateExpression = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_EXPRESSION).item(0);
+                    if (validateExpression != null){
+                        parameter.setValidateExpression(validateExpression.getFirstChild().getNodeValue());
+                    }
+
+                    Node validateExpressionErrorDescription = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_EXPRESSION_ERROR_DESCRIPTION).item(0);
+                    if (validateExpressionErrorDescription != null) {
+                        parameter.setValidateExpressionErrorDescription(validateExpressionErrorDescription.getFirstChild().getNodeValue());
+                    }
+
+                    Node optionValue = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_OPTION_VALUE).item(0);
+                    if (optionValue != null) {
+                        parameter.setOptionValue(optionValue.getFirstChild().getNodeValue());
+                    }
+
+                    Node dateFormat = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT).item(0);
+                    if (dateFormat != null) {
+                        parameter.setDateFormat(dateFormat.getFirstChild().getNodeValue());
+                    }
+
+                    Node dateFormatRangeEnd = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DTE_FORMAT_RANGE_END).item(0);
+                    if (dateFormatRangeEnd != null) {
+                        parameter.setDateFormatRangeEnd(dateFormatRangeEnd.getFirstChild().getNodeValue());
+                    }
+
+                    Node dateFormatFinal = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT_FINAL).item(0);
+                    if (dateFormatFinal != null) {
+                        parameter.setDateFormatFinal(dateFormatFinal.getFirstChild().getNodeValue());
+                    }
+
+                    Node sourceValueEntity = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY).item(0);
+                    if (sourceValueEntity != null) {
+                        switch (sourceValueEntity.getFirstChild().getNodeValue()) {
+
+                            case "ticket" :
+                                parameter.setSourceValueEntity(SourceEntity.ticket);
+                                break;
+
+                            case "task" :
+                                parameter.setSourceValueEntity(SourceEntity.task);
+                                break;
+
+                            case "guide" :
+                                parameter.setSourceValueEntity(SourceEntity.guide);
+                                break;
+                        }
+                    }
+
+                    Node sourceValueEntityProperty = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY_PROPERTY).item(0);
+                    if (sourceValueEntityProperty != null) {
+                        parameter.setSourceValueEntityProperty(sourceValueEntityProperty.getFirstChild().getNodeValue());
+                    }
+
+                    Node convert = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_CONVERT).item(0);
+                    if (convert != null) {
+                        parameter.setConvert(Boolean.valueOf(convert.getFirstChild().getNodeValue()));
+                    }
+
+                    Node valueWhenInParameterEquals = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS).item(0);
+                    if (valueWhenInParameterEquals != null) {
+                        parameter.setValueWhenInParameterEquals(valueWhenInParameterEquals.getFirstChild().getNodeValue());
+                    }
+
+                    Document docParameter = nodeToDocument(parameterNode);
+                    if (!property){
+                        parameter.setProperties(importParameters(docParameter,"properties", true));
+                    }
+                    parameter.setConvertCondition(importConvertCondition(docParameter));
+                    parameter.setValidateCrossFieldCondition(importValidateCrossFieldCondition(docParameter));
+
+                    parameters.add(parameter);
+                }
+            }
+        }
+        return parameters;
+    }
+
+    private List<Convertion> importConvertCondition(Document doc) {
+        List<Convertion> convertions = new LinkedList<>();
+
+        if(doc != null){
+            NodeList convertionNodeList = doc.getElementsByTagName(XMLConstants.PARAMETER_CONVERT_CONDITION);
+            if(convertionNodeList != null){
+                for (int i = 0; i < convertionNodeList.getLength(); i++)
+                {
+                    Convertion convertion = new Convertion();
+
+                    Node convertionNode = convertionNodeList.item(i);
+                    Element convertionElement = (Element) convertionNode;
+
+                    Node condition = convertionElement.getElementsByTagName(XMLConstants.CONVERTION_CONDITION).item(0);
+                    if (condition != null) {
+                        convertion.setCondition(condition.getFirstChild().getNodeValue());
+                    }
+
+                    Node sourceUnit = convertionElement.getElementsByTagName(XMLConstants.CONVERTION_SOURCE_UNIT).item(0);
+                    if (sourceUnit != null) {
+                        convertion.setSourceUnit(sourceUnit.getFirstChild().getNodeValue());
+                    }
+
+                    Node destinationUnit = convertionElement.getElementsByTagName(XMLConstants.CONVERTION_DESTINATION_UNIT).item(0);
+                    if (destinationUnit != null) {
+                        convertion.setDestinationUnit(destinationUnit.getFirstChild().getNodeValue());
+                    }
+
+                    convertions.add(convertion);
+                }
+            }
+        }
+        return convertions;
+    }
+
+    private List<ValidateCrossFieldCondition> importValidateCrossFieldCondition(Document doc) {
+        List<ValidateCrossFieldCondition> validateCrossFieldConditions = new LinkedList<>();
+
+        if(doc != null){
+            NodeList validateNodeList = doc.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_CROSS_FIELD_CONDITION);
+            if(validateNodeList != null){
+                for (int i = 0; i < validateNodeList.getLength(); i++)
+                {
+                    ValidateCrossFieldCondition validateCrossFieldCondition = new ValidateCrossFieldCondition();
+
+                    Node validateNode = validateNodeList.item(i);
+                    Element validateElement = (Element) validateNode;
+
+                    Node fieldName = validateElement.getElementsByTagName(XMLConstants.VALIDATE_CROSS_FIELD_CONDITION_FIELD_NAME_).item(0);
+                    if (fieldName != null) {
+                        validateCrossFieldCondition.setFieldName(fieldName.getFirstChild().getNodeValue());
+                    }
+
+                    Node condition = validateElement.getElementsByTagName(XMLConstants.VALIDATE_CROSS_FIELD_CONDITION_CONDITION_).item(0);
+                    if (condition != null) {
+                        validateCrossFieldCondition.setCondition(condition.getFirstChild().getNodeValue());
+                    }
+
+                    Node messageError = validateElement.getElementsByTagName(XMLConstants.VALIDATE_CROSS_FIELD_CONDITION_MESSAGE_ERROR).item(0);
+                    if (messageError != null) {
+                        validateCrossFieldCondition.setMessageError(messageError.getFirstChild().getNodeValue());
+                    }
+
+                    validateCrossFieldConditions.add(validateCrossFieldCondition);
+                }
+            }
+        }
+        return validateCrossFieldConditions;
+    }
+
+    private List<Condition> importConditions(Document doc) throws ParserConfigurationException {
+        List<Condition> conditions = new LinkedList<>();
+
+        if(doc != null){
+            NodeList conditionNodeList = doc.getElementsByTagName(XMLConstants.CONDITION_ELEMENT);
+            if(conditionNodeList != null){
+                for (int i = 0; i < conditionNodeList.getLength(); i++)
+                {
+                    Node conditionNode = conditionNodeList.item(i);
+                    Document docCondition = nodeToDocument(conditionNode);
+                    Condition condition = importCondition(docCondition,"condition");
+                    conditions.add(condition);
+                }
+            }
+        }
+        return conditions;
+    }
+
+    private Condition importCondition(Document doc, String operator) throws ParserConfigurationException {
+        Condition condition = new Condition();
+        NodeList conditionNodeList;
+
+        switch (operator) {
+
+            case "operator1" :
+                conditionNodeList = doc.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATOR_UNO);
+                break;
+
+            case "operator2" :
+                conditionNodeList = doc.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATOR_DOS);
+                break;
+
+            default:
+                conditionNodeList = doc.getElementsByTagName(XMLConstants.CONDITION_ELEMENT);
+        }
+
+        Node conditionNode = conditionNodeList.item(0);
+        Element conditionElement = (Element) conditionNode;
+
+        Node conditionType = conditionElement.getAttributeNode("xsi:type");
+        String tagCondition = conditionType.getNodeValue();
+        if (tagCondition != null) {
+            switch (tagCondition) {
+
+                case "ttg:UnaryCondition" :
+                    condition.setType(TypeOperation.unaryCondition);
+                    Node operationName = conditionElement.getElementsByTagName(XMLConstants.UNARY_CONDITION_OPERATION_NAME).item(0);
+                    if (operationName != null) {
+                        condition.setOperation(operationName.getFirstChild().getNodeValue());
+                    }
+                    Document docUnaryCondition = nodeToDocument(conditionNode);
+                    condition.setConditionParameter(importConditionParameters(docUnaryCondition));
+                    break;
+
+                case "ttg:BinaryCondition" :
+                    condition.setType(TypeOperation.binaryCondition);
+                    Node binaryOperator = conditionElement.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATION).item(0);
+                    if (binaryOperator != null) {
+                        condition.setOperation(binaryOperator.getFirstChild().getNodeValue());
+                        stepOperations = stepOperations + 1;
+                    }
+                    Node operator1 = conditionElement.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATOR_UNO).item(0);
+                    Node operator2 = conditionElement.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATOR_DOS).item(0);
+                    Document docOperator1 = nodeToDocument(operator1);
+                    Document docOperator2 = nodeToDocument(operator2);
+                    condition.setHijoIzquierdo(importCondition(docOperator1, "operator1"));
+                    condition.setHijoDerecho(importCondition(docOperator2, "operator2"));
+                    break;
+            }
+        }
+        return condition;
+    }
+
+    private List<ConditionParameter> importConditionParameters(Document doc) {
+        List<ConditionParameter> conditionParameters = new LinkedList<>();
+
+        if(doc != null){
+            NodeList conditionParameterNodeList = doc.getElementsByTagName(XMLConstants.CONDITION_ENABLE_ALTERNATIVE);
+            if(conditionParameterNodeList != null){
+                for (int i = 0; i < conditionParameterNodeList.getLength(); i++)
+                {
+                    ConditionParameter conditionParameter = new ConditionParameter();
+
+                    Node conditionParameterNode = conditionParameterNodeList.item(i);
+                    Element conditionParameterElement = (Element) conditionParameterNode;
+
+                    Node field = conditionParameterElement.getElementsByTagName(XMLConstants.UNARY_CONDITION_FIELD).item(0);
+                    if (field != null) {
+                        conditionParameter.setField(field.getFirstChild().getNodeValue());
+                    }
+
+                    Node fieldType = conditionParameterElement.getElementsByTagName(XMLConstants.UNARY_CONDITION_FIELD_TYPE).item(0);
+                    if (fieldType != null) {
+                        conditionParameter.setFieldType(fieldType.getFirstChild().getNodeValue());
+                    }
+
+                    Node operator = conditionParameterElement.getElementsByTagName(XMLConstants.UNARY_CONDITION_OPERATOR).item(0);
+                    if (operator != null) {
+                        conditionParameter.setOperator(operator.getFirstChild().getNodeValue());
+                    }
+
+                    Node value = conditionParameterElement.getElementsByTagName(XMLConstants.UNARY_CONDITION_VALUE).item(0);
+                    if (value != null) {
+                        conditionParameter.setValue(value.getFirstChild().getNodeValue());
+                    }
+
+                    conditionParameters.add(conditionParameter);
+                }
+            }
+        }
+        return conditionParameters;
+    }
+
+    private List<String> importCandidateGroups(Document doc) {
+        List<String> candidates = new LinkedList<>();
+
+        if(doc != null){
+            NodeList candidateNodeList = doc.getElementsByTagName(XMLConstants.OPERATION_CANDIDATE_GROUPS);
+            if(candidateNodeList != null){
+                for (int i = 0; i < candidateNodeList.getLength(); i++)
+                {
+                    Node candidateNode = candidateNodeList.item(i);
+                    Element candidateElement = (Element) candidateNode;
+
+                    Node groupName = candidateElement.getElementsByTagName(XMLConstants.CANDIDATE_GROUPS_GROUP_NAME).item(0);
+                    if (groupName != null) {
+                        candidates.add(groupName.getFirstChild().getNodeValue());
+                    }
+                }
+            }
+        }
+        return candidates;
+    }
+
+    private Document parseXML(String filePath) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = db.parse(filePath);
+        doc.getDocumentElement().normalize();
+        return doc;
+    }
 
     public List<Pair<String, byte[]>> guidePrints (Guide mainGuide){
 
@@ -125,7 +946,7 @@ public class GuideGeneratorServiceImp {
                 Document docStep = dBuilder.parse(file);
 
                 Node idStep = docStep.getElementsByTagName(XMLConstants.STEP_ID).item(0);
-                idStep.setTextContent(step.getText());
+                idStep.setTextContent(step.getTextId());
                 Node labelStep = docStep.getElementsByTagName(XMLConstants.STEP_LABEL).item(0);
                 labelStep.setTextContent(step.getLabel());
                 Node textStep = docStep.getElementsByTagName(XMLConstants.STEP_TEXT).item(0);
@@ -749,12 +1570,12 @@ public class GuideGeneratorServiceImp {
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document docValidate = dBuilder.parse(file);
 
-        /*Node fieldName = docValidate.getElementsByTagName(XMLConstants.VALIDATE_CROSS_FIELD_CONDITION_FIELD_NAME_).item(0);
+        Node fieldName = docValidate.getElementsByTagName(XMLConstants.VALIDATE_CROSS_FIELD_CONDITION_FIELD_NAME_).item(0);
         fieldName.setTextContent(validateCrossFieldCondition.getFieldName());
         Node condition = docValidate.getElementsByTagName(XMLConstants.VALIDATE_CROSS_FIELD_CONDITION_CONDITION_).item(0);
         condition.setTextContent(validateCrossFieldCondition.getCondition());
         Node messageError = docValidate.getElementsByTagName(XMLConstants.VALIDATE_CROSS_FIELD_CONDITION_MESSAGE_ERROR).item(0);
-        messageError.setTextContent(validateCrossFieldCondition.getMessageError());*/
+        messageError.setTextContent(validateCrossFieldCondition.getMessageError());
 
         Node newVal = docValidate.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_CROSS_FIELD_CONDITION).item(0);
 
