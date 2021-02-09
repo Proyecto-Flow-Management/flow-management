@@ -161,6 +161,8 @@ public class CandidatesGrupsForm extends VerticalLayout {
             Groups grp = new Groups();
 
             grp.setGroupName(nuevo);
+            if(groupsNames == null)
+                groupsNames = new LinkedList<>();
             groupsNames.add(grp);
             updateGrid();
             this.group.setValue("");
@@ -183,6 +185,8 @@ public class CandidatesGrupsForm extends VerticalLayout {
 
     public List<Groups> getGroupsNames()
     {
+        if(this.groupsNames == null)
+            this.groupsNames = new LinkedList<>();
         return this.groupsNames;
     }
 

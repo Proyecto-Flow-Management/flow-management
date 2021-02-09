@@ -3,6 +3,7 @@ package com.proyecto.flowmanagement.ui.views.forms;
 import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.def.SimpleOperationType;
 import com.proyecto.flowmanagement.backend.def.TaskOperationType;
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.proyecto.flowmanagement.backend.persistence.entity.SimpleOperation;
 import com.proyecto.flowmanagement.backend.persistence.entity.TaskOperation;
@@ -315,6 +316,14 @@ public class OperationForm extends VerticalLayout {
         this.name.setValue(operation.getName());
         this.label.setValue(operation.getLabel());
 
+        if(operation.getConditions() != null && operation.getConditions().size() >0)
+        {
+            conditionForm.setVisible(true);
+            Alternative aux = new Alternative();
+            aux.setConditions(operation.getConditions());
+            conditionForm.updateForm(aux);
+        }
+
         if (operation.getOperationType() != null){
             addElements(operation.getOperationType());
         }
@@ -445,9 +454,6 @@ public class OperationForm extends VerticalLayout {
         this.outParameterAccordion.close();
         this.alternativesIdsAccordion.close();
         this.groupsAccordion.close();
-        if (operation.getConditions() != null){
-            this.conditionForm.setConditions(operation.getConditions());
-        }
         this.conditionFormAccordion.close();
     }
 
@@ -484,6 +490,7 @@ public class OperationForm extends VerticalLayout {
         if (operationType.getValue() == OperationType.taskOperation){
             TaskOperation taskOperation = new TaskOperation();
             taskOperation.setType(taskOperationType.getValue());
+            taskOperation.setGroupsIds(candidatesGrupsForm.getGroupsNames());
             if (!targetSystem.isEmpty()){
                 taskOperation.setTargetSystem(targetSystem.getValue());
             }

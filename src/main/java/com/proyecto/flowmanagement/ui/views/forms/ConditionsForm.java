@@ -194,6 +194,7 @@ public class ConditionsForm extends HorizontalLayout {
         actual = null;
         if(alternative.getConditions().size()==0)
             agregarLayout.setVisible(true);
+        editando = null;
     }
 
     private void editarUnary() {
