@@ -24,7 +24,9 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.stereotype.Component;
 import org.vaadin.olli.FileDownloadWrapper;
 import org.vaadin.stefan.LazyDownloadButton;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -50,10 +52,10 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
     GuideServiceImpl guideService;
     GuideGeneratorServiceImp guideGeneratorService;
 
-    public GuideList(GuideServiceImpl guideService) {
+    public GuideList(GuideServiceImpl guideService) throws IOException, SAXException, ParserConfigurationException {
         this.guideService = guideService;
         this.guideGeneratorService = new GuideGeneratorServiceImp();
-        //test();
+        test2();
         addClassName("create-guide-view");
         setSizeFull();
         configureGrid();
@@ -85,6 +87,13 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         Guide guide = mock.GetGuide("Guia","Label", "MainStep");
         test.GuidePrint(guide);
     }
+
+    public void test2() throws ParserConfigurationException, SAXException, IOException {
+        GuideGeneratorServiceImp test = new GuideGeneratorServiceImp();
+        MockTestServiceImpl mock = new MockTestServiceImpl();
+        test.importGuide("/Users/hebarnada/Tesis/flow-management/src/main/resources/XMLResources/GuideResult.xml");
+    }
+
 
     private void updateList() {
         grid.setColumns("name", "label", "mainStep");

@@ -1,5 +1,8 @@
 package com.proyecto.flowmanagement.ui;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
+import com.proyecto.flowmanagement.backend.service.Impl.GuideGeneratorServiceImp;
+import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
 import com.proyecto.flowmanagement.ui.views.list.GuideList;
 import com.proyecto.flowmanagement.ui.views.list.UserList;
 import com.proyecto.flowmanagement.ui.views.pages.GuideCreator;
@@ -16,12 +19,18 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 
 @CssImport("./styles/shared-styles.css")
 public class MainLayout extends AppLayout {
 
-    public MainLayout() {
+    public MainLayout() throws ParserConfigurationException, SAXException, IOException {
+        GuideServiceImpl guideServiceImpl = new GuideServiceImpl();
+        GuideList guideList = new GuideList(guideServiceImpl);
         createHeader();
         createDrawer();
     }
