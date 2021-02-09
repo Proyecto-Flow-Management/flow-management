@@ -78,7 +78,7 @@ public class AlternativeForm extends VerticalLayout {
         List<String> options = new LinkedList<>();
         options.add("nextStep Existente");
         options.add("nextStep Nuevo");
-        options.add("guideName");
+        options.add("Guia Nueva");
         options.add("Guia Existente");
         options.add("Guia Sistema");
 
@@ -158,26 +158,36 @@ public class AlternativeForm extends VerticalLayout {
         {
             this.alternative.setNextStep(this.stepComboBox.getValue().getTextId());
             this.alternative.setNewStep(false);
+            this.alternative.setNewGuide(false);
+            this.alternative.setSystemGuide(false);
         }
         else if(this.option.getValue() == "Guia Existente")
         {
             this.alternative.setGuideName(this.guideComboBox.getValue().getName());
             this.alternative.setNewStep(false);
+            this.alternative.setNewGuide(false);
+            this.alternative.setSystemGuide(false);
         }
         else if(this.option.getValue() == "Guia Sistema")
         {
             this.alternative.setGuideName(this.systemGuideComboBox.getValue().getName());
             this.alternative.setNewStep(false);
+            this.alternative.setNewGuide(false);
+            this.alternative.setSystemGuide(true);
         }
         else if(this.option.getValue() == "nextStep Nuevo")
         {
             this.alternative.setNextStep(this.nextStep.getValue());
             this.alternative.setNewStep(true);
+            this.alternative.setNewGuide(false);
+            this.alternative.setSystemGuide(false);
         }
         else
         {
             this.alternative.setGuideName(this.nextStep.getValue());
             this.alternative.setNewStep(false);
+            this.alternative.setNewGuide(true);
+            this.alternative.setSystemGuide(false);
         }
 
         String mensajeValidacion = alternative.validacionIncompleta();
@@ -220,18 +230,36 @@ public class AlternativeForm extends VerticalLayout {
                     this.guideComboBox.setVisible(false);
                     this.systemGuideComboBox.setVisible(false);
                     this.option.setValue("nextStep Existente");
-                    Step stepSelected = this.stepList.stream().filter(step -> step.getTextId() == alternative.getNextStep()).findFirst().get();
+                    Step stepSelected = this.stepList.stream().filter(step -> step.getTextId().equals(alternative.getNextStep())).findFirst().get();
                     this.stepComboBox.setValue(stepSelected);
                 }
             }
-            else
-            {
+            else if(alternative.isSystemGuide()){
+                this.stepComboBox.setVisible(false);
+                this.nextStep.setVisible(false);
+                this.guideComboBox.setVisible(false);
+                this.systemGuideComboBox.setVisible(true);
+                this.option.setValue("Guia Sistema");
+                Guide guideSelected = this.systemGuideList.stream().filter(guide -> guide.getName().equals(alternative.getGuideName())).findFirst().get();
+                this.systemGuideComboBox.setValue(guideSelected);
+            }
+            else if (alternative.isNewGuide()){
                 this.stepComboBox.setVisible(false);
                 this.guideComboBox.setVisible(false);
                 this.systemGuideComboBox.setVisible(false);
                 this.nextStep.setVisible(true);
-                this.option.setValue("guideName");
+                this.option.setValue("Guia Nueva");
                 this.nextStep.setValue(this.alternative.getGuideName());
+            }
+            else
+            {
+                this.stepComboBox.setVisible(false);
+                this.nextStep.setVisible(false);
+                this.guideComboBox.setVisible(true);
+                this.systemGuideComboBox.setVisible(false);
+                this.option.setValue("Guia Existente");
+                Guide guideSelected = this.guideList.stream().filter(guide -> guide.getName().equals(alternative.getGuideName())).findFirst().get();
+                this.guideComboBox.setValue(guideSelected);
             }
 
             this.label.setValue(alternative.getLabel());

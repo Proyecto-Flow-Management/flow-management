@@ -25,6 +25,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -349,6 +350,24 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.save.addClickListener(buttonClickEvent -> nuevoStep());
     }
 
+    private Guide getGuideByName(String name){
+        List<Guide> listGuide = guideService.getAll();
+
+        for (Guide guide:
+             listGuide) {
+            if (name.equals(guide.getName())){
+                return guide;
+            }
+        }
+        return null;
+    }
+
+    private Guide duplicateGuide(Guide guide){
+        Guide newGuide =  SerializationUtils.clone(guide);
+        newGuide.setName(guide.getName());
+        return newGuide;
+    }
+
     private void nuevoStep() {
 
         if(stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.isValid)
@@ -369,10 +388,20 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
                     nuevo.setTextId(myAlternative.getNextStep());
                     this.stepPanel.stepGridForm.stepList.add(nuevo);
                     this.stepPanel.stepGridForm.updateGrid();
-                    actualizarGuiaActual();
                 }
             }
-            else if( myAlternative.getGuideName() != null ||  !myAlternative.getGuideName().isEmpty())
+            else if(myAlternative.isSystemGuide() && (myAlternative.getGuideName() != null ||  !myAlternative.getGuideName().isEmpty())){
+                Guide guide = getGuideByName(myAlternative.getGuideName());
+                if (guide != null){
+                    Guide newGuide = duplicateGuide(guide);
+
+                    if(editado.getGuides()== null)
+                        editado.setGuides(new LinkedList<>());
+
+                    editado.addGuide(newGuide);
+                }
+            }
+            else if(myAlternative.isNewGuide() && (myAlternative.getGuideName() != null ||  !myAlternative.getGuideName().isEmpty()))
             {
                 Guide newGuide = new Guide();
                 newGuide.setName(myAlternative.getGuideName());
@@ -381,9 +410,8 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
                     editado.setGuides(new LinkedList<>());
 
                 editado.addGuide(newGuide);
-
-                actualizarGuiaActual();
             }
+            actualizarGuiaActual();
         }
     }
 

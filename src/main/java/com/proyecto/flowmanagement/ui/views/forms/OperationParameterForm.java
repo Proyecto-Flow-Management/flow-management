@@ -234,7 +234,7 @@ public class OperationParameterForm extends VerticalLayout {
         }
         this.optionValueForm.setOptionValues(operationParameter.getOptionValues());
         this.convertConditionForm.setConvertConditions(operationParameter.getConvertConditions());
-//        this.propertiesForm.setProperties(operationParameter.getProperties());
+        this.propertiesForm.setProperties(operationParameter.getProperties());
     }
 
     public void setAsDefault() {
@@ -250,6 +250,7 @@ public class OperationParameterForm extends VerticalLayout {
         this.dateFormatRangeEnd.clear();
         this.dateFormatFinal.clear();
         this.sourceValueEntity.clear();
+        this.sourceValueEntityProperty.clear();
         this.valueWhenInParameterEquals.clear();
         this.enable.clear();
         this.required.clear();
@@ -337,6 +338,7 @@ public class OperationParameterForm extends VerticalLayout {
 
         operationParameter.setOptionValues(optionValueForm.getOptionValues());
         operationParameter.setConvertConditions(convertConditionForm.getConvertConditions());
+        operationParameter.setProperties(propertiesForm.getProperties());
         this.optionValuesAccordion.close();
         this.convertConditionsAccordion.close();
         this.propertiesAccordion.close();

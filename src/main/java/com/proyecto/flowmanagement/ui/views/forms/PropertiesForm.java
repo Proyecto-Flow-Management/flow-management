@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Groups;
+import com.proyecto.flowmanagement.backend.persistence.entity.OperationParameter;
 import com.proyecto.flowmanagement.backend.persistence.entity.OptionValue;
 import com.proyecto.flowmanagement.backend.persistence.entity.Properties;
 import com.vaadin.flow.component.button.Button;
@@ -17,19 +18,20 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.ui.CheckBox;
 
+
 import javax.persistence.criteria.From;
 import java.util.LinkedList;
 import java.util.List;
 
 @CssImport("./styles/properties-form.css")
 public class PropertiesForm extends VerticalLayout {
-    FormLayout actionsLayout = new FormLayout();
+    HorizontalLayout campos = new HorizontalLayout();
     HorizontalLayout buttonsLayout = new HorizontalLayout();
     HorizontalLayout gridLayout = new HorizontalLayout();
 
-    List<Properties> properties = new LinkedList<>();
-    Grid<Properties> propertiesGrid = new Grid<>();
-    Properties editing = new Properties();
+    List<OperationParameter> properties = new LinkedList<>();
+    Grid<OperationParameter> propertiesGrid = new Grid<>();
+    OperationParameter editing = new OperationParameter();
 
     TextField name = new TextField("Name");
     TextField label = new TextField("Label");
@@ -57,37 +59,29 @@ public class PropertiesForm extends VerticalLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        VerticalLayout ppal = new VerticalLayout();
-        ppal.setWidthFull();
-
         buttonsLayout.add(add,delete,save,cancel);
-        actionsLayout.add(name, label, visible, type);
-        actionsLayout.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("25em", 1),
-                new FormLayout.ResponsiveStep("32em", 2),
-                new FormLayout.ResponsiveStep("40em", 3),
-                new FormLayout.ResponsiveStep("40em", 4));
-
-        ppal.add(actionsLayout,buttonsLayout);
+        campos.add(name, label, visible, type);
 
         gridLayout.add(propertiesGrid);
 
-        add(ppal, gridLayout);
+        HorizontalLayout form = new HorizontalLayout();
+        form.add(campos, buttonsLayout);
+        add(form, gridLayout);
     }
 
     private void configureElements()
     {
-        buttonsLayout.setClassName("buttonsLayout");
+        buttonsLayout.setClassName("buttonsPropertiesLayout");
         this.name.setVisible(true);
-        this.name.setValue("");
+        this.name.clear();
         this.label.setVisible(true);
-        this.label.setValue("");
+        this.label.clear();
         this.visible.setItems("True","False");
         visible.addClassName("vaadin-text-field-container");
         this.visible.setVisible(true);
-        this.visible.setValue("False");
+        this.visible.clear();
         this.type.setVisible(true);
-        this.type.setValue("");
+        this.type.clear();
         this.add.setVisible(true);
         this.save.setVisible(false);
         this.delete.setVisible(false);
@@ -97,7 +91,7 @@ public class PropertiesForm extends VerticalLayout {
 
     private void configureForEditing()
     {
-        buttonsLayout.setClassName("buttonsEditingLayout");
+        buttonsLayout.setClassName("buttonsPropertiesEditingLayout");
         this.name.setVisible(true);
         this.label.setVisible(true);
         this.visible.setVisible(true);
@@ -131,9 +125,10 @@ public class PropertiesForm extends VerticalLayout {
         updateGrid();
     }
 
-    public void setProperties(List<Properties> properties) {
+    public void setProperties(List<OperationParameter> properties) {
         this.properties = properties;
         updateGrid();
+        configureElements();
     }
 
     private void guardar()
@@ -176,7 +171,7 @@ public class PropertiesForm extends VerticalLayout {
         configureElements();
     }
 
-    private void edit(Properties value)
+    private void edit(OperationParameter value)
     {
         if(value != null)
         {
@@ -209,7 +204,7 @@ public class PropertiesForm extends VerticalLayout {
             String nuevoLabel = this.label.getValue();
             Boolean nuevoVisible = Boolean.valueOf(this.visible.getValue());
             String nuevoType = this.type.getValue();
-            Properties prp = new Properties();
+            OperationParameter prp = new OperationParameter();
 
             prp.setName(nuevoName);
             prp.setLabel(nuevoLabel);
@@ -217,10 +212,10 @@ public class PropertiesForm extends VerticalLayout {
             prp.setType(nuevoType);
             properties.add(prp);
             updateGrid();
-            this.name.setValue("");
-            this.label.setValue("");
-            this.visible.setValue("False");
-            this.type.setValue("");
+            this.name.clear();
+            this.label.clear();
+            this.visible.clear();
+            this.type.clear();
         }
         else
         {
@@ -232,7 +227,7 @@ public class PropertiesForm extends VerticalLayout {
         }
     }
 
-    public List<Properties> getProperties()
+    public List<OperationParameter> getProperties()
     {
         return this.properties;
     }
