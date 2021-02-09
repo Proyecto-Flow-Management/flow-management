@@ -117,8 +117,16 @@ public class OperationGridForm extends HorizontalLayout {
         operationForm.setVisible(true);
         operationForm.setAsDefault();
         operationForm.delete.setVisible(false);
-        operationForm.operationNotifyIdsForm.updateElements(this.operations);
-//        editOperation(new Operation());
+        if(this.operations != null && this.operations.size()>0)
+        {
+            operationForm.operationNotifyIdsForm.updateElements(this.operations);
+            this.operationForm.operationNotifyIdsFormAccordion.setVisible(true);
+        }
+        else
+        {
+            operationForm.operationNotifyIdsForm.updateElements(this.operations);
+            this.operationForm.operationNotifyIdsFormAccordion.setVisible(false);
+        }
     }
 
     private void configureGrid() {
@@ -135,12 +143,13 @@ public class OperationGridForm extends HorizontalLayout {
         } else {
             operationForm.setOperation(operation);
             List<String> operationsIntoOperaation;
+
             if(operation.getOperationNotifyIds() != null && operation.getOperationNotifyIds().size() >0)
                 operationsIntoOperaation = operation.getOperationNotifyIds().stream().map(o -> o.getName()).collect(Collectors.toList());
             else
                 operationsIntoOperaation = new LinkedList<>();
 
-            List<String> correctsOperations = operations.stream().filter(o -> !operationsIntoOperaation.contains(o)).collect(Collectors.toList());
+            List<String> correctsOperations = operations.stream().filter(o -> operation.getName() != o && !operationsIntoOperaation.contains(o)).collect(Collectors.toList());
             operationForm.operationNotifyIdsForm.updateElements(correctsOperations);
             operationForm.editing = true;
             operationForm.setVisible(true);
