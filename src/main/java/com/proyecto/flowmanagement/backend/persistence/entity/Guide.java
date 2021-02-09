@@ -175,7 +175,9 @@ public class Guide extends AbstractEntity implements Serializable {
 
 				if(aux.editing)
 				{
+					Long id = aux.getId(); 
 					int index = this.guides.indexOf(aux);
+					newGuide.setId(id);
 					this.guides.set(index,newGuide);
 					return true;
 				}
