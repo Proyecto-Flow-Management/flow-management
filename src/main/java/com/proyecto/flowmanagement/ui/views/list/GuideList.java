@@ -55,7 +55,7 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
     public GuideList(GuideServiceImpl guideService) throws IOException, SAXException, ParserConfigurationException {
         this.guideService = guideService;
         this.guideGeneratorService = new GuideGeneratorServiceImp();
-        test2();
+        //test2();
         addClassName("create-guide-view");
         setSizeFull();
         configureGrid();

@@ -28,9 +28,7 @@ import java.io.IOException;
 @CssImport("./styles/shared-styles.css")
 public class MainLayout extends AppLayout {
 
-    public MainLayout() throws ParserConfigurationException, SAXException, IOException {
-        GuideServiceImpl guideServiceImpl = new GuideServiceImpl();
-        GuideList guideList = new GuideList(guideServiceImpl);
+    public MainLayout(){
         createHeader();
         createDrawer();
     }
