@@ -16,6 +16,10 @@ public abstract class AbstractEntity {
         return id;
     }
 
+    public Long setId(Long id) {
+        return this.id = id;
+    }
+
     public boolean isPersisted() {
         return id != null;
     }
