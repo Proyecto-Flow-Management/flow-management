@@ -9,6 +9,39 @@ import java.io.Serializable;
 @Table(name= "user")
 public class User extends AbstractEntity implements Cloneable, Serializable {
 
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "role")
+    private String role;
+
+    @Column(name = "enabled")
+    private Integer enabled;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Integer getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Integer enabled) {
+        this.enabled = enabled;
+    }
+
     @Column(name = "firstName")
     private String firstName;
 

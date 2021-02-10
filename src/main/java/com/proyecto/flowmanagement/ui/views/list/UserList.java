@@ -4,6 +4,7 @@ import com.proyecto.flowmanagement.backend.persistence.entity.SecurePasswordStor
 import com.proyecto.flowmanagement.backend.persistence.entity.User;
 import com.proyecto.flowmanagement.backend.service.Impl.RolServiceImpl;
 import com.proyecto.flowmanagement.backend.service.Impl.UserServiceImpl;
+import com.proyecto.flowmanagement.security.SecurePasswordGenerator;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.forms.UserForm;
 import com.vaadin.flow.component.button.Button;
@@ -25,7 +26,7 @@ import java.util.List;
 public class UserList extends VerticalLayout {
 
     private final UserForm form;
-    private SecurePasswordStorage securePasswordStorage;
+    private SecurePasswordGenerator securePasswordGenerator;
     private String oldHash = "";
 
     Grid<User> grid = new Grid<>(User.class);
@@ -35,7 +36,7 @@ public class UserList extends VerticalLayout {
     RolServiceImpl rolService;
 
     public UserList(UserServiceImpl userService, RolServiceImpl rolService) {
-        this.securePasswordStorage = new SecurePasswordStorage();
+        this.securePasswordGenerator = new SecurePasswordGenerator();
         this.userService = userService;
         this.rolService = rolService;
         addClassName("list-view");
@@ -69,15 +70,11 @@ public class UserList extends VerticalLayout {
             User user = evt.getUser();
             // Cambio la password
             if (!user.getPassword().equals(this.oldHash)) {
-                try {
-                    String salt = securePasswordStorage.getNewSalt();
-                    user.setSalt(salt);
-                    String encryptedPassword = securePasswordStorage.getEncryptedPassword(user.getPassword(), salt);
-                    user.setPassword(encryptedPassword);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                String encryptedPassword = securePasswordGenerator.getEncryptedPassword(user.getPassword());
+                user.setPassword(encryptedPassword);
             }
+            user.setRole("ROLE_ADMIN");
+            user.setEnabled(1);
             userService.save(evt.getUser());
             updateList();
             closeEditor();
