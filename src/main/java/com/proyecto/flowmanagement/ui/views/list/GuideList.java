@@ -15,6 +15,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.internal.Pair;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamRegistration;
@@ -26,11 +28,15 @@ import org.vaadin.olli.FileDownloadWrapper;
 import org.vaadin.stefan.LazyDownloadButton;
 import org.xml.sax.SAXException;
 
+import org.w3c.dom.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -52,9 +58,9 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
     GuideServiceImpl guideService;
     GuideGeneratorServiceImp guideGeneratorService;
 
-    public GuideList(GuideServiceImpl guideService) throws IOException, SAXException, ParserConfigurationException {
+    public GuideList(GuideServiceImpl guideService, GuideGeneratorServiceImp guideGeneratorServiceImp) throws IOException, SAXException, ParserConfigurationException {
         this.guideService = guideService;
-        this.guideGeneratorService = new GuideGeneratorServiceImp();
+        this.guideGeneratorService = guideGeneratorServiceImp;
         //test2();
         addClassName("create-guide-view");
         setSizeFull();
@@ -77,23 +83,49 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         Button addGuideButton = new Button("Crear Guia", event -> UI.getCurrent().navigate("CrearGuia"));
         HorizontalLayout toolbar = new HorizontalLayout(addGuideButton);
         toolbar.addClassName("toolbar");
+
+        MemoryBuffer buffer = new MemoryBuffer();
+        Upload upload = new Upload(buffer);
+        Div output = new Div();
+
+
+
+        upload.addSucceededListener(event -> {
+            DocumentBuilderFactory factory = null;
+            DocumentBuilder builder = null;
+            Document ret = null;
+
+            try {
+                factory = DocumentBuilderFactory.newInstance();
+                builder = factory.newDocumentBuilder();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                ret = builder.parse(buffer.getInputStream());
+                Guide guide = guideGeneratorService.importGuide(ret);
+                guide.setName(event.getFileName());
+                guide.setLabel(event.getFileName());
+                guideService.add(guide);
+                updateGrid();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            }
+
+            /*Component component = createComponent(event.getMIMEType(),
+                    event.getFileName(), buffer.getInputStream());
+            showOutput(event.getFileName(), component, output);*/
+        });
+
+        add(upload, output);
+
         return toolbar;
     }
-
-
-    public void test(){
-        GuideGeneratorServiceImp test = new GuideGeneratorServiceImp();
-        MockTestServiceImpl mock = new MockTestServiceImpl();
-        Guide guide = mock.GetGuide("Guia","Label", "MainStep");
-        test.GuidePrint(guide);
-    }
-
-    public void test2() throws ParserConfigurationException, SAXException, IOException {
-        GuideGeneratorServiceImp test = new GuideGeneratorServiceImp();
-        MockTestServiceImpl mock = new MockTestServiceImpl();
-        test.importGuide("/Users/hebarnada/Tesis/flow-management/src/main/resources/XMLResources/GuideResult.xml");
-    }
-
 
     private void updateList() {
         grid.setColumns("name", "label", "mainStep");

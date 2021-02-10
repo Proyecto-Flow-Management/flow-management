@@ -37,7 +37,7 @@ public class Operation  extends AbstractEntity   implements Serializable {
 	@Column(name = "pauseExecution")
 	private Boolean pauseExecution;
 
-	@Column(name = "operationOrder")
+	@Column(name = "operationOrder", columnDefinition = "integer default 0")
 	private int operationOrder;
 
 	@Column(name = "operationType")

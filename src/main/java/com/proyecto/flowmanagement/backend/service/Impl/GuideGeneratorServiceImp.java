@@ -24,16 +24,13 @@ import java.util.List;
 @Service
 public class GuideGeneratorServiceImp {
 
-    public Guide importGuide (String source) throws IOException, SAXException, ParserConfigurationException {
-        Document doc = parseXML(source);
-
+    public Guide importGuide (Document doc) throws IOException, SAXException, ParserConfigurationException {
+        Guide guide = new Guide();
         if(doc != null){
             NodeList guideNodeList = doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT);
             if (guideNodeList != null){
                 for (int i = 0; i < guideNodeList.getLength(); i++)
                 {
-                    Guide guide = new Guide();
-
                     Node guideNode = guideNodeList.item(i);
                     Element guideElement = (Element) guideNode;
 
@@ -44,11 +41,10 @@ public class GuideGeneratorServiceImp {
 
                     guide.setSteps(importStep(guideNode));
                     guide.setOperations(importOperation(guideNode));
-                    guide.getName();
                 }
             }
         }
-        return null;
+        return guide;
     }
 
     private List<Step> importStep(Node node) throws ParserConfigurationException {
