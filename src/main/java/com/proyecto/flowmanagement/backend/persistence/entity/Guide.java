@@ -44,6 +44,8 @@ public class Guide extends AbstractEntity implements Serializable {
 
 	public boolean editing;
 
+	public boolean guiaPropia = false;
+
 	public String getName() {
 		return name;
 	}
@@ -202,6 +204,13 @@ public class Guide extends AbstractEntity implements Serializable {
 		this.editing = editing;
 	}
 
+	public boolean isGuiaPropia() {
+		return guiaPropia;
+	}
+
+	public void setGuiaPropia(boolean guiaPropia) {
+		this.guiaPropia = guiaPropia;
+	}
 
 	public void quitarEdicion()
 	{
