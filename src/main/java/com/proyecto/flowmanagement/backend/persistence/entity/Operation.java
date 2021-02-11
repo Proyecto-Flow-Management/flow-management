@@ -4,6 +4,7 @@ import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -38,7 +39,8 @@ public class Operation  extends AbstractEntity   implements Serializable {
 	private Boolean pauseExecution;
 
 	@Column(name = "operationOrder", columnDefinition = "integer default 0")
-	private int operationOrder;
+	@Nullable
+	private int operationOrder = 0;
 
 	@Column(name = "operationType")
 	@JoinColumn(name = "operation_id")

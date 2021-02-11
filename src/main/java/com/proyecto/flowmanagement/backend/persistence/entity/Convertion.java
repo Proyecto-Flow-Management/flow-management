@@ -7,7 +7,7 @@ import java.io.Serializable;
 @Table(name= "convertion")
 public class Convertion extends AbstractEntity  implements Serializable {
 
-    @Column(name = "condition")
+    @Column(name = "condition_value")
     private String condition;
 
     @Column(name = "source_unit")
@@ -19,10 +19,6 @@ public class Convertion extends AbstractEntity  implements Serializable {
     @ManyToOne
     @JoinColumn(name = "operation_parameter_id")
     private OperationParameter operationParameter;
-
-//    @ManyToOne
-//    @JoinColumn(name = "convertion_type_id")
-//    private Convertion_Type ConvertionType;
 
     public String getCondition() {
         return condition;

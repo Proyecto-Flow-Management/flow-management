@@ -20,16 +20,16 @@ public class OperationParameter extends AbstractEntity   implements Serializable
 	@Column(name = "label")
     private String label;
 	
-	@Column(name = "visible")
+	@Column(name = "visible_value")
     private Boolean visible;
 
-	@Column(name = "visible_when_in_parameter_equals_condition")
+	@Column(name = "visible_when_equals")
 	private String visibleWhenInParameterEqualsCondition;
 
-	@Column(name = "type")
+	@Column(name = "type_value")
 	private String type;
 
-	@Column(name = "description")
+	@Column(name = "description_value")
 	private String description;
 
 	@Column(name = "value")
@@ -69,7 +69,7 @@ public class OperationParameter extends AbstractEntity   implements Serializable
 	@JoinColumn(name="operation_parameter_id")
 	private List<OperationParameter> properties;
 
-	@Column(name = "convert")
+	@Column(name = "convert_value")
 	private Boolean convert;
 
 	@OneToMany(cascade = CascadeType.ALL)
