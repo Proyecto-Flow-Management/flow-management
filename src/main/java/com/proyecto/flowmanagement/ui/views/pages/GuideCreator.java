@@ -260,13 +260,6 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         operationGridForm.operations = operationsList;
     }
 
-    private void actualizarOperationsIdsStep()
-    {
-        actualizarGuiaActual();
-        List<String> operationsList =  operationGridForm.getOperations().stream().map(o -> o.getName()).collect(Collectors.toList());
-        operationGridForm.operations = operationsList;
-    }
-
     private void actualizacionConditionsAlternatives() {
         stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.conditionForm.unaryConditionForm.save.addClickListener(buttonClickEvent -> actualizarGuiaActual());
         stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.conditionForm.binaryConditionForm.save.addClickListener(buttonClickEvent -> actualizarGuiaActual());
@@ -301,21 +294,25 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     }
 
     private void cargarGuia() {
+
         Guide valor = actualGuidePanel.actualGuide.getValue();
 
         raiz.quitarEdicion();
 
         if(valor == raiz)
+        {
             raiz.editing = true;
+            editado = raiz;
+        }
         else
         {
-            raiz.setearParaEditar(valor);
+            editado = valor;
+            raiz.setearParaEditar(editado);
             delete.setVisible(true);
         }
 
         if(valor != null)
         {
-            editado = new Guide();
             cargarValorGrilla(valor);
         }
 
@@ -324,8 +321,6 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
 
     private void cargarValorGrilla(Guide guide)
     {
-        actualizarGuiaActual();
-
         this.stepPanel.stepGridForm.stepList = guide.getSteps();
         this.stepPanel.stepGridForm.updateGrid();
 
