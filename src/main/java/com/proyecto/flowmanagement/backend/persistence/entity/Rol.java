@@ -3,10 +3,11 @@ package com.proyecto.flowmanagement.backend.persistence.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "rol")
-public class Rol  extends AbstractEntity {
+public class Rol  extends AbstractEntity  implements Serializable {
 
     @Column(name = "name")
     private String name;

@@ -1,6 +1,8 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.OperationParameter;
+import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.forms.OperationParameterForm;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -11,8 +13,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class OperationParameterGridForm extends VerticalLayout {
+
     public Button createOperationParameter;
     public OperationParameterForm operationParameterForm;
+    OperationParameter editing;
 
     Grid<OperationParameter> operationParameterGrid = new Grid<>(OperationParameter.class);;
     List<OperationParameter> operationParameterList;
@@ -29,10 +33,13 @@ public class OperationParameterGridForm extends VerticalLayout {
         configureGrid();
         createOperationParameter = new Button(buttonLabel, click -> addOperationParameter());
 
+        editing = null;
+
         operationParameterForm = new OperationParameterForm();
         operationParameterForm.setVisible(false);
         operationParameterForm.save.addClickListener(buttonClickEvent -> CreateOperationParameter());
         operationParameterForm.close.addClickListener(buttonClickEvent -> CloseForm());
+        operationParameterForm.delete.addClickListener(buttonClickEvent -> deleteOperationParameter());
 
 
         HorizontalLayout gridLayout = new HorizontalLayout();
@@ -55,29 +62,58 @@ public class OperationParameterGridForm extends VerticalLayout {
         operationParameterGrid.setItems(operationParameterList);
     }
 
+    public void deleteOperationParameter()
+    {
+        this.operationParameterList.remove(editing);
+        CloseForm();
+        updateGrid();
+    }
+
     private void CloseForm() {
         this.operationParameterForm.setVisible(false);
     }
 
     private void CreateOperationParameter() {
-        if (operationParameterForm.isValid()) {
+        this.operationParameterGrid.deselectAll();
+        if (operationParameterForm.isValid) {
             OperationParameter newOperationParameter = operationParameterForm.getOperationParameter();
-            operationParameterList.add(newOperationParameter);
+            if(!operationParameterForm.editing){
+                operationParameterList.add(newOperationParameter);
+            }
+            else{
+                int index = operationParameterList.indexOf(editing);
+                this.operationParameterList.set(index, newOperationParameter);
+                operationParameterForm.editing = false;
+            }
             updateGrid();
             operationParameterForm.setVisible(false);
+            closeEditor();
         }
     }
 
+    public void setAsDefault() {
+        this.operationParameterForm.setAsDefault();
+        this.operationParameterList = new LinkedList<>();
+        updateGrid();
+    }
+
+    public void setOperationsParameters(List<OperationParameter> operationsParameters) {
+        this.operationParameterList = operationsParameters;
+        updateGrid();
+    }
+
     private void addOperationParameter() {
+        operationParameterForm.editing = false;
         operationParameterGrid.asSingleSelect().clear();
-        editOperationParameter(new OperationParameter());
+        this.operationParameterForm.setAsDefault();
+        operationParameterForm.setVisible(true);
+        operationParameterForm.delete.setVisible(false);
+//        editOperationParameter(new OperationParameter());
     }
 
         private void configureGrid() {
-//        operationParameterGrid = new Grid<>(OperationParameter.class);
         operationParameterGrid.addClassName("user-grid");
         operationParameterGrid.setColumns("name", "label");
-//        operationParameterGrid.setSizeFull();
         operationParameterGrid.setWidth("80%");
         operationParameterGrid.asSingleSelect().addValueChangeListener(evt -> editOperationParameter(evt.getValue()));
     }
@@ -87,14 +123,17 @@ public class OperationParameterGridForm extends VerticalLayout {
             closeEditor();
         } else {
             operationParameterForm.setOperationParameter(operationParameter);
+            operationParameterForm.editing = true;
             operationParameterForm.setVisible(true);
+            editing = operationParameter;
+            operationParameterForm.delete.setVisible(true);
             addClassName("editing");
         }
     }
 
     private void closeEditor() {
-        operationParameterForm.setOperationParameter(null);
         operationParameterForm.setVisible(false);
+        operationParameterForm.setAsDefault();
         removeClassName("editing");
     }
 

@@ -1,19 +1,30 @@
 package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
+import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
+import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.grids.ConditionsGridForm;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.Autocomplete;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.ui.Window;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CssImport("./styles/alternative-form.css")
 public class AlternativeForm extends VerticalLayout {
@@ -21,18 +32,29 @@ public class AlternativeForm extends VerticalLayout {
     public boolean editing;
     private Alternative alternative;
 
-    ConditionForm conditionForm = new ConditionForm();
+    public ConditionsForm conditionForm;
+    Accordion conditionFormAccordion = new Accordion();
 
-    TextField guideName = new TextField("Guia Nombre Alternative");
     TextField label = new TextField("Label Alternative");
-    TextField nextStep = new TextField("nextStep Alternative");
 
+    public List<Step> stepList = new LinkedList<>();
+    public List<Guide> guideList = new LinkedList<>();
+    public List<Guide> systemGuideList = new LinkedList<>();
+
+    TextField nextStep = new TextField("Referencia");
+    ComboBox<String> option = new ComboBox<>("Referencia");
+    ComboBox<Step> stepComboBox = new ComboBox<>("Steps");
+    ComboBox<Guide> guideComboBox = new ComboBox<>("Guias");
+    ComboBox<Guide> systemGuideComboBox = new ComboBox<>("Guias Sistema");
+
+    public boolean isValid;
     public Button save = new Button("Guardar");
-    Button delete = new Button("Eliminar");
+    public Button delete = new Button("Eliminar");
     public Button close = new Button("Cancelar");
 
 
-    public AlternativeForm() {
+    public AlternativeForm(List<Step> stepList) {
+        isValid = false;
         setClassName("alternativeSection");
         configureElements();
         editing = false;
@@ -40,7 +62,7 @@ public class AlternativeForm extends VerticalLayout {
 
     public void configureElements() {
 
-        save.addClickListener(buttonClickEvent -> validateAndSave());
+        save.addClickListener(buttonClickEvent -> saveAlternative());
 
         VerticalLayout form = new VerticalLayout();
 
@@ -53,7 +75,20 @@ public class AlternativeForm extends VerticalLayout {
         this.label.setRequired(true);
         this.label.setErrorMessage("Este campo es obligatorio.");
 
-        elements.add(guideName, label, nextStep);
+        List<String> options = new LinkedList<>();
+        options.add("nextStep Existente");
+        options.add("nextStep Nuevo");
+        options.add("Guia Nueva");
+        options.add("Guia Existente");
+        options.add("Guia Sistema");
+
+        option.addValueChangeListener(b -> configurarOpcion(b.getValue()));
+
+        option.setItems(options);
+        stepComboBox.setVisible(false);
+        guideComboBox.setVisible(false);
+        systemGuideComboBox.setVisible(false);
+        elements.add(label, option, nextStep, stepComboBox, guideComboBox, systemGuideComboBox);
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -65,110 +100,197 @@ public class AlternativeForm extends VerticalLayout {
 
         conditionsLayout.setWidthFull();
 
+        conditionForm = new ConditionsForm();
+
         conditionsLayout.add(conditionForm);
 
-        form.add(elements,conditionsLayout, actionsLayout);
+        conditionFormAccordion.setWidthFull();
+        conditionFormAccordion.close();
+        conditionFormAccordion.add("Conditions", conditionsLayout);
 
-        add(form);
+        form.add(elements);
+
+        add(form, conditionFormAccordion, actionsLayout);
     }
 
-    private void validateAndSave() {
-        if (isValid()){
-            this.alternative = new Alternative();
-            alternative.setLabel(this.label.getValue());
-            alternative.setGuideName(this.guideName.getValue());
-            alternative.setNextStep(this.nextStep.getValue());
+    private void configurarOpcion(String valor) {
+        if(valor == "nextStep Existente")
+        {
+            this.stepComboBox.setItems(this.stepList);
+            this.stepComboBox.setVisible(true);
+            this.nextStep.setVisible(false);
+            this.guideComboBox.setVisible(false);
+            this.systemGuideComboBox.setVisible(false);
         }
-        else {
-            Span content = new Span("Algún valor ingresado no es correcto o falta completar campos.");
-            Notification notification = new Notification(content);
-            notification.setDuration(3000);
-            notification.setPosition(Notification.Position.MIDDLE);
-            notification.open();
+        else if(valor == "Guia Existente"){
+            if (this.guideList!=null){
+                this.guideComboBox.setItems(this.guideList);
+            }
+            this.guideComboBox.setVisible(true);
+            this.nextStep.setVisible(false);
+            this.systemGuideComboBox.setVisible(false);
         }
+        else if(valor == "Guia Sistema"){
+            if (this.systemGuideList!=null){
+                this.systemGuideComboBox.setItems(this.systemGuideList);
+            }
+            this.systemGuideComboBox.setVisible(true);
+            this.nextStep.setVisible(false);
+            this.guideComboBox.setVisible(false);
+        }
+        else
+        {
+            this.stepComboBox.setVisible(false);
+            this.guideComboBox.setVisible(false);
+            this.systemGuideComboBox.setVisible(false);
+            this.nextStep.setVisible(true);
+        }
+    }
+
+    private void saveAlternative() {
+
+        this.alternative = new Alternative();
+        
+        alternative.setLabel(this.label.getValue());
+        alternative.setConditions(this.conditionForm.getConditions());
+
+        if(this.option.getValue() == "nextStep Existente")
+        {
+            this.alternative.setNextStep(this.stepComboBox.getValue().getTextId());
+            this.alternative.setNewStep(false);
+            this.alternative.setNewGuide(false);
+            this.alternative.setSystemGuide(false);
+        }
+        else if(this.option.getValue() == "Guia Existente")
+        {
+            this.alternative.setGuideName(this.guideComboBox.getValue().getName());
+            this.alternative.setNewStep(false);
+            this.alternative.setNewGuide(false);
+            this.alternative.setSystemGuide(false);
+        }
+        else if(this.option.getValue() == "Guia Sistema")
+        {
+            this.alternative.setGuideName(this.systemGuideComboBox.getValue().getName());
+            this.alternative.setNewStep(false);
+            this.alternative.setNewGuide(false);
+            this.alternative.setSystemGuide(true);
+        }
+        else if(this.option.getValue() == "nextStep Nuevo")
+        {
+            this.alternative.setNextStep(this.nextStep.getValue());
+            this.alternative.setNewStep(true);
+            this.alternative.setNewGuide(false);
+            this.alternative.setSystemGuide(false);
+        }
+        else
+        {
+            this.alternative.setGuideName(this.nextStep.getValue());
+            this.alternative.setNewStep(false);
+            this.alternative.setNewGuide(true);
+            this.alternative.setSystemGuide(false);
+        }
+
+        String mensajeValidacion = alternative.validacionIncompleta();
+        
+        if(!mensajeValidacion.isEmpty())
+            mostrarMensajeError(mensajeValidacion);
+
+        isValid = mensajeValidacion.isEmpty();
+    }
+
+    private void mostrarMensajeError(String mensajeValidacion) {
+        Span mensaje = new Span(mensajeValidacion);
+        Notification notification = new Notification(mensaje);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
     }
 
     public void setAlternative(Alternative alternative) {
         if (alternative != null)
         {
             this.alternative = alternative;
-            this.guideName.setValue(alternative.getGuideName());
-            this.nextStep.setValue(alternative.getNextStep());
+
+            if(alternative.getNextStep() != null)
+            {
+                this.nextStep.setValue(alternative.getNextStep());
+
+                if(this.alternative.getNewStep())
+                {
+                    this.option.setValue("nextStep Nuevo");
+                    this.stepComboBox.setVisible(false);
+                    this.guideComboBox.setVisible(false);
+                    this.systemGuideComboBox.setVisible(false);
+                    this.nextStep.setVisible(true);
+                }
+                else
+                {
+                    this.stepComboBox.setVisible(true);
+                    this.nextStep.setVisible(false);
+                    this.guideComboBox.setVisible(false);
+                    this.systemGuideComboBox.setVisible(false);
+                    this.option.setValue("nextStep Existente");
+                    Step stepSelected = this.stepList.stream().filter(step -> step.getTextId().equals(alternative.getNextStep())).findFirst().get();
+                    this.stepComboBox.setValue(stepSelected);
+                }
+            }
+            else if(alternative.isSystemGuide()){
+                this.stepComboBox.setVisible(false);
+                this.nextStep.setVisible(false);
+                this.guideComboBox.setVisible(false);
+                this.systemGuideComboBox.setVisible(true);
+                this.option.setValue("Guia Sistema");
+                Guide guideSelected = this.systemGuideList.stream().filter(guide -> guide.getName().equals(alternative.getGuideName())).findFirst().get();
+                this.systemGuideComboBox.setValue(guideSelected);
+            }
+            else if (alternative.isNewGuide()){
+                this.stepComboBox.setVisible(false);
+                this.guideComboBox.setVisible(false);
+                this.systemGuideComboBox.setVisible(false);
+                this.nextStep.setVisible(true);
+                this.option.setValue("Guia Nueva");
+                this.nextStep.setValue(this.alternative.getGuideName());
+            }
+            else
+            {
+                this.stepComboBox.setVisible(false);
+                this.nextStep.setVisible(false);
+                this.guideComboBox.setVisible(true);
+                this.systemGuideComboBox.setVisible(false);
+                this.option.setValue("Guia Existente");
+                Guide guideSelected = this.guideList.stream().filter(guide -> guide.getName().equals(alternative.getGuideName())).findFirst().get();
+                this.guideComboBox.setValue(guideSelected);
+            }
+
             this.label.setValue(alternative.getLabel());
-            this.conditionForm.setConditions(alternative);
             editing = true;
             delete.setVisible(true);
+            conditionForm.updateForm(alternative);
         }
         else
         {
-            this.guideName.setValue("");
-            this.nextStep.setValue("");
-            this.label.setValue("");
-            this.conditionForm.setAsDefault();
+            this.nextStep.clear();
+            this.label.clear();
         }
-    }
-
-    public boolean isValid() {
-        boolean result = false;
-
-        if(validateFields())
-            result = true;
-
-        return result;
-    }
-
-    public boolean validateFields(){
-        boolean result = false;
-
-        if(!this.label.getValue().isEmpty() &&
-                (!this.guideName.getValue().isEmpty() || !this.nextStep.getValue().isEmpty()))
-            result = true;
-
-        return result;
     }
 
     public Alternative getAlternative()
     {
-        this.alternative.setConditions(conditionForm.getUnaryConditions());
-        this.alternative.setBinaryConditions(conditionForm.getBinaryConditions());
         return this.alternative;
     }
 
-    // Events
-    public static abstract class AlternativeFormEvent extends ComponentEvent<AlternativeForm> {
-        private Alternative alternative;
-
-        protected AlternativeFormEvent(AlternativeForm source, Alternative alternative) {
-            super(source, false);
-            this.alternative = alternative;
-        }
-
-        public Alternative getAlternative() {
-            return alternative;
-        }
-    }
-
-    public static class SaveEvent extends AlternativeForm.AlternativeFormEvent {
-        SaveEvent(AlternativeForm source, Alternative alternative) {
-            super(source, alternative);
-        }
-    }
-
-    public static class DeleteEvent extends AlternativeForm.AlternativeFormEvent {
-        DeleteEvent(AlternativeForm source, Alternative alternative) {
-            super(source, alternative);
-        }
-
-    }
-
-    public static class CloseEvent extends AlternativeForm.AlternativeFormEvent {
-        CloseEvent(AlternativeForm source) {
-            super(source, null);
-        }
-    }
-
-    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
-                                                                  ComponentEventListener<T> listener) {
-        return getEventBus().addListener(eventType, listener);
+    public void setAsDefault() {
+        this.nextStep.setValue("");
+        this.label.setValue("");
+        this.conditionForm.setAsDefault();
+        this.alternative = new Alternative();
+        editing = false;
+        stepComboBox.setVisible(false);
+        guideComboBox.setVisible(false);
+        systemGuideComboBox.setVisible(false);
+        option.setValue("nextStep Nuevo");
+        nextStep.setVisible(true);
+        conditionForm.agregarLayout.setVisible(true);
+        conditionFormAccordion.close();
     }
 }

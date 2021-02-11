@@ -25,7 +25,6 @@ public class Component {
     private String label;
 
     @ManyToOne
-   	@JoinColumn(name = "id_component_type", nullable = false, foreignKey = @ForeignKey(name = "FK_component_component_tye"))
    	private ComponentType componentType;
 
 	public Integer getId() {

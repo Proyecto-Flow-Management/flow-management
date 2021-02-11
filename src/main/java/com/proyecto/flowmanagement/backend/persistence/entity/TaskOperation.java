@@ -1,16 +1,20 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
+import com.proyecto.flowmanagement.backend.commun.ValidationDTO;
 import com.proyecto.flowmanagement.backend.def.SimpleOperationType;
 import com.proyecto.flowmanagement.backend.def.TaskOperationType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "task_operation")
-public class TaskOperation extends Operation{
+public class TaskOperation extends Operation  implements Serializable {
 
     @Column(name = "type")
     private TaskOperationType type;
@@ -29,6 +33,11 @@ public class TaskOperation extends Operation{
 
     @Column(name = "mailSubjectPrefix")
     private String mailSubjectPrefix;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "task_operation_id")
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Groups> groupsNames;
 
     public TaskOperationType getType() {
         return type;
@@ -76,5 +85,79 @@ public class TaskOperation extends Operation{
 
     public void setMailSubjectPrefix(String mailSubjectPrefix) {
         this.mailSubjectPrefix = mailSubjectPrefix;
+    }
+
+    public List<Groups> getGroupsIds() {
+        return groupsNames;
+    }
+
+    public void setGroupsIds(List<Groups> groupsNames) {
+        this.groupsNames = groupsNames;
+    }
+
+    public ValidationDTO validateOperation( List<String> operationsActuales ) {
+
+        ValidationDTO validationGuide = new ValidationDTO();
+        validationGuide.setLabel("Op-Label: " + getLabel() );
+
+        if(this.getName().isEmpty())
+            validationGuide.addError("El campo Name es obligatorio");
+
+        if (this.getLabel().isEmpty())
+            validationGuide.addError("El campo Label es obligatorio");
+
+        if (this.getOperationType().toString() == null)
+            validationGuide.addError("El campo OperationType es obligatorio");
+
+        if (this.getOperationOrder() != null){
+            if (this.getOperationOrder() <= 0)
+                validationGuide.addError("El campo OperationOrder debe ser un entero positivo");
+        }
+
+        if (this.getNotifyOperationDelay() != null){
+            if (this.getNotifyOperationDelay() <= 0)
+                validationGuide.addError("El campo NotifyOperationDelay debe ser un entero positivo");
+        }
+
+        if (this.type.toString().isEmpty())
+            validationGuide.addError("El campo Type es obligatorio");
+
+        if(this.getOperationNotifyIds() != null && this.getOperationNotifyIds().size()>0)
+        {
+            List<String> operationsErrors= this.getOperationNotifyIds().stream().filter(on -> !operationsActuales.contains(on.getName())).map(r -> r.getName()).collect(Collectors.toList());
+            for (String notifyError: operationsErrors ) {
+                validationGuide.addError("Hay un OperationNotify ("+ notifyError +") haciendo referencia a un Operation que no existe");
+            }
+        }
+
+
+        return validationGuide;
+    }
+
+    public String incompleteValidation() {
+
+        if (this.getName().isEmpty())
+            return "El campo Name es obligatorio";
+
+        if (this.getLabel().isEmpty())
+            return "El campo Label es obligatorio";
+
+        if (this.getOperationType() == null)
+            return "El campo OperationType es obligatorio";
+
+//        if (this.getOperationOrder() != null){
+//            if (this.getOperationOrder() <= 0)
+//                return "El campo OperationOrder debe ser un entero positivo";
+//        }
+
+        if (this.getNotifyOperationDelay() != null){
+            if (this.getNotifyOperationDelay() <= 0)
+                return "El campo NotifyOperationDelay debe ser un entero positivo";
+        }
+
+        if (this.type == null)
+            return "El campo Type es obligatorio";
+
+        return "";
     }
 }

@@ -1,9 +1,12 @@
 package com.proyecto.flowmanagement.ui.views.grids;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.StepDocument;
 import com.proyecto.flowmanagement.ui.views.forms.DocumentsForm;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -12,13 +15,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 @CssImport("./styles/general.css")
-public class DocumentsGridForm extends VerticalLayout {
+public class DocumentsGridForm extends HorizontalLayout {
 
     private Button createDocument;
     DocumentsForm documentsForm;
 
+    StepDocument editing;
+
     Grid<StepDocument> stepDocumentGrid;
     List<StepDocument> stepDocumentsList;
+
+    VerticalLayout documentSectionLayout = new VerticalLayout();
+    Accordion accordion = new Accordion();
+    FormLayout basicInformation = new FormLayout();
 
     public DocumentsGridForm()
     {
@@ -30,12 +39,13 @@ public class DocumentsGridForm extends VerticalLayout {
     private void configureElements() {
         configureGrid();
         createDocument = new Button("Crear Document", click -> addDocument());
-
+        editing = null;
         documentsForm = new DocumentsForm();
         documentsForm.setVisible(false);
 
         documentsForm.save.addClickListener(buttonClickEvent -> CreateStepDocument());
         documentsForm.close.addClickListener(buttonClickEvent -> CloseForm());
+        documentsForm.delete.addClickListener(buttonClickEvent -> deleteStepDocument());
 
         HorizontalLayout gridLayout = new HorizontalLayout();
         gridLayout.add(stepDocumentGrid);
@@ -49,7 +59,22 @@ public class DocumentsGridForm extends VerticalLayout {
         createStepDocumentLayout.add(createDocument);
         createStepDocumentLayout.setWidthFull();
 
-        add(createStepDocumentLayout, stepDocumentFormLayout, gridLayout);
+        basicInformation.setWidthFull();
+        documentSectionLayout.setWidthFull();
+        documentSectionLayout.setId("step-Layout");
+        documentSectionLayout.add(createStepDocumentLayout, stepDocumentFormLayout, gridLayout);
+        setWidthFull();
+        basicInformation.add(documentSectionLayout);
+        accordion.add("Documents", basicInformation);
+        accordion.close();
+        add(accordion);
+    }
+
+    public void deleteStepDocument()
+    {
+        this.stepDocumentsList.remove(editing);
+        CloseForm();
+        updateGrid();
     }
 
     private void CloseForm() {
@@ -57,21 +82,46 @@ public class DocumentsGridForm extends VerticalLayout {
     }
 
     private void CreateStepDocument() {
-        if (documentsForm.isValid()) {
+        this.stepDocumentGrid.deselectAll();
+
+        if (documentsForm.isValid) {
             StepDocument newStepDocument = documentsForm.getStepDocument();
-            stepDocumentsList.add(newStepDocument);
+
+            if(!documentsForm.editing) {
+                stepDocumentsList.add(newStepDocument);
+            }
+            else
+            {
+                int index = stepDocumentsList.indexOf(editing);
+                this.stepDocumentsList.set(index, newStepDocument);
+                documentsForm.editing = false;
+            }
             updateGrid();
             documentsForm.setVisible(false);
+            closeEditor();
         }
     }
 
     private void updateGrid() {
+        if(stepDocumentsList == null)
+            stepDocumentsList = new LinkedList<>();
         stepDocumentGrid.setItems(stepDocumentsList);
     }
 
     private void addDocument() {
+        documentsForm.editing = false;
         stepDocumentGrid.asSingleSelect().clear();
-        editStepDocument(new StepDocument());
+        documentsForm.setAsDefault();
+        documentsForm.setVisible(true);
+        documentsForm.delete.setVisible(false);
+    }
+
+    private void configureGrid() {
+        stepDocumentGrid = new Grid<>(StepDocument.class);
+        stepDocumentGrid.addClassName("user-grid");
+        stepDocumentGrid.setSizeFull();
+        stepDocumentGrid.setColumns("url");
+        stepDocumentGrid.asSingleSelect().addValueChangeListener(evt -> editStepDocument(evt.getValue()));
     }
 
     private void editStepDocument(StepDocument stepDocument) {
@@ -79,29 +129,35 @@ public class DocumentsGridForm extends VerticalLayout {
             closeEditor();
         } else {
             documentsForm.setStepDocument(stepDocument);
+            documentsForm.editing = true;
             documentsForm.setVisible(true);
+            editing = stepDocument;
+            documentsForm.delete.setVisible(true);
             addClassName("editing");
         }
     }
 
     private void closeEditor() {
-//        documentsForm.setStepDocument(null);
         documentsForm.setVisible(false);
+        documentsForm.setAsDefault();
         removeClassName("editing");
-    }
-
-private void configureGrid() {  
-    stepDocumentGrid = new Grid<>(StepDocument.class);
-    stepDocumentGrid.addClassName("user-grid");
-    stepDocumentGrid.setSizeFull();
-    stepDocumentGrid.setColumns("url");
-    stepDocumentGrid.asSingleSelect().addValueChangeListener(evt -> editAlternative(evt.getValue()));
-    }
-
-    private void editAlternative(StepDocument value) {
     }
 
     public List<StepDocument> getDocuments() {
         return this.stepDocumentsList;
+    }
+
+    public void loadStepDocuments(List<StepDocument> stepDocuments)
+    {
+        this.stepDocumentsList = stepDocuments;
+        if(stepDocumentsList == null)
+            stepDocumentsList = new LinkedList<>();
+        updateGrid();
+        this.accordion.close();
+    }
+
+    public void setAsDefault() {
+        this.stepDocumentsList = new LinkedList<>();
+        updateGrid();
     }
 }

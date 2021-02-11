@@ -68,7 +68,6 @@ public class EditStep extends VerticalLayout {
             guide.setLabel(label.getValue());
             guide.setName(name.getValue());
             guideService.update(guide);*/
-            UI.getCurrent().navigate("StepList");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -4,13 +4,15 @@ import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "operation")
-public class Operation  extends AbstractEntity{
+public class Operation  extends AbstractEntity   implements Serializable {
 
 	@Column(name = "name")
 	private String name;
@@ -36,8 +38,9 @@ public class Operation  extends AbstractEntity{
 	@Column(name = "pauseExecution")
 	private Boolean pauseExecution;
 
-	@Column(name = "operationOrder")
-	private boolean operationOrder;
+	@Column(name = "operationOrder", columnDefinition = "integer default 0")
+	@Nullable
+	private int operationOrder = 0;
 
 	@Column(name = "operationType")
 	@JoinColumn(name = "operation_id")
@@ -72,7 +75,7 @@ public class Operation  extends AbstractEntity{
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "operation_id")
 	@Fetch(FetchMode.SUBSELECT)
-	private List<Operation> operationNotifyIds;
+	private List<OperationNotifyId> operationNotifyIds;
 
 	@Column(name = "notifyOperationDelay")
 	private Integer notifyOperationDelay;
@@ -141,11 +144,11 @@ public class Operation  extends AbstractEntity{
 		this.pauseExecution = pauseExecution;
 	}
 
-	public boolean getOperationOrder() {
+	public Integer getOperationOrder() {
 		return operationOrder;
 	}
 
-	public void setOperationOrder(boolean operationOrder) {
+	public void setOperationOrder(int operationOrder) {
 		this.operationOrder = operationOrder;
 	}
 
@@ -205,11 +208,11 @@ public class Operation  extends AbstractEntity{
 		this.notifyOperation = notifyOperation;
 	}
 
-	public List<Operation> getOperationNotifyIds() {
+	public List<OperationNotifyId> getOperationNotifyIds() {
 		return operationNotifyIds;
 	}
 
-	public void setOperationNotifyIds(List<Operation> operationNotifyIds) {
+	public void setOperationNotifyIds(List<OperationNotifyId> operationNotifyIds) {
 		this.operationNotifyIds = operationNotifyIds;
 	}
 
@@ -220,4 +223,5 @@ public class Operation  extends AbstractEntity{
 	public void setNotifyOperationDelay(Integer notifyOperationDelay) {
 		this.notifyOperationDelay = notifyOperationDelay;
 	}
+
 }

@@ -5,8 +5,10 @@ import com.proyecto.flowmanagement.backend.persistence.repository.RolRepository;
 import com.proyecto.flowmanagement.backend.persistence.repository.UserRepository;
 import com.proyecto.flowmanagement.backend.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +25,7 @@ public class UserServiceImpl implements IUserService {
     private RolRepository rolRepository;
 
     public List<User> findAll() {
-        return userRepository.findAll();
+        return new LinkedList<>();
     }
 
     public User find(String filterText) {

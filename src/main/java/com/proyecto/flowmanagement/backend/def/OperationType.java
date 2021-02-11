@@ -1,6 +1,8 @@
 package com.proyecto.flowmanagement.backend.def;
 
-public enum OperationType {
+import java.io.Serializable;
+
+public enum OperationType   implements Serializable {
     simpleOperation,
     taskOperation
 }

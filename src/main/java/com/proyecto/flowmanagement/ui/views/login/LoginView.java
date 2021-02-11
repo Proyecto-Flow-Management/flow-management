@@ -11,7 +11,6 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-import javax.xml.ws.Service;
 import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -38,13 +37,24 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         );
     }
 
+//    @Override
+//    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+//        if(!beforeEnterEvent.getLocation()
+//                .getQueryParameters()
+//                .getParameters()
+//                .getOrDefault("error", Collections.emptyList())
+//                .isEmpty()) {
+//            login.setError(true);
+//        }
+//    }
     @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        if(!beforeEnterEvent.getLocation()
+    public void beforeEnter(BeforeEnterEvent event) {
+        // inform the user about an authentication error
+        if(event.getLocation()
                 .getQueryParameters()
                 .getParameters()
-                .getOrDefault("error", Collections.emptyList())
-                .isEmpty()) {
+                .containsKey("error"))
+        {
             login.setError(true);
         }
     }

@@ -2,4 +2,5 @@
     <ttg:stepId></ttg:stepId>
     <ttg:label></ttg:label>
     <ttg:text></ttg:text>
+    <ttg:auxiliar></ttg:auxiliar>
 </ttg:step>

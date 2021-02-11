@@ -4,18 +4,19 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "unary_condition")
-public class UnaryCondition  extends AbstractEntity{
+public class UnaryCondition  extends AbstractEntity  implements Serializable {
 
     @Column(name = "operation_name")
     private String operationName;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="unary_condition_id")
-    @Fetch(FetchMode.SELECT)
-    ConditionParameter conditionParameter;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name="binary_condition_id")
+    private List<ConditionParameter> conditionParameter;
 
     public String getOperationName() {
         return operationName;
@@ -25,11 +26,11 @@ public class UnaryCondition  extends AbstractEntity{
         this.operationName = operationName;
     }
 
-    public ConditionParameter getConditionParameter() {
+    public List<ConditionParameter> getConditionParameter() {
         return conditionParameter;
     }
 
-    public void setConditionParameter(ConditionParameter conditionParameter) {
+    public void setConditionParameter(List<ConditionParameter> conditionParameter) {
         this.conditionParameter = conditionParameter;
     }
 }

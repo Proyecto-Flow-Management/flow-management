@@ -2,6 +2,8 @@ package com.proyecto.flowmanagement.ui.views.grids;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
 import com.proyecto.flowmanagement.ui.views.forms.StepForm;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
@@ -15,9 +17,9 @@ import java.util.List;
 public class StepGridForm  extends VerticalLayout {
     public StepForm stepForm;
     private Button createStep;
-
+    Step editing;
     Grid<Step> stepGrid = new Grid<>(Step.class);
-    List<Step> stepList = new LinkedList<>();
+    public List<Step> stepList = new LinkedList<>();
 
     public StepGridForm()
     {
@@ -31,11 +33,14 @@ public class StepGridForm  extends VerticalLayout {
     {
         configureGrid();
         createStep = new Button("Crear Step", click -> addStep());
-
+        editing = null;
         stepForm = new StepForm();
         stepForm.setVisible(false);
         stepForm.save.addClickListener(buttonClickEvent -> CreateStep());
         stepForm.close.addClickListener(buttonClickEvent -> CloseForm());
+        stepForm.delete.addClickListener(buttonClickEvent -> deleteStep());
+
+        stepForm.alternativeGridForm.createAlternative.addClickListener( buttonClickEvent ->  actualizarListaSteps());
 
         HorizontalLayout gridLayout = new HorizontalLayout();
         gridLayout.add(stepGrid);
@@ -53,33 +58,65 @@ public class StepGridForm  extends VerticalLayout {
         add(createStepLayout, stepFormLayout, gridLayout);
     }
 
+    private void actualizarListaSteps()
+    {
+        this.stepForm.alternativeGridForm.alternativeForm.stepList = this.stepList;
+    }
+
+    public void deleteStep()
+    {
+        this.stepList.remove(editing);
+        CloseForm();
+        updateGrid();
+    }
+
     private void CloseForm() {
         this.stepForm.setVisible(false);
     }
 
     private void CreateStep() {
-        if (stepForm.isValid()){
+        this.stepGrid.deselectAll();
+
+        if(stepForm.esValido)
+        {
             Step newStep = stepForm.getStep();
-            stepList.add(newStep);
+
+            if(!stepForm.editing)
+            {
+                stepList.add(newStep);
+            }
+            else
+            {
+                int index = stepList.indexOf(editing);
+                this.stepList.set(index, newStep);
+                stepForm.editing = false;
+            }
             updateGrid();
             stepForm.setVisible(false);
+            closeEditor();
         }
     }
 
-    private void updateGrid() {
+    public void updateGrid() {
+        if(stepList == null)
+            stepList = new LinkedList<>();
         stepGrid.setItems(stepList);
     }
 
     private void addStep() {
+        stepForm.editing = false;
         stepGrid.asSingleSelect().clear();
-        editStep(new Step());
+        stepForm.setAsDefault();
+        stepForm.setVisible(true);
+        stepForm.delete.setVisible(false);
     }
 
     private void configureGrid() {
-//        stepGrid = new Grid<>(Step.class);
         stepGrid.addClassName("user-grid");
-//        stepGrid.setSizeFull();
-        stepGrid.setColumns("label", "text", "textId");
+        stepGrid.setColumns();
+        stepGrid.addColumn(step ->step.getTextId()).setHeader("Step Id").setSortable(true);
+        stepGrid.addColumn(step ->step.getLabel()).setHeader("Label").setSortable(true);
+
         stepGrid.setWidth("80%");
 
         stepGrid.getColumns().forEach(col -> col.setAutoWidth(true));
@@ -93,15 +130,18 @@ public class StepGridForm  extends VerticalLayout {
             closeEditor();
         } else {
             stepForm.setStep(step);
+            stepForm.editing = true;
             stepForm.setVisible(true);
+            editing = step;
+            stepForm.delete.setVisible(true);
             addClassName("editing");
         }
     }
 
     private void closeEditor() {
-        stepForm.setStep(null);
         stepForm.setVisible(false);
-        removeClassName("editing");
+        stepForm.setAsDefault();
+        removeClassName("editing" );
     }
 
     public List<Step> getSteps() {
