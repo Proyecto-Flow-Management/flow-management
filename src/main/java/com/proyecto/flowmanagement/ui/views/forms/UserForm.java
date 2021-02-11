@@ -8,6 +8,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
@@ -23,15 +24,16 @@ import com.vaadin.flow.shared.Registration;
 import java.util.LinkedList;
 import java.util.List;
 
+@CssImport("./styles/user-form.css")
 public class UserForm extends FormLayout {
     private User user;
-    private SecurePasswordStorage securePasswordStorage;
     private String oldHash = "";
 
     public boolean isValid;
     TextField firstName = new TextField("Nombre");
     TextField lastName = new TextField("Apellido");
     EmailField email = new EmailField("Email");
+    TextField username = new TextField("Username");
     PasswordField password = new PasswordField("Contraseña");
 
     Button save = new Button("Guardar");
@@ -47,8 +49,9 @@ public class UserForm extends FormLayout {
     }
 
     public void configureElements() {
-        this.securePasswordStorage = new SecurePasswordStorage();
         this.email.setErrorMessage("Ingresa una dirección de mail correcta.");
+        this.username.setRequired(true);
+        this.username.setErrorMessage("El campo usuario es obligatorio.");
         this.password.setPlaceholder("Ingresa la contraseña.");
         this.password.setRevealButtonVisible(false);
         this.password.setRequired(true);
@@ -57,6 +60,7 @@ public class UserForm extends FormLayout {
         add(firstName,
                 lastName,
                 email,
+                username,
                 password,
                 createButtonsLayout());
     }
@@ -64,6 +68,7 @@ public class UserForm extends FormLayout {
     public void setUser(User user) {
         this.user = user;
         binder.readBean(user);
+        this.password.clear();
     }
 
     public String getOldHash(){
@@ -110,6 +115,9 @@ public class UserForm extends FormLayout {
 
         if (this.email.isEmpty()){
             mensajesError.add("El campo email es obligatorio");
+        }
+        if (this.username.isEmpty()){
+            mensajesError.add("El campo username es obligatorio");
         }
         if (this.password.isEmpty()){
             mensajesError.add("El campo password es obligatorio");
