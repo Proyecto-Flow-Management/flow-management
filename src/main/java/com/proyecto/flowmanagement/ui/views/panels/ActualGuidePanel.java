@@ -4,6 +4,7 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.ui.views.grids.StepGridForm;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.crud.CrudI18n;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -18,7 +19,7 @@ public class ActualGuidePanel extends HorizontalLayout {
     Accordion accordion = new Accordion();
     FormLayout basicInformation = new FormLayout();
     public ComboBox<Guide> actualGuide =new ComboBox<>("Guia Actual");
-    Button eliminarGuia = new Button("Eliminar");
+    public Button eliminarGuia = new Button("Eliminar");
     List<Guide> guias = new LinkedList<>();
 
     public ActualGuidePanel()
@@ -28,12 +29,11 @@ public class ActualGuidePanel extends HorizontalLayout {
 
     private void configureElements()
     {
-        setWidthFull();
+        eliminarGuia.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        eliminarGuia.setVisible(false);
         basicInformation.setWidthFull();
-        actualGuideLayout.setWidthFull();
         actualGuideLayout.setId("step-Layout");
-        setWidthFull();
-        basicInformation.add(actualGuide);
+        basicInformation.add(actualGuide,eliminarGuia);
         accordion.close();
         accordion.add("Guia Actual", basicInformation);
         add(accordion);
