@@ -26,6 +26,7 @@ public class GuideGeneratorServiceImp {
 
     public Guide importGuide (Document doc) throws IOException, SAXException, ParserConfigurationException {
         Guide guide = new Guide();
+        guide.setGuiaPropia(true);
         if(doc != null){
             NodeList guideNodeList = doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT);
             if (guideNodeList != null){
