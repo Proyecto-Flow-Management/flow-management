@@ -146,6 +146,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         if (!guidePanel.name.getValue().trim().isEmpty()) {
             actualizarGuiaActual();
             raiz.setGuides(new LinkedList<>());
+            raiz.setGuiaPropia(true);
 
             if (!editing)
                 guideService.add(raiz);
@@ -179,7 +180,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     private void actualizarListaGuidesExistentes()
     {
         this.guideList = raiz.getGuides();
-        this.systemGuideList = guideService.getAll();
+        this.systemGuideList = guideService.getAll().stream().filter(aux -> aux.isGuiaPropia()).collect(Collectors.toList());
         this.stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.guideList = this.guideList;
         this.stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.systemGuideList = this.systemGuideList;
     }
