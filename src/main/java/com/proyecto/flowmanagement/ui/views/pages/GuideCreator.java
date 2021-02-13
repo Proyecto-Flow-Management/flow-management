@@ -138,6 +138,17 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     private void deleteGuide()
     {
         raiz.eliminarGuia();
+
+        if(raiz != null)
+        {
+            raiz.editing = true;
+
+                editado = raiz;
+                actualGuidePanel.eliminarGuia.setVisible(false);
+
+            cargarValorGrilla(raiz);
+        }
+
     }
 
 
