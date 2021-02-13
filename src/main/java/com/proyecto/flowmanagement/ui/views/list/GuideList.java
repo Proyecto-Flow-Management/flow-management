@@ -72,11 +72,11 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
 
         add(getToolBar(), content);
         updateList();
-        grid.setItems(guideService.getAll().stream().filter(aux -> aux.isGuiaPropia()));
+        updateGrid();
     }
 
     public void updateGrid(){
-        grid.setItems(guideService.getAll());
+        grid.setItems(guideService.getAll().stream().filter(aux -> aux.isGuiaPropia()));
     }
 
     private HorizontalLayout getToolBar() {

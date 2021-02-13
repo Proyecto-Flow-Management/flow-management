@@ -21,7 +21,7 @@ public class Step extends AbstractEntity  implements Serializable {
 	@Column(name = "label")
 	private String label;
 	
-	@Column(name = "text")
+	@Column(name = "text", length = 999)
 	private String text;
 
 	@Column(name = "text_id")
