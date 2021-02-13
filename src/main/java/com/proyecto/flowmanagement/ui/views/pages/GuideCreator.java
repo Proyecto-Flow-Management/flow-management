@@ -71,7 +71,6 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
 
     public Button save = new Button("Guardar");
     public Button validar = new Button("Validar");
-    public Button delete = new Button("Eliminar");
 
     Guide raiz;
     Guide editado;
@@ -129,13 +128,11 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     private void configureActions() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         validar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         save.addClickListener(buttonClickEvent -> guardarGuias());
         validar.addClickListener(buttonClickEvent -> validarGuia());
-        delete.setVisible(false);
-        delete.addClickListener(buttonClickEvent -> deleteGuide());
+        actualGuidePanel.eliminarGuia.addClickListener(buttonClickEvent -> deleteGuide());
         actionsLayout = new HorizontalLayout();
-        actionsLayout.add(save,validar,delete);
+        actionsLayout.add(save,validar);
     }
 
     private void deleteGuide()
@@ -260,13 +257,6 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         operationGridForm.operations = operationsList;
     }
 
-    private void actualizarOperationsIdsStep()
-    {
-        actualizarGuiaActual();
-        List<String> operationsList =  operationGridForm.getOperations().stream().map(o -> o.getName()).collect(Collectors.toList());
-        operationGridForm.operations = operationsList;
-    }
-
     private void actualizacionConditionsAlternatives() {
         stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.conditionForm.unaryConditionForm.save.addClickListener(buttonClickEvent -> actualizarGuiaActual());
         stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.conditionForm.binaryConditionForm.save.addClickListener(buttonClickEvent -> actualizarGuiaActual());
@@ -301,31 +291,32 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     }
 
     private void cargarGuia() {
+
         Guide valor = actualGuidePanel.actualGuide.getValue();
-
-        raiz.quitarEdicion();
-
-        if(valor == raiz)
-            raiz.editing = true;
-        else
-        {
-            raiz.setearParaEditar(valor);
-            delete.setVisible(true);
-        }
 
         if(valor != null)
         {
-            editado = new Guide();
+            raiz.quitarEdicion();
+
+            if(valor == raiz)
+            {
+                raiz.editing = true;
+                editado = raiz;
+                actualGuidePanel.eliminarGuia.setVisible(false);
+            }
+            else
+            {
+                editado = valor;
+                raiz.setearParaEditar(editado);
+                actualGuidePanel.eliminarGuia.setVisible(true);
+            }
+
             cargarValorGrilla(valor);
         }
-
-        editado.editing = true;
     }
 
     private void cargarValorGrilla(Guide guide)
     {
-        actualizarGuiaActual();
-
         this.stepPanel.stepGridForm.stepList = guide.getSteps();
         this.stepPanel.stepGridForm.updateGrid();
 
