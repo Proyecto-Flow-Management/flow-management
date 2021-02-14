@@ -109,6 +109,7 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
     private void noSoloImportacion()
     {
         this.addGuideButton.setVisible(true);
+        this.filterText.setVisible(true);
     }
 
     private void importar()
@@ -118,6 +119,7 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         try
         {
             this.addGuideButton.setVisible(true);
+            this.filterText.setVisible(true);
 
             if(uploadFileForm.actual != null)
             {
@@ -148,6 +150,7 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
     private void soloImportacion()
     {
         this.addGuideButton.setVisible(false);
+        this.filterText.setVisible(false);
     }
 
     private void updateList() {

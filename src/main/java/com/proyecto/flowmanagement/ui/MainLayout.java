@@ -52,14 +52,12 @@ public class MainLayout extends AppLayout {
 
     private void createDrawer() {
         RouterLink listLink = new RouterLink("Usuarios", UserList.class);
-        RouterLink guideLink = new RouterLink("Guide", GuideList.class);
-        RouterLink crearGuia = new RouterLink("Crear Guia", GuideCreator.class);
+        RouterLink guideLink = new RouterLink("Guides", GuideList.class);
         listLink.setHighlightCondition(HighlightConditions.sameLocation());
 
         addToDrawer(new VerticalLayout(
                 listLink,
-                guideLink,
-                crearGuia
+                guideLink
         ));
     }
 
