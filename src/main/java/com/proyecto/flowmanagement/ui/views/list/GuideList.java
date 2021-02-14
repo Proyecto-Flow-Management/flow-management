@@ -6,17 +6,21 @@ import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
 import com.proyecto.flowmanagement.backend.service.Impl.MockTestServiceImpl;
 import com.proyecto.flowmanagement.backend.service.Impl.StepServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
+import com.proyecto.flowmanagement.ui.views.forms.UploadFileForm;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.internal.Pair;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamRegistration;
@@ -57,7 +61,9 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
     Grid<Guide> grid = new Grid<>(Guide.class);
     GuideServiceImpl guideService;
     GuideGeneratorServiceImp guideGeneratorService;
-
+    Button addGuideButton;
+    UploadFileForm uploadFileForm;
+    TextField filterText = new TextField();
     public GuideList(GuideServiceImpl guideService, GuideGeneratorServiceImp guideGeneratorServiceImp) throws IOException, SAXException, ParserConfigurationException {
         this.guideService = guideService;
         this.guideGeneratorService = guideGeneratorServiceImp;
@@ -65,6 +71,11 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         addClassName("create-guide-view");
         setSizeFull();
         configureGrid();
+        
+        filterText.setPlaceholder("Filtrar por nombre...");
+        filterText.setClearButtonVisible(true);
+        filterText.setValueChangeMode(ValueChangeMode.LAZY);
+        filterText.addValueChangeListener(e -> updateListWithValues());
 
         Div content = new Div(grid);
         content.addClassName("content");
@@ -75,56 +86,68 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         updateGrid();
     }
 
+    private void updateListWithValues()
+    {
+        grid.setItems(guideService.findAll(filterText.getValue()));
+    }
+
     public void updateGrid(){
         grid.setItems(guideService.getAll().stream().filter(aux -> aux.isGuiaPropia()));
     }
 
     private HorizontalLayout getToolBar() {
-        Button addGuideButton = new Button("Crear Guia", event -> UI.getCurrent().navigate("CrearGuia"));
-        HorizontalLayout toolbar = new HorizontalLayout(addGuideButton);
+        addGuideButton = new Button("Crear Guia", event -> UI.getCurrent().navigate("CrearGuia"));
+        uploadFileForm = new UploadFileForm(guideGeneratorService);
+        HorizontalLayout toolbar = new HorizontalLayout(filterText,addGuideButton,uploadFileForm);
+        uploadFileForm.importarGuia.addClickListener(buttonClickEvent -> soloImportacion());
+        uploadFileForm.cancelarImportacion.addClickListener(buttonClickEvent -> noSoloImportacion());
+        uploadFileForm.upload.addSucceededListener(buttonClickEvent -> importar());
         toolbar.addClassName("toolbar");
-
-        MemoryBuffer buffer = new MemoryBuffer();
-        Upload upload = new Upload(buffer);
-        Div output = new Div();
-
-
-
-        upload.addSucceededListener(event -> {
-            DocumentBuilderFactory factory = null;
-            DocumentBuilder builder = null;
-            Document ret = null;
-
-            try {
-                factory = DocumentBuilderFactory.newInstance();
-                builder = factory.newDocumentBuilder();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                ret = builder.parse(buffer.getInputStream());
-                Guide guide = guideGeneratorService.importGuide(ret);
-                guide.setName(event.getFileName());
-                guide.setLabel(event.getFileName());
-                guideService.add(guide);
-                updateGrid();
-            } catch (SAXException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            }
-
-            /*Component component = createComponent(event.getMIMEType(),
-                    event.getFileName(), buffer.getInputStream());
-            showOutput(event.getFileName(), component, output);*/
-        });
-
-        add(upload, output);
-
         return toolbar;
+    }
+
+    private void noSoloImportacion()
+    {
+        this.addGuideButton.setVisible(true);
+    }
+
+    private void importar()
+    {
+        String mensaje = "";
+
+        try
+        {
+            this.addGuideButton.setVisible(true);
+
+            if(uploadFileForm.actual != null)
+            {
+                guideService.add(uploadFileForm.actual);
+                updateGrid();
+                mensaje = "Guia importada correctamente";
+            }
+            else
+            {
+                mensaje = "La guia no pudo ser importada por errores en su sintaxis";
+            }
+
+        }catch (Exception ex)
+        {
+            mensaje = "La guia no pudo ser importada por errores al transferirse a la base de datos";
+        }
+
+        mostrarMensajeError(mensaje);
+    }
+    private void mostrarMensajeError(String validacionIncompleta) {
+        Span mensaje = new Span(validacionIncompleta);
+        Notification notification = new Notification(mensaje);
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.MIDDLE);
+        notification.open();
+    }
+
+    private void soloImportacion()
+    {
+        this.addGuideButton.setVisible(false);
     }
 
     private void updateList() {

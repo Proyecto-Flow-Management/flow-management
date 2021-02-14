@@ -2,6 +2,7 @@ package com.proyecto.flowmanagement.backend.service.Impl;
 import java.util.List;
 import java.util.Optional;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.User;
 import com.proyecto.flowmanagement.backend.persistence.repository.IGuideRepo;
 import com.proyecto.flowmanagement.backend.service.IGuideService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,10 @@ public class GuideServiceImpl implements IGuideService {
 	public Guide getById(Long id) {
 		Optional<Guide> op = repo.findById(id);
 		return op.isPresent() ? op.get() : new Guide();
+	}
+
+	public List<Guide> findAll(String filterText) {
+		return repo.search(filterText);
 	}
 
 	@Override
