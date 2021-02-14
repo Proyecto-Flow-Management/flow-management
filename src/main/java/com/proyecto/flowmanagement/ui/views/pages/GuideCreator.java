@@ -130,7 +130,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         validar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(buttonClickEvent -> guardarGuias());
         validar.addClickListener(buttonClickEvent -> validarGuia());
-        actualGuidePanel.eliminarGuia.addClickListener(buttonClickEvent -> deleteGuide());
+        guidePanel.eliminarGuia.addClickListener(buttonClickEvent -> deleteGuide());
         actionsLayout = new HorizontalLayout();
         actionsLayout.add(save,validar);
     }
@@ -144,7 +144,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
             raiz.editing = true;
 
                 editado = raiz;
-                actualGuidePanel.eliminarGuia.setVisible(false);
+            guidePanel.eliminarGuia.setVisible(false);
 
             cargarValorGrilla(raiz);
         }
@@ -314,13 +314,13 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
             {
                 raiz.editing = true;
                 editado = raiz;
-                actualGuidePanel.eliminarGuia.setVisible(false);
+                guidePanel.eliminarGuia.setVisible(false);
             }
             else
             {
                 editado = valor;
                 raiz.setearParaEditar(editado);
-                actualGuidePanel.eliminarGuia.setVisible(true);
+                guidePanel.eliminarGuia.setVisible(true);
             }
 
             cargarValorGrilla(valor);

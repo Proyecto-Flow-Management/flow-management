@@ -19,7 +19,6 @@ public class ActualGuidePanel extends HorizontalLayout {
     Accordion accordion = new Accordion();
     FormLayout basicInformation = new FormLayout();
     public ComboBox<Guide> actualGuide =new ComboBox<>("Guia Actual");
-    public Button eliminarGuia = new Button("Eliminar");
     List<Guide> guias = new LinkedList<>();
 
     public ActualGuidePanel()
@@ -29,11 +28,11 @@ public class ActualGuidePanel extends HorizontalLayout {
 
     private void configureElements()
     {
-        eliminarGuia.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        eliminarGuia.setVisible(false);
         basicInformation.setWidthFull();
         actualGuideLayout.setId("step-Layout");
-        basicInformation.add(actualGuide,eliminarGuia);
+        actualGuideLayout.add(actualGuide);
+        accordion.setWidthFull();
+        basicInformation.add(actualGuideLayout);
         accordion.close();
         accordion.add("Guia Actual", basicInformation);
         add(accordion);
