@@ -28,6 +28,7 @@ import com.vaadin.flow.shared.Registration;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @org.springframework.stereotype.Component
@@ -65,8 +66,8 @@ public class OperationForm extends VerticalLayout {
 
     private CandidatesGrupsForm candidatesGrupsForm = new CandidatesGrupsForm();
 
-    private OperationParameterGridForm inParameterGridForm = new OperationParameterGridForm("Crear IN Operation Parameter");
-    private OperationParameterGridForm outParameterGridForm = new OperationParameterGridForm("Crear OUT Operation Parameter");
+    private OperationParameterGridForm inParameterGridForm = new OperationParameterGridForm("Crear IN Operation Parameter", false);
+    private OperationParameterGridForm outParameterGridForm = new OperationParameterGridForm("Crear OUT Operation Parameter", true);
 
     private VerticalLayout elements = new VerticalLayout();
     private HorizontalLayout alternativeIdsFormLayout = new HorizontalLayout();
@@ -435,8 +436,8 @@ public class OperationForm extends VerticalLayout {
             groupsAccordion.setVisible(false);
         }
 
-        this.inParameterGridForm.setOperationsParameters(operation.getInParameters());
-        this.outParameterGridForm.setOperationsParameters(operation.getOutParameters());
+        this.inParameterGridForm.setOperationsParameters(operation.getInParameters().stream().filter(o -> !o.getOutParameter()).collect(Collectors.toList()));
+        this.outParameterGridForm.setOperationsParameters(operation.getInParameters().stream().filter(o -> o.getOutParameter()).collect(Collectors.toList()));
         this.inParameterAccordion.close();
         this.outParameterAccordion.close();
         this.alternativesIdsAccordion.close();
