@@ -126,18 +126,11 @@ public class StepForm extends HorizontalLayout {
         delete.setVisible(false);
 
         this.text.setPlaceholder("Descripción de la guía...");
-        this.text.setRequired(true);
-        this.text.setErrorMessage("Campo obligatorio");
-        this.textId.setRequired(true);
-        this.textId.setErrorMessage("Campo obligatorio");
-        this.label.setRequired(true);
-        this.label.setErrorMessage("Campo obligatorio");
 
         elements.add(textId,label,text);
         elements.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1),
-                new FormLayout.ResponsiveStep("32em", 2),
-                new FormLayout.ResponsiveStep("40em", 3));
+                new FormLayout.ResponsiveStep("32em", 2));
         elements.setWidthFull();
         actionsLayout.add(createButtonsLayout());
     }

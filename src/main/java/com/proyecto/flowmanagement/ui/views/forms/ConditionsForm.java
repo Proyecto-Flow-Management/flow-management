@@ -21,12 +21,12 @@ public class ConditionsForm extends HorizontalLayout {
     Alternative alternative;
     Condition actual;
 
-    ComboBox<TypeOperation> listType = new ComboBox<>("Tipo Operacion");
-    public Button agregarCondition = new Button("Add");
+    ComboBox<TypeOperation> listType = new ComboBox<>("Tipo Operación");
+    public Button agregarCondition = new Button("Agregar");
 
     // Panel Acciones Binarys
-    public Button agregarBinaryEnBinary = new Button("Add Binary");
-    public Button agregarUnaryABinary = new Button("Add Unary");
+    public Button agregarBinaryEnBinary = new Button("Agregar Binary");
+    public Button agregarUnaryABinary = new Button("Agregar Unary");
     public Button editarBinary = new Button("Editar");
     public Button eliminarBinary = new Button("Eliminar");
 
@@ -100,8 +100,12 @@ public class ConditionsForm extends HorizontalLayout {
         unaryConditionForm.close.addClickListener(buttonClickEvent -> this.unaryConditionForm.setVisible(false));
         binaryConditionForm.close.addClickListener(buttonClickEvent -> this.binaryConditionForm.setVisible(false));
         agregarLayout.setWidthFull();
+        agregarLayout.setClassName("conditions-layout");
 
         agregarLayout.add(listType, agregarCondition);
+        agregarLayout.setVerticalComponentAlignment(Alignment.BASELINE, listType);
+        agregarLayout.setVerticalComponentAlignment(Alignment.BASELINE, agregarCondition);
+        agregarLayout.setSizeFull();
 
         form.setSizeFull();
 
@@ -134,7 +138,6 @@ public class ConditionsForm extends HorizontalLayout {
     }
 
     private void configureElements() {
-
         this.unaryConditionForm.setVisible(false);
 
         this.unaryLayout = new HorizontalLayout();

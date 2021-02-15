@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-//@Component
+
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Users | Flow Management")
 public class UserList extends VerticalLayout {

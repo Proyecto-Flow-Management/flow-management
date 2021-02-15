@@ -7,6 +7,7 @@ import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import com.proyecto.flowmanagement.ui.views.grids.StepGridForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
@@ -18,6 +19,7 @@ import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 
 import java.util.List;
 
+@CssImport("./styles/details-panel-form.css")
 public class DetailsPanel  extends HorizontalLayout {
 
     HorizontalLayout stepSecctionLayout = new HorizontalLayout();
@@ -38,8 +40,10 @@ public class DetailsPanel  extends HorizontalLayout {
         basicInformation.setWidthFull();
         stepSecctionLayout.setWidthFull();
         stepSecctionLayout.setId("step-Layout");
+//        stepSecctionLayout.setClassName("details-layout");
         setWidthFull();
         basicInformation.add(stepSecctionLayout);
+        basicInformation.setClassName("details-layout");
         accordion.add("Resumen de Guia", basicInformation);
         accordion.close();
         add(accordion);

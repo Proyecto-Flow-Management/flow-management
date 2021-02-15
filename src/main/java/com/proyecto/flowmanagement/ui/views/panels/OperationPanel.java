@@ -3,10 +3,12 @@ package com.proyecto.flowmanagement.ui.views.panels;
 import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
 import com.proyecto.flowmanagement.ui.views.grids.StepGridForm;
 import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+@CssImport("./styles/operation-panel.css")
 public class OperationPanel extends HorizontalLayout {
 
     public OperationGridForm operationGridForm = new OperationGridForm();

@@ -52,13 +52,16 @@ public class OptionValueForm extends VerticalLayout {
         VerticalLayout ppal = new VerticalLayout();
         ppal.setWidthFull();
 
-        buttonsLayout.add(add,delete,save,cancel);
-        actionsLayout.add(optionValue);
-
         gridLayout.add(optionValuesGrid);
 
         HorizontalLayout form = new HorizontalLayout();
-        form.add(actionsLayout, buttonsLayout);
+        form.add(optionValue,add,delete,save,cancel);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, optionValue);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, add);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, delete);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, save);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, cancel);
+        form.setSizeFull();
         add(form, gridLayout);
     }
 
