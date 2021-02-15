@@ -4,6 +4,8 @@ import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.def.SourceEntity;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,13 +17,13 @@ import java.util.List;
 public class OperationParameter extends AbstractEntity   implements Serializable {
 
 	@Column(name = "name")
-    private String name;
-	
+	private String name;
+
 	@Column(name = "label")
-    private String label;
-	
+	private String label;
+
 	@Column(name = "visible_value")
-    private Boolean visible;
+	private Boolean visible;
 
 	@Column(name = "visible_when_equals")
 	private String visibleWhenInParameterEqualsCondition;
@@ -74,10 +76,12 @@ public class OperationParameter extends AbstractEntity   implements Serializable
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="operation_parameter_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Convertion> convertCondition;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="operation_parameter_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<ValidateCrossFieldCondition> validateCrossFieldCondition;
 
 	@Column(name = "value_when_in_parameter_equals")
@@ -85,16 +89,19 @@ public class OperationParameter extends AbstractEntity   implements Serializable
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "operation_parameter_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<OptionValue> optionValues;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "task_operation_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<ConvertCondition> convertConditions;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "task_operation_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Properties> propertiesNames;
 
@@ -326,5 +333,5 @@ public class OperationParameter extends AbstractEntity   implements Serializable
 			return "El campo Description es obligatorio";
 
 		return "";
-    }
+	}
 }
