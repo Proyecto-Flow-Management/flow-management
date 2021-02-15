@@ -50,11 +50,8 @@ public class UserForm extends FormLayout {
 
     public void configureElements() {
         this.email.setErrorMessage("Ingresa una dirección de mail correcta.");
-        this.username.setRequired(true);
-        this.username.setErrorMessage("El campo usuario es obligatorio.");
         this.password.setPlaceholder("Ingresa la contraseña.");
         this.password.setRevealButtonVisible(false);
-        this.password.setRequired(true);
         binder.bindInstanceFields(this);
 
         add(firstName,

@@ -54,11 +54,16 @@ public class AlternativeIdsForm extends VerticalLayout {
         deleteAlternative.setVisible(false);
         HorizontalLayout actions = new HorizontalLayout();
         actions.setWidthFull();
-        actions.setClassName("buttonsidsAlternativesLayouts");
+//        actions.setClassName("buttonsidsAlternativesLayouts");
         actions.add(addAlternative,deleteAlternative);
 
         HorizontalLayout principal = new HorizontalLayout();
-        principal.add(comboAlternatives,actions);
+//        principal.add(comboAlternatives,actions);
+        principal.add(comboAlternatives,addAlternative, deleteAlternative);
+        principal.setVerticalComponentAlignment(Alignment.BASELINE, comboAlternatives);
+        principal.setVerticalComponentAlignment(Alignment.BASELINE, addAlternative);
+        principal.setVerticalComponentAlignment(Alignment.BASELINE, deleteAlternative);
+        principal.setSizeFull();
 
         HorizontalLayout gridAlternativesLayout = new HorizontalLayout();
         gridAlternativesLayout.setWidthFull();

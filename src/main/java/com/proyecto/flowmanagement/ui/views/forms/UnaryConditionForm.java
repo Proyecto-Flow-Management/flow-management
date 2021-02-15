@@ -40,6 +40,7 @@ public class UnaryConditionForm extends VerticalLayout {
     HorizontalLayout camposLayout = new HorizontalLayout();
     HorizontalLayout gridParametersLayout = new HorizontalLayout();
     HorizontalLayout actionsLayout = new HorizontalLayout();
+    VerticalLayout unaryLayout = new VerticalLayout();
 
     public UnaryConditionForm() {
         setWidthFull();
@@ -68,6 +69,8 @@ public class UnaryConditionForm extends VerticalLayout {
 
     private void configureForms() {
         camposLayout.add(operationNameText.getValue());
+        unaryLayout.add(camposLayout, gridParametersLayout,actionsLayout);
+//        add(unaryLayout);
         add(camposLayout, gridParametersLayout,actionsLayout);
     }
 

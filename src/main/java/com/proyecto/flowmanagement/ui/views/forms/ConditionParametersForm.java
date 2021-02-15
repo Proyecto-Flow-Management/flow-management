@@ -6,6 +6,7 @@ import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
@@ -18,6 +19,7 @@ import com.vaadin.flow.data.binder.Binder;
 import java.util.LinkedList;
 import java.util.List;
 
+@CssImport("./styles/conditions-parameters-form.css")
 public class ConditionParametersForm  extends VerticalLayout {
 
     ConditionParameter conditionParameter;
@@ -54,6 +56,7 @@ public class ConditionParametersForm  extends VerticalLayout {
     }
 
     private void configureElement() {
+        addClassName("conditionParametersForm");
 
         isValid = false;
 

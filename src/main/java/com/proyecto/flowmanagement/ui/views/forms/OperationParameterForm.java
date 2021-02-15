@@ -78,12 +78,6 @@ public class OperationParameterForm extends VerticalLayout {
     private void configureElements() {
         addClassName("operationParameterSection");
         delete.setVisible(false);
-        this.name.setRequired(true);
-        this.name.setErrorMessage("Este campo es obligatorio.");
-        this.type.setRequired(true);
-        this.type.setErrorMessage("Este campo es obligatorio.");
-        this.description.setRequired(true);
-        this.description.setErrorMessage("Este campo es obligatorio.");
         this.visible.setItems("True","False");
         this.enable.setItems("True","False");
         this.required.setItems("True","False");

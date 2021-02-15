@@ -39,9 +39,6 @@ public class DocumentsForm extends VerticalLayout {
     private void configureElements() {
         delete.setVisible(false);
 
-        this.url.setRequired(true);
-        this.url.setErrorMessage("Este campo es obligatorio.");
-
         this.url.setValue("");
         elements.add(url);
         actionsLayout.add(createButtonsLayout());

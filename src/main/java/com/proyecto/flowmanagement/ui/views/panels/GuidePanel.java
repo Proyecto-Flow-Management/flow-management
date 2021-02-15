@@ -36,18 +36,14 @@ public class GuidePanel  extends HorizontalLayout {
     }
 
     private void configureElements() {
-        this.name.setRequired(true);
-        this.label.setRequired(true);
-        this.label.setRequired(true);
-
         eliminarGuia.addThemeVariants(ButtonVariant.LUMO_ERROR);
         eliminarGuia.addClassName("delete-button");
         eliminarGuia.setVisible(false);
-        this.name.setErrorMessage("Campo obligatorio");
-        this.label.setErrorMessage("Campo obligatorio");
 
         basicHorizontal.add(name,label,mainStep,eliminarGuia);
+        basicHorizontal.setClassName("campos-layout");
         basicInformation.add(basicHorizontal);
+        basicInformation.setClassName("basic-information-layout");
         accordion.add("Informacion Basica", basicInformation);
     }
 

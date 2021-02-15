@@ -53,8 +53,13 @@ public class CandidatesGrupsForm extends VerticalLayout {
         HorizontalLayout ppal = new HorizontalLayout();
         ppal.setWidthFull();
 
-        buttonsLayout.add(add,delete,save,cancel);
-        actionsLayout.add(group);
+        ppal.add(group,add,delete,save,cancel);
+        ppal.setVerticalComponentAlignment(Alignment.BASELINE, group);
+        ppal.setVerticalComponentAlignment(Alignment.BASELINE, add);
+        ppal.setVerticalComponentAlignment(Alignment.BASELINE, delete);
+        ppal.setVerticalComponentAlignment(Alignment.BASELINE, save);
+        ppal.setVerticalComponentAlignment(Alignment.BASELINE, cancel);
+        ppal.setSizeFull();
 
         ppal.add(actionsLayout,buttonsLayout);
 

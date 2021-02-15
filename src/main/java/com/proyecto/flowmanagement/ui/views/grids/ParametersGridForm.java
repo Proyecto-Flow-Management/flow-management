@@ -3,6 +3,7 @@ package com.proyecto.flowmanagement.ui.views.grids;
 import com.proyecto.flowmanagement.backend.persistence.entity.ConditionParameter;
 import com.proyecto.flowmanagement.ui.views.forms.ConditionParametersForm;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -10,6 +11,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.util.LinkedList;
 import java.util.List;
 
+@CssImport("./styles/parameters-grid-form.css")
 public class ParametersGridForm extends VerticalLayout {
 
     public ConditionParametersForm conditionParametersForm = new ConditionParametersForm();
@@ -38,6 +40,7 @@ public class ParametersGridForm extends VerticalLayout {
     }
 
     private void configureElements() {
+        addClassName("parametersGridForm");
         this.conditionParameterList = new LinkedList<>();
 
         configureGrid();

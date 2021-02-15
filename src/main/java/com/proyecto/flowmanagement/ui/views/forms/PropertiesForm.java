@@ -59,13 +59,19 @@ public class PropertiesForm extends VerticalLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        buttonsLayout.add(add,delete,save,cancel);
-        campos.add(name, label, visible, type);
-
         gridLayout.add(propertiesGrid);
 
         HorizontalLayout form = new HorizontalLayout();
-        form.add(campos, buttonsLayout);
+        form.add(name, label, visible, type,add,delete,save,cancel);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, name);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, label);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, visible);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, type);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, add);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, delete);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, save);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, cancel);
+        form.setSizeFull();
         add(form, gridLayout);
     }
 

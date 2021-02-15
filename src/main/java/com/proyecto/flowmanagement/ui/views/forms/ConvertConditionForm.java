@@ -53,13 +53,18 @@ public class ConvertConditionForm extends VerticalLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        buttonsLayout.add(add,delete,save,cancel);
-        campos.add(condition, sourceUnit, destinationUnit);
-
         gridLayout.add(convertConditionsGrid);
 
         HorizontalLayout form = new HorizontalLayout();
-        form.add(campos, buttonsLayout);
+        form.add(condition, sourceUnit, destinationUnit,add,delete,save,cancel);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, condition);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, sourceUnit);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, destinationUnit);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, add);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, delete);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, save);
+        form.setVerticalComponentAlignment(Alignment.BASELINE, cancel);
+        form.setSizeFull();
         add(form, gridLayout);
     }
 

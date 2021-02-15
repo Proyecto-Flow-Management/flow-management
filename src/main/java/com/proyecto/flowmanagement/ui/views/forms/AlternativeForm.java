@@ -72,9 +72,6 @@ public class AlternativeForm extends VerticalLayout {
 
         HorizontalLayout actionsLayout = new HorizontalLayout();
 
-        this.label.setRequired(true);
-        this.label.setErrorMessage("Este campo es obligatorio.");
-
         List<String> options = new LinkedList<>();
         options.add("nextStep Existente");
         options.add("nextStep Nuevo");
@@ -108,6 +105,7 @@ public class AlternativeForm extends VerticalLayout {
         conditionFormAccordion.close();
         conditionFormAccordion.add("Conditions", conditionsLayout);
 
+        form.setClassName("alternative-form");
         form.add(elements);
 
         add(form, conditionFormAccordion, actionsLayout);

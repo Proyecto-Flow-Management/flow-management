@@ -165,17 +165,11 @@ public class OperationForm extends VerticalLayout {
     private void configureElements() {
         addClassName("operationSection");
         delete.setVisible(false);
-        this.name.setRequired(true);
         name.addClassName("vaadin-text-field-container");
-        this.name.setErrorMessage("Este campo es obligatorio.");
-        this.label.setRequired(true);
         label.addClassName("vaadin-text-field-container");
-        this.label.setErrorMessage("Este campo es obligatorio.");
-        this.operationType.setRequired(true);
         comment.addClassName("vaadin-text-field-container");
         title.addClassName("vaadin-text-field-container");
         operationType.addClassName("vaadin-text-field-container");
-        this.operationType.setErrorMessage("Debes seleccionar un tipo.");
         this.visible.setItems("True","False");
         visible.addClassName("vaadin-text-field-container");
         this.preExecute.setItems("True","False");
@@ -234,20 +228,13 @@ public class OperationForm extends VerticalLayout {
 
     private void addElements(OperationType operationType){
         if (operationType== OperationType.simpleOperation){
-            this.simpleOperationType.setRequired(true);
-            this.simpleOperationType.setErrorMessage("Debes seleccionar un tipo.");
             this.simpleOperationType.setItems(SimpleOperationType.values());
-            this.service.setRequired(true);
-            this.service.setErrorMessage("Este campo es obligatorio.");
-
             elementsForm.remove(taskOperationType,targetSystem,mailTemplate,mailTo,mailSubjectPrefix);
             elementsForm.add(simpleOperationType,service);
             groupsAccordion.setVisible(false);
 //            elements.remove(groupsAccordion);
         }
         else if(operationType== OperationType.taskOperation){
-            this.taskOperationType.setRequired(true);
-            this.taskOperationType.setErrorMessage("Debes seleccionar un tipo.");
             this.taskOperationType.setItems(TaskOperationType.values());
 
             elementsForm.remove(simpleOperationType,service);
