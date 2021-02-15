@@ -866,7 +866,7 @@ public class GuideGeneratorServiceImp {
 
             doc = configureStepsXML(doc, guide);
 
-            //printResult(doc);
+            printResult(doc);
 
             return printResultByte(doc);
         } catch (Exception ex) {
@@ -1144,7 +1144,7 @@ public class GuideGeneratorServiceImp {
                 docOp.removeChild(node);
             }
 
-            if (taskOperation.getGroupsIds() != null){
+            if (taskOperation.getGroupsIds() != null && taskOperation.getGroupsIds().size() > 0){
                 Node newCand = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
                 Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TEMPLATE).item(0);
 

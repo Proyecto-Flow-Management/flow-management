@@ -150,7 +150,7 @@ public class AlternativeForm extends VerticalLayout {
     private void saveAlternative() {
 
         this.alternative = new Alternative();
-        
+
         alternative.setLabel(this.label.getValue());
         alternative.setConditions(this.conditionForm.getConditions());
 
@@ -191,7 +191,7 @@ public class AlternativeForm extends VerticalLayout {
         }
 
         String mensajeValidacion = alternative.validacionIncompleta();
-        
+
         if(!mensajeValidacion.isEmpty())
             mostrarMensajeError(mensajeValidacion);
 
@@ -230,8 +230,10 @@ public class AlternativeForm extends VerticalLayout {
                     this.guideComboBox.setVisible(false);
                     this.systemGuideComboBox.setVisible(false);
                     this.option.setValue("nextStep Existente");
-                    Step stepSelected = this.stepList.stream().filter(step -> step.getTextId().equals(alternative.getNextStep())).findFirst().get();
-                    this.stepComboBox.setValue(stepSelected);
+                    if (!stepList.isEmpty()){
+                        Step stepSelected = this.stepList.stream().filter(step -> step.getTextId().equals(alternative.getNextStep())).findFirst().get();
+                        this.stepComboBox.setValue(stepSelected);
+                    }
                 }
             }
             else if(alternative.isSystemGuide()){

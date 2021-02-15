@@ -4,6 +4,8 @@ import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -48,15 +50,18 @@ public class Operation  extends AbstractEntity   implements Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "operation_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<OperationParameter> inParameters;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "operation_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<OperationParameter> outParameters;
 
 	@OneToMany(cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@Fetch(FetchMode.SUBSELECT)
 	@JoinColumn(name = "operation_id")
 	private List<Condition> conditions;
@@ -66,6 +71,7 @@ public class Operation  extends AbstractEntity   implements Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "operation_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Alternative> alternativeIds;
 
@@ -74,6 +80,7 @@ public class Operation  extends AbstractEntity   implements Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "operation_id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<OperationNotifyId> operationNotifyIds;
 
