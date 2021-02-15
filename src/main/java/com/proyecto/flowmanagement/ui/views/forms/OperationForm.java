@@ -436,8 +436,8 @@ public class OperationForm extends VerticalLayout {
             groupsAccordion.setVisible(false);
         }
 
-        this.inParameterGridForm.setOperationsParameters(operation.getInParameters().stream().filter(o -> !o.getOutParameter()).collect(Collectors.toList()));
-        this.outParameterGridForm.setOperationsParameters(operation.getInParameters().stream().filter(o -> o.getOutParameter()).collect(Collectors.toList()));
+        this.inParameterGridForm.setOperationsParameters(operation.getInParameters().stream().filter(o -> !o.getOutParameter() && !o.getProperty()).collect(Collectors.toList()));
+        this.outParameterGridForm.setOperationsParameters(operation.getInParameters().stream().filter(o -> o.getOutParameter() && !o.getProperty()).collect(Collectors.toList()));
         this.inParameterAccordion.close();
         this.outParameterAccordion.close();
         this.alternativesIdsAccordion.close();

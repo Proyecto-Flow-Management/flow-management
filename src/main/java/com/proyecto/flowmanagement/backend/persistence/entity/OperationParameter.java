@@ -37,6 +37,9 @@ public class OperationParameter extends AbstractEntity   implements Serializable
 	@Column(name = "isOut")
 	private Boolean isOutParameter;
 
+	@Column(name = "isOut")
+	private Boolean isProperty;
+
 	@Column(name = "value")
 	private String value;
 
@@ -314,6 +317,14 @@ public class OperationParameter extends AbstractEntity   implements Serializable
 
 	public void setOutParameter(Boolean outParameter) {
 		isOutParameter = outParameter;
+	}
+
+	public Boolean getProperty() {
+		return isProperty;
+	}
+
+	public void setProperty(Boolean property) {
+		isProperty = property;
 	}
 
 	public List<String> validateOperationParameter() {

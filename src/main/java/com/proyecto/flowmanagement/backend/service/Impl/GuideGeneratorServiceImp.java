@@ -289,8 +289,8 @@ public class GuideGeneratorServiceImp {
 
         operation.setAlternativeIds(importAlternativesIds(node));
         operation.setOperationNotifyIds(importOperationIds(node));
-        operation.setInParameters(importParameters(node, XMLConstants.PARAMETER_IN_ELEMENT, false));
-        operation.setOutParameters(importParameters(node, XMLConstants.PARAMETER_OUT_ELEMENT, false));
+        operation.setInParameters(importParameters(node, XMLConstants.PARAMETER_IN_ELEMENT, false,false,false));
+        operation.setOutParameters(importParameters(node, XMLConstants.PARAMETER_OUT_ELEMENT, false,true,true));
         operation.setConditions(importConditions(node));
 
         return operation;
@@ -408,8 +408,8 @@ public class GuideGeneratorServiceImp {
 
         operation.setAlternativeIds(importAlternativesIds(node));
         operation.setOperationNotifyIds(importOperationIds(node));
-        operation.setInParameters(importParameters(node, XMLConstants.PARAMETER_IN_ELEMENT, false));
-        operation.setOutParameters(importParameters(node, XMLConstants.PARAMETER_OUT_ELEMENT, false));
+        operation.setInParameters(importParameters(node, XMLConstants.PARAMETER_IN_ELEMENT, false,false,false));
+        operation.setOutParameters(importParameters(node, XMLConstants.PARAMETER_OUT_ELEMENT, false,true,false));
         operation.setConditions(importConditions(node));
         operation.setGroupsIds(importCandidateGroups(node));
 
@@ -468,7 +468,7 @@ public class GuideGeneratorServiceImp {
         return operations;
     }
 
-    private List<OperationParameter> importParameters(Node node, String in, Boolean property) {
+    private List<OperationParameter> importParameters(Node node, String in, Boolean property, Boolean isOutParameter, boolean isproperty) {
         List<OperationParameter> parameters = new LinkedList<>();
 
         if(node != null){
@@ -479,6 +479,9 @@ public class GuideGeneratorServiceImp {
                     if (parameterNodeList.item(i).getNodeName() == in) {
 
                         OperationParameter parameter = new OperationParameter();
+
+                        parameter.setOutParameter(isOutParameter);
+                        parameter.setProperty(isproperty);
 
                         Node parameterNode = parameterNodeList.item(i);
                         Element parameterElement = (Element) parameterNode;
@@ -592,7 +595,7 @@ public class GuideGeneratorServiceImp {
                         }
 
                         if (!property){
-                            parameter.setProperties(importParameters(parameterNode,XMLConstants.PARAMETER_PROPERTIES, true));
+                            parameter.setProperties(importParameters(parameterNode,XMLConstants.PARAMETER_PROPERTIES, true, false,true));
                         }
                         parameter.setConvertCondition(importConvertCondition(parameterNode));
                         parameter.setValidateCrossFieldCondition(importValidateCrossFieldCondition(parameterNode));
