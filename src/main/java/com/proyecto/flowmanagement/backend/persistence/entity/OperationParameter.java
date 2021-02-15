@@ -37,7 +37,7 @@ public class OperationParameter extends AbstractEntity   implements Serializable
 	@Column(name = "isOut")
 	private Boolean isOutParameter;
 
-	@Column(name = "isOut")
+	@Column(name = "isProperty")
 	private Boolean isProperty;
 
 	@Column(name = "value")
