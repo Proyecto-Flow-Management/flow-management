@@ -139,11 +139,11 @@ public class GuideGeneratorServiceImp {
                         Node guideName = alternativeElement.getElementsByTagName(XMLConstants.ALTERNATIVE_GUIDE_NAME).item(0);
                         if (guideName != null && guideName.getFirstChild() != null) {
                             alternative.setGuideName(guideName.getFirstChild().getNodeValue());
-                        }
-
-                        Node stepId = alternativeElement.getElementsByTagName(XMLConstants.ALTERNATIVE_STEP_ID).item(0);
-                        if (stepId != null && stepId.getFirstChild() != null) {
-                            alternative.setNextStep(stepId.getFirstChild().getNodeValue());
+                        }else{
+                            Node stepId = alternativeElement.getElementsByTagName(XMLConstants.ALTERNATIVE_STEP_ID).item(0);
+                            if (stepId != null && stepId.getFirstChild() != null) {
+                                alternative.setNextStep(stepId.getFirstChild().getNodeValue());
+                            }
                         }
 
                         Node label = alternativeElement.getElementsByTagName(XMLConstants.ALTERNATIVE_LABEL).item(0);
