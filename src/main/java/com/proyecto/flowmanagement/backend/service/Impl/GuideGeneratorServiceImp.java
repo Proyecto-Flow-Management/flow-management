@@ -290,7 +290,7 @@ public class GuideGeneratorServiceImp {
         operation.setAlternativeIds(importAlternativesIds(node));
         operation.setOperationNotifyIds(importOperationIds(node));
         operation.setInParameters(importParameters(node, XMLConstants.PARAMETER_IN_ELEMENT, false,false,false));
-        operation.setOutParameters(importParameters(node, XMLConstants.PARAMETER_OUT_ELEMENT, false,true,true));
+        operation.setOutParameters(importParameters(node, XMLConstants.PARAMETER_OUT_ELEMENT, false,true,false));
         operation.setConditions(importConditions(node));
 
         return operation;

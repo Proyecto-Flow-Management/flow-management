@@ -279,6 +279,8 @@ public class OperationParameterForm extends VerticalLayout {
     private void saveOperationParameter(){
         this.operationParameter = new OperationParameter();
         operationParameter.setName(name.getValue());
+        operationParameter.setProperty(true);
+        operationParameter.setOutParameter(false);
         if (!label.isEmpty()){
             operationParameter.setLabel(label.getValue());
         }

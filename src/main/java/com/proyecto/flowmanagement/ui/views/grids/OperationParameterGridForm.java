@@ -23,7 +23,7 @@ public class OperationParameterGridForm extends VerticalLayout {
 
     public OperationParameterGridForm(String buttonLabel, boolean isOutParameter)
     {
-        isOutParameter = isOutParameter;
+        this.isOutParameter = isOutParameter;
         this.operationParameterList = new LinkedList<>();
         setSizeFull();
         configureElements(buttonLabel);
@@ -79,6 +79,7 @@ public class OperationParameterGridForm extends VerticalLayout {
         if (operationParameterForm.isValid) {
             OperationParameter newOperationParameter = operationParameterForm.getOperationParameter();
             newOperationParameter.setOutParameter(this.isOutParameter);
+            newOperationParameter.setProperty(false);
             if(!operationParameterForm.editing){
                 operationParameterList.add(newOperationParameter);
             }
