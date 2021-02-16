@@ -164,6 +164,9 @@ public class Guide extends AbstractEntity implements Serializable {
 
 	public void addGuide(Guide newGuide)
 	{
+		if(this.guides == null)
+			this.guides = new LinkedList<>();
+		newGuide.setGuiaPropia(false);
 		this.guides.add(newGuide);
 	}
 
