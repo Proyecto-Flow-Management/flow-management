@@ -215,7 +215,7 @@ public class OperationForm extends VerticalLayout {
                 new FormLayout.ResponsiveStep("32em", 2),
                 new FormLayout.ResponsiveStep("40em", 3),
                 new FormLayout.ResponsiveStep("40em", 4));
-        elements.add(elementsForm, groupsAccordion, alternativesIdsAccordion);
+        elements.add(elementsForm);
 
         actionsLayout.add(createButtonsLayout());
     }
@@ -295,7 +295,7 @@ public class OperationForm extends VerticalLayout {
         conditionFormAccordion.close();
         conditionFormAccordion.add("Conditions", conditionFormLayout);
 
-        add(accordionBasicInformation,inParameterAccordion,outParameterAccordion,conditionFormAccordion,operationNotifyIdsFormAccordion,actionsLayout);
+        add(accordionBasicInformation,inParameterAccordion,outParameterAccordion,conditionFormAccordion,operationNotifyIdsFormAccordion, groupsAccordion, alternativesIdsAccordion,actionsLayout);
     }
 
     public void setOperation(Operation operation) {
