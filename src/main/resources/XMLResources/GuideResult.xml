@@ -11,6 +11,18 @@
     <ttg:type>schedule</ttg:type>
     <ttg:outParameters/>
     <ttg:inParameters>
+    <ttg:name>COMMENT</ttg:name>
+    <ttg:label>true</ttg:label>
+    <ttg:visible>true</ttg:visible>
+    <ttg:type>string</ttg:type>
+    <ttg:description/>
+    <ttg:required>true</ttg:required>
+    <ttg:validateExpression>(^[\s\'\-\+\*\..=¿/¡:,;áéíóúüÁÉÍÓÚñÑ@a-zA-Z0-9]{0,250}$)</ttg:validateExpression>
+    <ttg:validateExpressionErrorDescription>La descripción debe tener máximo 250 caracteres</ttg:validateExpressionErrorDescription>
+    <ttg:properties/>
+    <ttg:convertCondition/>
+    <ttg:validateCrossFieldCondition/>
+    </ttg:inParameters><ttg:inParameters>
     <ttg:name>SCHEDULE_DATE</ttg:name>
     <ttg:label>true</ttg:label>
     <ttg:visible>true</ttg:visible>
@@ -29,22 +41,22 @@
     <ttg:description/>
     <ttg:value>false</ttg:value>
     <ttg:required>true</ttg:required>
-    <ttg:properties/>
-    <ttg:convertCondition/>
-    <ttg:validateCrossFieldCondition/>
-    </ttg:inParameters><ttg:inParameters>
-    <ttg:name>COMMENT</ttg:name>
-    <ttg:label>true</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:description/>
-    <ttg:required>true</ttg:required>
-    <ttg:validateExpression>(^[\s\'\-\+\*\..=¿/¡:,;áéíóúüÁÉÍÓÚñÑ@a-zA-Z0-9]{0,250}$)</ttg:validateExpression>
-    <ttg:validateExpressionErrorDescription>La descripción debe tener máximo 250 caracteres</ttg:validateExpressionErrorDescription>
     <ttg:properties/>
     <ttg:convertCondition/>
     <ttg:validateCrossFieldCondition/>
     </ttg:inParameters><ttg:outParameters>
+    <ttg:name>COMMENT</ttg:name>
+    <ttg:label>true</ttg:label>
+    <ttg:visible>true</ttg:visible>
+    <ttg:type>string</ttg:type>
+    <ttg:description/>
+    <ttg:required>true</ttg:required>
+    <ttg:validateExpression>(^[\s\'\-\+\*\..=¿/¡:,;áéíóúüÁÉÍÓÚñÑ@a-zA-Z0-9]{0,250}$)</ttg:validateExpression>
+    <ttg:validateExpressionErrorDescription>La descripción debe tener máximo 250 caracteres</ttg:validateExpressionErrorDescription>
+    <ttg:properties/>
+    <ttg:convertCondition/>
+    <ttg:validateCrossFieldCondition/>
+    </ttg:outParameters><ttg:outParameters>
     <ttg:name>SCHEDULE_DATE</ttg:name>
     <ttg:label>true</ttg:label>
     <ttg:visible>true</ttg:visible>
@@ -63,18 +75,6 @@
     <ttg:description/>
     <ttg:value>false</ttg:value>
     <ttg:required>true</ttg:required>
-    <ttg:properties/>
-    <ttg:convertCondition/>
-    <ttg:validateCrossFieldCondition/>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>COMMENT</ttg:name>
-    <ttg:label>true</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:description/>
-    <ttg:required>true</ttg:required>
-    <ttg:validateExpression>(^[\s\'\-\+\*\..=¿/¡:,;áéíóúüÁÉÍÓÚñÑ@a-zA-Z0-9]{0,250}$)</ttg:validateExpression>
-    <ttg:validateExpressionErrorDescription>La descripción debe tener máximo 250 caracteres</ttg:validateExpressionErrorDescription>
     <ttg:properties/>
     <ttg:convertCondition/>
     <ttg:validateCrossFieldCondition/>
@@ -89,13 +89,12 @@
     <ttg:type>close</ttg:type>
     <ttg:outParameters/>
     <ttg:inParameters>
-    <ttg:name>completionCode</ttg:name>
-    <ttg:label>false</ttg:label>
-    <ttg:visible>false</ttg:visible>
+    <ttg:name>completionLabel</ttg:name>
+    <ttg:label>true</ttg:label>
+    <ttg:visible>true</ttg:visible>
     <ttg:type>string</ttg:type>
     <ttg:description/>
-    <ttg:value>false</ttg:value>
-    <ttg:enable>false</ttg:enable>
+    <ttg:required>true</ttg:required>
     <ttg:properties/>
     <ttg:convertCondition/>
     <ttg:validateCrossFieldCondition/>
@@ -111,23 +110,23 @@
     <ttg:convertCondition/>
     <ttg:validateCrossFieldCondition/>
     </ttg:inParameters><ttg:inParameters>
-    <ttg:name>completionLabel</ttg:name>
-    <ttg:label>true</ttg:label>
-    <ttg:visible>true</ttg:visible>
+    <ttg:name>completionCode</ttg:name>
+    <ttg:label>false</ttg:label>
+    <ttg:visible>false</ttg:visible>
     <ttg:type>string</ttg:type>
     <ttg:description/>
-    <ttg:required>true</ttg:required>
+    <ttg:value>false</ttg:value>
+    <ttg:enable>false</ttg:enable>
     <ttg:properties/>
     <ttg:convertCondition/>
     <ttg:validateCrossFieldCondition/>
     </ttg:inParameters><ttg:outParameters>
-    <ttg:name>completionCode</ttg:name>
-    <ttg:label>false</ttg:label>
-    <ttg:visible>false</ttg:visible>
+    <ttg:name>completionLabel</ttg:name>
+    <ttg:label>true</ttg:label>
+    <ttg:visible>true</ttg:visible>
     <ttg:type>string</ttg:type>
     <ttg:description/>
-    <ttg:value>false</ttg:value>
-    <ttg:enable>false</ttg:enable>
+    <ttg:required>true</ttg:required>
     <ttg:properties/>
     <ttg:convertCondition/>
     <ttg:validateCrossFieldCondition/>
@@ -143,12 +142,13 @@
     <ttg:convertCondition/>
     <ttg:validateCrossFieldCondition/>
     </ttg:outParameters><ttg:outParameters>
-    <ttg:name>completionLabel</ttg:name>
-    <ttg:label>true</ttg:label>
-    <ttg:visible>true</ttg:visible>
+    <ttg:name>completionCode</ttg:name>
+    <ttg:label>false</ttg:label>
+    <ttg:visible>false</ttg:visible>
     <ttg:type>string</ttg:type>
     <ttg:description/>
-    <ttg:required>true</ttg:required>
+    <ttg:value>false</ttg:value>
+    <ttg:enable>false</ttg:enable>
     <ttg:properties/>
     <ttg:convertCondition/>
     <ttg:validateCrossFieldCondition/>

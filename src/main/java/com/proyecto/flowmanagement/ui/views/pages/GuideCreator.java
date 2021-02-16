@@ -236,9 +236,26 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         actualizacionConditionsAlternatives();
         cambioGuia();
         actualizacionOperations();
+        cambioLabelYempezarEn();
         //Actualizar Steps
         // Alternativs
         //Actuaalizar resumen
+    }
+
+    private void cambioLabelYempezarEn()
+    {
+        guidePanel.label.addValueChangeListener(event -> actualizarLabel());
+        guidePanel.mainStep.addValueChangeListener(event -> actualizarStep());
+    }
+
+    private void actualizarStep()
+    {
+        editado.setMainStep(guidePanel.mainStep.getValue());
+    }
+
+    private void actualizarLabel()
+    {
+        editado.setLabel(guidePanel.label.getValue());
     }
 
     private void actualizacionOperations()
@@ -466,6 +483,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         {
             Long id = raiz.getId();
             raiz = editado;
+            raiz.editing = true;
             raiz.setId(id);
         }
         else
@@ -476,12 +494,16 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         if(raiz.getGuides() != null && raiz.getGuides().size() > 0)
             mostrarOpcionesDeGuias();
         else
+        {
             actualPanelLaayout.setVisible(false);
+            actualGuidePanel.setVisible(false);
+        }
     }
 
     private void mostrarOpcionesDeGuias()
     {
         actualPanelLaayout.setVisible(true);
+        actualGuidePanel.setVisible(true);
         actualGuidePanel.actualizarItems(raiz);
     }
 
