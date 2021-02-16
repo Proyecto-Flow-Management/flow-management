@@ -20,6 +20,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -38,11 +40,23 @@ public class MainLayout extends AppLayout {
         H1 logo = new H1("Flow Management");
         logo.addClassName("logo");
 
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        H1 loggedUsername = new H1(username);
+        loggedUsername.addClassName("logo");
+
 //        Anchor logout = new Anchor("login", "Log out");
         Button logout = new Button("Log out");
         logout.addClickListener(event -> UI.getCurrent().getPage().setLocation("/logout"));
 
-        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, logout);
+        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, loggedUsername, logout);
         header.addClassName("header");
         header.setWidth("100%");
         header.expand(logo);
