@@ -82,6 +82,7 @@ public class AlternativeForm extends VerticalLayout {
         option.addValueChangeListener(b -> configurarOpcion(b.getValue()));
 
         option.setItems(options);
+        stepComboBox.setItemLabelGenerator(step -> step.getTextId());
         stepComboBox.setVisible(false);
         guideComboBox.setVisible(false);
         systemGuideComboBox.setVisible(false);
@@ -253,11 +254,22 @@ public class AlternativeForm extends VerticalLayout {
             }
             else
             {
+                this.label.setValue(alternative.getLabel());
                 this.stepComboBox.setVisible(false);
                 this.nextStep.setVisible(false);
                 this.guideComboBox.setVisible(true);
                 this.systemGuideComboBox.setVisible(false);
                 this.option.setValue("Guia Existente");
+//                if (!this.alternative.isNewGuide() && !this.alternative.isSystemGuide()) {
+//                    Guide newGuide = new Guide();
+//                    newGuide.setName(this.alternative.getGuideName());
+//                    newGuide.setGuiaPropia(false);
+//                    this.guideComboBox.setValue(newGuide);
+//                }
+//                else {
+//                    Guide guideSelected = this.guideList.stream().filter(guide -> guide.getName().equals(alternative.getGuideName())).findFirst().get();
+//                    this.guideComboBox.setValue(guideSelected);
+//                }
                 Guide guideSelected = this.guideList.stream().filter(guide -> guide.getName().equals(alternative.getGuideName())).findFirst().get();
                 this.guideComboBox.setValue(guideSelected);
             }

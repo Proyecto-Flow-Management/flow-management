@@ -126,6 +126,7 @@ public class StepGridForm  extends VerticalLayout {
     }
 
     private void editStep(Step step) {
+        actualizarListaSteps();
         if(step == null) {
             closeEditor();
         } else {

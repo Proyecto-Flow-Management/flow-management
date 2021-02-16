@@ -40,6 +40,7 @@ public class StepForm extends HorizontalLayout {
 
     VerticalLayout form = new VerticalLayout();
     FormLayout elements = new FormLayout();
+    FormLayout textLayout = new FormLayout();
     HorizontalLayout alternativeGridLayout = new HorizontalLayout();
     HorizontalLayout stepDocumentsLayout = new HorizontalLayout();
     HorizontalLayout operationsLayout = new HorizontalLayout();
@@ -76,7 +77,7 @@ public class StepForm extends HorizontalLayout {
     }
 
     private void configureForm() {
-        form.add(elements,
+        form.add(elements,textLayout,
                 alternativeGridLayout,
                 operationsLayout,
                 stepDocumentsLayout,
@@ -127,11 +128,15 @@ public class StepForm extends HorizontalLayout {
 
         this.text.setPlaceholder("Descripción de la guía...");
 
-        elements.add(textId,label,text);
+        elements.add(textId,label);
         elements.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1),
                 new FormLayout.ResponsiveStep("32em", 2));
         elements.setWidthFull();
+        textLayout.add(text);
+        textLayout.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1));
+        textLayout.setWidthFull();
         actionsLayout.add(createButtonsLayout());
     }
 

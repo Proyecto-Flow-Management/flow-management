@@ -67,6 +67,7 @@ public class GuidePanel  extends HorizontalLayout {
             List<String> steps = guide.getSteps().stream().map(m -> m.getTextId()).collect(Collectors.toList());
             if(guide.getMainStep()!= null && steps.contains(guide.getMainStep()))
                 this.mainStep.setItems(steps);
+                this.mainStep.setValue(guide.getMainStep());
         }
 
         if(guide.getName() !=null)

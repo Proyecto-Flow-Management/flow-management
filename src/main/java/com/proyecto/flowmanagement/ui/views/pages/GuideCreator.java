@@ -106,6 +106,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         raiz = guideService.getById(id);
         raiz.editing = true;
         cargarValorGrilla(raiz);
+        cargarListaGuidesExistentes(raiz);
         actualGuidePanel.actualizarItems(raiz);
         actualGuidePanel.setVisible(raiz.getGuides() != null && raiz.getGuides().size() > 0);
         editing = true;
@@ -196,6 +197,34 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         this.stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.systemGuideList = this.systemGuideList;
     }
 
+    private void cargarListaGuidesExistentes(Guide guide){
+        List<Guide> guides = new LinkedList<>();
+
+        for (Step step: guide.getSteps()) {
+            List<Alternative> alternatives = step.getAlternatives();
+            for (Alternative alternative: alternatives) {
+               if (alternative.getGuideName() != null){
+                   if (!alternative.getGuideName().isEmpty()){
+                       Guide newGuide = new Guide();
+                       newGuide.setName(alternative.getGuideName());
+                       newGuide.setLabel(alternative.getLabel());
+                       boolean add = true;
+                       for (Guide gd:
+                            guides) {
+                           if(gd.getName().equals(newGuide.getName())){
+                               add = false;
+                           }
+                       }
+                       if(add) {
+                           guides.add(newGuide);
+                       }
+                   }
+               }
+            }
+        }
+        this.stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.guideList = guides;
+    }
+
     private void configureGuidePanel() {
         guidePanelLayout = new HorizontalLayout();
         guidePanelLayout.setWidthFull();
@@ -216,6 +245,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         stepPanel = new StepPanel();
         stepPanelLayout.add(stepPanel);
         stepPanel.stepGridForm.stepForm.alternativeGridForm.createAlternative.addClickListener( buttonClickEvent ->  actualizarListaGuidesExistentes());
+//        stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeGrid.asSingleSelect().addValueChangeListener(evt -> actualizarListaGuidesExistentes());
     }
 
     private void configureOperatorPanel() {
@@ -341,6 +371,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
             }
 
             cargarValorGrilla(valor);
+            cargarListaGuidesExistentes(valor);
         }
     }
 

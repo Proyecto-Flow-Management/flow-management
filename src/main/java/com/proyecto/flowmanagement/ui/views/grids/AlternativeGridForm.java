@@ -25,7 +25,7 @@ public class AlternativeGridForm extends HorizontalLayout {
     public AlternativeForm alternativeForm;
     public Button createAlternative;
     Alternative editAlternative;
-    Grid<Alternative> alternativeGrid;
+    public Grid<Alternative> alternativeGrid;
     List<Alternative> alternativeList;
 
     List<Step> stepList;
