@@ -9,6 +9,7 @@ public final class XMLConstants {
     public static final String TASK_OPERATION_XML_LOCATION = "src/main/resources/XMLResources/TaskOperationXML.xml";
     public static final String IN_PARAMETER_XML_LOCATION = "src/main/resources/XMLResources/InParameterXML.xml";
     public static final String OUT_PARAMETER_XML_LOCATION = "src/main/resources/XMLResources/OutParameterXML.xml";
+    public static final String PROPERTY_XML_LOCATION = "src/main/resources/XMLResources/PropertyXML.xml";
     public static final String ALTERNATIVE_XML_LOCATION = "src/main/resources/XMLResources/AlternativeXML.xml";
     public static final String REFERENCE_DOC_XML_LOCATION = "src/main/resources/XMLResources/ReferenceDocXML.xml";
     public static final String UNARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/UnaryConditionXML.xml";

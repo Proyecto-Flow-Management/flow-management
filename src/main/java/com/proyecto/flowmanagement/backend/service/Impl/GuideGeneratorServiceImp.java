@@ -17,7 +17,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Parameter;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,7 +40,6 @@ public class GuideGeneratorServiceImp {
                     if (mainStep != null && mainStep.getFirstChild() != null) {
                         guide.setMainStep(mainStep.getFirstChild().getNodeValue());
                     }
-
                     guide.setSteps(importStep(guideNode));
                     guide.setOperations(importOperation(guideNode));
                 }
@@ -935,7 +935,9 @@ public class GuideGeneratorServiceImp {
 
     private Document configureStepsXML(Document doc, Guide guide) {
         try {
-            for (Step step : guide.getSteps()) {
+            List<Step> steps = guide.getSteps();
+            Collections.reverse(steps);
+            for (Step step : steps) {
                 File file = new File(XMLConstants.STEP_XML_LOCATION);
                 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -952,21 +954,27 @@ public class GuideGeneratorServiceImp {
                 Node refNode = docStep.getElementsByTagName(XMLConstants.AUX).item(0);
 
                 if(step.getAlternatives() != null){
-                    for (Alternative alternative : step.getAlternatives()) {
+                    List<Alternative> alternatives = step.getAlternatives();
+                    Collections.reverse(alternatives);
+                    for (Alternative alternative : alternatives) {
                         Node alt = configureAlternativesXML(doc, alternative);
                         newStep.insertBefore(docStep.importNode(alt,true), refNode);
                     }
                 }
 
                 if (step.getOperations() != null){
-                    for (Operation operation : step.getOperations()) {
+                    List<Operation> operations = step.getOperations();
+                    Collections.reverse(operations);
+                    for (Operation operation : operations) {
                         Node op = configureOperationsXML(doc, operation, null);
                         newStep.insertBefore(docStep.importNode(op,true), refNode);
                     }
                 }
 
                 if(step.getStepDocuments() != null){
-                    for (StepDocument referenceDoc : step.getStepDocuments()) {
+                    List<StepDocument> stepDocuments = step.getStepDocuments();
+                    Collections.reverse(stepDocuments);
+                    for (StepDocument referenceDoc : stepDocuments) {
                         Node refDoc = configureReferenceDocsXML(doc, referenceDoc);
                         newStep.insertBefore(docStep.importNode(refDoc,true), refNode);
                     }
@@ -1199,8 +1207,10 @@ public class GuideGeneratorServiceImp {
             Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
 
             for (OperationParameter operationParameter : operation.getInParameters()) {
-                Node param = configureParameter(doc, operationParameter, XMLConstants.PARAMETER_IN_ELEMENT);
-                newPar.insertBefore(docOperation.importNode(param, true), refNode);
+                if (!operationParameter.getOutParameter()){
+                    Node param = configureParameter(doc, operationParameter, XMLConstants.PARAMETER_IN_ELEMENT);
+                    newPar.insertBefore(docOperation.importNode(param, true), refNode);
+                }
             }
         }
 
@@ -1210,8 +1220,10 @@ public class GuideGeneratorServiceImp {
             Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
 
             for (OperationParameter operationParameter : operation.getOutParameters()) {
-                Node param = configureParameter(doc, operationParameter, XMLConstants.PARAMETER_OUT_ELEMENT);
-                newPar.insertBefore(docOperation.importNode(param, true), refNode);
+                if (operationParameter.getOutParameter()){
+                    Node param = configureParameter(doc, operationParameter, XMLConstants.PARAMETER_OUT_ELEMENT);
+                    newPar.insertBefore(docOperation.importNode(param, true), refNode);
+                }
             }
         }
 
@@ -1236,12 +1248,12 @@ public class GuideGeneratorServiceImp {
             docOp.removeChild(node);
         }
 
-        if (operation.getAlternativeIds() != null){
+        if (operation.getAlternativeIds() != null && operation.getAlternativeIds().size() > 0){
             Node newAlt = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
             Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION).item(0);
 
             for (Alternative alternative : operation.getAlternativeIds()) {
-                Node altId = configureAlternativeId(doc, alternative);
+                Node altId = configureAlternativeId(alternative);
                 newAlt.insertBefore(docOperation.importNode(altId, true), refNode);
             }
         }
@@ -1256,12 +1268,12 @@ public class GuideGeneratorServiceImp {
             docOp.removeChild(node);
         }
 
-        if (operation.getOperationNotifyIds() != null){
+        if (operation.getOperationNotifyIds() != null && operation.getOperationNotifyIds().size() > 0){
             Node newOpIds = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
             Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY).item(0);
 
-            for (Operation operationGuide : operations) {
-                Node opId = configureOperationId(doc, operationGuide);
+            for (OperationNotifyId operationNotify : operation.getOperationNotifyIds()) {
+                Node opId = configureOperationId(operationNotify);
                 newOpIds.insertBefore(docOperation.importNode(opId, true), refNode);
             }
         }
@@ -1295,7 +1307,7 @@ public class GuideGeneratorServiceImp {
         return newCand;
     }
 
-    private Node configureAlternativeId(Document doc, Alternative alternative) throws ParserConfigurationException, IOException, SAXException {
+    private Node configureAlternativeId(Alternative alternative) throws ParserConfigurationException, IOException, SAXException {
         File file = new File(XMLConstants.ALTERNATIVE_IDS_XML_LOCATION);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -1307,7 +1319,7 @@ public class GuideGeneratorServiceImp {
         return alternativeId;
     }
 
-    private Node configureOperationId(Document doc, Operation operation) throws ParserConfigurationException, IOException, SAXException {
+    private Node configureOperationId(OperationNotifyId operation) throws ParserConfigurationException, IOException, SAXException {
         File file = new File(XMLConstants.OPERATION_NOTIFY_IDS_XML_LOCATION);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -1334,19 +1346,26 @@ public class GuideGeneratorServiceImp {
                 break;
 
             default :
-                file = new File(XMLConstants.PARAMETER_PROPERTIES);
+                file = new File(XMLConstants.PROPERTY_XML_LOCATION);
         }
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document docParameter = dBuilder.parse(file);
 
-        Node name = docParameter.getElementsByTagName(XMLConstants.PARAMETER_NAME).item(0);
-        name.setTextContent(parameter.getName());
+        if (parameter.getName() != null){
+            Node name = docParameter.getElementsByTagName(XMLConstants.PARAMETER_NAME).item(0);
+            name.setTextContent(parameter.getName());
+        }else{
+            Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_NAME).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
 
         if (parameter.getLabel() != null){
             Node label = docParameter.getElementsByTagName(XMLConstants.PARAMETER_LABEL).item(0);
-            label.setTextContent(String.valueOf(parameter.getVisible()));
+            label.setTextContent(parameter.getLabel());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
             Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_LABEL).item(0);
@@ -1374,15 +1393,30 @@ public class GuideGeneratorServiceImp {
             docOp.removeChild(node);
         }
 
-        Node type = docParameter.getElementsByTagName(XMLConstants.PARAMETER_TYPE).item(0);
-        type.setTextContent(parameter.getType());
+        if (parameter.getType() != null){
+            Node type = docParameter.getElementsByTagName(XMLConstants.PARAMETER_TYPE).item(0);
+            type.setTextContent(parameter.getType());
+        }else{
+            Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_TYPE).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
 
-        Node description = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DESCRIPTION).item(0);
-        description.setTextContent(parameter.getDescription());
+        if (parameter.getDescription() != null){
+            Node description = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DESCRIPTION).item(0);
+            description.setTextContent(parameter.getDescription());
+        }else{
+            Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DESCRIPTION).item(0);
+            docOp.removeChild(node.getNextSibling());
+            docOp.removeChild(node);
+        }
+
 
         if (parameter.getValue() != null){
             Node value = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALUE).item(0);
-            value.setTextContent(String.valueOf(parameter.getVisible()));
+            value.setTextContent(String.valueOf(parameter.getValue()));
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
             Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALUE).item(0);
@@ -1490,7 +1524,7 @@ public class GuideGeneratorServiceImp {
             docOp.removeChild(node);
         }
 
-        if (parameter.getProperties() != null){
+        if (parameter.getProperties() != null && parameter.getProperties().size() > 0 && !constantTypeParameter.equals(XMLConstants.PARAMETER_PROPERTIES)){
             Node newProp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
             Node refNode = docParameter.getElementsByTagName(XMLConstants.PARAMETER_CONVERT).item(0);
 
@@ -1498,7 +1532,7 @@ public class GuideGeneratorServiceImp {
                 Node property = configureParameter(doc, properties, XMLConstants.PARAMETER_PROPERTIES);
                 newProp.insertBefore(docParameter.importNode(property, true), refNode);
             }
-        }else{
+        }else if(!constantTypeParameter.equals(XMLConstants.PARAMETER_PROPERTIES)){
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
             Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_PROPERTIES).item(0);
             docOp.removeChild(node.getNextSibling());
@@ -1515,7 +1549,7 @@ public class GuideGeneratorServiceImp {
             docOp.removeChild(node);
         }
 
-        if (parameter.getConvertCondition() != null){
+        if (parameter.getConvertCondition() != null && parameter.getConvertCondition().size() > 0){
             Node newConv = docParameter.getElementsByTagName(constantTypeParameter).item(0);
             Node refNode = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_CROSS_FIELD_CONDITION).item(0);
 
@@ -1530,7 +1564,7 @@ public class GuideGeneratorServiceImp {
             docOp.removeChild(node);
         }
 
-        if (parameter.getValidateCrossFieldCondition() != null){
+        if (parameter.getValidateCrossFieldCondition() != null && parameter.getValidateCrossFieldCondition().size() > 0){
             Node newVal = docParameter.getElementsByTagName(constantTypeParameter).item(0);
             Node refNode = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS).item(0);
 

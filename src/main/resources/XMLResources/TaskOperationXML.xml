@@ -15,7 +15,6 @@
     <ttg:mailTemplate></ttg:mailTemplate>
     <ttg:mailTo></ttg:mailTo>
     <ttg:mailSubjectPrefix></ttg:mailSubjectPrefix>
-    <ttg:outParameters></ttg:outParameters>
     <ttg:notifyAlternative></ttg:notifyAlternative>
     <ttg:notifyOperation></ttg:notifyOperation>
     <ttg:notifyOperationDelay></ttg:notifyOperationDelay>
