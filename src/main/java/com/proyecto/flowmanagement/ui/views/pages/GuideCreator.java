@@ -4,11 +4,9 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
-import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
+import com.proyecto.flowmanagement.backend.service.Impl.*;
 import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
-import com.proyecto.flowmanagement.backend.service.Impl.UserServiceImpl;
-import com.proyecto.flowmanagement.backend.service.Impl.ValidationServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
 import com.proyecto.flowmanagement.ui.views.panels.*;
@@ -50,6 +48,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
 
     boolean editing;
     GuideServiceImpl guideService;
+    GuideGeneratorServiceImp guideGeneratorServiceImp;
 
     HorizontalLayout actualPanelLaayout;
     HorizontalLayout detailsPanelLayout;
@@ -57,6 +56,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     HorizontalLayout validatorPanelLayout;
     HorizontalLayout operationPanelLayout;
     HorizontalLayout guidePanelLayout;
+    HorizontalLayout importExportLayout;
     HorizontalLayout actionsLayout;
 
     ActualGuidePanel actualGuidePanel;
@@ -65,6 +65,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     StepPanel stepPanel;
     ValidatorPanel validatorPanel;
     GuidePanel guidePanel;
+    ImportExportPanel importExportPanel;
 
     List<Guide> guideList = new LinkedList<>();
     List<Guide> systemGuideList = new LinkedList<>();
@@ -75,9 +76,10 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     Guide raiz;
     Guide editado;
 
-    public GuideCreator(@Autowired GuideServiceImpl guideService)
+    public GuideCreator(@Autowired GuideServiceImpl guideService,@Autowired GuideGeneratorServiceImp guideGeneratorServiceImp)
     {
         this.guideService = guideService;
+        this.guideGeneratorServiceImp = guideGeneratorServiceImp;
 
         setSizeFull();
         
@@ -90,6 +92,8 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         configureGuidePanel();
 
         configureStepPanel();
+
+        configureImportExport();
 
         configureOperatorPanel();
 
@@ -203,6 +207,13 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         guidePanelLayout.add(guidePanel);
     }
 
+    private void configureImportExport() {
+        importExportLayout = new HorizontalLayout();
+        importExportLayout.setWidthFull();
+        importExportPanel = new ImportExportPanel(guideGeneratorServiceImp);
+        importExportLayout.add(importExportPanel);
+    }
+
     private void configureDetailsPanel() {
         detailsPanelLayout = new HorizontalLayout();
         detailsPanelLayout.setWidthFull();
@@ -237,9 +248,26 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         cambioGuia();
         actualizacionOperations();
         cambioLabelYempezarEn();
+        importacionGuia();
         //Actualizar Steps
         // Alternativs
         //Actuaalizar resumen
+    }
+
+    private void importacionGuia()
+    {
+        importExportPanel.uploadFileForm.upload.addSucceededListener(succeededEvent -> addImportedGuide());
+    }
+
+    private void addImportedGuide()
+    {
+        Guide importedGuide = importExportPanel.uploadFileForm.actual;
+
+        if(importedGuide != null)
+        {
+            editado.addGuide(importedGuide);
+            actualizarGuiaActual();
+        }
     }
 
     private void cambioLabelYempezarEn()
@@ -451,6 +479,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
                 guidePanelLayout,
                 stepPanelLayout,
                 operationPanelLayout,
+                importExportLayout,
                 validatorPanelLayout,
                 actionsLayout);
     }
