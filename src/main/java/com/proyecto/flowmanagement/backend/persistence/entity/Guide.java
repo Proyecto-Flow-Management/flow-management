@@ -27,6 +27,9 @@ public class Guide extends AbstractEntity implements Serializable {
 	@Column(name = "mainStep")
 	private String mainStep;
 
+	@Column(name = "eliminada", columnDefinition="tinyint(0) default 0")
+	private boolean eliminada;
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="guide_id")
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -298,4 +301,11 @@ public class Guide extends AbstractEntity implements Serializable {
 			this.guides.remove(paraEliminar);
 	}
 
+	public boolean isEliminada() {
+		return eliminada;
+	}
+
+	public void setEliminada(boolean eliminada) {
+		this.eliminada = eliminada;
+	}
 }

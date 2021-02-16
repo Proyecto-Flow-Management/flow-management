@@ -3,8 +3,6 @@ package com.proyecto.flowmanagement.ui.views.list;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideGeneratorServiceImp;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
-import com.proyecto.flowmanagement.backend.service.Impl.MockTestServiceImpl;
-import com.proyecto.flowmanagement.backend.service.Impl.StepServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.forms.UploadFileForm;
 import com.vaadin.flow.component.UI;
@@ -13,48 +11,34 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.internal.Pair;
 import com.vaadin.flow.router.*;
-import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
-import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.SerializationUtils;
-import org.springframework.stereotype.Component;
 import org.vaadin.olli.FileDownloadWrapper;
-import org.vaadin.stefan.LazyDownloadButton;
 import org.xml.sax.SAXException;
 
-import org.w3c.dom.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-//@Component
-@Route(value = "GuideList", layout = MainLayout.class)
-@PageTitle("Crear Guia | Flow Management")
-public class GuideList extends VerticalLayout implements HasUrlParameter<String> {
+@Route(value = "GuideListDeleted", layout = MainLayout.class)
+@PageTitle("Guias Eliminadas | Flow Management")
+public class GuideListEliminados  extends VerticalLayout implements HasUrlParameter<String> {
 
     @Override
     public void setParameter(BeforeEvent event
             , @OptionalParameter String parameter) {
-        if(parameter!=null)
+        if (parameter != null)
             updateGrid();
     }
 
@@ -64,14 +48,15 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
     Button addGuideButton;
     UploadFileForm uploadFileForm;
     TextField filterText = new TextField();
-    public GuideList(GuideServiceImpl guideService, GuideGeneratorServiceImp guideGeneratorServiceImp) throws IOException, SAXException, ParserConfigurationException {
+
+    public GuideListEliminados(GuideServiceImpl guideService, GuideGeneratorServiceImp guideGeneratorServiceImp) throws IOException, SAXException, ParserConfigurationException {
         this.guideService = guideService;
         this.guideGeneratorService = guideGeneratorServiceImp;
         //test2();
         addClassName("create-guide-view");
         setSizeFull();
         configureGrid();
-        
+
         filterText.setPlaceholder("Filtrar por nombre...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
@@ -86,19 +71,18 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         updateGrid();
     }
 
-    private void updateListWithValues()
-    {
+    private void updateListWithValues() {
         grid.setItems(guideService.findAll(filterText.getValue()));
     }
 
-    public void updateGrid(){
-        grid.setItems(guideService.getAll().stream().filter(aux -> aux.isGuiaPropia() && !aux.isEliminada()));
+    public void updateGrid() {
+        grid.setItems(guideService.getAll().stream().filter(aux -> aux.isGuiaPropia() && aux.isEliminada()));
     }
 
     private HorizontalLayout getToolBar() {
         addGuideButton = new Button("Crear Guia", event -> UI.getCurrent().navigate("CrearGuia"));
         uploadFileForm = new UploadFileForm(guideGeneratorService);
-        HorizontalLayout toolbar = new HorizontalLayout(filterText,addGuideButton,uploadFileForm);
+        HorizontalLayout toolbar = new HorizontalLayout(filterText);
         uploadFileForm.importarGuia.addClickListener(buttonClickEvent -> soloImportacion());
         uploadFileForm.cancelarImportacion.addClickListener(buttonClickEvent -> noSoloImportacion());
         uploadFileForm.upload.addSucceededListener(buttonClickEvent -> importar());
@@ -106,39 +90,33 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         return toolbar;
     }
 
-    private void noSoloImportacion()
-    {
+    private void noSoloImportacion() {
         this.addGuideButton.setVisible(true);
         this.filterText.setVisible(true);
     }
 
-    private void importar()
-    {
+    private void importar() {
         String mensaje = "";
 
-        try
-        {
+        try {
             this.addGuideButton.setVisible(true);
             this.filterText.setVisible(true);
 
-            if(uploadFileForm.actual != null)
-            {
+            if (uploadFileForm.actual != null) {
                 guideService.add(uploadFileForm.actual);
                 updateGrid();
                 mensaje = "Guia importada correctamente";
-            }
-            else
-            {
+            } else {
                 mensaje = "La guia no pudo ser importada por errores en su sintaxis";
             }
 
-        }catch (Exception ex)
-        {
+        } catch (Exception ex) {
             mensaje = "La guia no pudo ser importada por errores al transferirse a la base de datos";
         }
 
         mostrarMensajeError(mensaje);
     }
+
     private void mostrarMensajeError(String validacionIncompleta) {
         Span mensaje = new Span(validacionIncompleta);
         Notification notification = new Notification(mensaje);
@@ -147,8 +125,7 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         notification.open();
     }
 
-    private void soloImportacion()
-    {
+    private void soloImportacion() {
         this.addGuideButton.setVisible(false);
         this.filterText.setVisible(false);
     }
@@ -158,34 +135,33 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.addComponentColumn(guide -> generateEditButton(guide)).setHeader("Editar");
-        grid.addComponentColumn(guide -> generateDuplicateButton(guide)).setHeader("Duplicar");
-        grid.addComponentColumn(guide -> generateDeleteButton(guide)).setHeader("Eliminar");
+        grid.addComponentColumn(guide -> restaurar(guide)).setHeader("Restaurar");
         grid.addComponentColumn(guide -> generateExportButton(guide)).setHeader("Exportar");
     }
 
-    private Button generateEditButton(Guide guide){
+    private Button generateEditButton(Guide guide) {
         Icon icon = new Icon("vaadin", "edit");
         Button botonEditar = new Button("", event -> UI.getCurrent().navigate("CrearGuia/" + guide.getId()));
         botonEditar.setIcon(icon);
-        return  botonEditar;
+        return botonEditar;
     }
 
-    private Button generateDuplicateButton(Guide guide){
+    private Button generateDuplicateButton(Guide guide) {
         Icon icon = new Icon("vaadin", "copy");
         Button botonDuplicar = new Button(icon);
         botonDuplicar.addClickListener(e -> {
             duplicateGuide(guide);
         });
-        return  botonDuplicar;
+        return botonDuplicar;
     }
 
-    private Button generateDeleteButton(Guide guide){
-        Icon icon = new Icon("vaadin", "trash");
+    private Button restaurar(Guide guide) {
+        Icon icon = new Icon("vaadin", "plus");
         Button botonEliminar = new Button(icon);
         botonEliminar.addClickListener(e -> {
-            deleteGuide(guide.getId());
+            restaurar(guide.getId());
         });
-        return  botonEliminar;
+        return botonEliminar;
     }
 
     private FileDownloadWrapper generateExportButton(Guide guide) {
@@ -201,19 +177,20 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                return null;}));
+                    return null;
+                }));
         buttonWrapper.wrapComponent(button);
         return buttonWrapper;
     }
 
-    private List<Pair<String, byte[]>> getFiles(Guide guide){
+    private List<Pair<String, byte[]>> getFiles(Guide guide) {
         List<Pair<String, byte[]>> files = guideGeneratorService.guidePrints(guide);
         return files;
     }
 
     public byte[] zipFiles(List<Pair<String, byte[]>> files) throws IOException {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             ZipOutputStream  zos = new ZipOutputStream(baos)) {
+             ZipOutputStream zos = new ZipOutputStream(baos)) {
 
             for (Pair<String, byte[]> file : files) {
                 String filename = file.getFirst();
@@ -231,8 +208,8 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         }
     }
 
-    public void duplicateGuide(Guide guide){
-        Guide newGuide =  SerializationUtils.clone(guide);
+    public void duplicateGuide(Guide guide) {
+        Guide newGuide = SerializationUtils.clone(guide);
         newGuide.setName("Copia-" + guide.getName());
         guideService.add(newGuide);
         updateGrid();
@@ -245,23 +222,14 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
     }
 
-    private void deleteGuide(Long id)
-    {
+    private void restaurar(Long id) {
         Guide aux = guideService.getById(id);
-        aux.setEliminada(true);
+        aux.setEliminada(false);
         guideService.update(aux);
-        grid.setItems(guideService.getAll().stream().filter(g -> g.isGuiaPropia() && !g.isEliminada()));
+        grid.setItems(guideService.getAll().stream().filter(g -> g.isGuiaPropia() && g.isEliminada()));
     }
 
-    private void editGuide(Long id)
-    {
+    private void editGuide(Long id) {
         UI.getCurrent().navigate("EditGuide");
     }
-
-
-    private void export(Long id)
-    {
-        guideService.delete(id);
-    }
-
 }

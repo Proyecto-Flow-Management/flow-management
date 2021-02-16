@@ -4,6 +4,7 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideGeneratorServiceImp;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
 import com.proyecto.flowmanagement.ui.views.list.GuideList;
+import com.proyecto.flowmanagement.ui.views.list.GuideListEliminados;
 import com.proyecto.flowmanagement.ui.views.list.UserList;
 import com.proyecto.flowmanagement.ui.views.pages.GuideCreator;
 
@@ -53,11 +54,13 @@ public class MainLayout extends AppLayout {
     private void createDrawer() {
         RouterLink listLink = new RouterLink("Usuarios", UserList.class);
         RouterLink guideLink = new RouterLink("Guides", GuideList.class);
+        RouterLink guideDelete = new RouterLink("Papelera", GuideListEliminados.class);
         listLink.setHighlightCondition(HighlightConditions.sameLocation());
 
         addToDrawer(new VerticalLayout(
                 listLink,
-                guideLink
+                guideLink,
+                guideDelete
         ));
     }
 
