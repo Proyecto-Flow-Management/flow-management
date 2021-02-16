@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide" xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
+<<<<<<< HEAD
             <ttg:mainStepId>INITIAL</ttg:mainStepId>
             <ttg:operation xsi:type="ttg:TaskOperation">
     <ttg:name>Agendar reclamo</ttg:name>
@@ -569,3 +570,11 @@ Si no se obtuvieron datos válidos, presione 'Derivar al 123'.</ttg:text>
     <ttg:operator>=</ttg:operator>
     <ttg:value>000000000000</ttg:value>
 </ttg:conditionsEnableAlternative></ttg:condition></ttg:operation></ttg:step></ttg:guide>
+=======
+            <ttg:mainStepId>aaa</ttg:mainStepId>
+            <ttg:step>
+    <ttg:stepId>aaa</ttg:stepId>
+    <ttg:label>aaa</ttg:label>
+    <ttg:text>aaa</ttg:text>
+    </ttg:step></ttg:guide>
+>>>>>>> FLO-85-fixes

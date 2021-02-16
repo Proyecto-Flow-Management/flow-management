@@ -19,3 +19,5 @@ error-screenshots/
 webpack.generated.js
 
 src/main/resources/application.properties
+
+src/main/resources/XMLResources/GuideResult.xml

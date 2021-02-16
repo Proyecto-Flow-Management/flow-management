@@ -39,7 +39,8 @@ public class DetailsPanel  extends HorizontalLayout {
         stepSecctionLayout.add(arbol);
         basicInformation.setWidthFull();
         stepSecctionLayout.setWidthFull();
-        stepSecctionLayout.setId("step-Layout");
+//        stepSecctionLayout.setId("step-Layout");
+        stepSecctionLayout.setClassName("step-layout");
 //        stepSecctionLayout.setClassName("details-layout");
         setWidthFull();
         basicInformation.add(stepSecctionLayout);

@@ -7,12 +7,14 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.crud.CrudI18n;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@CssImport("./styles/actual-guide-panel-form.css")
 public class ActualGuidePanel extends HorizontalLayout {
 
     HorizontalLayout actualGuideLayout = new HorizontalLayout();
@@ -33,6 +35,7 @@ public class ActualGuidePanel extends HorizontalLayout {
         actualGuideLayout.add(actualGuide);
         accordion.setWidthFull();
         basicInformation.add(actualGuideLayout);
+        basicInformation.setClassName("basic-information-layout");
         accordion.close();
         accordion.add("Guia Actual", basicInformation);
         add(accordion);
