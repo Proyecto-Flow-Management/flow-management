@@ -262,12 +262,16 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     private void addImportedGuide()
     {
         Guide importedGuide = importExportPanel.uploadFileForm.actual;
+        if(this.guideList == null)
+            guideList = new LinkedList<>();
+        guideList.add(importedGuide);
 
         if(importedGuide != null)
         {
             editado.addGuide(importedGuide);
             actualizarGuiaActual();
         }
+        this.stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.guideList = this.guideList;
     }
 
     private void cambioLabelYempezarEn()

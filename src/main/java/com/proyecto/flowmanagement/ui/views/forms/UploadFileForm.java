@@ -69,8 +69,8 @@ public class UploadFileForm extends HorizontalLayout {
             builder = factory.newDocumentBuilder();
             ret = builder.parse(buffer.getInputStream());
             Guide guide = (Guide) guideGeneratorService.importGuide(ret);
-            guide.setName(event.getFileName());
-            guide.setLabel(event.getFileName());
+            guide.setName(event.getFileName().split("\\.")[0]);
+            guide.setLabel(event.getFileName().split("\\.")[0]);
             cancelarImportacion();
             actual = guide;
         } catch (Exception e) {
