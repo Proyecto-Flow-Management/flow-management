@@ -81,16 +81,15 @@ public class GuidePanel  extends HorizontalLayout {
             }
         }
 
-        if(guide.getName() !=null)
-            this.name.setValue(guide.getName());
-        else
-            this.name.setValue("");
-
-
         if(guide.getLabel() !=null)
             this.label.setValue(guide.getLabel());
         else
             this.label.setValue("");
+
+        if(guide.getName() !=null)
+            this.name.setValue(guide.getName());
+        else
+            this.name.setValue("");
     }
  
     public void actualizarSteps(List<Step> stepList) {
