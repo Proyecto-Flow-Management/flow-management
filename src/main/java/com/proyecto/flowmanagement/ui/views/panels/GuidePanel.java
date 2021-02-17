@@ -41,6 +41,11 @@ public class GuidePanel  extends HorizontalLayout {
         eliminarGuia.setVisible(false);
 
         basicHorizontal.add(name,label,mainStep,eliminarGuia);
+        basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, name);
+        basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, label);
+        basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, mainStep);
+        basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, eliminarGuia);
+        basicHorizontal.setSizeFull();
         basicHorizontal.setClassName("campos-layout");
         basicInformation.add(basicHorizontal);
         basicInformation.setClassName("basic-information-layout");
@@ -65,13 +70,19 @@ public class GuidePanel  extends HorizontalLayout {
         if(guide.getSteps() != null )
         {
             List<String> steps = guide.getSteps().stream().map(m -> m.getTextId()).collect(Collectors.toList());
-            if(guide.getMainStep()!= null && steps.contains(guide.getMainStep()))
+            if(guide.getMainStep()!= null && steps.contains(guide.getMainStep())) {
                 this.mainStep.setItems(steps);
                 this.mainStep.setValue(guide.getMainStep());
+            }
+            else if (guide.getMainStep()!= null) {
+                if (guide.getMainStep().equals("") && steps.size()>0) {
+                    this.mainStep.setItems(steps);
+                }
+            }
         }
 
         if(guide.getName() !=null)
-             this.name.setValue(guide.getName());
+            this.name.setValue(guide.getName());
         else
             this.name.setValue("");
 
