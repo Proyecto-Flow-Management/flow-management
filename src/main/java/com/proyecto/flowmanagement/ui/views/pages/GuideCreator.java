@@ -479,7 +479,6 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     private void configureForm() {
         add(actualPanelLaayout,
                 detailsPanelLayout,
-                detailsPanel,
                 guidePanelLayout,
                 stepPanelLayout,
                 operationPanelLayout,

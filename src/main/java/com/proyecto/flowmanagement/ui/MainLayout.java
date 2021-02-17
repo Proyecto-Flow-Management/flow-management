@@ -50,7 +50,7 @@ public class MainLayout extends AppLayout {
         }
 
         H1 loggedUsername = new H1(username);
-        loggedUsername.addClassName("logo");
+        loggedUsername.addClassName("username");
 
 //        Anchor logout = new Anchor("login", "Log out");
         Button logout = new Button("Log out");
