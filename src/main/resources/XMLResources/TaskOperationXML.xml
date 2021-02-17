@@ -11,7 +11,6 @@
     <ttg:operationType></ttg:operationType>
     <ttg:type></ttg:type>
     <ttg:targetSystem></ttg:targetSystem>
-    <ttg:candidateGroups></ttg:candidateGroups>
     <ttg:mailTemplate></ttg:mailTemplate>
     <ttg:mailTo></ttg:mailTo>
     <ttg:mailSubjectPrefix></ttg:mailSubjectPrefix>

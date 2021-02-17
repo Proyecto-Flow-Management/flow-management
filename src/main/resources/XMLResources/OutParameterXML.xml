@@ -16,7 +16,6 @@
     <ttg:dateFormatFinal></ttg:dateFormatFinal>
     <ttg:sourceValueEntity></ttg:sourceValueEntity>
     <ttg:sourceValueEntityProperty></ttg:sourceValueEntityProperty>
-    <ttg:properties></ttg:properties>
     <ttg:convert></ttg:convert>
     <ttg:convertCondition></ttg:convertCondition>
     <ttg:validateCrossFieldCondition></ttg:validateCrossFieldCondition>

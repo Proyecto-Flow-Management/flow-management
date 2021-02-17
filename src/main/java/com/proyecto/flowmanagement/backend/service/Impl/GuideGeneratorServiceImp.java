@@ -704,7 +704,23 @@ public class GuideGeneratorServiceImp {
                 }
             }
         }
+        if (conditions.size() == 2){
+            Condition conditionBinary = convertirEnBinary(conditions);
+            conditions.removeAll(conditions);
+            conditions.add(conditionBinary);
+        }
         return conditions;
+    }
+
+    private Condition convertirEnBinary(List<Condition> conditions) throws ParserConfigurationException {
+        Condition condition = new Condition();
+
+        condition.setType(TypeOperation.binaryCondition);
+        condition.setOperation("OR");
+        condition.setHijoIzquierdo(conditions.get(0));
+        condition.setHijoDerecho(conditions.get(1));
+
+        return condition;
     }
 
     private Condition importCondition(Document node, String operator) throws ParserConfigurationException {
@@ -748,8 +764,9 @@ public class GuideGeneratorServiceImp {
                     if (binaryOperator != null && binaryOperator.getFirstChild() != null) {
                         condition.setOperation(binaryOperator.getFirstChild().getNodeValue());
                     }
-                    Node operator1 = conditionElement.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATOR_UNO).item(0);
-                    Node operator2 = conditionElement.getElementsByTagName(XMLConstants.BINARY_CONDITION_OPERATOR_DOS).item(0);
+                    NodeList operators = conditionElement.getChildNodes();
+                    Node operator1 = operators.item(3);
+                    Node operator2 = operators.item(5);
                     Document docOperator1 = nodeToDocument(operator1);
                     Document docOperator2 = nodeToDocument(operator2);
                     condition.setHijoIzquierdo(importCondition(docOperator1, "operator1"));
@@ -1164,15 +1181,8 @@ public class GuideGeneratorServiceImp {
                 Node newCand = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
                 Node refNode = docOperation.getElementsByTagName(XMLConstants.OPERATION_MAIL_TEMPLATE).item(0);
 
-                for (Groups candidate : taskOperation.getGroupsIds()) {
-                    Node cand = configureCandidate(doc, candidate);
-                    newCand.insertBefore(docOperation.importNode(cand, true), refNode);
-                }
-            }else{
-                Node docOp = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
-                Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_CANDIDATE_GROUPS).item(0);
-                docOp.removeChild(node.getNextSibling());
-                docOp.removeChild(node);
+                Node cand = configureCandidate(doc, taskOperation.getGroupsIds());
+                newCand.insertBefore(docOperation.importNode(cand, true), refNode);
             }
 
             if (taskOperation.getMailTemplate() != null){
@@ -1298,16 +1308,24 @@ public class GuideGeneratorServiceImp {
         return newOperation;
     }
 
-    private Node configureCandidate(Document doc, Groups candidate) throws ParserConfigurationException, IOException, SAXException {
+    private Node configureCandidate(Document doc, List<Groups> candidates) throws ParserConfigurationException, IOException, SAXException {
         File file = new File(XMLConstants.CANDIDATE_GROUPS_XML_LOCATION);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document docCandidateGroups = dBuilder.parse(file);
 
         Node groupName = docCandidateGroups.getElementsByTagName(XMLConstants.CANDIDATE_GROUPS_GROUP_NAME).item(0);
-        groupName.setTextContent(candidate.getGroupName());
+        groupName.setTextContent(candidates.get(0).getGroupName());
 
         Node newCand = docCandidateGroups.getElementsByTagName(XMLConstants.OPERATION_CANDIDATE_GROUPS).item(0);
+
+        if (candidates.size() > 1) {
+            for(int i = 1; i < candidates.size(); i++){
+                Node newGroup = groupName.cloneNode(true);
+                newGroup.setTextContent(candidates.get(i).getGroupName());
+                newCand.appendChild(newGroup);
+            }
+        }
 
         return newCand;
     }
@@ -1537,11 +1555,6 @@ public class GuideGeneratorServiceImp {
                 Node property = configureParameter(doc, properties, XMLConstants.PARAMETER_PROPERTIES);
                 newProp.insertBefore(docParameter.importNode(property, true), refNode);
             }
-        }else if(!constantTypeParameter.equals(XMLConstants.PARAMETER_PROPERTIES)){
-            Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_PROPERTIES).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
         }
 
         if (parameter.getConvert() != null){
