@@ -1,571 +1,745 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide" xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide"
+           xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-            <ttg:mainStepId>INITIAL</ttg:mainStepId>
-            <ttg:operation xsi:type="ttg:TaskOperation">
-    <ttg:name>Agendar reclamo</ttg:name>
-    <ttg:label>Agendar</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:automatic>false</ttg:automatic>
-    <ttg:operationOrder>1</ttg:operationOrder>
-    <ttg:operationType>taskOperation</ttg:operationType>
-    <ttg:type>schedule</ttg:type>
-    <ttg:inParameters>
-    <ttg:name>SCHEDULE_DATE</ttg:name>
-    <ttg:label>Fecha de agenda</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>date</ttg:type>
-    <ttg:value>current</ttg:value>
-    <ttg:required>true</ttg:required>
-    </ttg:inParameters><ttg:inParameters>
-    <ttg:name>CANDIDATE_GROUPS</ttg:name>
-    <ttg:label>Usuario asignado</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:value>Cualquiera del grupo</ttg:value>
-    <ttg:required>true</ttg:required>
-    </ttg:inParameters><ttg:inParameters>
-    <ttg:name>COMMENT</ttg:name>
-    <ttg:label>Comentario</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:required>true</ttg:required>
-    <ttg:validateExpression>(^[\s\'\-\+\*\..=¿/¡:,;áéíóúüÁÉÍÓÚñÑ@a-zA-Z0-9]{0,250}$)</ttg:validateExpression>
-    <ttg:validateExpressionErrorDescription>La descripción debe tener máximo 250 caracteres</ttg:validateExpressionErrorDescription>
-    </ttg:inParameters></ttg:operation><ttg:operation xsi:type="ttg:TaskOperation">
-    <ttg:name>Cerrar</ttg:name>
-    <ttg:label>Cancelar</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:title>Reclamo cancelado</ttg:title>
-    <ttg:automatic>false</ttg:automatic>
-    <ttg:operationOrder>1</ttg:operationOrder>
-    <ttg:operationType>taskOperation</ttg:operationType>
-    <ttg:type>close</ttg:type>
-    <ttg:inParameters>
-    <ttg:name>completionCode</ttg:name>
-    <ttg:label>Tipo cierre</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:value>Cancelado</ttg:value>
-    <ttg:enable>false</ttg:enable>
-    </ttg:inParameters><ttg:inParameters>
-    <ttg:name>completionSubCode</ttg:name>
-    <ttg:label>Código cierre</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:required>true</ttg:required>
-    <ttg:optionValue>Cliente se debe comunicar nuevamente</ttg:optionValue>
-    </ttg:inParameters><ttg:inParameters>
-    <ttg:name>completionLabel</ttg:name>
-    <ttg:label>Comentario</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:required>true</ttg:required>
-    </ttg:inParameters></ttg:operation><ttg:step>
-    <ttg:stepId>INITIAL</ttg:stepId>
-    <ttg:label>Inicio</ttg:label>
-    <ttg:text>[HD-F-Q-I] Verificar la respuesta en la pestaña 'Estado TLK'. De acuerdo a la misma tomar la acción correspondiente:
-- ACTIVO: Ir a la pestaña 'Datos TLK'. Si no hay información (Central vacío o Equipo Especial = 00000000) seleccionar 'Sin Datos TLK'. Si todo está en orden, presione 'Continuar' para seguir con el diagnóstico.
-- TRAMITE PENDIENTE: Revisar en TLK y Tinco si trámite afecta funcionamiento. Controlar que se esté registrando en servicio correcto (ej: traslado).
-- BLOQUEADO: Seleccionar el botón correspondiente.
-- REQUIERE ATENCIÓN COMERCIAL, DERIVAR AL 123 u otra respuesta diferente de ACTIVO: Seleccionar el botón 'Derivar al 123'.
-- VERIFICAR TINCO Y TLK: Derivar a Servicio Técnico.
-Si ATSM informó sobre una Falla Masiva, seleccionar el botón correspondiente.</ttg:text>
-    <ttg:alternative>
-    <ttg:stepId/>
-    <ttg:guideName>guide_internet_FTTH_Query_Check</ttg:guideName>
-    <ttg:label>Continuar</ttg:label>
-    <ttg:condition xsi:type="ttg:BinaryCondition">
-    <ttg:operation>OR</ttg:operation>
-<ttg:operator1 xsi:type="ttg:BinaryCondition">
-    <ttg:operation>OR</ttg:operation>
-<ttg:operator1 xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>message</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>ACTIVO</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:operator1><ttg:operator2 xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>message</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>ERROR</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:operator2></ttg:operator1><ttg:operator2 xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>message</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>ERROR</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:operator2></ttg:condition></ttg:alternative><ttg:alternative>
-    <ttg:stepId>SIN_DATOS_TLK</ttg:stepId>
-    <ttg:guideName/>
-    <ttg:label>Sin Datos TLK</ttg:label>
-    <ttg:condition xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>TLK02</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>numeroEquipo</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>000000000000</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:condition></ttg:alternative><ttg:alternative>
-    <ttg:stepId/>
-    <ttg:guideName>guide_internet_FTTH_Saldo</ttg:guideName>
-    <ttg:label>Saldo/Consumo</ttg:label>
-    </ttg:alternative><ttg:operation xsi:type="ttg:SimpleOperation">
-    <ttg:name>EstadoTLK-Datos</ttg:name>
-    <ttg:label>Estado TLK</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:automatic>true</ttg:automatic>
-    <ttg:operationOrder>1</ttg:operationOrder>
-    <ttg:operationType>simpleOperation</ttg:operationType>
-    <ttg:type>query</ttg:type>
-    <ttg:servicio>EstadoTLK-Datos</ttg:servicio>
-    <ttg:inParameters>
-    <ttg:name>service</ttg:name>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:productNumber</ttg:sourceValueEntityProperty>
-    </ttg:inParameters><ttg:inParameters>
-    <ttg:name>telefonoServicio</ttg:name>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:supportServiceId</ttg:sourceValueEntityProperty>
-    </ttg:inParameters><ttg:outParameters>
-    <ttg:name>message</ttg:name>
-    <ttg:label>Estado</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>guide</ttg:sourceValueEntity>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>listaFacilidades</ttg:name>
-    <ttg:label>Facilidades</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>RECORD</ttg:type>
-    <ttg:sourceValueEntity>guide</ttg:sourceValueEntity>
-    </ttg:outParameters><ttg:condition xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>message</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>ACTIVO</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:condition><ttg:notifyAlternative>true</ttg:notifyAlternative>
-    <ttg:alternativeIds>CON_DATOS_TLK</ttg:alternativeIds><ttg:notifyOperation>true</ttg:notifyOperation>
-    <ttg:operationNotifyIds>123</ttg:operationNotifyIds><ttg:operationNotifyIds>Bloqueado</ttg:operationNotifyIds></ttg:operation><ttg:operation xsi:type="ttg:SimpleOperation">
-    <ttg:name>OrdenesRecarga</ttg:name>
-    <ttg:label>Recargas Realizadas</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:automatic>true</ttg:automatic>
-    <ttg:operationOrder>1</ttg:operationOrder>
-    <ttg:operationType>simpleOperation</ttg:operationType>
-    <ttg:type>query</ttg:type>
-    <ttg:servicio>OrdenesRecarga</ttg:servicio>
-    <ttg:inParameters>
-    <ttg:name>version</ttg:name>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:value>2.0</ttg:value>
-    </ttg:inParameters><ttg:inParameters>
-    <ttg:name>productNumber</ttg:name>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:productNumber</ttg:sourceValueEntityProperty>
-    </ttg:inParameters><ttg:outParameters>
-    <ttg:name>productOrder</ttg:name>
-    <ttg:label>Ordenes</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>collection</ttg:type>
-    <ttg:sourceValueEntity>guide</ttg:sourceValueEntity>
-    <ttg:properties/>
-    <ttg:properties>
-    <ttg:name>id</ttg:name>
-    <ttg:label>Id</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    </ttg:properties><ttg:properties>
-    <ttg:name>orderNr</ttg:name>
-    <ttg:label>OrderNumber</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    </ttg:properties><ttg:properties>
-    <ttg:name>orderItem[0].psr[0].characteristic[0].value</ttg:name>
-    <ttg:label>Candidad</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    </ttg:properties></ttg:outParameters></ttg:operation><ttg:operation xsi:type="ttg:SimpleOperation">
-    <ttg:name>TLK_PrioridadReparacion</ttg:name>
-    <ttg:label>Prioridad TLK</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:automatic>true</ttg:automatic>
-    <ttg:operationOrder>1</ttg:operationOrder>
-    <ttg:operationType>simpleOperation</ttg:operationType>
-    <ttg:type>query</ttg:type>
-    <ttg:servicio>TLK_PrioridadReparacion</ttg:servicio>
-    <ttg:inParameters>
-    <ttg:name>telefonoServicio</ttg:name>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:supportServiceId</ttg:sourceValueEntityProperty>
-    </ttg:inParameters><ttg:outParameters>
-    <ttg:name>prioridadReparacion</ttg:name>
-    <ttg:label>Prioridad</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>guide</ttg:sourceValueEntity>
-    </ttg:outParameters></ttg:operation><ttg:operation xsi:type="ttg:SimpleOperation">
-    <ttg:name>TLK02</ttg:name>
-    <ttg:label>Datos TLK</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:automatic>true</ttg:automatic>
-    <ttg:operationOrder>1</ttg:operationOrder>
-    <ttg:operationType>simpleOperation</ttg:operationType>
-    <ttg:type>query</ttg:type>
-    <ttg:servicio>TLK02</ttg:servicio>
-    <ttg:inParameters>
-    <ttg:name>telefonoServicio</ttg:name>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:supportServiceId</ttg:sourceValueEntityProperty>
-    </ttg:inParameters><ttg:outParameters>
-    <ttg:name>centralTLK</ttg:name>
-    <ttg:label>Central</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:central</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>numeroEquipo</ttg:name>
-    <ttg:label>Equipo especial</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:numeroEquipo</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>nodo</ttg:name>
-    <ttg:label>nodo</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:nodo</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>tarjeta</ttg:name>
-    <ttg:label>Tarjeta</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:tarjeta</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>puerto</ttg:name>
-    <ttg:label>Puerto</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:puerto</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>distancia</ttg:name>
-    <ttg:label>Distancia (km)</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:distancia</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:condition xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>TLK02</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>numeroEquipo</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>!=</ttg:operator>
-    <ttg:value>000000000000</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:condition><ttg:notifyAlternative>true</ttg:notifyAlternative>
-    <ttg:alternativeIds>SIN_DATOS_TLK</ttg:alternativeIds></ttg:operation><ttg:operation xsi:type="ttg:TaskOperation">
-    <ttg:name>Bloqueado</ttg:name>
-    <ttg:label>Bloqueado</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:comment>Se ha detectado un inconveniente comercial en su servicio, el cual no permite proseguir con la atención de su reclamo. Para solucionar el inconveniente se debe comunicar con el 123.</ttg:comment>
-    <ttg:title>Finaliza reclamo</ttg:title>
-    <ttg:automatic>false</ttg:automatic>
-    <ttg:operationOrder>1</ttg:operationOrder>
-    <ttg:operationType>taskOperation</ttg:operationType>
-    <ttg:type>close</ttg:type>
-    <ttg:inParameters>
-    <ttg:name>completionCode</ttg:name>
-    <ttg:label>Tipo cierre</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:value>Rechazado</ttg:value>
-    <ttg:enable>false</ttg:enable>
-    </ttg:inParameters><ttg:inParameters>
-    <ttg:name>completionSubCode</ttg:name>
-    <ttg:label>Código cierre</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:value>Bloqueado</ttg:value>
-    <ttg:enable>false</ttg:enable>
-    <ttg:required>true</ttg:required>
-    </ttg:inParameters><ttg:inParameters>
-    <ttg:name>completionLabel</ttg:name>
-    <ttg:label>Comentario</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:required>false</ttg:required>
-    </ttg:inParameters><ttg:condition xsi:type="ttg:BinaryCondition">
-    <ttg:operation>OR</ttg:operation>
-<ttg:operator1 xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>message</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>BLOQUEADO</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:operator1><ttg:operator2 xsi:type="ttg:BinaryCondition">
-    <ttg:operation>OR</ttg:operation>
-<ttg:operator1 xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>message</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>BLOQUEO SALIENTE</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:operator1><ttg:operator2 xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>message</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>SUPRESIÓN DEFINITIVA</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:operator2></ttg:operator2></ttg:condition></ttg:operation><ttg:operation xsi:type="ttg:TaskOperation">
-    <ttg:name>123</ttg:name>
-    <ttg:label>Derivar al 123</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:comment>Se ha detectado un inconveniente comercial en el servicio, el cual no permite proseguir con la atención del reclamo. El ticket será derivado al 123 para su gestión.</ttg:comment>
-    <ttg:title>Derivar al 123</ttg:title>
-    <ttg:automatic>false</ttg:automatic>
-    <ttg:operationOrder>1</ttg:operationOrder>
-    <ttg:operationType>taskOperation</ttg:operationType>
-    <ttg:type>internalDerivation</ttg:type>
-    <ttg:targetSystem>derivar123</ttg:targetSystem>
-    <ttg:candidateGroups/>
-    <ttg:candidateGroups>
-    <ttg:groupName>apw_sur_accesa_comercial_referente</ttg:groupName>
-</ttg:candidateGroups><ttg:candidateGroups>
-    <ttg:groupName>apw_sur_accesa_comercial_agente</ttg:groupName>
-</ttg:candidateGroups><ttg:inParameters>
-    <ttg:name>derivationReason</ttg:name>
-    <ttg:label>Comentario</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:enable>true</ttg:enable>
-    <ttg:required>true</ttg:required>
-    </ttg:inParameters><ttg:condition xsi:type="ttg:BinaryCondition">
-    <ttg:operation>OR</ttg:operation>
-<ttg:operator1 xsi:type="ttg:BinaryCondition">
-    <ttg:operation>OR</ttg:operation>
-<ttg:operator1 xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>message</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>DERIVAR AL 123</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:operator1><ttg:operator2 xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>message</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>REQUIERE ATENCIÓN COMERCIAL</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:operator2></ttg:operator1><ttg:operator2 xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>message</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>REQUIERE ATENCIÓN COMERCIAL</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:operator2></ttg:condition></ttg:operation><ttg:operation xsi:type="ttg:TaskOperation">
-    <ttg:name>REJECTED</ttg:name>
-    <ttg:label>Falla Masiva</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:title>Cierra reclamo</ttg:title>
-    <ttg:automatic>false</ttg:automatic>
-    <ttg:operationOrder>1</ttg:operationOrder>
-    <ttg:operationType>taskOperation</ttg:operationType>
-    <ttg:type>close</ttg:type>
-    <ttg:inParameters>
-    <ttg:name>completionLabel</ttg:name>
-    <ttg:label>Comentario</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    </ttg:inParameters><ttg:inParameters>
-    <ttg:name>completionCode</ttg:name>
-    <ttg:label>Tipo cierre</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:value>Rechazado</ttg:value>
-    <ttg:enable>false</ttg:enable>
-    </ttg:inParameters><ttg:inParameters>
-    <ttg:name>completionSubCode</ttg:name>
-    <ttg:label>Código cierre</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:value>Falla mayor</ttg:value>
-    <ttg:enable>false</ttg:enable>
-    <ttg:required>true</ttg:required>
-    </ttg:inParameters></ttg:operation><ttg:referenceDoc>
-    <ttg:mimeType>Facilidades/pdf</ttg:mimeType>
-    <ttg:url>/opt/apps/fs/SUR/documentos/internos/facilidades/Facilidades.pdf</ttg:url>
-</ttg:referenceDoc><ttg:referenceDoc>
-    <ttg:mimeType>Servicios/pdf</ttg:mimeType>
-    <ttg:url>/opt/apps/fs/SUR/documentos/internos/facilidades/Servicios.pdf</ttg:url>
-</ttg:referenceDoc><ttg:referenceDoc>
-    <ttg:mimeType>Equipos/pdf</ttg:mimeType>
-    <ttg:url>/opt/apps/fs/SUR/documentos/internos/facilidades/Equipos.pdf</ttg:url>
-</ttg:referenceDoc></ttg:step><ttg:step>
-    <ttg:stepId>SIN_DATOS_TLK</ttg:stepId>
-    <ttg:label>Sin Datos TLK</ttg:label>
-    <ttg:text>En la pestaña 'Datos TLK' presione 'Consultar'. Se desplegará un pop-up con los datos actuales del servicio.
-Si en el pop-up se obtuvieron datos de TLK presione 'Continuar'.
-Si no se obtuvieron datos válidos, presione 'Derivar al 123'.</ttg:text>
-    <ttg:alternative>
-    <ttg:stepId/>
-    <ttg:guideName>guide_internet_FTTH_Query_Check</ttg:guideName>
-    <ttg:label>Continuar</ttg:label>
-    <ttg:condition xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>TLK02</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>numeroEquipo</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>!=</ttg:operator>
-    <ttg:value>000000000000</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:condition></ttg:alternative><ttg:operation xsi:type="ttg:TaskOperation">
-    <ttg:name>SinDatosTLK</ttg:name>
-    <ttg:label>Derivar al 123</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:title>Derivar por Sin Par/Facilidad</ttg:title>
-    <ttg:automatic>false</ttg:automatic>
-    <ttg:operationOrder>1</ttg:operationOrder>
-    <ttg:operationType>taskOperation</ttg:operationType>
-    <ttg:type>internalDerivation</ttg:type>
-    <ttg:targetSystem>derivar123</ttg:targetSystem>
-    <ttg:candidateGroups/>
-    <ttg:candidateGroups>
-    <ttg:groupName>apw_sur_accesa_comercial_referente</ttg:groupName>
-</ttg:candidateGroups><ttg:candidateGroups>
-    <ttg:groupName>apw_sur_accesa_comercial_agente</ttg:groupName>
-</ttg:candidateGroups><ttg:inParameters>
-    <ttg:name>derivationReason</ttg:name>
-    <ttg:label>Causa</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:value>SIN PAR/FACILIDAD</ttg:value>
-    <ttg:enable>false</ttg:enable>
-    <ttg:required>true</ttg:required>
-    </ttg:inParameters><ttg:inParameters>
-    <ttg:name>COMMENT</ttg:name>
-    <ttg:label>Comentario</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:required>true</ttg:required>
-    <ttg:validateExpression>(^[\s\'\-\+\*\..=¿/¡:,;áéíóúüÁÉÍÓÚñÑ@a-zA-Z0-9]{5,230}$)</ttg:validateExpression>
-    <ttg:validateExpressionErrorDescription>El comentario debe tener entre 5 y 230 caracteres</ttg:validateExpressionErrorDescription>
-    </ttg:inParameters><ttg:condition xsi:type="ttg:UnaryCondition">
-    <ttg:operationName>TLK02</ttg:operationName>
-<ttg:conditionsEnableAlternative>
-    <ttg:field>numeroEquipo</ttg:field>
-    <ttg:fieldType>string</ttg:fieldType>
-    <ttg:operator>=</ttg:operator>
-    <ttg:value>000000000000</ttg:value>
-</ttg:conditionsEnableAlternative></ttg:condition></ttg:operation><ttg:operation xsi:type="ttg:SimpleOperation">
-    <ttg:name>TLK02</ttg:name>
-    <ttg:label>Datos TLK</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:comment>Si el equipo especial comienza por 7, presionar 'Completar'. De lo contrario cerrar el pop-up y presionar 'Derivar al 123'.</ttg:comment>
-    <ttg:title>Ingreso de central y equipo especial</ttg:title>
-    <ttg:automatic>false</ttg:automatic>
-    <ttg:operationOrder>1</ttg:operationOrder>
-    <ttg:operationType>simpleOperation</ttg:operationType>
-    <ttg:type>query</ttg:type>
-    <ttg:servicio>TLK02</ttg:servicio>
-    <ttg:inParameters>
-    <ttg:name>telefonoServicio</ttg:name>
-    <ttg:label>Telefono</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:enable>false</ttg:enable>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:commercialServiceId</ttg:sourceValueEntityProperty>
-    </ttg:inParameters><ttg:outParameters>
-    <ttg:name>distancia</ttg:name>
-    <ttg:label>Distancia (km)</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:enable>false</ttg:enable>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:distancia</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>puerto</ttg:name>
-    <ttg:label>Puerto</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:enable>false</ttg:enable>
-    <ttg:validateExpression>(^[0-9]{2}$)</ttg:validateExpression>
-    <ttg:validateExpressionErrorDescription>El puerto debe tener un valor numérico de largo 2</ttg:validateExpressionErrorDescription>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:puerto</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>tarjeta</ttg:name>
-    <ttg:label>Tarjeta</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:enable>false</ttg:enable>
-    <ttg:validateExpression>(^[0-9]{2}$)</ttg:validateExpression>
-    <ttg:validateExpressionErrorDescription>La tarjeta debe tener un valor numérico de largo 2</ttg:validateExpressionErrorDescription>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:tarjeta</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>nodo</ttg:name>
-    <ttg:label>Nodo</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:enable>false</ttg:enable>
-    <ttg:validateExpression>(^[\-A-Z0-9]{0,12}$)</ttg:validateExpression>
-    <ttg:validateExpressionErrorDescription>El nodo debe tener letras, un guión, 2 números y una letra final (ej: MVDBUC-02)</ttg:validateExpressionErrorDescription>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:nodo</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>centralTLK</ttg:name>
-    <ttg:label>Central</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:enable>false</ttg:enable>
-    <ttg:validateExpression>(^[A-Z0-9]{12}$)</ttg:validateExpression>
-    <ttg:validateExpressionErrorDescription>La central debe tener 12 caracteres, compuestos por letras mayúsculas y números</ttg:validateExpressionErrorDescription>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:central</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>numeroEquipo</ttg:name>
-    <ttg:label>Equipo especial</ttg:label>
-    <ttg:visible>true</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:enable>false</ttg:enable>
-    <ttg:validateExpression>(^[0-9]{12}$)</ttg:validateExpression>
-    <ttg:validateExpressionErrorDescription>El equipo especial debe ser numérico de largo 12, y en el caso de servicios FTTH debe comenzar en 7.</ttg:validateExpressionErrorDescription>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:numeroEquipo</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:outParameters>
-    <ttg:name>telefonoServicio</ttg:name>
-    <ttg:label>telefonoServicio</ttg:label>
-    <ttg:visible>false</ttg:visible>
-    <ttg:type>string</ttg:type>
-    <ttg:enable>false</ttg:enable>
-    <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
-    <ttg:sourceValueEntityProperty>relatedObjectChar:supportServiceId</ttg:sourceValueEntityProperty>
-    </ttg:outParameters><ttg:notifyAlternative>true</ttg:notifyAlternative>
-    <ttg:alternativeIds>FTTH_SIN_DATOS_TLK</ttg:alternativeIds><ttg:notifyOperation>true</ttg:notifyOperation>
-    <ttg:operationNotifyIds>SinDatosTLK</ttg:operationNotifyIds></ttg:operation></ttg:step></ttg:guide>
+    <ttg:mainStepId>INITIAL</ttg:mainStepId>
+    <ttg:operation xsi:type="ttg:TaskOperation">
+        <ttg:name>Agendar reclamo</ttg:name>
+        <ttg:label>Agendar</ttg:label>
+        <ttg:visible>true</ttg:visible>
+        <ttg:automatic>false</ttg:automatic>
+        <ttg:operationOrder>1</ttg:operationOrder>
+        <ttg:operationType>taskOperation</ttg:operationType>
+        <ttg:type>schedule</ttg:type>
+        <ttg:inParameters>
+            <ttg:name>COMMENT</ttg:name>
+            <ttg:label>Comentario</ttg:label>
+            <ttg:visible>true</ttg:visible>
+            <ttg:type>string</ttg:type>
+            <ttg:required>true</ttg:required>
+            <ttg:validateExpression>(^[\s\'\-\+\*\..=¿/¡:,;áéíóúüÁÉÍÓÚñÑ@a-zA-Z0-9]{0,250}$)</ttg:validateExpression>
+            <ttg:validateExpressionErrorDescription>La descripción debe tener máximo 250 caracteres
+            </ttg:validateExpressionErrorDescription>
+        </ttg:inParameters>
+        <ttg:inParameters>
+            <ttg:name>SCHEDULE_DATE</ttg:name>
+            <ttg:label>Fecha de agenda</ttg:label>
+            <ttg:visible>true</ttg:visible>
+            <ttg:type>date</ttg:type>
+            <ttg:value>current</ttg:value>
+            <ttg:required>true</ttg:required>
+        </ttg:inParameters>
+        <ttg:inParameters>
+            <ttg:name>CANDIDATE_GROUPS</ttg:name>
+            <ttg:label>Usuario asignado</ttg:label>
+            <ttg:visible>false</ttg:visible>
+            <ttg:type>string</ttg:type>
+            <ttg:value>Cualquiera del grupo</ttg:value>
+            <ttg:required>true</ttg:required>
+        </ttg:inParameters>
+    </ttg:operation>
+    <ttg:operation xsi:type="ttg:TaskOperation">
+        <ttg:name>Cerrar</ttg:name>
+        <ttg:label>Cancelar</ttg:label>
+        <ttg:visible>false</ttg:visible>
+        <ttg:title>Reclamo cancelado</ttg:title>
+        <ttg:automatic>false</ttg:automatic>
+        <ttg:operationOrder>1</ttg:operationOrder>
+        <ttg:operationType>taskOperation</ttg:operationType>
+        <ttg:type>close</ttg:type>
+        <ttg:inParameters>
+            <ttg:name>completionLabel</ttg:name>
+            <ttg:label>Comentario</ttg:label>
+            <ttg:visible>true</ttg:visible>
+            <ttg:type>string</ttg:type>
+            <ttg:required>true</ttg:required>
+        </ttg:inParameters>
+        <ttg:inParameters>
+            <ttg:name>completionSubCode</ttg:name>
+            <ttg:label>Código cierre</ttg:label>
+            <ttg:visible>true</ttg:visible>
+            <ttg:type>string</ttg:type>
+            <ttg:required>true</ttg:required>
+            <ttg:optionValue>Cliente se debe comunicar nuevamente</ttg:optionValue>
+        </ttg:inParameters>
+        <ttg:inParameters>
+            <ttg:name>completionCode</ttg:name>
+            <ttg:label>Tipo cierre</ttg:label>
+            <ttg:visible>false</ttg:visible>
+            <ttg:type>string</ttg:type>
+            <ttg:value>Cancelado</ttg:value>
+            <ttg:enable>false</ttg:enable>
+        </ttg:inParameters>
+    </ttg:operation>
+    <ttg:step>
+        <ttg:stepId>INITIAL</ttg:stepId>
+        <ttg:label>Inicio</ttg:label>
+        <ttg:text>[HD-F-Q-I] Verificar la respuesta en la pestaña 'Estado TLK'. De acuerdo a la misma tomar la acción
+            correspondiente:
+            - ACTIVO: Ir a la pestaña 'Datos TLK'. Si no hay información (Central vacío o Equipo Especial = 00000000)
+            seleccionar 'Sin Datos TLK'. Si todo está en orden, presione 'Continuar' para seguir con el diagnóstico.
+            - TRAMITE PENDIENTE: Revisar en TLK y Tinco si trámite afecta funcionamiento. Controlar que se esté
+            registrando en servicio correcto (ej: traslado).
+            - BLOQUEADO: Seleccionar el botón correspondiente.
+            - REQUIERE ATENCIÓN COMERCIAL, DERIVAR AL 123 u otra respuesta diferente de ACTIVO: Seleccionar el botón
+            'Derivar al 123'.
+            - VERIFICAR TINCO Y TLK: Derivar a Servicio Técnico.
+            Si ATSM informó sobre una Falla Masiva, seleccionar el botón correspondiente.
+        </ttg:text>
+        <ttg:alternative>
+            <ttg:stepId>SIN_DATOS_TLK</ttg:stepId>
+            <ttg:guideName/>
+            <ttg:label>Sin Datos TLK</ttg:label>
+            <ttg:condition xsi:type="ttg:UnaryCondition">
+                <ttg:operationName>TLK02</ttg:operationName>
+                <ttg:conditionsEnableAlternative>
+                    <ttg:field>numeroEquipo</ttg:field>
+                    <ttg:fieldType>string</ttg:fieldType>
+                    <ttg:operator>=</ttg:operator>
+                    <ttg:value>000000000000</ttg:value>
+                </ttg:conditionsEnableAlternative>
+            </ttg:condition>
+        </ttg:alternative>
+        <ttg:alternative>
+            <ttg:stepId/>
+            <ttg:guideName>guide_internet_FTTH_Query_Check</ttg:guideName>
+            <ttg:label>Continuar</ttg:label>
+            <ttg:condition xsi:type="ttg:BinaryCondition">
+                <ttg:operation>OR</ttg:operation>
+                <ttg:operator1 xsi:type="ttg:BinaryCondition">
+                    <ttg:operation>OR</ttg:operation>
+                    <ttg:operator1 xsi:type="ttg:UnaryCondition">
+                        <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                        <ttg:conditionsEnableAlternative>
+                            <ttg:field>message</ttg:field>
+                            <ttg:fieldType>string</ttg:fieldType>
+                            <ttg:operator>=</ttg:operator>
+                            <ttg:value>ACTIVO</ttg:value>
+                        </ttg:conditionsEnableAlternative>
+                    </ttg:operator1>
+                    <ttg:operator2 xsi:type="ttg:UnaryCondition">
+                        <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                        <ttg:conditionsEnableAlternative>
+                            <ttg:field>message</ttg:field>
+                            <ttg:fieldType>string</ttg:fieldType>
+                            <ttg:operator>=</ttg:operator>
+                            <ttg:value>ERROR</ttg:value>
+                        </ttg:conditionsEnableAlternative>
+                    </ttg:operator2>
+                </ttg:operator1>
+                <ttg:operator2 xsi:type="ttg:BinaryCondition">
+                    <ttg:operation>OR</ttg:operation>
+                    <ttg:operator1 xsi:type="ttg:UnaryCondition">
+                        <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                        <ttg:conditionsEnableAlternative>
+                            <ttg:field>message</ttg:field>
+                            <ttg:fieldType>string</ttg:fieldType>
+                            <ttg:operator>=</ttg:operator>
+                            <ttg:value>TRAMITE PENDIENTE</ttg:value>
+                        </ttg:conditionsEnableAlternative>
+                    </ttg:operator1>
+                    <ttg:operator2 xsi:type="ttg:BinaryCondition">
+                        <ttg:operation>OR</ttg:operation>
+                        <ttg:operator1 xsi:type="ttg:UnaryCondition">
+                            <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                            <ttg:conditionsEnableAlternative>
+                                <ttg:field>message</ttg:field>
+                                <ttg:fieldType>string</ttg:fieldType>
+                                <ttg:operator>=</ttg:operator>
+                                <ttg:value>BLOQUEO SALIENTE</ttg:value>
+                            </ttg:conditionsEnableAlternative>
+                        </ttg:operator1>
+                        <ttg:operator2 xsi:type="ttg:UnaryCondition">
+                            <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                            <ttg:conditionsEnableAlternative>
+                                <ttg:field>message</ttg:field>
+                                <ttg:fieldType>string</ttg:fieldType>
+                                <ttg:operator>=</ttg:operator>
+                                <ttg:value>VERIFICAR TINCO Y TLK</ttg:value>
+                            </ttg:conditionsEnableAlternative>
+                        </ttg:operator2>
+                    </ttg:operator2>
+                </ttg:operator2>
+            </ttg:condition>
+        </ttg:alternative>
+        <ttg:alternative>
+            <ttg:stepId/>
+            <ttg:guideName>guide_internet_FTTH_Saldo</ttg:guideName>
+            <ttg:label>Saldo/Consumo</ttg:label>
+        </ttg:alternative>
+        <ttg:operation xsi:type="ttg:TaskOperation">
+            <ttg:name>REJECTED</ttg:name>
+            <ttg:label>Falla Masiva</ttg:label>
+            <ttg:visible>false</ttg:visible>
+            <ttg:title>Cierra reclamo</ttg:title>
+            <ttg:automatic>false</ttg:automatic>
+            <ttg:operationOrder>1</ttg:operationOrder>
+            <ttg:operationType>taskOperation</ttg:operationType>
+            <ttg:type>close</ttg:type>
+            <ttg:inParameters>
+                <ttg:name>completionCode</ttg:name>
+                <ttg:label>Tipo cierre</ttg:label>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:value>Rechazado</ttg:value>
+                <ttg:enable>false</ttg:enable>
+            </ttg:inParameters>
+            <ttg:inParameters>
+                <ttg:name>completionSubCode</ttg:name>
+                <ttg:label>Código cierre</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:value>Falla mayor</ttg:value>
+                <ttg:enable>false</ttg:enable>
+                <ttg:required>true</ttg:required>
+            </ttg:inParameters>
+            <ttg:inParameters>
+                <ttg:name>completionLabel</ttg:name>
+                <ttg:label>Comentario</ttg:label>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+            </ttg:inParameters>
+        </ttg:operation>
+        <ttg:operation xsi:type="ttg:SimpleOperation">
+            <ttg:name>TLK02</ttg:name>
+            <ttg:label>Datos TLK</ttg:label>
+            <ttg:visible>false</ttg:visible>
+            <ttg:automatic>true</ttg:automatic>
+            <ttg:operationOrder>1</ttg:operationOrder>
+            <ttg:operationType>simpleOperation</ttg:operationType>
+            <ttg:type>query</ttg:type>
+            <ttg:servicio>TLK02</ttg:servicio>
+            <ttg:inParameters>
+                <ttg:name>telefonoServicio</ttg:name>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:supportServiceId</ttg:sourceValueEntityProperty>
+            </ttg:inParameters>
+            <ttg:outParameters>
+                <ttg:name>distancia</ttg:name>
+                <ttg:label>Distancia (km)</ttg:label>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:distancia</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:outParameters>
+                <ttg:name>puerto</ttg:name>
+                <ttg:label>Puerto</ttg:label>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:puerto</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:outParameters>
+                <ttg:name>tarjeta</ttg:name>
+                <ttg:label>Tarjeta</ttg:label>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:tarjeta</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:outParameters>
+                <ttg:name>nodo</ttg:name>
+                <ttg:label>nodo</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:nodo</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:outParameters>
+                <ttg:name>centralTLK</ttg:name>
+                <ttg:label>Central</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:central</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:outParameters>
+                <ttg:name>numeroEquipo</ttg:name>
+                <ttg:label>Equipo especial</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:numeroEquipo</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:condition xsi:type="ttg:UnaryCondition">
+                <ttg:operationName>TLK02</ttg:operationName>
+                <ttg:conditionsEnableAlternative>
+                    <ttg:field>numeroEquipo</ttg:field>
+                    <ttg:fieldType>string</ttg:fieldType>
+                    <ttg:operator>!=</ttg:operator>
+                    <ttg:value>000000000000</ttg:value>
+                </ttg:conditionsEnableAlternative>
+            </ttg:condition>
+            <ttg:notifyAlternative>true</ttg:notifyAlternative>
+            <ttg:alternativeIds>SIN_DATOS_TLK</ttg:alternativeIds>
+        </ttg:operation>
+        <ttg:operation xsi:type="ttg:SimpleOperation">
+            <ttg:name>EstadoTLK-Datos</ttg:name>
+            <ttg:label>Estado TLK</ttg:label>
+            <ttg:visible>false</ttg:visible>
+            <ttg:automatic>true</ttg:automatic>
+            <ttg:operationOrder>1</ttg:operationOrder>
+            <ttg:operationType>simpleOperation</ttg:operationType>
+            <ttg:type>query</ttg:type>
+            <ttg:servicio>EstadoTLK-Datos</ttg:servicio>
+            <ttg:inParameters>
+                <ttg:name>telefonoServicio</ttg:name>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:supportServiceId</ttg:sourceValueEntityProperty>
+            </ttg:inParameters>
+            <ttg:inParameters>
+                <ttg:name>service</ttg:name>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:productNumber</ttg:sourceValueEntityProperty>
+            </ttg:inParameters>
+            <ttg:outParameters>
+                <ttg:name>listaFacilidades</ttg:name>
+                <ttg:label>Facilidades</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>RECORD</ttg:type>
+                <ttg:sourceValueEntity>guide</ttg:sourceValueEntity>
+            </ttg:outParameters>
+            <ttg:outParameters>
+                <ttg:name>message</ttg:name>
+                <ttg:label>Estado</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>guide</ttg:sourceValueEntity>
+            </ttg:outParameters>
+            <ttg:condition xsi:type="ttg:UnaryCondition">
+                <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                <ttg:conditionsEnableAlternative>
+                    <ttg:field>message</ttg:field>
+                    <ttg:fieldType>string</ttg:fieldType>
+                    <ttg:operator>=</ttg:operator>
+                    <ttg:value>ACTIVO</ttg:value>
+                </ttg:conditionsEnableAlternative>
+            </ttg:condition>
+            <ttg:notifyAlternative>true</ttg:notifyAlternative>
+            <ttg:alternativeIds>CON_DATOS_TLK</ttg:alternativeIds>
+            <ttg:notifyOperation>true</ttg:notifyOperation>
+            <ttg:operationNotifyIds>123</ttg:operationNotifyIds>
+            <ttg:operationNotifyIds>Bloqueado</ttg:operationNotifyIds>
+        </ttg:operation>
+        <ttg:operation xsi:type="ttg:SimpleOperation">
+            <ttg:name>TLK_PrioridadReparacion</ttg:name>
+            <ttg:label>Prioridad TLK</ttg:label>
+            <ttg:visible>false</ttg:visible>
+            <ttg:automatic>true</ttg:automatic>
+            <ttg:operationOrder>1</ttg:operationOrder>
+            <ttg:operationType>simpleOperation</ttg:operationType>
+            <ttg:type>query</ttg:type>
+            <ttg:servicio>TLK_PrioridadReparacion</ttg:servicio>
+            <ttg:inParameters>
+                <ttg:name>telefonoServicio</ttg:name>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:supportServiceId</ttg:sourceValueEntityProperty>
+            </ttg:inParameters>
+            <ttg:outParameters>
+                <ttg:name>prioridadReparacion</ttg:name>
+                <ttg:label>Prioridad</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>guide</ttg:sourceValueEntity>
+            </ttg:outParameters>
+        </ttg:operation>
+        <ttg:operation xsi:type="ttg:TaskOperation">
+            <ttg:name>Bloqueado</ttg:name>
+            <ttg:label>Bloqueado</ttg:label>
+            <ttg:visible>false</ttg:visible>
+            <ttg:comment>Se ha detectado un inconveniente comercial en su servicio, el cual no permite proseguir con la
+                atención de su reclamo. Para solucionar el inconveniente se debe comunicar con el 123.
+            </ttg:comment>
+            <ttg:title>Finaliza reclamo</ttg:title>
+            <ttg:automatic>false</ttg:automatic>
+            <ttg:operationOrder>1</ttg:operationOrder>
+            <ttg:operationType>taskOperation</ttg:operationType>
+            <ttg:type>close</ttg:type>
+            <ttg:inParameters>
+                <ttg:name>completionCode</ttg:name>
+                <ttg:label>Tipo cierre</ttg:label>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:value>Rechazado</ttg:value>
+                <ttg:enable>false</ttg:enable>
+            </ttg:inParameters>
+            <ttg:inParameters>
+                <ttg:name>completionSubCode</ttg:name>
+                <ttg:label>Código cierre</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:value>Bloqueado</ttg:value>
+                <ttg:enable>false</ttg:enable>
+                <ttg:required>true</ttg:required>
+            </ttg:inParameters>
+            <ttg:inParameters>
+                <ttg:name>completionLabel</ttg:name>
+                <ttg:label>Comentario</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:required>false</ttg:required>
+            </ttg:inParameters>
+            <ttg:condition xsi:type="ttg:BinaryCondition">
+                <ttg:operation>OR</ttg:operation>
+                <ttg:operator1 xsi:type="ttg:UnaryCondition">
+                    <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                    <ttg:conditionsEnableAlternative>
+                        <ttg:field>message</ttg:field>
+                        <ttg:fieldType>string</ttg:fieldType>
+                        <ttg:operator>=</ttg:operator>
+                        <ttg:value>BLOQUEADO</ttg:value>
+                    </ttg:conditionsEnableAlternative>
+                </ttg:operator1>
+                <ttg:operator2 xsi:type="ttg:BinaryCondition">
+                    <ttg:operation>OR</ttg:operation>
+                    <ttg:operator1 xsi:type="ttg:UnaryCondition">
+                        <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                        <ttg:conditionsEnableAlternative>
+                            <ttg:field>message</ttg:field>
+                            <ttg:fieldType>string</ttg:fieldType>
+                            <ttg:operator>=</ttg:operator>
+                            <ttg:value>BLOQUEO SALIENTE</ttg:value>
+                        </ttg:conditionsEnableAlternative>
+                    </ttg:operator1>
+                    <ttg:operator2 xsi:type="ttg:UnaryCondition">
+                        <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                        <ttg:conditionsEnableAlternative>
+                            <ttg:field>message</ttg:field>
+                            <ttg:fieldType>string</ttg:fieldType>
+                            <ttg:operator>=</ttg:operator>
+                            <ttg:value>SUPRESIÓN DEFINITIVA</ttg:value>
+                        </ttg:conditionsEnableAlternative>
+                    </ttg:operator2>
+                </ttg:operator2>
+            </ttg:condition>
+        </ttg:operation>
+        <ttg:operation xsi:type="ttg:SimpleOperation">
+            <ttg:name>OrdenesRecarga</ttg:name>
+            <ttg:label>Recargas Realizadas</ttg:label>
+            <ttg:visible>false</ttg:visible>
+            <ttg:automatic>true</ttg:automatic>
+            <ttg:operationOrder>1</ttg:operationOrder>
+            <ttg:operationType>simpleOperation</ttg:operationType>
+            <ttg:type>query</ttg:type>
+            <ttg:servicio>OrdenesRecarga</ttg:servicio>
+            <ttg:inParameters>
+                <ttg:name>version</ttg:name>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:value>2.0</ttg:value>
+            </ttg:inParameters>
+            <ttg:inParameters>
+                <ttg:name>productNumber</ttg:name>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:productNumber</ttg:sourceValueEntityProperty>
+            </ttg:inParameters>
+            <ttg:outParameters>
+                <ttg:name>productOrder</ttg:name>
+                <ttg:label>Ordenes</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>collection</ttg:type>
+                <ttg:sourceValueEntity>guide</ttg:sourceValueEntity>
+                <ttg:properties>
+                    <ttg:name>id</ttg:name>
+                    <ttg:label>Id</ttg:label>
+                    <ttg:visible>true</ttg:visible>
+                    <ttg:type>string</ttg:type>
+                </ttg:properties>
+                <ttg:properties>
+                    <ttg:name>orderNr</ttg:name>
+                    <ttg:label>OrderNumber</ttg:label>
+                    <ttg:visible>true</ttg:visible>
+                    <ttg:type>string</ttg:type>
+                </ttg:properties>
+                <ttg:properties>
+                    <ttg:name>orderItem[0].psr[0].characteristic[0].value</ttg:name>
+                    <ttg:label>Candidad</ttg:label>
+                    <ttg:visible>true</ttg:visible>
+                    <ttg:type>string</ttg:type>
+                </ttg:properties>
+            </ttg:outParameters>
+        </ttg:operation>
+        <ttg:operation xsi:type="ttg:TaskOperation">
+            <ttg:name>123</ttg:name>
+            <ttg:label>Derivar al 123</ttg:label>
+            <ttg:visible>true</ttg:visible>
+            <ttg:comment>Se ha detectado un inconveniente comercial en el servicio, el cual no permite proseguir con la
+                atención del reclamo. El ticket será derivado al 123 para su gestión.
+            </ttg:comment>
+            <ttg:title>Derivar al 123</ttg:title>
+            <ttg:automatic>false</ttg:automatic>
+            <ttg:operationOrder>1</ttg:operationOrder>
+            <ttg:operationType>taskOperation</ttg:operationType>
+            <ttg:type>internalDerivation</ttg:type>
+            <ttg:targetSystem>derivar123</ttg:targetSystem>
+            <ttg:candidateGroups>
+                <ttg:groupName>apw_sur_accesa_comercial_referente</ttg:groupName>
+                <ttg:groupName>apw_sur_accesa_comercial_agente</ttg:groupName>
+            </ttg:candidateGroups>
+            <ttg:inParameters>
+                <ttg:name>derivationReason</ttg:name>
+                <ttg:label>Comentario</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:enable>true</ttg:enable>
+                <ttg:required>true</ttg:required>
+            </ttg:inParameters>
+            <ttg:condition xsi:type="ttg:BinaryCondition">
+                <ttg:operation>OR</ttg:operation>
+                <ttg:operator1 xsi:type="ttg:BinaryCondition">
+                    <ttg:operation>OR</ttg:operation>
+                    <ttg:operator1 xsi:type="ttg:UnaryCondition">
+                        <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                        <ttg:conditionsEnableAlternative>
+                            <ttg:field>message</ttg:field>
+                            <ttg:fieldType>string</ttg:fieldType>
+                            <ttg:operator>=</ttg:operator>
+                            <ttg:value>DERIVAR AL 123</ttg:value>
+                        </ttg:conditionsEnableAlternative>
+                    </ttg:operator1>
+                    <ttg:operator2 xsi:type="ttg:UnaryCondition">
+                        <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                        <ttg:conditionsEnableAlternative>
+                            <ttg:field>message</ttg:field>
+                            <ttg:fieldType>string</ttg:fieldType>
+                            <ttg:operator>=</ttg:operator>
+                            <ttg:value>REQUIERE ATENCIÓN COMERCIAL</ttg:value>
+                        </ttg:conditionsEnableAlternative>
+                    </ttg:operator2>
+                </ttg:operator1>
+                <ttg:operator2 xsi:type="ttg:BinaryCondition">
+                    <ttg:operation>OR</ttg:operation>
+                    <ttg:operator1 xsi:type="ttg:UnaryCondition">
+                        <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                        <ttg:conditionsEnableAlternative>
+                            <ttg:field>message</ttg:field>
+                            <ttg:fieldType>string</ttg:fieldType>
+                            <ttg:operator>=</ttg:operator>
+                            <ttg:value>TRAMITE PENDIENTE</ttg:value>
+                        </ttg:conditionsEnableAlternative>
+                    </ttg:operator1>
+                    <ttg:operator2 xsi:type="ttg:BinaryCondition">
+                        <ttg:operation>OR</ttg:operation>
+                        <ttg:operator1 xsi:type="ttg:UnaryCondition">
+                            <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                            <ttg:conditionsEnableAlternative>
+                                <ttg:field>message</ttg:field>
+                                <ttg:fieldType>string</ttg:fieldType>
+                                <ttg:operator>=</ttg:operator>
+                                <ttg:value>VERIFICAR TINCO Y TLK</ttg:value>
+                            </ttg:conditionsEnableAlternative>
+                        </ttg:operator1>
+                        <ttg:operator2 xsi:type="ttg:UnaryCondition">
+                            <ttg:operationName>EstadoTLK-Datos</ttg:operationName>
+                            <ttg:conditionsEnableAlternative>
+                                <ttg:field>message</ttg:field>
+                                <ttg:fieldType>string</ttg:fieldType>
+                                <ttg:operator>=</ttg:operator>
+                                <ttg:value>SUPRESIÓN DEFINITIVA</ttg:value>
+                            </ttg:conditionsEnableAlternative>
+                        </ttg:operator2>
+                    </ttg:operator2>
+                </ttg:operator2>
+            </ttg:condition>
+        </ttg:operation>
+        <ttg:referenceDoc>
+            <ttg:mimeType>Facilidades/pdf</ttg:mimeType>
+            <ttg:url>/opt/apps/fs/SUR/documentos/internos/facilidades/Facilidades.pdf</ttg:url>
+        </ttg:referenceDoc>
+        <ttg:referenceDoc>
+            <ttg:mimeType>Servicios/pdf</ttg:mimeType>
+            <ttg:url>/opt/apps/fs/SUR/documentos/internos/facilidades/Servicios.pdf</ttg:url>
+        </ttg:referenceDoc>
+        <ttg:referenceDoc>
+            <ttg:mimeType>Equipos/pdf</ttg:mimeType>
+            <ttg:url>/opt/apps/fs/SUR/documentos/internos/facilidades/Equipos.pdf</ttg:url>
+        </ttg:referenceDoc>
+    </ttg:step>
+    <ttg:step>
+        <ttg:stepId>SIN_DATOS_TLK</ttg:stepId>
+        <ttg:label>Sin Datos TLK</ttg:label>
+        <ttg:text>En la pestaña 'Datos TLK' presione 'Consultar'. Se desplegará un pop-up con los datos actuales del
+            servicio.
+            Si en el pop-up se obtuvieron datos de TLK presione 'Continuar'.
+            Si no se obtuvieron datos válidos, presione 'Derivar al 123'.
+        </ttg:text>
+        <ttg:alternative>
+            <ttg:stepId/>
+            <ttg:guideName>guide_internet_FTTH_Query_Check</ttg:guideName>
+            <ttg:label>Continuar</ttg:label>
+            <ttg:condition xsi:type="ttg:UnaryCondition">
+                <ttg:operationName>TLK02</ttg:operationName>
+                <ttg:conditionsEnableAlternative>
+                    <ttg:field>numeroEquipo</ttg:field>
+                    <ttg:fieldType>string</ttg:fieldType>
+                    <ttg:operator>!=</ttg:operator>
+                    <ttg:value>000000000000</ttg:value>
+                </ttg:conditionsEnableAlternative>
+            </ttg:condition>
+        </ttg:alternative>
+        <ttg:operation xsi:type="ttg:TaskOperation">
+            <ttg:name>SinDatosTLK</ttg:name>
+            <ttg:label>Derivar al 123</ttg:label>
+            <ttg:visible>true</ttg:visible>
+            <ttg:title>Derivar por Sin Par/Facilidad</ttg:title>
+            <ttg:automatic>false</ttg:automatic>
+            <ttg:operationOrder>1</ttg:operationOrder>
+            <ttg:operationType>taskOperation</ttg:operationType>
+            <ttg:type>internalDerivation</ttg:type>
+            <ttg:targetSystem>derivar123</ttg:targetSystem>
+            <ttg:candidateGroups>
+                <ttg:groupName>apw_sur_accesa_comercial_referente</ttg:groupName>
+                <ttg:groupName>apw_sur_accesa_comercial_agente</ttg:groupName>
+            </ttg:candidateGroups>
+            <ttg:inParameters>
+                <ttg:name>derivationReason</ttg:name>
+                <ttg:label>Causa</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:value>SIN PAR/FACILIDAD</ttg:value>
+                <ttg:enable>false</ttg:enable>
+                <ttg:required>true</ttg:required>
+            </ttg:inParameters>
+            <ttg:inParameters>
+                <ttg:name>COMMENT</ttg:name>
+                <ttg:label>Comentario</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:required>true</ttg:required>
+                <ttg:validateExpression>(^[\s\'\-\+\*\..=¿/¡:,;áéíóúüÁÉÍÓÚñÑ@a-zA-Z0-9]{5,230}$)
+                </ttg:validateExpression>
+                <ttg:validateExpressionErrorDescription>El comentario debe tener entre 5 y 230 caracteres
+                </ttg:validateExpressionErrorDescription>
+            </ttg:inParameters>
+            <ttg:condition xsi:type="ttg:UnaryCondition">
+                <ttg:operationName>TLK02</ttg:operationName>
+                <ttg:conditionsEnableAlternative>
+                    <ttg:field>numeroEquipo</ttg:field>
+                    <ttg:fieldType>string</ttg:fieldType>
+                    <ttg:operator>=</ttg:operator>
+                    <ttg:value>000000000000</ttg:value>
+                </ttg:conditionsEnableAlternative>
+            </ttg:condition>
+        </ttg:operation>
+        <ttg:operation xsi:type="ttg:SimpleOperation">
+            <ttg:name>TLK02</ttg:name>
+            <ttg:label>Datos TLK</ttg:label>
+            <ttg:visible>true</ttg:visible>
+            <ttg:comment>Si el equipo especial comienza por 7, presionar 'Completar'. De lo contrario cerrar el pop-up y
+                presionar 'Derivar al 123'.
+            </ttg:comment>
+            <ttg:title>Ingreso de central y equipo especial</ttg:title>
+            <ttg:automatic>false</ttg:automatic>
+            <ttg:operationOrder>1</ttg:operationOrder>
+            <ttg:operationType>simpleOperation</ttg:operationType>
+            <ttg:type>query</ttg:type>
+            <ttg:servicio>TLK02</ttg:servicio>
+            <ttg:inParameters>
+                <ttg:name>telefonoServicio</ttg:name>
+                <ttg:label>Telefono</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:enable>false</ttg:enable>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:commercialServiceId</ttg:sourceValueEntityProperty>
+            </ttg:inParameters>
+            <ttg:outParameters>
+                <ttg:name>centralTLK</ttg:name>
+                <ttg:label>Central</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:enable>false</ttg:enable>
+                <ttg:validateExpression>(^[A-Z0-9]{12}$)</ttg:validateExpression>
+                <ttg:validateExpressionErrorDescription>La central debe tener 12 caracteres, compuestos por letras
+                    mayúsculas y números
+                </ttg:validateExpressionErrorDescription>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:central</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:outParameters>
+                <ttg:name>numeroEquipo</ttg:name>
+                <ttg:label>Equipo especial</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:enable>false</ttg:enable>
+                <ttg:validateExpression>(^[0-9]{12}$)</ttg:validateExpression>
+                <ttg:validateExpressionErrorDescription>El equipo especial debe ser numérico de largo 12, y en el caso
+                    de servicios FTTH debe comenzar en 7.
+                </ttg:validateExpressionErrorDescription>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:numeroEquipo</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:outParameters>
+                <ttg:name>nodo</ttg:name>
+                <ttg:label>Nodo</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:enable>false</ttg:enable>
+                <ttg:validateExpression>(^[\-A-Z0-9]{0,12}$)</ttg:validateExpression>
+                <ttg:validateExpressionErrorDescription>El nodo debe tener letras, un guión, 2 números y una letra final
+                    (ej: MVDBUC-02)
+                </ttg:validateExpressionErrorDescription>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:nodo</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:outParameters>
+                <ttg:name>tarjeta</ttg:name>
+                <ttg:label>Tarjeta</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:enable>false</ttg:enable>
+                <ttg:validateExpression>(^[0-9]{2}$)</ttg:validateExpression>
+                <ttg:validateExpressionErrorDescription>La tarjeta debe tener un valor numérico de largo 2
+                </ttg:validateExpressionErrorDescription>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:tarjeta</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:outParameters>
+                <ttg:name>puerto</ttg:name>
+                <ttg:label>Puerto</ttg:label>
+                <ttg:visible>true</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:enable>false</ttg:enable>
+                <ttg:validateExpression>(^[0-9]{2}$)</ttg:validateExpression>
+                <ttg:validateExpressionErrorDescription>El puerto debe tener un valor numérico de largo 2
+                </ttg:validateExpressionErrorDescription>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:puerto</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:outParameters>
+                <ttg:name>distancia</ttg:name>
+                <ttg:label>Distancia (km)</ttg:label>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:enable>false</ttg:enable>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:distancia</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:outParameters>
+                <ttg:name>telefonoServicio</ttg:name>
+                <ttg:label>telefonoServicio</ttg:label>
+                <ttg:visible>false</ttg:visible>
+                <ttg:type>string</ttg:type>
+                <ttg:enable>false</ttg:enable>
+                <ttg:sourceValueEntity>ticket</ttg:sourceValueEntity>
+                <ttg:sourceValueEntityProperty>relatedObjectChar:supportServiceId</ttg:sourceValueEntityProperty>
+            </ttg:outParameters>
+            <ttg:notifyAlternative>true</ttg:notifyAlternative>
+            <ttg:alternativeIds>FTTH_SIN_DATOS_TLK</ttg:alternativeIds>
+            <ttg:notifyOperation>true</ttg:notifyOperation>
+            <ttg:operationNotifyIds>SinDatosTLK</ttg:operationNotifyIds>
+        </ttg:operation>
+    </ttg:step>
+</ttg:guide>
