@@ -337,8 +337,8 @@ public class OperationParameter extends AbstractEntity   implements Serializable
 		if (type.isEmpty())
 			encounteredErrors.add("El campo Type es obligatorio");
 
-		if (description.isEmpty())
-			encounteredErrors.add("El campo Description es obligatorio");
+//		if (description.isEmpty())
+//			encounteredErrors.add("El campo Description es obligatorio");
 
 		return encounteredErrors;
 	}
@@ -351,8 +351,8 @@ public class OperationParameter extends AbstractEntity   implements Serializable
 		if (type.isEmpty())
 			return "El campo Type es obligatorio";
 
-		if (description.isEmpty())
-			return "El campo Description es obligatorio";
+//		if (description.isEmpty())
+//			return "El campo Description es obligatorio";
 
 		return "";
 	}
