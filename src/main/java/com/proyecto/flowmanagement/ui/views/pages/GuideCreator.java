@@ -160,7 +160,6 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     {
         if (!guidePanel.name.getValue().trim().isEmpty()) {
             actualizarGuiaActual();
-            raiz.setGuides(new LinkedList<>());
             raiz.setGuiaPropia(true);
 
             if (!editing)
@@ -514,8 +513,10 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         if(raiz.editing)
         {
             Long id = raiz.getId();
+            List<Guide> guideList = raiz.getGuides();
             raiz = editado;
             raiz.editing = true;
+            raiz.setGuides(guideList);
             raiz.setId(id);
         }
         else
