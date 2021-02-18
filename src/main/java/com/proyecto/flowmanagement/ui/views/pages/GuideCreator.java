@@ -209,7 +209,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     private void configureImportExport() {
         importExportLayout = new HorizontalLayout();
         importExportLayout.setWidthFull();
-        importExportPanel = new ImportExportPanel(guideGeneratorServiceImp);
+        importExportPanel = new ImportExportPanel(guideGeneratorServiceImp, guideService);
         importExportLayout.add(importExportPanel);
     }
 
@@ -256,11 +256,37 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     private void importacionGuia()
     {
         importExportPanel.uploadFileForm.upload.addSucceededListener(succeededEvent -> addImportedGuide());
+        importExportPanel.importarExistente.addClickListener(buttonClickEvent -> importarExistente());
+    }
+
+    private void importarExistente() {
+        if(importExportPanel.guides !=null)
+        {
+            Guide importedGuide = importExportPanel.guides.getValue();
+            if(this.guideList == null)
+                guideList = new LinkedList<>();
+
+            guideList.add(SerializationUtils.clone(importedGuide));
+
+            if(importedGuide != null)
+            {
+                editado.addGuide(importedGuide);
+                actualizarGuiaActual();
+            }
+
+            importExportPanel.setAsDefault();
+
+            this.stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.guideList = this.guideList;
+        }
+        else{
+            mostrarMensajeError("Debe elegir una guia para importar");
+        }
     }
 
     private void addImportedGuide()
     {
         Guide importedGuide = importExportPanel.uploadFileForm.actual;
+        importedGuide.setGuiaPropia(false);
         if(this.guideList == null)
             guideList = new LinkedList<>();
         guideList.add(importedGuide);
@@ -270,6 +296,9 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
             editado.addGuide(importedGuide);
             actualizarGuiaActual();
         }
+
+        importExportPanel.setAsDefault();
+
         this.stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.guideList = this.guideList;
     }
 
