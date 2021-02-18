@@ -49,8 +49,13 @@ public class ImportExportPanel  extends HorizontalLayout {
 
         uploadFileForm = new UploadFileForm(this.guideGeneratorService);
         basicHorizontal.add(options,uploadFileForm,guides,importarExistente,cancel);
+        basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, options);
+        basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, uploadFileForm);
+        basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, guides);
+        basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, importarExistente);
+        basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, cancel);
+        basicHorizontal.setSizeFull();
         uploadFileForm.cancelarImportacion.addClickListener(buttonClickEvent -> setAsDefault());
-        basicHorizontal.setWidthFull();
         setWidthFull();
         basicHorizontal.setClassName("campos-layout");
         basicInformation.add(basicHorizontal);
