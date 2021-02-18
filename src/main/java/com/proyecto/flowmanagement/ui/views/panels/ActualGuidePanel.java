@@ -30,14 +30,20 @@ public class ActualGuidePanel extends HorizontalLayout {
 
     private void configureElements()
     {
+        setWidthFull();
         basicInformation.setWidthFull();
         actualGuideLayout.setId("step-Layout");
         actualGuideLayout.add(actualGuide);
+        actualGuideLayout.setWidthFull();
+        actualGuideLayout.setClassName("basic-information-layout");
+        actualGuide.setMinWidth("35%");
+        actualGuide.setMaxWidth("75%");
         accordion.setWidthFull();
-        basicInformation.add(actualGuideLayout);
-        basicInformation.setClassName("basic-information-layout");
+//        basicInformation.add(actualGuideLayout);
+//        basicInformation.setClassName("basic-information-layout");
+
         accordion.close();
-        accordion.add("Guia Actual", basicInformation);
+        accordion.add("Guia Actual", actualGuideLayout);
         add(accordion);
     }
 

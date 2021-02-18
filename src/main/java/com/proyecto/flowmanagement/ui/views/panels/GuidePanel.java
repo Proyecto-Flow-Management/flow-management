@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 public class GuidePanel  extends HorizontalLayout {
 
     Accordion accordion = new Accordion();
-    FormLayout basicInformation = new FormLayout();
     HorizontalLayout basicHorizontal = new HorizontalLayout();
     public Button eliminarGuia = new Button("Eliminar");
 
@@ -45,11 +44,13 @@ public class GuidePanel  extends HorizontalLayout {
         basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, label);
         basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, mainStep);
         basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, eliminarGuia);
-        basicHorizontal.setSizeFull();
         basicHorizontal.setClassName("campos-layout");
-        basicInformation.add(basicHorizontal);
-        basicInformation.setClassName("basic-information-layout");
-        accordion.add("Informacion Basica", basicInformation);
+        basicHorizontal.setWidthFull();
+        name.setMinWidth("25%");
+        name.setMaxWidth("40%");
+        label.setMinWidth("25%");
+        label.setMaxWidth("40%");
+        accordion.add("Informacion Basica", basicHorizontal);
     }
 
     private void configureForm() {

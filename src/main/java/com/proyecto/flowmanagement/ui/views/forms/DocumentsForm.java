@@ -19,7 +19,8 @@ public class DocumentsForm extends VerticalLayout {
     VerticalLayout form = new VerticalLayout();
     HorizontalLayout elements = new HorizontalLayout();
     HorizontalLayout actionsLayout = new HorizontalLayout();
-    TextField url = new TextField("URL Document");
+    TextField url = new TextField("URL");
+    TextField mineType = new TextField("Mine Type");
     public Button save = new Button("Guardar");
     public Button close = new Button("Cancelar");
     public Button delete = new Button("Eliminar");
@@ -39,8 +40,13 @@ public class DocumentsForm extends VerticalLayout {
     private void configureElements() {
         delete.setVisible(false);
 
-        this.url.setValue("");
-        elements.add(url);
+        this.url.clear();
+        elements.add(mineType,url);
+        elements.setWidthFull();
+        mineType.setMinWidth("25%");
+        mineType.setMaxWidth("40%");
+        url.setMinWidth("35%");
+        url.setMaxWidth("70%");
         actionsLayout.add(createButtonsLayout());
     }
 
@@ -70,11 +76,12 @@ public class DocumentsForm extends VerticalLayout {
         if(isValid())
         {
             stepDocument = new StepDocument();
+            stepDocument.setMimeType(mineType.getValue());
             stepDocument.setUrl(url.getValue());
             this.isValid = true;
         }
         else {
-            MostrarMensajeError("El campo url es obligatorio.");
+            MostrarMensajeError("Los campos Mine Type y URL son obligatorios.");
         }
     }
 
@@ -98,7 +105,7 @@ public class DocumentsForm extends VerticalLayout {
     public boolean validateFields() {
         boolean result = false;
 
-        if(!this.url.getValue().isEmpty()) {
+        if(!this.url.getValue().trim().isEmpty() && !this.mineType.getValue().trim().isEmpty()) {
             result = true;
         }
         return result;
