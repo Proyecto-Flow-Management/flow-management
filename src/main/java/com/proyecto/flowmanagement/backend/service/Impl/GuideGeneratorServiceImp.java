@@ -209,87 +209,157 @@ public class GuideGeneratorServiceImp {
 
         Element operationElement = (Element) node;
 
-        Node name = operationElement.getElementsByTagName(XMLConstants.OPERATION_NAME).item(0);
-        if (name != null && name.getFirstChild() != null){
-            operation.setName(name.getFirstChild().getNodeValue());
-        }
-
-        Node label = operationElement.getElementsByTagName(XMLConstants.OPERATION_LABEL).item(0);
-        if (label != null && label.getFirstChild() != null) {
-            operation.setLabel(label.getFirstChild().getNodeValue());
-        }
-
-        Node visible = operationElement.getElementsByTagName(XMLConstants.OPERATION_VISIBLE).item(0);
-        if (visible != null && visible.getFirstChild() != null) {
-            operation.setVisible(Boolean.valueOf(visible.getFirstChild().getNodeValue()));
-        }
-
-        Node preExecute = operationElement.getElementsByTagName(XMLConstants.OPERATION_PRE_EXECUTE).item(0);
-        if (preExecute != null && preExecute.getFirstChild() != null) {
-            operation.setPreExecute(Boolean.valueOf(preExecute.getFirstChild().getNodeValue()));
-        }
-
-        Node comment = operationElement.getElementsByTagName(XMLConstants.OPERATION_COMMENT).item(0);
-        if (comment != null && comment.getFirstChild() != null) {
-            operation.setComment(comment.getFirstChild().getNodeValue());
-        }
-
-        Node title = operationElement.getElementsByTagName(XMLConstants.OPERATION_TITLE).item(0);
-        if (title != null && title.getFirstChild() != null) {
-            operation.setTitle(title.getFirstChild().getNodeValue());
-        }
-
-        Node automatic = operationElement.getElementsByTagName(XMLConstants.OPERATION_AUTOMATIC).item(0);
-        if (automatic != null && automatic.getFirstChild() != null) {
-            operation.setAutomatic(Boolean.valueOf(automatic.getFirstChild().getNodeValue()));
-        }
-
-        Node pauseExecution = operationElement.getElementsByTagName(XMLConstants.OPERATION_PAUSE_EXECUTION).item(0);
-        if (pauseExecution != null && pauseExecution.getFirstChild() != null) {
-            operation.setPauseExecution(Boolean.valueOf(pauseExecution.getFirstChild().getNodeValue()));
-        }
-
-        Node operationOrder = operationElement.getElementsByTagName(XMLConstants.OPERATION_OPERATION_ORDER).item(0);
-        if (operationOrder != null && operationOrder.getFirstChild() != null) {
-            operation.setOperationOrder(Integer.parseInt(operationOrder.getFirstChild().getNodeValue()));
-        }
-
-        Node notifyAlternative = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
-        if (notifyAlternative != null && notifyAlternative.getFirstChild() != null) {
-            operation.setNotifyAlternative(Boolean.valueOf(notifyAlternative.getFirstChild().getNodeValue()));
-        }
-
-        Node notifyOperation = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION).item(0);
-        if (notifyOperation != null && notifyOperation.getFirstChild() != null) {
-            operation.setNotifyOperation(Boolean.valueOf(notifyOperation.getFirstChild().getNodeValue()));
-        }
-
-        Node notifyOperationDelay = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY).item(0);
-        if (notifyOperationDelay != null && notifyOperationDelay.getFirstChild() != null) {
-            operation.setNotifyOperationDelay(Integer.parseInt(notifyOperationDelay.getFirstChild().getNodeValue()));
-        }
-
-        Node type = operationElement.getElementsByTagName(XMLConstants.OPERATION_TYPE).item(0);
-        if (type != null && type.getFirstChild() != null) {
-            switch (type.getFirstChild().getNodeValue()) {
-
-                case "configuration" :
-                    operation.setType(SimpleOperationType.configuration);
-                    break;
-
-                case "diagnostic" :
-                    operation.setType(SimpleOperationType.diagnostic);
-                    break;
-
-                case "query" :
-                    operation.setType(SimpleOperationType.query);
-                    break;
+        NodeList nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_NAME);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node name = nodos.item(iterador);
+            if (name.getParentNode().equals(node)) {
+                if (name != null && name.getFirstChild() != null) {
+                    operation.setName(name.getFirstChild().getNodeValue());
+                }
             }
         }
 
-        Node servicio = operationElement.getElementsByTagName(XMLConstants.OPERATION_SERVICE).item(0);
-        if (servicio != null && servicio.getFirstChild() != null) {
-            operation.setService(servicio.getFirstChild().getNodeValue());
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_LABEL);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node label = nodos.item(iterador);
+            if (label.getParentNode().equals(node)) {
+                if (label != null && label.getFirstChild() != null) {
+                    operation.setLabel(label.getFirstChild().getNodeValue());
+                }
+            }
+        }
+
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_VISIBLE);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node visible = nodos.item(iterador);
+            if (visible.getParentNode().equals(node)) {
+                if (visible != null && visible.getFirstChild() != null) {
+                    operation.setVisible(Boolean.valueOf(visible.getFirstChild().getNodeValue()));
+                }
+            }
+        }
+
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_PRE_EXECUTE);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node preExecute = nodos.item(iterador);
+            if (preExecute.getParentNode().equals(node)) {
+                if (preExecute != null && preExecute.getFirstChild() != null) {
+                    operation.setPreExecute(Boolean.valueOf(preExecute.getFirstChild().getNodeValue()));
+                }
+            }
+        }
+
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_COMMENT);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node comment = nodos.item(iterador);
+            if (comment.getParentNode().equals(node)) {
+                if (comment != null && comment.getFirstChild() != null) {
+                    operation.setComment(comment.getFirstChild().getNodeValue());
+                }
+            }
+        }
+
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_TITLE);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node title = nodos.item(iterador);
+            if (title.getParentNode().equals(node)) {
+                if (title != null && title.getFirstChild() != null) {
+                    operation.setTitle(title.getFirstChild().getNodeValue());
+                }
+            }
+        }
+
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_AUTOMATIC);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node automatic = nodos.item(iterador);
+            if (automatic.getParentNode().equals(node)) {
+                if (automatic != null && automatic.getFirstChild() != null) {
+                    operation.setAutomatic(Boolean.valueOf(automatic.getFirstChild().getNodeValue()));
+                }
+            }
+        }
+
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_PAUSE_EXECUTION);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node pauseExecution = nodos.item(iterador);
+            if (pauseExecution.getParentNode().equals(node)) {
+                if (pauseExecution != null && pauseExecution.getFirstChild() != null) {
+                    operation.setPauseExecution(Boolean.valueOf(pauseExecution.getFirstChild().getNodeValue()));
+                }
+            }
+        }
+
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_OPERATION_ORDER);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node operationOrder = nodos.item(iterador);
+            if (operationOrder.getParentNode().equals(node)) {
+                if (operationOrder != null && operationOrder.getFirstChild() != null) {
+                    operation.setOperationOrder(Integer.parseInt(operationOrder.getFirstChild().getNodeValue()));
+                }
+            }
+        }
+
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node notifyAlternative = nodos.item(iterador);
+            if (notifyAlternative.getParentNode().equals(node)) {
+                if (notifyAlternative != null && notifyAlternative.getFirstChild() != null) {
+                    operation.setNotifyAlternative(Boolean.valueOf(notifyAlternative.getFirstChild().getNodeValue()));
+                }
+            }
+        }
+
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node notifyOperation = nodos.item(iterador);
+            if (notifyOperation.getParentNode().equals(node)) {
+                if (notifyOperation != null && notifyOperation.getFirstChild() != null) {
+                    operation.setNotifyOperation(Boolean.valueOf(notifyOperation.getFirstChild().getNodeValue()));
+                }
+            }
+        }
+
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node notifyOperationDelay = nodos.item(iterador);
+            if (notifyOperationDelay.getParentNode().equals(node)) {
+                if (notifyOperationDelay != null && notifyOperationDelay.getFirstChild() != null) {
+                    operation.setNotifyOperationDelay(Integer.parseInt(notifyOperationDelay.getFirstChild().getNodeValue()));
+                }
+            }
+        }
+
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_TYPE);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++) {
+            Node type = nodos.item(iterador);
+            if (type.getParentNode().equals(node)) {
+                if (type != null && type.getFirstChild() != null) {
+                    switch (type.getFirstChild().getNodeValue()) {
+
+                        case "configuration":
+                            operation.setType(SimpleOperationType.configuration);
+                            break;
+
+                        case "diagnostic":
+                            operation.setType(SimpleOperationType.diagnostic);
+                            break;
+
+                        case "query":
+                            operation.setType(SimpleOperationType.query);
+                            break;
+                    }
+                }
+            }
+        }
+
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_SERVICE);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++) {
+            Node servicio = nodos.item(iterador);
+            if (servicio.getParentNode().equals(node)) {
+                if (servicio != null && servicio.getFirstChild() != null) {
+                    operation.setService(servicio.getFirstChild().getNodeValue());
+                }
+            }
         }
 
         operation.setAlternativeIds(importAlternativesIds(node));
@@ -307,84 +377,164 @@ public class GuideGeneratorServiceImp {
 
         Element operationElement = (Element) node;
 
-        Node name = operationElement.getElementsByTagName(XMLConstants.OPERATION_NAME).item(0);
-        if (name != null && name.getFirstChild() != null){
-            operation.setName(name.getFirstChild().getNodeValue());
+        NodeList nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_NAME);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node name = nodos.item(iterador);
+            if (name.getParentNode().equals(node)) {
+                if (name != null && name.getFirstChild() != null) {
+                    operation.setName(name.getFirstChild().getNodeValue());
+                }
+            }
         }
 
-        Node label = operationElement.getElementsByTagName(XMLConstants.OPERATION_LABEL).item(0);
-        if (label != null && label.getFirstChild() != null) {
-            operation.setLabel(label.getFirstChild().getNodeValue());
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_LABEL);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node label = nodos.item(iterador);
+            if (label.getParentNode().equals(node)) {
+                if (label != null && label.getFirstChild() != null) {
+                    operation.setLabel(label.getFirstChild().getNodeValue());
+                }
+            }
         }
 
-        Node visible = operationElement.getElementsByTagName(XMLConstants.OPERATION_VISIBLE).item(0);
-        if (visible != null && visible.getFirstChild() != null) {
-            operation.setVisible(Boolean.valueOf(visible.getFirstChild().getNodeValue()));
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_VISIBLE);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node visible = nodos.item(iterador);
+            if (visible.getParentNode().equals(node)) {
+                if (visible != null && visible.getFirstChild() != null) {
+                    operation.setVisible(Boolean.valueOf(visible.getFirstChild().getNodeValue()));
+                }
+            }
         }
 
-        Node preExecute = operationElement.getElementsByTagName(XMLConstants.OPERATION_PRE_EXECUTE).item(0);
-        if (preExecute != null && preExecute.getFirstChild() != null) {
-            operation.setPreExecute(Boolean.valueOf(preExecute.getFirstChild().getNodeValue()));
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_PRE_EXECUTE);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node preExecute = nodos.item(iterador);
+            if (preExecute.getParentNode().equals(node)) {
+                if (preExecute != null && preExecute.getFirstChild() != null) {
+                    operation.setPreExecute(Boolean.valueOf(preExecute.getFirstChild().getNodeValue()));
+                }
+            }
         }
 
-        Node comment = operationElement.getElementsByTagName(XMLConstants.OPERATION_COMMENT).item(0);
-        if (comment != null && comment.getFirstChild() != null) {
-            operation.setComment(comment.getFirstChild().getNodeValue());
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_COMMENT);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node comment = nodos.item(iterador);
+            if (comment.getParentNode().equals(node)) {
+                if (comment != null && comment.getFirstChild() != null) {
+                    operation.setComment(comment.getFirstChild().getNodeValue());
+                }
+            }
         }
 
-        Node title = operationElement.getElementsByTagName(XMLConstants.OPERATION_TITLE).item(0);
-        if (title != null && title.getFirstChild() != null) {
-            operation.setTitle(title.getFirstChild().getNodeValue());
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_TITLE);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node title = nodos.item(iterador);
+            if (title.getParentNode().equals(node)) {
+                if (title != null && title.getFirstChild() != null) {
+                    operation.setTitle(title.getFirstChild().getNodeValue());
+                }
+            }
         }
 
-        Node automatic = operationElement.getElementsByTagName(XMLConstants.OPERATION_AUTOMATIC).item(0);
-        if (automatic != null && automatic.getFirstChild() != null) {
-            operation.setAutomatic(Boolean.valueOf(automatic.getFirstChild().getNodeValue()));
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_AUTOMATIC);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node automatic = nodos.item(iterador);
+            if (automatic.getParentNode().equals(node)) {
+                if (automatic != null && automatic.getFirstChild() != null) {
+                    operation.setAutomatic(Boolean.valueOf(automatic.getFirstChild().getNodeValue()));
+                }
+            }
         }
 
-        Node pauseExecution = operationElement.getElementsByTagName(XMLConstants.OPERATION_PAUSE_EXECUTION).item(0);
-        if (pauseExecution != null && pauseExecution.getFirstChild() != null) {
-            operation.setPauseExecution(Boolean.valueOf(pauseExecution.getFirstChild().getNodeValue()));
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_PAUSE_EXECUTION);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node pauseExecution = nodos.item(iterador);
+            if (pauseExecution.getParentNode().equals(node)) {
+                if (pauseExecution != null && pauseExecution.getFirstChild() != null) {
+                    operation.setPauseExecution(Boolean.valueOf(pauseExecution.getFirstChild().getNodeValue()));
+                }
+            }
         }
 
-        Node operationOrder = operationElement.getElementsByTagName(XMLConstants.OPERATION_OPERATION_ORDER).item(0);
-        if (operationOrder != null && operationOrder.getFirstChild() != null) {
-            operation.setOperationOrder(Integer.parseInt(operationOrder.getFirstChild().getNodeValue()));
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_OPERATION_ORDER);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node operationOrder = nodos.item(iterador);
+            if (operationOrder.getParentNode().equals(node)) {
+                if (operationOrder != null && operationOrder.getFirstChild() != null) {
+                    operation.setOperationOrder(Integer.parseInt(operationOrder.getFirstChild().getNodeValue()));
+                }
+            }
         }
 
-        Node notifyAlternative = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE).item(0);
-        if (notifyAlternative != null && notifyAlternative.getFirstChild() != null) {
-            operation.setNotifyAlternative(Boolean.valueOf(notifyAlternative.getFirstChild().getNodeValue()));
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_ALTERNATIVE);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node notifyAlternative = nodos.item(iterador);
+            if (notifyAlternative.getParentNode().equals(node)) {
+                if (notifyAlternative != null && notifyAlternative.getFirstChild() != null) {
+                    operation.setNotifyAlternative(Boolean.valueOf(notifyAlternative.getFirstChild().getNodeValue()));
+                }
+            }
         }
 
-        Node notifyOperation = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION).item(0);
-        if (notifyOperation != null && notifyOperation.getFirstChild() != null) {
-            operation.setNotifyOperation(Boolean.valueOf(notifyOperation.getFirstChild().getNodeValue()));
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node notifyOperation = nodos.item(iterador);
+            if (notifyOperation.getParentNode().equals(node)) {
+                if (notifyOperation != null && notifyOperation.getFirstChild() != null) {
+                    operation.setNotifyOperation(Boolean.valueOf(notifyOperation.getFirstChild().getNodeValue()));
+                }
+            }
         }
 
-        Node notifyOperationDelay = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY).item(0);
-        if (notifyOperationDelay != null && notifyOperationDelay.getFirstChild() != null) {
-            operation.setNotifyOperationDelay(Integer.parseInt(notifyOperationDelay.getFirstChild().getNodeValue()));
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node notifyOperationDelay = nodos.item(iterador);
+            if (notifyOperationDelay.getParentNode().equals(node)) {
+                if (notifyOperationDelay != null && notifyOperationDelay.getFirstChild() != null) {
+                    operation.setNotifyOperationDelay(Integer.parseInt(notifyOperationDelay.getFirstChild().getNodeValue()));
+                }
+            }
         }
 
-        Node targetSystem = operationElement.getElementsByTagName(XMLConstants.OPERATION_TARGET_SYSTEM).item(0);
-        if (targetSystem != null && targetSystem.getFirstChild() != null) {
-            operation.setTargetSystem(targetSystem.getFirstChild().getNodeValue());
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_TARGET_SYSTEM);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node targetSystem = nodos.item(iterador);
+            if (targetSystem.getParentNode().equals(node)) {
+                if (targetSystem != null && targetSystem.getFirstChild() != null) {
+                    operation.setTargetSystem(targetSystem.getFirstChild().getNodeValue());
+                }
+            }
         }
 
-        Node mailTemplate = operationElement.getElementsByTagName(XMLConstants.OPERATION_MAIL_TEMPLATE).item(0);
-        if (mailTemplate != null && mailTemplate.getFirstChild() != null) {
-            operation.setMailTemplate(mailTemplate.getFirstChild().getNodeValue());
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_MAIL_TEMPLATE);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node mailTemplate = nodos.item(iterador);
+            if (mailTemplate.getParentNode().equals(node)) {
+                if (mailTemplate != null && mailTemplate.getFirstChild() != null) {
+                    operation.setMailTemplate(mailTemplate.getFirstChild().getNodeValue());
+                }
+            }
         }
 
-        Node mailTo = operationElement.getElementsByTagName(XMLConstants.OPERATION_MAIL_TO).item(0);
-        if (mailTo != null && mailTo.getFirstChild() != null) {
-            operation.setMailTo(mailTo.getFirstChild().getNodeValue());
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_MAIL_TO);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node mailTo = nodos.item(iterador);
+            if (mailTo.getParentNode().equals(node)) {
+                if (mailTo != null && mailTo.getFirstChild() != null) {
+                    operation.setMailTo(mailTo.getFirstChild().getNodeValue());
+                }
+            }
         }
 
-        Node mailSubjectPrefix = operationElement.getElementsByTagName(XMLConstants.OPERATION_MAIL_SUBJECT_PREFIX).item(0);
-        if (mailSubjectPrefix != null && mailSubjectPrefix.getFirstChild() != null) {
-            operation.setMailSubjectPrefix(mailSubjectPrefix.getFirstChild().getNodeValue());
+        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_MAIL_SUBJECT_PREFIX);
+        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+            Node mailSubjectPrefix = nodos.item(iterador);
+            if (mailSubjectPrefix.getParentNode().equals(node)) {
+                if (mailSubjectPrefix != null && mailSubjectPrefix.getFirstChild() != null) {
+                    operation.setMailSubjectPrefix(mailSubjectPrefix.getFirstChild().getNodeValue());
+                }
+            }
         }
 
         NodeList childs = node.getChildNodes();
@@ -491,112 +641,209 @@ public class GuideGeneratorServiceImp {
                         Node parameterNode = parameterNodeList.item(i);
                         Element parameterElement = (Element) parameterNode;
 
-                        Node name = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_NAME).item(0);
-                        if (name != null && name.getFirstChild() != null){
-                            parameter.setName(name.getFirstChild().getNodeValue());
-                        }
 
-                        Node label = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_LABEL).item(0);
-                        if (label != null && label.getFirstChild() != null) {
-                            parameter.setLabel(label.getFirstChild().getNodeValue());
-                        }
-
-                        Node visible = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VISIBLE).item(0);
-                        if (visible != null && visible.getFirstChild() != null) {
-                            parameter.setVisible(Boolean.valueOf(visible.getFirstChild().getNodeValue()));
-                        }
-
-                        Node visibleWhenIn = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VISIBLE_WHEN_IN_PARAMETER_EQUALS_CONDITION).item(0);
-                        if (visibleWhenIn != null && (visibleWhenIn.getFirstChild()!=null)){
-                            parameter.setVisibleWhenInParameterEqualsCondition(visibleWhenIn.getFirstChild().getNodeValue());
-                        }
-
-                        Node type = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_TYPE).item(0);
-                        if (type != null && type.getFirstChild() != null) {
-                            parameter.setType(type.getFirstChild().getNodeValue());
-                        }
-
-                        Node description = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DESCRIPTION).item(0);
-                        if (description != null && description.getFirstChild() != null){
-                            parameter.setDescription(description.getFirstChild().getNodeValue());
-                        }
-
-                        Node value = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VALUE).item(0);
-                        if (value != null && (value.getFirstChild()!=null)) {
-                            parameter.setValue(value.getFirstChild().getNodeValue());
-                        }
-
-                        Node enable = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_ENABLE).item(0);
-                        if (enable != null && enable.getFirstChild() != null) {
-                            parameter.setEnable(Boolean.valueOf(enable.getFirstChild().getNodeValue()));
-                        }
-
-                        Node required = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_REQUIRED).item(0);
-                        if (required != null && required.getFirstChild() != null) {
-                            parameter.setRequired(Boolean.valueOf(required.getFirstChild().getNodeValue()));
-                        }
-
-                        Node validateExpression = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_EXPRESSION).item(0);
-                        if (validateExpression != null && validateExpression.getFirstChild() != null){
-                            parameter.setValidateExpression(validateExpression.getFirstChild().getNodeValue());
-                        }
-
-                        Node validateExpressionErrorDescription = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_EXPRESSION_ERROR_DESCRIPTION).item(0);
-                        if (validateExpressionErrorDescription != null && validateExpression.getFirstChild() != null) {
-                            parameter.setValidateExpressionErrorDescription(validateExpressionErrorDescription.getFirstChild().getNodeValue());
-                        }
-
-                        Node optionValue = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_OPTION_VALUE).item(0);
-                        if (optionValue != null && optionValue.getFirstChild() != null) {
-                            parameter.setOptionValue(optionValue.getFirstChild().getNodeValue());
-                        }
-
-                        Node dateFormat = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT).item(0);
-                        if (dateFormat != null && dateFormat.getFirstChild() != null) {
-                            parameter.setDateFormat(dateFormat.getFirstChild().getNodeValue());
-                        }
-
-                        Node dateFormatRangeEnd = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DTE_FORMAT_RANGE_END).item(0);
-                        if (dateFormatRangeEnd != null && dateFormatRangeEnd.getFirstChild() != null) {
-                            parameter.setDateFormatRangeEnd(dateFormatRangeEnd.getFirstChild().getNodeValue());
-                        }
-
-                        Node dateFormatFinal = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT_FINAL).item(0);
-                        if (dateFormatFinal != null && dateFormatFinal.getFirstChild() != null) {
-                            parameter.setDateFormatFinal(dateFormatFinal.getFirstChild().getNodeValue());
-                        }
-
-                        Node sourceValueEntity = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY).item(0);
-                        if (sourceValueEntity != null && sourceValueEntity.getFirstChild() != null) {
-                            switch (sourceValueEntity.getFirstChild().getNodeValue()) {
-
-                                case "ticket" :
-                                    parameter.setSourceValueEntity(SourceEntity.ticket);
-                                    break;
-
-                                case "task" :
-                                    parameter.setSourceValueEntity(SourceEntity.task);
-                                    break;
-
-                                case "guide" :
-                                    parameter.setSourceValueEntity(SourceEntity.guide);
-                                    break;
+                        NodeList nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_NAME);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+                            Node name = nodos.item(iterador);
+                            if (name.getParentNode().equals(parameterNode)){
+                                if (name != null && name.getFirstChild() != null){
+                                    parameter.setName(name.getFirstChild().getNodeValue());
+                                }
                             }
                         }
 
-                        Node sourceValueEntityProperty = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY_PROPERTY).item(0);
-                        if (sourceValueEntityProperty != null && (sourceValueEntityProperty.getFirstChild() != null)) {
-                            parameter.setSourceValueEntityProperty(sourceValueEntityProperty.getFirstChild().getNodeValue());
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_LABEL);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+                            Node label = nodos.item(iterador);
+                            if (label.getParentNode().equals(parameterNode)) {
+                                if (label != null && label.getFirstChild() != null) {
+                                    parameter.setLabel(label.getFirstChild().getNodeValue());
+                                }
+                            }
                         }
 
-                        Node convert = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_CONVERT).item(0);
-                        if (convert != null && convert.getFirstChild() != null) {
-                            parameter.setConvert(Boolean.valueOf(convert.getFirstChild().getNodeValue()));
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VISIBLE);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+                            Node visible = nodos.item(iterador);
+                            if (visible.getParentNode().equals(parameterNode)) {
+                                if (visible != null && visible.getFirstChild() != null) {
+                                    parameter.setVisible(Boolean.valueOf(visible.getFirstChild().getNodeValue()));
+                                }
+                            }
                         }
 
-                        Node valueWhenInParameterEquals = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS).item(0);
-                        if (valueWhenInParameterEquals != null && valueWhenInParameterEquals.getFirstChild() != null) {
-                            parameter.setValueWhenInParameterEquals(valueWhenInParameterEquals.getFirstChild().getNodeValue());
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VISIBLE_WHEN_IN_PARAMETER_EQUALS_CONDITION);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+                            Node visibleWhenIn = nodos.item(iterador);
+                            if (visibleWhenIn.getParentNode().equals(parameterNode)) {
+                                if (visibleWhenIn != null && (visibleWhenIn.getFirstChild() != null)) {
+                                    parameter.setVisibleWhenInParameterEqualsCondition(visibleWhenIn.getFirstChild().getNodeValue());
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_TYPE);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+                            Node type = nodos.item(iterador);
+                            if (type.getParentNode().equals(parameterNode)) {
+                                if (type != null && type.getFirstChild() != null) {
+                                    parameter.setType(type.getFirstChild().getNodeValue());
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DESCRIPTION);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+                            Node description = nodos.item(iterador);
+                            if (description.getParentNode().equals(parameterNode)) {
+                                if (description != null && description.getFirstChild() != null) {
+                                    parameter.setDescription(description.getFirstChild().getNodeValue());
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VALUE);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+                            Node value = nodos.item(iterador);
+                            if (value.getParentNode().equals(parameterNode)) {
+                                if (value != null && (value.getFirstChild() != null)) {
+                                    parameter.setValue(value.getFirstChild().getNodeValue());
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_ENABLE);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+                            Node enable = nodos.item(iterador);
+                            if (enable.getParentNode().equals(parameterNode)) {
+                                if (enable != null && enable.getFirstChild() != null) {
+                                    parameter.setEnable(Boolean.valueOf(enable.getFirstChild().getNodeValue()));
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_REQUIRED);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++) {
+                            Node required = nodos.item(iterador);
+                            if (required.getParentNode().equals(parameterNode)) {
+                                if (required != null && required.getFirstChild() != null) {
+                                    parameter.setRequired(Boolean.valueOf(required.getFirstChild().getNodeValue()));
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_EXPRESSION);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++) {
+                            Node validateExpression = nodos.item(iterador);
+                            if (validateExpression.getParentNode().equals(parameterNode)) {
+                                if (validateExpression != null && validateExpression.getFirstChild() != null) {
+                                    parameter.setValidateExpression(validateExpression.getFirstChild().getNodeValue());
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_EXPRESSION_ERROR_DESCRIPTION);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++) {
+                            Node validateExpressionErrorDescription = nodos.item(iterador);
+                            if (validateExpressionErrorDescription.getParentNode().equals(parameterNode)) {
+                                if (validateExpressionErrorDescription != null && validateExpressionErrorDescription.getFirstChild() != null) {
+                                    parameter.setValidateExpressionErrorDescription(validateExpressionErrorDescription.getFirstChild().getNodeValue());
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_OPTION_VALUE);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++) {
+                            Node optionValue = nodos.item(iterador);
+                            if (optionValue.getParentNode().equals(parameterNode)) {
+                                if (optionValue != null && optionValue.getFirstChild() != null) {
+                                    parameter.setOptionValue(optionValue.getFirstChild().getNodeValue());
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++) {
+                            Node dateFormat = nodos.item(iterador);
+                            if (dateFormat.getParentNode().equals(parameterNode)) {
+                                if (dateFormat != null && dateFormat.getFirstChild() != null) {
+                                    parameter.setDateFormat(dateFormat.getFirstChild().getNodeValue());
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DTE_FORMAT_RANGE_END);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++) {
+                            Node dateFormatRangeEnd = nodos.item(iterador);
+                            if (dateFormatRangeEnd.getParentNode().equals(parameterNode)) {
+                                if (dateFormatRangeEnd != null && dateFormatRangeEnd.getFirstChild() != null) {
+                                    parameter.setDateFormatRangeEnd(dateFormatRangeEnd.getFirstChild().getNodeValue());
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT_FINAL);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++) {
+                            Node dateFormatFinal = nodos.item(iterador);
+                            if (dateFormatFinal.getParentNode().equals(parameterNode)) {
+                                if (dateFormatFinal != null && dateFormatFinal.getFirstChild() != null) {
+                                    parameter.setDateFormatFinal(dateFormatFinal.getFirstChild().getNodeValue());
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++) {
+                            Node sourceValueEntity = nodos.item(iterador);
+                            if (sourceValueEntity.getParentNode().equals(parameterNode)) {
+                                if (sourceValueEntity != null && sourceValueEntity.getFirstChild() != null) {
+                                    switch (sourceValueEntity.getFirstChild().getNodeValue()) {
+
+                                        case "ticket":
+                                            parameter.setSourceValueEntity(SourceEntity.ticket);
+                                            break;
+
+                                        case "task":
+                                            parameter.setSourceValueEntity(SourceEntity.task);
+                                            break;
+
+                                        case "guide":
+                                            parameter.setSourceValueEntity(SourceEntity.guide);
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY_PROPERTY);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++) {
+                            Node sourceValueEntityProperty = nodos.item(iterador);
+                            if (sourceValueEntityProperty.getParentNode().equals(parameterNode)) {
+                                if (sourceValueEntityProperty != null && (sourceValueEntityProperty.getFirstChild() != null)) {
+                                    parameter.setSourceValueEntityProperty(sourceValueEntityProperty.getFirstChild().getNodeValue());
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_CONVERT);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+                            Node convert = nodos.item(iterador);
+                            if (convert.getParentNode().equals(parameterNode)){
+                                if (convert != null && convert.getFirstChild() != null) {
+                                    parameter.setConvert(Boolean.valueOf(convert.getFirstChild().getNodeValue()));
+                                }
+                            }
+                        }
+
+                        nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS);
+                        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
+                            Node valueWhenInParameterEquals = nodos.item(iterador);
+                            if (valueWhenInParameterEquals.getParentNode().equals(parameterNode)) {
+                                if (valueWhenInParameterEquals != null && valueWhenInParameterEquals.getFirstChild() != null) {
+                                    parameter.setValueWhenInParameterEquals(valueWhenInParameterEquals.getFirstChild().getNodeValue());
+                                }
+                            }
                         }
 
                         if (!property){
@@ -1381,9 +1628,13 @@ public class GuideGeneratorServiceImp {
             name.setTextContent(parameter.getName());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_NAME).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_NAME).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_NAME).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getLabel() != null){
@@ -1391,9 +1642,13 @@ public class GuideGeneratorServiceImp {
             label.setTextContent(parameter.getLabel());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_LABEL).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_LABEL).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_LABEL).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getVisible() != null){
@@ -1401,9 +1656,13 @@ public class GuideGeneratorServiceImp {
             visible.setTextContent(String.valueOf(parameter.getVisible()));
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VISIBLE).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_VISIBLE).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VISIBLE).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getVisibleWhenInParameterEqualsCondition() != null){
@@ -1411,9 +1670,13 @@ public class GuideGeneratorServiceImp {
             visibleWhenInParameterEqualsCondition.setTextContent(parameter.getVisibleWhenInParameterEqualsCondition());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VISIBLE_WHEN_IN_PARAMETER_EQUALS_CONDITION).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_VISIBLE_WHEN_IN_PARAMETER_EQUALS_CONDITION).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VISIBLE_WHEN_IN_PARAMETER_EQUALS_CONDITION).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getType() != null){
@@ -1421,9 +1684,13 @@ public class GuideGeneratorServiceImp {
             type.setTextContent(parameter.getType());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_TYPE).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_TYPE).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_TYPE).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getDescription() != null){
@@ -1431,9 +1698,13 @@ public class GuideGeneratorServiceImp {
             description.setTextContent(parameter.getDescription());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DESCRIPTION).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_DESCRIPTION).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DESCRIPTION).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
 
@@ -1442,9 +1713,13 @@ public class GuideGeneratorServiceImp {
             value.setTextContent(String.valueOf(parameter.getValue()));
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALUE).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALUE).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALUE).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getEnable() != null){
@@ -1452,9 +1727,13 @@ public class GuideGeneratorServiceImp {
             enable.setTextContent(String.valueOf(parameter.getEnable()));
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_ENABLE).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_ENABLE).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_ENABLE).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getRequired() != null){
@@ -1462,9 +1741,13 @@ public class GuideGeneratorServiceImp {
             required.setTextContent(String.valueOf(parameter.getRequired()));
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_REQUIRED).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_REQUIRED).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_REQUIRED).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getValidateExpression() != null){
@@ -1472,9 +1755,13 @@ public class GuideGeneratorServiceImp {
             validateExpression.setTextContent(parameter.getValidateExpression());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_EXPRESSION).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_EXPRESSION).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_EXPRESSION).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getValidateExpressionErrorDescription() != null){
@@ -1482,9 +1769,13 @@ public class GuideGeneratorServiceImp {
             validateExpressionErrorDescription.setTextContent(parameter.getValidateExpressionErrorDescription());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_EXPRESSION_ERROR_DESCRIPTION).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_EXPRESSION_ERROR_DESCRIPTION).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_EXPRESSION_ERROR_DESCRIPTION).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getOptionValue() != null){
@@ -1492,9 +1783,13 @@ public class GuideGeneratorServiceImp {
             optionValue.setTextContent(parameter.getOptionValue());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_OPTION_VALUE).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_OPTION_VALUE).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_OPTION_VALUE).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getDateFormat() != null){
@@ -1502,9 +1797,13 @@ public class GuideGeneratorServiceImp {
             dateFormat.setTextContent(parameter.getDateFormat());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getDateFormatRangeEnd() != null){
@@ -1512,9 +1811,13 @@ public class GuideGeneratorServiceImp {
             dateFormatRangeEnd.setTextContent(parameter.getDateFormatRangeEnd());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DTE_FORMAT_RANGE_END).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_DTE_FORMAT_RANGE_END).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DTE_FORMAT_RANGE_END).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getDateFormatFinal() != null){
@@ -1522,9 +1825,13 @@ public class GuideGeneratorServiceImp {
             dateFormatFinal.setTextContent(parameter.getDateFormatFinal());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT_FINAL).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT_FINAL).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT_FINAL).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getSourceValueEntity() != null){
@@ -1532,9 +1839,13 @@ public class GuideGeneratorServiceImp {
             sourceValueEntity.setTextContent(String.valueOf(parameter.getSourceValueEntity()));
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getSourceValueEntityProperty() != null){
@@ -1542,9 +1853,13 @@ public class GuideGeneratorServiceImp {
             sourceValueEntityProperty.setTextContent(parameter.getSourceValueEntityProperty());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY_PROPERTY).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY_PROPERTY).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_SOURCE_VALUE_ENTITY_PROPERTY).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getProperties() != null && parameter.getProperties().size() > 0 && !constantTypeParameter.equals(XMLConstants.PARAMETER_PROPERTIES)){
@@ -1562,9 +1877,13 @@ public class GuideGeneratorServiceImp {
             convert.setTextContent(String.valueOf(parameter.getConvert()));
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_CONVERT).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_CONVERT).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_CONVERT).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getConvertCondition() != null && parameter.getConvertCondition().size() > 0){
@@ -1577,9 +1896,13 @@ public class GuideGeneratorServiceImp {
             }
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_CONVERT_CONDITION).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_CONVERT_CONDITION).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_CONVERT_CONDITION).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getValidateCrossFieldCondition() != null && parameter.getValidateCrossFieldCondition().size() > 0){
@@ -1592,9 +1915,13 @@ public class GuideGeneratorServiceImp {
             }
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_CROSS_FIELD_CONDITION).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_CROSS_FIELD_CONDITION).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALIDATE_CROSS_FIELD_CONDITION).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         if (parameter.getValueWhenInParameterEquals() != null){
@@ -1602,9 +1929,13 @@ public class GuideGeneratorServiceImp {
             valueWhenInParameterEquals.setTextContent(parameter.getValueWhenInParameterEquals());
         }else{
             Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS).item(0);
-            docOp.removeChild(node.getNextSibling());
-            docOp.removeChild(node);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_VALUE_WHEN_IN_PARAMETER_EQUALS).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
+            }
         }
 
         Node newPar = docParameter.getElementsByTagName(constantTypeParameter).item(0);
