@@ -35,12 +35,12 @@ public class AlternativeForm extends VerticalLayout {
     public ConditionsForm conditionForm;
     Accordion conditionFormAccordion = new Accordion();
 
-    TextField label = new TextField("Label Alternative");
 
     public List<Step> stepList = new LinkedList<>();
     public List<Guide> guideList = new LinkedList<>();
     public List<Guide> systemGuideList = new LinkedList<>();
 
+    TextField label = new TextField("Label Alternative");
     TextField nextStep = new TextField("Referencia");
     ComboBox<String> option = new ComboBox<>("Referencia");
     ComboBox<Step> stepComboBox = new ComboBox<>("Steps");
@@ -87,6 +87,15 @@ public class AlternativeForm extends VerticalLayout {
         guideComboBox.setVisible(false);
         systemGuideComboBox.setVisible(false);
         elements.add(label, option, nextStep, stepComboBox, guideComboBox, systemGuideComboBox);
+        elements.setWidthFull();
+        nextStep.setMinWidth("25%");
+        nextStep.setMaxWidth("40%");
+        stepComboBox.setMinWidth("25%");
+        stepComboBox.setMaxWidth("40%");
+        guideComboBox.setMinWidth("35%");
+        guideComboBox.setMaxWidth("75%");
+        systemGuideComboBox.setMinWidth("35%");
+        systemGuideComboBox.setMaxWidth("75%");
 
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);

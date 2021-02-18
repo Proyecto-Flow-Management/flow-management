@@ -120,7 +120,9 @@ public class DocumentsGridForm extends HorizontalLayout {
         stepDocumentGrid = new Grid<>(StepDocument.class);
         stepDocumentGrid.addClassName("user-grid");
         stepDocumentGrid.setSizeFull();
-        stepDocumentGrid.setColumns("url");
+        stepDocumentGrid.setColumns();
+        stepDocumentGrid.addColumn(stepDocument ->stepDocument.getMimeType()).setHeader("Mine Type").setSortable(true);
+        stepDocumentGrid.addColumn(stepDocument ->stepDocument.getUrl()).setHeader("URL").setSortable(true);
         stepDocumentGrid.asSingleSelect().addValueChangeListener(evt -> editStepDocument(evt.getValue()));
     }
 
