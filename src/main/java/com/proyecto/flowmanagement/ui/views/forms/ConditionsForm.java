@@ -374,15 +374,16 @@ public class ConditionsForm extends HorizontalLayout {
             this.conditionTreeForm.conditions = alternative.getConditions();
             this.conditionTreeForm.updateGrid();
             this.conditionTreeForm.setVisible(true);
+            agregarLayout.setVisible(false);
         }
         else
         {
             this.conditionTreeForm.setVisible(false);
+            agregarLayout.setVisible(true);
         }
 
         this.agregarUnaryABinary.setVisible(false);
         this.agregarBinaryEnBinary.setVisible(false);
-        this.agregarCondition.setVisible(true);
     }
 }
 

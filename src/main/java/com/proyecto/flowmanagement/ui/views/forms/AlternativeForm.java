@@ -269,8 +269,11 @@ public class AlternativeForm extends VerticalLayout {
                 this.guideComboBox.setVisible(true);
                 this.systemGuideComboBox.setVisible(false);
                 this.option.setValue("Guia Existente");
-                Guide guideSelected = this.guideList.stream().filter(guide -> guide.getName().equals(alternative.getGuideName())).findFirst().get();
-                this.guideComboBox.setValue(guideSelected);
+                if(guideList != null && guideList.size()>0)
+                {
+                    Guide guideSelected = this.guideList.stream().filter(guide -> guide.getName().equals(alternative.getGuideName())).findFirst().get();
+                    this.guideComboBox.setValue(guideSelected);
+                }
             }
 
             this.label.setValue(alternative.getLabel());
