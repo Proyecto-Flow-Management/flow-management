@@ -47,6 +47,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     }
 
     boolean editing;
+    boolean flag = true;
     GuideServiceImpl guideService;
     GuideGeneratorServiceImp guideGeneratorServiceImp;
 
@@ -109,10 +110,12 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     private void configureEditing(long id) {
         raiz = guideService.getById(id);
         raiz.editing = true;
+        flag = false;
         cargarValorGrilla(raiz);
         actualGuidePanel.actualizarItems(raiz);
         actualGuidePanel.setVisible(raiz.getGuides() != null && raiz.getGuides().size() > 0);
         editing = true;
+        flag = true;
     }
 
     private void setAsDefault() {
@@ -541,12 +544,24 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
 
         if(raiz.editing)
         {
-            Long id = raiz.getId();
-            List<Guide> guideList = raiz.getGuides();
-            raiz = editado;
-            raiz.editing = true;
-            raiz.setGuides(guideList);
-            raiz.setId(id);
+            if(flag)
+            {
+                Long id = raiz.getId();
+                List<Guide> guideList = editado.getGuides();
+                raiz = editado;
+                raiz.editing = true;
+                raiz.setGuides(guideList);
+                raiz.setId(id);
+            }
+            else
+                {
+                    Long id = raiz.getId();
+                    List<Guide> guideList = raiz.getGuides();
+                    raiz = editado;
+                    raiz.editing = true;
+                    raiz.setGuides(guideList);
+                    raiz.setId(id);
+                }
         }
         else
          raiz.setGuide(editado);
