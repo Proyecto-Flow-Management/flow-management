@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @CssImport("./styles/general.css")
 public class OperationGridForm extends HorizontalLayout {
-    private Button createOperation;
+    public Button createOperation;
     public OperationForm operationForm;
     Operation editing;
     public List<String> alternatives = new LinkedList<String>();

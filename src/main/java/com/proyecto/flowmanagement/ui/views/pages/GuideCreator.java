@@ -11,6 +11,8 @@ import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
 import com.proyecto.flowmanagement.ui.views.panels.*;
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -326,11 +328,18 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         operationGridForm.operationForm.save.addClickListener(buttonClickEvent -> actualizarOperationsIdsGuia());
         stepPanel.stepGridForm.stepForm.operationGridForm.operationForm.save.addClickListener(buttonClickEvent -> actualizarOperaationsSteps());
         stepPanel.stepGridForm.stepForm.alternativeGridForm.alternativeForm.save.addClickListener(buttonClickEvent -> actualizarAlternativesIds());
+        stepPanel.stepGridForm.stepForm.operationGridForm.createOperation.addClickListener(buttonClickEvent -> actualizarListAlternatives());
     }
 
     private void actualizarAlternativesIds()
     {
+        stepPanel.stepGridForm.stepForm.operationGridForm.createOperation.addClickListener( buttonClickEvent ->  actualizarListAlternatives());
+    }
 
+    private void actualizarListAlternatives()
+    {
+       List<String> alternativesIds = stepPanel.stepGridForm.stepForm.getStep().getAlternatives().stream().filter(a -> a.getNextStep() != null && a.getNextStep() != "").map(al -> al.getNextStep()).collect(Collectors.toList());
+       stepPanel.stepGridForm.stepForm.operationGridForm.operationForm.alternativeIdsForm.updateElements(alternativesIds);
     }
 
     private void actualizarOperaationsSteps()
