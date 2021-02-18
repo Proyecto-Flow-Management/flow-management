@@ -754,19 +754,13 @@ public class GuideGeneratorServiceImp {
                         }
 
                         nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_OPTION_VALUE);
-                        List<OptionValue> optionValues = new LinkedList<>();
                         for (int iterador = 0; iterador < nodos.getLength(); iterador++) {
                             Node optionValue = nodos.item(iterador);
                             if (optionValue.getParentNode().equals(parameterNode)) {
                                 if (optionValue != null && optionValue.getFirstChild() != null) {
-                                    OptionValue option = new OptionValue();
-                                    option.setOptionValueName(optionValue.getFirstChild().getNodeValue());
-                                    optionValues.add(option);
+                                    parameter.setOptionValue(optionValue.getFirstChild().getNodeValue());
                                 }
                             }
-                        }
-                        if (!optionValues.isEmpty()){
-                            parameter.setOptionValues(optionValues);
                         }
 
                         nodos = parameterElement.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT);
@@ -1607,18 +1601,6 @@ public class GuideGeneratorServiceImp {
         return operationId;
     }
 
-    private Node configureOptionValues(OptionValue optionValue) throws ParserConfigurationException, IOException, SAXException {
-        File file = new File(XMLConstants.OPTION_VALUE_XML_LOCATION);
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document docOptionValue = dBuilder.parse(file);
-
-        Node optionValueNode = docOptionValue.getElementsByTagName(XMLConstants.PARAMETER_OPTION_VALUE).item(0);
-        optionValueNode.setTextContent(optionValue.getOptionValueName());
-
-        return optionValueNode;
-    }
-
     private Node configureParameter(Document doc, OperationParameter parameter, String constantTypeParameter) throws ParserConfigurationException, IOException, TransformerException, org.xml.sax.SAXException {
 
         File file = null;
@@ -1796,13 +1778,17 @@ public class GuideGeneratorServiceImp {
             }
         }
 
-        if (parameter.getOptionValues() != null && parameter.getOptionValues().size() > 0){
-            Node newOption = docParameter.getElementsByTagName(constantTypeParameter).item(0);
-            Node refNode = docParameter.getElementsByTagName(XMLConstants.PARAMETER_DATE_FORMAT).item(0);
-
-            for (OptionValue optionValue : parameter.getOptionValues()) {
-                Node optionVal = configureOptionValues(optionValue);
-                newOption.insertBefore(docParameter.importNode(optionVal, true), refNode);
+        if (parameter.getOptionValue() != null){
+            Node optionValue = docParameter.getElementsByTagName(XMLConstants.PARAMETER_OPTION_VALUE).item(0);
+            optionValue.setTextContent(parameter.getOptionValue());
+        }else{
+            Node docOp = docParameter.getElementsByTagName(constantTypeParameter).item(0);
+            for(int i = 0; i < docParameter.getElementsByTagName(XMLConstants.PARAMETER_OPTION_VALUE).getLength(); i++){
+                Node node = docParameter.getElementsByTagName(XMLConstants.PARAMETER_OPTION_VALUE).item(i);
+                if (node.getParentNode().isEqualNode(docOp)){
+                    docOp.removeChild(node.getNextSibling());
+                    docOp.removeChild(node);
+                }
             }
         }
 

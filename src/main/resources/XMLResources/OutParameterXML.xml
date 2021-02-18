@@ -10,6 +10,7 @@
     <ttg:required></ttg:required>
     <ttg:validateExpression></ttg:validateExpression>
     <ttg:validateExpressionErrorDescription></ttg:validateExpressionErrorDescription>
+    <ttg:optionValue></ttg:optionValue>
     <ttg:dateFormat></ttg:dateFormat>
     <ttg:dateFormatRangeEnd></ttg:dateFormatRangeEnd>
     <ttg:dateFormatFinal></ttg:dateFormatFinal>
