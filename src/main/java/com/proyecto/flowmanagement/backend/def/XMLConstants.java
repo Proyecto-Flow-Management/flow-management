@@ -24,6 +24,7 @@ public final class XMLConstants {
     public static final String CANDIDATE_GROUPS_XML_LOCATION = "src/main/resources/XMLResources/CandidateGroupsXML.xml";
     public static final String CONVERTION_XML_LOCATION = "src/main/resources/XMLResources/ConvertionXML.xml";
     public static final String VALIDATE_CROSS_FIELD_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/ValidateCrossFieldConditionXML.xml";
+    public static final String OPTION_VALUE_XML_LOCATION = "src/main/resources/XMLResources/OptionValueXML.xml";
 
     //GUIDE ATTRIBUTES
     public static final String GUIDE_ELEMENT = "ttg:guide";
