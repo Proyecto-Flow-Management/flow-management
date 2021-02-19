@@ -64,7 +64,7 @@ public class MainLayout extends AppLayout {
         Button logout = new Button("Log out");
         logout.addClickListener(event -> UI.getCurrent().getPage().setLocation("/logout"));
 
-        unzipJar("./", "application.jar");
+//        unzipJar("./", "application.jar");
 //        unzipJar("./", "src/prueba.jar");
 
 //        String listFiles = "";
