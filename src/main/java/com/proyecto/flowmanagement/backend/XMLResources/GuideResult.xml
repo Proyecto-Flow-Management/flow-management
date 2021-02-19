@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide" xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+            <ttg:mainStepId>INITIAL</ttg:mainStepId>
+            <ttg:operation xsi:type="ttg:TaskOperation">
+    <ttg:name>Agendar reclamo</ttg:name>
+    <ttg:label>Agendar</ttg:label>
+    <ttg:automatic>false</ttg:automatic>
+    <ttg:operationOrder>1</ttg:operationOrder>
+    <ttg:operationType>taskOperation</ttg:operationType>
+    <ttg:type>schedule</ttg:type>
+    <ttg:inParameters>
+    <ttg:name>SCHEDULE_DATE</ttg:name>
+    <ttg:label>Fecha de agenda</ttg:label>
+    <ttg:visible>true</ttg:visible>
+    <ttg:type>date</ttg:type>
+    <ttg:value>current</ttg:value>
+    <ttg:required>true</ttg:required>
+    </ttg:inParameters><ttg:inParameters>
+    <ttg:name>CANDIDATE_GROUPS</ttg:name>
+    <ttg:label>Usuario asignado</ttg:label>
+    <ttg:visible>false</ttg:visible>
+    <ttg:type>string</ttg:type>
+    <ttg:value>Cualquiera del grupo</ttg:value>
+    <ttg:required>true</ttg:required>
+    </ttg:inParameters><ttg:inParameters>
+    <ttg:name>COMMENT</ttg:name>
+    <ttg:label>Comentario</ttg:label>
+    <ttg:visible>true</ttg:visible>
+    <ttg:type>string</ttg:type>
+    <ttg:required>true</ttg:required>
+    <ttg:validateExpression>(^[\s\'\-\+\*\..=¿/¡:,;áéíóúüÁÉÍÓÚñÑ@a-zA-Z0-9]{0,250}$)</ttg:validateExpression>
+    <ttg:validateExpressionErrorDescription>La descripción debe tener máximo 250 caracteres</ttg:validateExpressionErrorDescription>
+    </ttg:inParameters></ttg:operation><ttg:operation xsi:type="ttg:TaskOperation">
+    <ttg:name>Cerrar</ttg:name>
+    <ttg:label>Cancelar</ttg:label>
+    <ttg:title>Reclamo cancelado</ttg:title>
+    <ttg:automatic>false</ttg:automatic>
+    <ttg:operationOrder>1</ttg:operationOrder>
+    <ttg:operationType>taskOperation</ttg:operationType>
+    <ttg:type>close</ttg:type>
+    <ttg:inParameters>
+    <ttg:name>completionCode</ttg:name>
+    <ttg:label>Tipo cierre</ttg:label>
+    <ttg:visible>false</ttg:visible>
+    <ttg:type>string</ttg:type>
+    <ttg:value>Cancelado</ttg:value>
+    <ttg:enable>false</ttg:enable>
+    </ttg:inParameters><ttg:inParameters>
+    <ttg:name>completionSubCode</ttg:name>
+    <ttg:label>Código cierre</ttg:label>
+    <ttg:visible>true</ttg:visible>
+    <ttg:type>string</ttg:type>
+    <ttg:required>true</ttg:required>
+    <ttg:optionValue>Cliente se debe comunicar nuevamente</ttg:optionValue><ttg:optionValue>Solucionado por cliente</ttg:optionValue></ttg:inParameters><ttg:inParameters>
+    <ttg:name>completionLabel</ttg:name>
+    <ttg:label>Comentario</ttg:label>
+    <ttg:visible>true</ttg:visible>
+    <ttg:type>string</ttg:type>
+    <ttg:required>true</ttg:required>
+    </ttg:inParameters></ttg:operation></ttg:guide>
