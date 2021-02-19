@@ -42,7 +42,7 @@ public class ImportExportPanel  extends HorizontalLayout {
         List<String> opciones = new LinkedList<>();
         opciones.add("Nueva Guia");
         opciones.add("Guia existente");
-        guides.setItems(guideService.getAll().stream().filter(o -> o.isGuiaPropia()).collect(Collectors.toList()));
+        guides.setItems(guideService.getAll().stream().filter(o -> o.isGuiaPropia() && !o.isEliminada()).collect(Collectors.toList()));
         options.setItems(opciones);
         cancel.addClickListener(buttonClickEvent -> setAsDefault());
         options.addValueChangeListener(comboBoxStringComponentValueChangeEvent -> slectItem());
