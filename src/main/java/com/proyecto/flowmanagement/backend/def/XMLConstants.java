@@ -3,28 +3,28 @@ package com.proyecto.flowmanagement.backend.def;
 public final class XMLConstants {
 
     //XML Templates
-    public static final String GUIDE_XML_LOCATION = "src/main/resources/XMLResources/GuideXML.xml";
-    public static final String STEP_XML_LOCATION = "src/main/resources/XMLResources/StepXML.xml";
-    public static final String SIMPLE_OPERATION_XML_LOCATION = "src/main/resources/XMLResources/SimpleOperationXML.xml";
-    public static final String TASK_OPERATION_XML_LOCATION = "src/main/resources/XMLResources/TaskOperationXML.xml";
-    public static final String IN_PARAMETER_XML_LOCATION = "src/main/resources/XMLResources/InParameterXML.xml";
-    public static final String OUT_PARAMETER_XML_LOCATION = "src/main/resources/XMLResources/OutParameterXML.xml";
-    public static final String PROPERTY_XML_LOCATION = "src/main/resources/XMLResources/PropertyXML.xml";
-    public static final String ALTERNATIVE_XML_LOCATION = "src/main/resources/XMLResources/AlternativeXML.xml";
-    public static final String REFERENCE_DOC_XML_LOCATION = "src/main/resources/XMLResources/ReferenceDocXML.xml";
-    public static final String UNARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/UnaryConditionXML.xml";
-    public static final String BINARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/BinaryConditionXML.xml";
-    public static final String OPERATOR_UNO_UNARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/Operator1UnaryXML.xml";
-    public static final String OPERATOR_DOS_UNARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/Operator2UnaryXML.xml";
-    public static final String OPERATOR_UNO_BINARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/Operator1BinaryXML.xml";
-    public static final String OPERATOR_DOS_BINARY_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/Operator2BinaryXML.xml";
-    public static final String CONDITION_ENABLE_ALTERNATIVE_LOCATION = "src/main/resources/XMLResources/ConditionParameterXML.xml";
-    public static final String ALTERNATIVE_IDS_XML_LOCATION = "src/main/resources/XMLResources/AlternativeIdsXML.xml";
-    public static final String OPERATION_NOTIFY_IDS_XML_LOCATION = "src/main/resources/XMLResources/OperationNotifyIdsXML.xml";
-    public static final String CANDIDATE_GROUPS_XML_LOCATION = "src/main/resources/XMLResources/CandidateGroupsXML.xml";
-    public static final String CONVERTION_XML_LOCATION = "src/main/resources/XMLResources/ConvertionXML.xml";
-    public static final String VALIDATE_CROSS_FIELD_CONDITION_XML_LOCATION = "src/main/resources/XMLResources/ValidateCrossFieldConditionXML.xml";
-    public static final String OPTION_VALUE_XML_LOCATION = "src/main/resources/XMLResources/OptionValueXML.xml";
+    public static final String GUIDE_XML_LOCATION = "BOOT-INF/classes/XMLResources/GuideXML.xml";
+    public static final String STEP_XML_LOCATION = "BOOT-INF/classes/XMLResources/StepXML.xml";
+    public static final String SIMPLE_OPERATION_XML_LOCATION = "BOOT-INF/classes/XMLResources/SimpleOperationXML.xml";
+    public static final String TASK_OPERATION_XML_LOCATION = "BOOT-INF/classes/XMLResources/TaskOperationXML.xml";
+    public static final String IN_PARAMETER_XML_LOCATION = "BOOT-INF/classes/XMLResources/InParameterXML.xml";
+    public static final String OUT_PARAMETER_XML_LOCATION = "BOOT-INF/classes/XMLResources/OutParameterXML.xml";
+    public static final String PROPERTY_XML_LOCATION = "BOOT-INF/classes/XMLResources/PropertyXML.xml";
+    public static final String ALTERNATIVE_XML_LOCATION = "BOOT-INF/classes/XMLResources/AlternativeXML.xml";
+    public static final String REFERENCE_DOC_XML_LOCATION = "BOOT-INF/classes/XMLResources/ReferenceDocXML.xml";
+    public static final String UNARY_CONDITION_XML_LOCATION = "BOOT-INF/classes/XMLResources/UnaryConditionXML.xml";
+    public static final String BINARY_CONDITION_XML_LOCATION = "BOOT-INF/classes/XMLResources/BinaryConditionXML.xml";
+    public static final String OPERATOR_UNO_UNARY_CONDITION_XML_LOCATION = "BOOT-INF/classes/XMLResources/Operator1UnaryXML.xml";
+    public static final String OPERATOR_DOS_UNARY_CONDITION_XML_LOCATION = "BOOT-INF/classes/XMLResources/Operator2UnaryXML.xml";
+    public static final String OPERATOR_UNO_BINARY_CONDITION_XML_LOCATION = "BOOT-INF/classes/XMLResources/Operator1BinaryXML.xml";
+    public static final String OPERATOR_DOS_BINARY_CONDITION_XML_LOCATION = "BOOT-INF/classes/XMLResources/Operator2BinaryXML.xml";
+    public static final String CONDITION_ENABLE_ALTERNATIVE_LOCATION = "BOOT-INF/classes/XMLResources/ConditionParameterXML.xml";
+    public static final String ALTERNATIVE_IDS_XML_LOCATION = "BOOT-INF/classes/XMLResources/AlternativeIdsXML.xml";
+    public static final String OPERATION_NOTIFY_IDS_XML_LOCATION = "BOOT-INF/classes/XMLResources/OperationNotifyIdsXML.xml";
+    public static final String CANDIDATE_GROUPS_XML_LOCATION = "BOOT-INF/classes/XMLResources/CandidateGroupsXML.xml";
+    public static final String CONVERTION_XML_LOCATION = "BOOT-INF/classes/XMLResources/ConvertionXML.xml";
+    public static final String VALIDATE_CROSS_FIELD_CONDITION_XML_LOCATION = "BOOT-INF/classes/XMLResources/ValidateCrossFieldConditionXML.xml";
+    public static final String OPTION_VALUE_XML_LOCATION = "BOOT-INF/classes/XMLResources/OptionValueXML.xml";
 
     //GUIDE ATTRIBUTES
     public static final String GUIDE_ELEMENT = "ttg:guide";
@@ -139,7 +139,7 @@ public final class XMLConstants {
     public static final String VALIDATE_CROSS_FIELD_CONDITION_MESSAGE_ERROR = "ttg:messageError";
 
     // AUX
-    public static final String GUIDE_RESULT = "src/main/resources/XMLResources/GuideResult.xml";
+    public static final String GUIDE_RESULT = "BOOT-INF/classes/XMLResources/GuideResult.xml";
     public static final String AUX = "ttg:auxiliar";
 
 }
