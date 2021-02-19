@@ -3,6 +3,7 @@ package com.proyecto.flowmanagement.ui;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideGeneratorServiceImp;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
+import com.proyecto.flowmanagement.ui.views.list.ErrorList;
 import com.proyecto.flowmanagement.ui.views.list.GuideList;
 import com.proyecto.flowmanagement.ui.views.list.GuideListEliminados;
 import com.proyecto.flowmanagement.ui.views.list.UserList;
@@ -69,12 +70,14 @@ public class MainLayout extends AppLayout {
         RouterLink listLink = new RouterLink("Usuarios", UserList.class);
         RouterLink guideLink = new RouterLink("Guides", GuideList.class);
         RouterLink guideDelete = new RouterLink("Papelera", GuideListEliminados.class);
+        RouterLink errores = new RouterLink("Errores", ErrorList.class);
         listLink.setHighlightCondition(HighlightConditions.sameLocation());
 
         addToDrawer(new VerticalLayout(
                 listLink,
                 guideLink,
-                guideDelete
+                guideDelete,
+                errores
         ));
     }
 

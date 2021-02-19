@@ -1,10 +1,8 @@
 package com.proyecto.flowmanagement.ui.views.list;
 
+import com.proyecto.flowmanagement.backend.persistence.entity.Errores;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
-import com.proyecto.flowmanagement.backend.service.Impl.GuideGeneratorServiceImp;
-import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
-import com.proyecto.flowmanagement.backend.service.Impl.MockTestServiceImpl;
-import com.proyecto.flowmanagement.backend.service.Impl.StepServiceImpl;
+import com.proyecto.flowmanagement.backend.service.Impl.*;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.forms.UploadFileForm;
 import com.vaadin.flow.component.UI;
@@ -64,8 +62,12 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
     Button addGuideButton;
     UploadFileForm uploadFileForm;
     TextField filterText = new TextField();
-    public GuideList(GuideServiceImpl guideService, GuideGeneratorServiceImp guideGeneratorServiceImp) throws IOException, SAXException, ParserConfigurationException {
+
+    ErroresServiceImpl erroresService;
+
+    public GuideList(GuideServiceImpl guideService, GuideGeneratorServiceImp guideGeneratorServiceImp, ErroresServiceImpl erroresService) throws IOException, SAXException, ParserConfigurationException {
         this.guideService = guideService;
+        this.erroresService = erroresService; 
         this.guideGeneratorService = guideGeneratorServiceImp;
         //test2();
         addClassName("create-guide-view");
@@ -199,6 +201,9 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
                     try {
                         return new ByteArrayInputStream(zipFiles(files));
                     } catch (IOException e) {
+                        Errores nuevoError = new Errores();
+                        nuevoError.setError(e.getMessage());
+                        erroresService.add(nuevoError);
                         e.printStackTrace();
                     }
                 return null;}));
