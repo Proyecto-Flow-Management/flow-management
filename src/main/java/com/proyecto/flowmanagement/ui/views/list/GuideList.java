@@ -207,7 +207,7 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
                         nuevoError.setError(e.getMessage());
                         erroresService.add(nuevoError);
                         e.printStackTrace();
-                    }
+                    } 
                 return null;}));
         buttonWrapper.wrapComponent(button);
         return buttonWrapper;
@@ -222,6 +222,9 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
                     try {
                         return new ByteArrayInputStream(zipFiles(files));
                     } catch (IOException e) {
+                        Errores nuevoError = new Errores();
+                        nuevoError.setError(e.getMessage());
+                        erroresService.add(nuevoError);
                         e.printStackTrace();
                     }
                     return null;}// ... create the input stream here
