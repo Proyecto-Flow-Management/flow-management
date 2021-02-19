@@ -39,8 +39,6 @@ public class ActualGuidePanel extends HorizontalLayout {
         actualGuide.setMinWidth("35%");
         actualGuide.setMaxWidth("75%");
         accordion.setWidthFull();
-//        basicInformation.add(actualGuideLayout);
-//        basicInformation.setClassName("basic-information-layout");
 
         accordion.close();
         accordion.add("Guia Actual", actualGuideLayout);
