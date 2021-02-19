@@ -64,9 +64,10 @@ public class MainLayout extends AppLayout {
         Button logout = new Button("Log out");
         logout.addClickListener(event -> UI.getCurrent().getPage().setLocation("/logout"));
 
+        // Local comentado, deploy descomentado: mvn clean package -Pproduction -DskipTests
 //        unzipJar("./", "application.jar");
-//        unzipJar("./", "src/prueba.jar");
 
+        /// Archivos que estan en el directorio donde esta corriendo el programa
 //        String listFiles = "";
 //
 //        File directory = new File("./");
