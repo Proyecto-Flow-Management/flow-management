@@ -17,6 +17,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
 
@@ -43,7 +44,9 @@ public class OperationParameterForm extends VerticalLayout {
     HorizontalLayout convertConditionGridLayout = new HorizontalLayout();
     VerticalLayout propertiesLayout = new VerticalLayout();
     HorizontalLayout propertiesGridLayout = new HorizontalLayout();
+    Accordion desconocidosAccordion = new Accordion();
 
+    TextArea desconocidosText = new TextArea("Desconocidos");
     private TextField name = new TextField("Nombre");
     private TextField label = new TextField("Etiqueta");
     private ComboBox<String> visible = new ComboBox<>("Visible");
@@ -107,6 +110,13 @@ public class OperationParameterForm extends VerticalLayout {
         convertConditionsAccordion.add("Convert Conditions", convertConditionLayout);
         convertConditionsAccordion.close();
 
+        desconocidosAccordion.setWidthFull();
+        desconocidosAccordion.close();
+        desconocidosAccordion.add("Componentes desconocidos", desconocidosText);
+        desconocidosText.setMinWidth("60%");
+        desconocidosText.setMaxWidth("80%");
+        desconocidosText.setClassName("campos-layout");
+
         propertiesLayout.setWidthFull();
         propertiesGridLayout.setWidthFull();
         propertiesGridLayout.add(propertiesForm);
@@ -119,7 +129,7 @@ public class OperationParameterForm extends VerticalLayout {
     }
 
     private void configureForm() {
-        add(elements, optionValuesAccordion, convertConditionsAccordion, propertiesAccordion, actionsLayout);
+        add(elements, optionValuesAccordion, convertConditionsAccordion, propertiesAccordion, desconocidosAccordion, actionsLayout);
     }
 
     public void setOperationParameter(OperationParameter operationParameter) {

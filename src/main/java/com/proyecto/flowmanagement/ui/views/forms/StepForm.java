@@ -9,6 +9,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -37,6 +38,8 @@ public class StepForm extends HorizontalLayout {
     public AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
     DocumentsGridForm documentsGridForm = new DocumentsGridForm();
     public OperationGridForm operationGridForm = new OperationGridForm();
+    Accordion desconocidosAccordion = new Accordion();
+    TextArea desconocidosText = new TextArea("Desconocidos");
 
     VerticalLayout form = new VerticalLayout();
     FormLayout elements = new FormLayout();
@@ -78,6 +81,7 @@ public class StepForm extends HorizontalLayout {
 
     private void configureForm() {
         form.add(elements,textLayout,
+                desconocidosAccordion,
                 alternativeGridLayout,
                 operationsLayout,
                 stepDocumentsLayout,
@@ -134,6 +138,12 @@ public class StepForm extends HorizontalLayout {
                 new FormLayout.ResponsiveStep("32em", 2));
         elements.setWidthFull();
         textLayout.add(text);
+        desconocidosAccordion.setWidthFull();
+        desconocidosAccordion.close();
+        desconocidosAccordion.add("Componentes desconocidos", desconocidosText);
+        desconocidosText.setMinWidth("60%");
+        desconocidosText.setMaxWidth("80%");
+        desconocidosText.setClassName("campos-layout");
         textLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1));
         textLayout.setWidthFull();

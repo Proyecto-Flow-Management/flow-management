@@ -10,6 +10,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 
 import java.util.LinkedList;
@@ -21,6 +22,8 @@ public class GuidePanel  extends HorizontalLayout {
 
     Accordion accordion = new Accordion();
     HorizontalLayout basicHorizontal = new HorizontalLayout();
+    Accordion desconocidosAccordion = new Accordion();
+    TextArea desconocidosText = new TextArea("Desconocidos");
     public Button eliminarGuia = new Button("Eliminar");
 
     public TextField name = new TextField("Name");
@@ -46,11 +49,21 @@ public class GuidePanel  extends HorizontalLayout {
         basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, eliminarGuia);
         basicHorizontal.setClassName("campos-layout");
         basicHorizontal.setWidthFull();
+        desconocidosAccordion.setWidthFull();
+        desconocidosAccordion.close();
+        desconocidosAccordion.add("Componentes desconocidos", desconocidosText);
+        desconocidosText.setMinWidth("60%");
+        desconocidosText.setMaxWidth("80%");
+        desconocidosText.setClassName("campos-layout");
+        VerticalLayout layoutVertical = new VerticalLayout();
+        layoutVertical.setWidthFull();
+        layoutVertical.add(basicHorizontal,desconocidosAccordion);
         name.setMinWidth("25%");
         name.setMaxWidth("40%");
         label.setMinWidth("25%");
         label.setMaxWidth("40%");
-        accordion.add("Informacion Basica", basicHorizontal);
+//        accordion.add("Informacion Basica", basicHorizontal);
+        accordion.add("Informacion Basica", layoutVertical);
     }
 
     private void configureForm() {
