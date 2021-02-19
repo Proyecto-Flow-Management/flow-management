@@ -39,6 +39,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -162,7 +164,7 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         grid.addComponentColumn(guide -> generateEditButton(guide)).setHeader("Editar");
         grid.addComponentColumn(guide -> generateDuplicateButton(guide)).setHeader("Duplicar");
         grid.addComponentColumn(guide -> generateDeleteButton(guide)).setHeader("Eliminar");
-        grid.addComponentColumn(guide -> generateExportButton(guide)).setHeader("Exportar");
+        grid.addComponentColumn(guide -> generateExportButton2(guide)).setHeader("Exportar");
     }
 
     private Button generateEditButton(Guide guide){
@@ -210,6 +212,27 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         buttonWrapper.wrapComponent(button);
         return buttonWrapper;
     }
+
+    private Button generateExportButton2(Guide guide) {
+        List<Pair<String, byte[]>> files = getFiles(guide);
+
+        LazyDownloadButton button = new LazyDownloadButton("",
+                () -> guide.getName() + ".zip",
+                () -> {
+                    try {
+                        return new ByteArrayInputStream(zipFiles(files));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;}// ... create the input stream here
+        );
+
+        Icon icon = new Icon("vaadin", "download");
+        button.setIcon(icon);
+
+      return button;
+    }
+
 
     private List<Pair<String, byte[]>> getFiles(Guide guide){
         List<Pair<String, byte[]>> files = guideGeneratorService.guidePrints(guide);
