@@ -164,7 +164,7 @@ public class GuideList extends VerticalLayout implements HasUrlParameter<String>
         grid.addComponentColumn(guide -> generateEditButton(guide)).setHeader("Editar");
         grid.addComponentColumn(guide -> generateDuplicateButton(guide)).setHeader("Duplicar");
         grid.addComponentColumn(guide -> generateDeleteButton(guide)).setHeader("Eliminar");
-        grid.addComponentColumn(guide -> generateExportButton2(guide)).setHeader("Exportar");
+        grid.addComponentColumn(guide -> generateExportButton(guide)).setHeader("Exportar");
     }
 
     private Button generateEditButton(Guide guide){

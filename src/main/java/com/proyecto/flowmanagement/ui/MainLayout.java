@@ -26,18 +26,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 
 @CssImport("./styles/shared-styles.css")
 public class MainLayout extends AppLayout {
 
-    public MainLayout(){
+    public MainLayout() throws IOException {
         createHeader();
         createDrawer();
     }
 
-    private void createHeader() {
+    private void createHeader() throws IOException {
         H1 logo = new H1("Flow Management");
         logo.addClassName("logo");
 
@@ -57,6 +64,34 @@ public class MainLayout extends AppLayout {
         Button logout = new Button("Log out");
         logout.addClickListener(event -> UI.getCurrent().getPage().setLocation("/logout"));
 
+//        unzipJar("./", "application.jar");
+//        unzipJar("./", "src/prueba.jar");
+
+//        String listFiles = "";
+//
+//        File directory = new File("./");
+//
+//        File[] filesArray = directory.listFiles();
+//
+//        //sort all files
+//        Arrays.sort(filesArray);
+//
+//        //print the sorted values
+//        for (File file : filesArray) {
+//            if (file.isFile()) {
+//                listFiles += "File : " + file.getName() + "| ";
+//            } else if (file.isDirectory()) {
+//                listFiles += "Directory : " + file.getName() + "| ";
+//            } else {
+//                listFiles += "Unknown : " + file.getName() + "| ";
+//            }
+//        }
+//
+//        H1 archivos = new H1(listFiles);
+//        archivos.addClassName("logo");
+
+
+//        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo,archivos, loggedUsername, logout);
         HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, loggedUsername, logout);
         header.addClassName("header");
         header.setWidth("100%");
@@ -81,5 +116,45 @@ public class MainLayout extends AppLayout {
         ));
     }
 
+    public static void unzipJar(String destinationDir, String jarPath) throws IOException {
+        File file = new File(jarPath);
+        JarFile jar = new JarFile(file);
+
+        // fist get all directories,
+        // then make those directory on the destination Path
+        for (Enumeration<JarEntry> enums = jar.entries(); enums.hasMoreElements();) {
+            JarEntry entry = (JarEntry) enums.nextElement();
+
+            String fileName = destinationDir + File.separator + entry.getName();
+            File f = new File(fileName);
+
+            if (fileName.endsWith("/") && entry.getName().equals("BOOT-INF/classes/XMLResources/")) {
+                f.mkdirs();
+            }
+
+        }
+
+        //now create all files
+        for (Enumeration<JarEntry> enums = jar.entries(); enums.hasMoreElements();) {
+            JarEntry entry = (JarEntry) enums.nextElement();
+
+            String fileName = destinationDir + File.separator + entry.getName();
+            if (entry.getName().contains("BOOT-INF/classes/XMLResources")){
+                File f = new File(fileName);
+                if (!fileName.endsWith("/")) {
+                    InputStream is = jar.getInputStream(entry);
+                    FileOutputStream fos = new FileOutputStream(f);
+
+                    // write contents of 'is' to 'fos'
+                    while (is.available() > 0) {
+                        fos.write(is.read());
+                    }
+
+                    fos.close();
+                    is.close();
+                }
+            }
+        }
+    }
 
 }

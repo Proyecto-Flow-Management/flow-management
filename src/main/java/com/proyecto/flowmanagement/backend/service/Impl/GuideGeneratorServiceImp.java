@@ -1126,7 +1126,7 @@ public class GuideGeneratorServiceImp {
 
         if(mainGuide.getGuides()!= null){
             for(Guide guide : mainGuide.getGuides()){
-                files.add(new Pair<>(guide.getName() + ".xml", (GuidePrint(mainGuide))));
+                files.add(new Pair<>(guide.getName() + ".xml", (GuidePrint(guide))));
             }
         }
         return files;

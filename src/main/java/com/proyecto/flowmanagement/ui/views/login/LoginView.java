@@ -25,22 +25,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
     LoginForm login = new LoginForm();
     UserServiceImpl userService;
 
-    public LoginView(UserServiceImpl userService) {
-        this.userService = userService;
-
-        if(userService.findAll().size() == 0)
-        {
-            User newUser = new User();
-            newUser.setFirstName("Admin");
-            newUser.setLastName("Admin");
-            newUser.setEmail("admin@ucu.edu.uy");
-            newUser.setUsername("admin");
-            newUser.setPassword("$2a$10$zxvEq8XzYEYtNjbkRsJEbukHeRx3XS6MDXHMu8cNuNsRfZJWwswDy");
-            newUser.setRole("ROLE_ADMIN");
-            newUser.setEnabled(1);
-            userService.save(newUser);
-        }
-
+    public LoginView() {
         addClassName("login-view");
         setSizeFull(); 
         setJustifyContentMode(JustifyContentMode.CENTER);
