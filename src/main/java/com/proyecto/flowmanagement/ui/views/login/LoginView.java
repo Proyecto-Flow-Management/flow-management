@@ -1,8 +1,10 @@
 package com.proyecto.flowmanagement.ui.views.login;
 
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
+import com.proyecto.flowmanagement.backend.persistence.entity.User;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideGeneratorServiceImp;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
+import com.proyecto.flowmanagement.backend.service.Impl.UserServiceImpl;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -21,8 +23,23 @@ import java.util.List;
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     LoginForm login = new LoginForm();
+    UserServiceImpl userService;
 
-    public LoginView() {
+    public LoginView(UserServiceImpl userService) {
+        this.userService = userService;
+
+        if(userService.findAll().size() == 0)
+        {
+            User newUser = new User();
+            newUser.setFirstName("Admin");
+            newUser.setLastName("Admin");
+            newUser.setEmail("admin@ucu.edu.uy");
+            newUser.setUsername("admin");
+            newUser.setPassword("$2a$10$zxvEq8XzYEYtNjbkRsJEbukHeRx3XS6MDXHMu8cNuNsRfZJWwswDy");
+            newUser.setRole("ROLE_ADMIN");
+            newUser.setEnabled(1);
+            userService.save(newUser);
+        }
 
         addClassName("login-view");
         setSizeFull(); 
