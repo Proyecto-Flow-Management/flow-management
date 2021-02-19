@@ -124,8 +124,12 @@ public class Condition  extends AbstractEntity  implements Serializable {
             {
                 this.hijoDerecho = null;
             }
-            else if(hijoDerecho.deleteCondition(eliminar));
-                return true;
+            else{
+                boolean aux = hijoDerecho.deleteCondition(eliminar);
+                if(aux)
+                 return true;
+            }
+
         }
 
         if(hijoIzquierdo != null)
