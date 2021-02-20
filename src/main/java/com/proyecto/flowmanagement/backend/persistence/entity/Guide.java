@@ -24,6 +24,12 @@ public class Guide extends AbstractEntity implements Serializable {
 	@Column(name = "label")
 	private String label;
 
+	@Column(name = "fileXsd")
+	private byte[] fileXSD;
+
+	@Column(name = "nameXsd")
+	private String nameXsd;
+
 	@Column(name = "mainStep")
 	private String mainStep;
 
@@ -307,5 +313,21 @@ public class Guide extends AbstractEntity implements Serializable {
 
 	public void setEliminada(boolean eliminada) {
 		this.eliminada = eliminada;
+	}
+
+	public byte[] getFileXSD() {
+		return fileXSD;
+	}
+
+	public void setFileXSD(byte[] fileXSD) {
+		this.fileXSD = fileXSD;
+	}
+
+	public String getNameXsd() {
+		return nameXsd;
+	}
+
+	public void setNameXsd(String nameXsd) {
+		this.nameXsd = nameXsd;
 	}
 }

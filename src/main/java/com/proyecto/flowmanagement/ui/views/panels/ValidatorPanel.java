@@ -24,6 +24,7 @@ public class ValidatorPanel extends HorizontalLayout {
     Accordion accordion = new Accordion();
     FormLayout basicInformation = new FormLayout();
     Grid<String> erroresValidacion = new Grid<>();
+    Grid<String> erroresValidacionesXML = new Grid<>();
 
     TreeGrid<ValidationDTO> arbol = new TreeGrid<ValidationDTO>(ValidationDTO.class);
     TreeDataProvider<ValidationDTO> dataProvider = (TreeDataProvider<ValidationDTO>) arbol.getDataProvider();
@@ -50,6 +51,7 @@ public class ValidatorPanel extends HorizontalLayout {
     }
 
     private void configureGrid() {
+        erroresValidacionesXML.setVisible(false);
         validatorSecctionLayout = new HorizontalLayout();
         validatorSecctionLayout.add(arbol);
         arbol.removeAllColumns();
