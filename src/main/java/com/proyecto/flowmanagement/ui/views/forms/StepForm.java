@@ -6,14 +6,13 @@ import com.proyecto.flowmanagement.ui.views.grids.AlternativeGridForm;
 import com.proyecto.flowmanagement.ui.views.grids.DocumentsGridForm;
 import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEvent;
-import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -21,11 +20,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.shared.Registration;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Component
 @PageTitle("CreateStep | Flow Management")
@@ -38,8 +35,12 @@ public class StepForm extends HorizontalLayout {
     public AlternativeGridForm alternativeGridForm = new AlternativeGridForm();
     DocumentsGridForm documentsGridForm = new DocumentsGridForm();
     public OperationGridForm operationGridForm = new OperationGridForm();
+    VerticalLayout desconocidosLayout = new VerticalLayout();
+    Button validarDesconocido = new Button("Validar");
     Accordion desconocidosAccordion = new Accordion();
     TextArea desconocidosText = new TextArea("Desconocidos");
+    VerticalLayout contenedorDesconocidos = new VerticalLayout();
+    Div mensajesError = new Div();
 
     VerticalLayout form = new VerticalLayout();
     FormLayout elements = new FormLayout();
@@ -81,10 +82,10 @@ public class StepForm extends HorizontalLayout {
 
     private void configureForm() {
         form.add(elements,textLayout,
-                desconocidosAccordion,
                 alternativeGridLayout,
                 operationsLayout,
                 stepDocumentsLayout,
+                desconocidosAccordion,
                 actionsLayout);
 
         add(form);
@@ -140,15 +141,35 @@ public class StepForm extends HorizontalLayout {
         textLayout.add(text);
         desconocidosAccordion.setWidthFull();
         desconocidosAccordion.close();
-        desconocidosAccordion.add("Componentes desconocidos", desconocidosText);
-        desconocidosText.setMinWidth("60%");
-        desconocidosText.setMaxWidth("80%");
-        desconocidosText.setClassName("campos-layout");
+        desconocidosLayout.setWidthFull();
+        mensajesError.setClassName("error");
+        mensajesError.setVisible(false);
+        validarDesconocido.addClickListener(buttonClickEvent -> validarDesconocido());
+        contenedorDesconocidos.setMinWidth("60%");
+        contenedorDesconocidos.setMaxWidth("80%");
+        desconocidosText.setWidthFull();
+        mensajesError.setWidthFull();
+        contenedorDesconocidos.add(validarDesconocido, desconocidosText, mensajesError);
+        desconocidosLayout.add(contenedorDesconocidos);
+        desconocidosAccordion.add("Componentes desconocidos", desconocidosLayout);
         textLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1));
         textLayout.setWidthFull();
         actionsLayout.add(createButtonsLayout());
     }
+
+    private void validarDesconocido(){
+        this.mensajesError.setVisible(true);
+    }
+
+    public void setMensajesError(String mensajesError){
+        this.mensajesError.setText(mensajesError);
+    }
+
+    public void setDesconocidosText(String text){
+        this.desconocidosText.setValue(text);
+    }
+
 
     private Component createButtonsLayout() {
 
@@ -172,6 +193,7 @@ public class StepForm extends HorizontalLayout {
           step.setAlternatives(alternativeGridForm.getAlternatives());
           step.setOperations(operationGridForm.getOperations());
           step.setStepDocuments(documentsGridForm.getDocuments());
+          step.setTagsDesconocidos(desconocidosText.getValue());
           
           String validacionIncompleta = step.validacionIncompleta();
           
@@ -194,6 +216,13 @@ public class StepForm extends HorizontalLayout {
         this.label.setValue(step.getLabel());
         this.textId.setValue(step.getTextId());
         this.text.setValue(step.getText());
+        if (step.getTagsDesconocidos() != null){
+            setDesconocidosText(step.getTagsDesconocidos());
+        }
+        else{
+           setDesconocidosText("");
+        }
+        this.desconocidosAccordion.close();
         this.alternativeGridForm.loadAlternative(step.getAlternatives());
         this.operationGridForm.loadOperations(step.getOperations());
         this.documentsGridForm.loadStepDocuments(step.getStepDocuments());
@@ -210,6 +239,9 @@ public class StepForm extends HorizontalLayout {
         this.label.clear();
         this.textId.clear();
         this.text.clear();
+        this.setMensajesError("");
+        this.setDesconocidosText("");
+        this.mensajesError.setVisible(false);
         this.alternativeGridForm.setAsDefault();
         this.operationGridForm.setAsDefault();
         this.documentsGridForm.setAsDefault();

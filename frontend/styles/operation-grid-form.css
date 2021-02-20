@@ -8,3 +8,14 @@
 {
     margin-left: var(--lumo-space-m);
 }
+
+.error
+{
+    color: red;
+}
+
+.gridHorizontalLayout{
+    height: 200px;
+}
+
+
