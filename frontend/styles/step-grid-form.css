@@ -8,3 +8,8 @@
 {
     margin-left: var(--lumo-space-m);
 }
+
+.error
+{
+    color: red;
+}
