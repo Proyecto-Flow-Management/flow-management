@@ -27,6 +27,9 @@ public class Guide extends AbstractEntity implements Serializable {
 	@Column(name = "mainStep")
 	private String mainStep;
 
+	@Column(name = "desconocidos")
+	private String tagsDesconocidos;
+
 	@Column(name = "eliminada", columnDefinition="tinyint(0) default 0")
 	private boolean eliminada;
 
@@ -308,4 +311,13 @@ public class Guide extends AbstractEntity implements Serializable {
 	public void setEliminada(boolean eliminada) {
 		this.eliminada = eliminada;
 	}
+
+	public String getTagsDesconocidos() {
+		return tagsDesconocidos;
+	}
+
+	public void setTagsDesconocidos(String tagsDesconocidos) {
+		this.tagsDesconocidos = tagsDesconocidos;
+	}
 }
+

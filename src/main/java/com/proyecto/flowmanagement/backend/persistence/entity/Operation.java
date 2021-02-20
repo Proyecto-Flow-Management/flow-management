@@ -22,6 +22,9 @@ public class Operation  extends AbstractEntity   implements Serializable {
 	@Column(name = "label")
 	private String label;
 
+	@Column(name = "desconocidos")
+	private String tagsDesconocidos;
+
 	@Column(name = "visible")
 	private Boolean visible;
 
@@ -231,4 +234,11 @@ public class Operation  extends AbstractEntity   implements Serializable {
 		this.notifyOperationDelay = notifyOperationDelay;
 	}
 
+	public String getTagsDesconocidos() {
+		return tagsDesconocidos;
+	}
+
+	public void setTagsDesconocidos(String tagsDesconocidos) {
+		this.tagsDesconocidos = tagsDesconocidos;
+	}
 }

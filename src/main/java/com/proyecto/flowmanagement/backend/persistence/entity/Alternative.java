@@ -34,6 +34,9 @@ public class Alternative  extends AbstractEntity   implements Serializable {
 	@Column(name = "isSystemGuide")
 	private boolean isSystemGuide;
 
+	@Column(name = "desconocidos")
+	private String tagsDesconocidos;
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="alternative_id")
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -185,5 +188,13 @@ public class Alternative  extends AbstractEntity   implements Serializable {
 
 	public void setSystemGuide(boolean systemGuide) {
 		isSystemGuide = systemGuide;
+	}
+
+	public String getTagsDesconocidos() {
+		return tagsDesconocidos;
+	}
+
+	public void setTagsDesconocidos(String tagsDesconocidos) {
+		this.tagsDesconocidos = tagsDesconocidos;
 	}
 }

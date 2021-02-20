@@ -27,6 +27,9 @@ public class Step extends AbstractEntity  implements Serializable {
 	@Column(name = "text_id")
 	private String textId;
 
+	@Column(name = "desconocidos")
+	private String tagsDesconocidos;
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="step_id")
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -155,4 +158,11 @@ public class Step extends AbstractEntity  implements Serializable {
 		return this.getText();
 	}
 
+	public String getTagsDesconocidos() {
+		return tagsDesconocidos;
+	}
+
+	public void setTagsDesconocidos(String tagsDesconocidos) {
+		this.tagsDesconocidos = tagsDesconocidos;
+	}
 }
