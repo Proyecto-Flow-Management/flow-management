@@ -18,6 +18,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.Autocomplete;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
 import com.vaadin.ui.Window;
@@ -34,7 +35,8 @@ public class AlternativeForm extends VerticalLayout {
 
     public ConditionsForm conditionForm;
     Accordion conditionFormAccordion = new Accordion();
-
+    Accordion desconocidosAccordion = new Accordion();
+    TextArea desconocidosText = new TextArea("Desconocidos");
 
     public List<Step> stepList = new LinkedList<>();
     public List<Guide> guideList = new LinkedList<>();
@@ -109,6 +111,12 @@ public class AlternativeForm extends VerticalLayout {
 
         conditionForm = new ConditionsForm();
 
+        desconocidosAccordion.setWidthFull();
+        desconocidosAccordion.close();
+        desconocidosAccordion.add("Componentes desconocidos", desconocidosText);
+        desconocidosText.setMinWidth("60%");
+        desconocidosText.setMaxWidth("80%");
+        desconocidosText.setClassName("campos-layout");
         conditionsLayout.add(conditionForm);
 
         conditionFormAccordion.setWidthFull();
@@ -118,7 +126,7 @@ public class AlternativeForm extends VerticalLayout {
         form.setClassName("alternative-form");
         form.add(elements);
 
-        add(form, conditionFormAccordion, actionsLayout);
+        add(form, desconocidosAccordion,conditionFormAccordion, actionsLayout);
     }
 
     private void configurarOpcion(String valor) {
