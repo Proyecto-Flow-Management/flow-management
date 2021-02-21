@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.commun.ValidationDTO;
+import com.proyecto.flowmanagement.backend.commun.XMLValidaations;
 import com.proyecto.flowmanagement.backend.def.TypeOperation;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -131,6 +132,14 @@ public class Alternative  extends AbstractEntity   implements Serializable {
 
 		if(this.getNextStep().trim().isEmpty() && this.nextStep.trim().isEmpty())
 			validationGuide.addError("Debe seleccionar una guia o un step para el Alternative");
+
+		if(getTagsDesconocidos() != null && !getTagsDesconocidos().isEmpty())
+		{
+			XMLValidaations validations = new XMLValidaations();
+			String error = validations.validarXDSMessage(getTagsDesconocidos());
+			if(!error.isEmpty())
+				validationGuide.addError("Error Tags Deconocidos: " + error);
+		}
 
 		if(this.conditions != null && this.conditions.size() > 0)
 		{
