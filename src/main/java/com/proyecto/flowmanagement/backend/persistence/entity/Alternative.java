@@ -34,7 +34,7 @@ public class Alternative  extends AbstractEntity   implements Serializable {
 	@Column(name = "isSystemGuide")
 	private boolean isSystemGuide;
 
-	@Column(name = "desconocidos")
+	@Column(name = "desconocidos",length = Integer.MAX_VALUE)
 	private String tagsDesconocidos;
 
 	@OneToMany(cascade = CascadeType.ALL)

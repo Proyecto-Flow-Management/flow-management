@@ -22,7 +22,7 @@ public class Operation  extends AbstractEntity   implements Serializable {
 	@Column(name = "label")
 	private String label;
 
-	@Column(name = "desconocidos")
+	@Column(name = "desconocidos", length = Integer.MAX_VALUE)
 	private String tagsDesconocidos;
 
 	@Column(name = "visible")

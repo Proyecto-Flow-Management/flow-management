@@ -22,13 +22,13 @@ public class Step extends AbstractEntity  implements Serializable {
 	@Column(name = "label")
 	private String label;
 	
-	@Column(name = "text", length = 999)
+	@Column(name = "text", length = Integer.MAX_VALUE)
 	private String text;
 
 	@Column(name = "text_id")
 	private String textId;
 
-	@Column(name = "desconocidos")
+	@Column(name = "desconocidos", length = Integer.MAX_VALUE)
 	private String tagsDesconocidos;
 
 	@OneToMany(cascade = CascadeType.ALL)

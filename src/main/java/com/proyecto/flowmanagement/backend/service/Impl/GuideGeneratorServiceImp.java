@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 public class GuideGeneratorServiceImp {
 
-    public Guide importGuide (Document doc) throws IOException, SAXException, ParserConfigurationException, TransformerException {
+public Guide importGuide (Document doc) throws IOException, SAXException, ParserConfigurationException, TransformerException {
         Guide guide = new Guide();
         guide.setGuiaPropia(true);
         if(doc != null){
@@ -1450,7 +1450,7 @@ public class GuideGeneratorServiceImp {
 
                 if(step.getTagsDesconocidos() != null && !step.getTagsDesconocidos().isEmpty())
                 {
-                    doc = convertStringToXMLDocument(step.getTagsDesconocidos(), doc);
+                    docStep = convertStringToXMLDocument(step.getTagsDesconocidos(), docStep);
                 }
 
                 Node docOp = docStep.getElementsByTagName(XMLConstants.STEP_ELEMENT).item(0);
@@ -1508,10 +1508,16 @@ public class GuideGeneratorServiceImp {
             }
         }
 
+        if(alternative.getTagsDesconocidos() != null && !alternative.getTagsDesconocidos().isEmpty())
+        {
+            docAlternative = convertStringToXMLDocument(alternative.getTagsDesconocidos(), docAlternative);
+        }
+
         Node docOp = docAlternative.getElementsByTagName(XMLConstants.ALTERNATIVE_ELEMENT).item(0);
         Node node = docAlternative.getElementsByTagName(XMLConstants.AUX).item(0);
         docOp.removeChild(node.getNextSibling());
         docOp.removeChild(node);
+
 
         return newAlt;
     }

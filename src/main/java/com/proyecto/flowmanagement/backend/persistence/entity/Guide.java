@@ -34,7 +34,7 @@ public class Guide extends AbstractEntity implements Serializable {
 	@Column(name = "mainStep")
 	private String mainStep;
 
-	@Column(name = "desconocidos")
+	@Column(name = "desconocidos", length = Integer.MAX_VALUE)
 	private String tagsDesconocidos;
 
 	@Column(name = "eliminada", columnDefinition="tinyint(0) default 0")
