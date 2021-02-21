@@ -293,26 +293,37 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     {
         List<String> errorsList = new LinkedList<>();
 
-        String error = validarXDSMessage(guideGeneratorServiceImp.GuidePrint(raiz));
-
-        if(!error.isEmpty())
-            errorsList.add(error);
-
-        for(Guide aux : raiz.getGuides()){
-            error = validarXDSMessage(guideGeneratorServiceImp.GuidePrint(aux));
-            if(!error.isEmpty())
-                errorsList.add(error);
-        }
+        errorsList = iterar(raiz);
 
         if(errorsList.size() > 0)
         {
             this.validatorPanel.mostrarErroresXSD(errorsList);
             this.validatorPanel.accordion.setVisible(true);
+            mostrarMensajeError("Existen errores");
         }
-
+        else
+        {
+            mostrarMensajeError("La guia se valida correctamente contra el XSD");
+        }
     }
 
-    public String validarXDSMessage( byte[] byteArray)
+    public List<String> iterar(Guide guia)
+    {
+        List<String> errores = new LinkedList<>();
+
+        String error = validarXDSMessage(guideGeneratorServiceImp.GuidePrint(guia), guia.getName());
+
+        if(!error.isEmpty())
+            errores.add(error);
+
+        for(Guide aux : guia.getGuides()){
+            errores.addAll(iterar(aux));
+        }
+
+        return errores;
+    }
+
+    public String validarXDSMessage( byte[] byteArray, String nombreGuia)
     {
         byte[]  validacionXSD = validacionesOpcionesPanel.actual.getFileXSD();
 
@@ -335,7 +346,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
             return "";
 
         } catch (Exception e) {
-            return "Error Guia " + raiz.getName() + ": " + e.getMessage() ;
+            return "Error Guia " + nombreGuia + ": " + e.getMessage() ;
         }
     }
 
