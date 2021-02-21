@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 public class GuideGeneratorServiceImp {
 
-    public Guide importGuide (Document doc) throws IOException, SAXException, ParserConfigurationException {
+    public Guide importGuide (Document doc) throws IOException, SAXException, ParserConfigurationException, TransformerException {
         Guide guide = new Guide();
         guide.setGuiaPropia(true);
         if(doc != null){
@@ -39,15 +39,44 @@ public class GuideGeneratorServiceImp {
                     if (mainStep != null && mainStep.getFirstChild() != null) {
                         guide.setMainStep(mainStep.getFirstChild().getNodeValue());
                     }
-                    guide.setSteps(importStep(guideNode));
-                    guide.setOperations(importOperation(guideNode));
+
+                    Boolean unknown = false;
+                    NodeList otherNodes = guideElement.getChildNodes();
+                    DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+                    Document docUnknownTags = docBuilder.newDocument();
+
+                    Node importedNodeGuideElement = docUnknownTags.importNode(guideNodeList.item(i),false);
+                    docUnknownTags.appendChild(importedNodeGuideElement);
+
+                    for(int j = 0; j < otherNodes.getLength(); j++){
+                        if(otherNodes.item(j).getNodeType() == 1 &&
+                                otherNodes.item(j).getNodeName() != XMLConstants.MAIN_STEP_ID &&
+                                otherNodes.item(j).getNodeName() != XMLConstants.STEP_ELEMENT &&
+                                otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_ELEMENT){
+                            Node importedNode = docUnknownTags.importNode(otherNodes.item(j), true);
+                            docUnknownTags.getFirstChild().appendChild(importedNode);
+                            unknown = true;
+                        }
+                    }
+                    String tags = docToString(docUnknownTags);
+                    tags = tags.replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>","");
+                    tags = tags.replace("<ttg:guide xmlns:ttg=\"http://ns.antel.com.uy/schema/troubleticket/guide\" xmlns:vc=\"http://www.w3.org/2007/XMLSchema-versioning\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd\">","");
+                    tags = tags.replace("</ttg:guide>","");
+
+                    if (unknown){
+                        guide.setTagsDesconocidos(tags);
+                    }
+
+                    guide.setSteps(importStep(guideNode, docUnknownTags));
+                    guide.setOperations(importOperation(guideNode, docUnknownTags));
                 }
             }
         }
         return guide;
     }
 
-    private List<Step> importStep(Node node) throws ParserConfigurationException {
+    private List<Step> importStep(Node node, Document docUnknownTags) throws ParserConfigurationException, IOException, TransformerException {
         List<Step> steps = new LinkedList<>();
 
         if(node != null){
@@ -56,6 +85,7 @@ public class GuideGeneratorServiceImp {
 
                 for (int i = 0; i < stepNodeList.getLength(); i++){
                     if (stepNodeList.item(i).getNodeName() == XMLConstants.STEP_ELEMENT) {
+
                         Step step = new Step();
 
                         Node stepNode = stepNodeList.item(i);
@@ -76,9 +106,38 @@ public class GuideGeneratorServiceImp {
                             step.setText(text.getFirstChild().getNodeValue());
                         }
 
-                        List<Operation> operations = importOperation(stepNode);
+                        Boolean unknown = false;
+                        NodeList otherNodes = stepElement.getChildNodes();
+                        NodeList hijos = docUnknownTags.getFirstChild().getChildNodes();
+
+                        for (int k = 0; k < hijos.getLength(); k++){
+                            docUnknownTags.getFirstChild().removeChild(hijos.item(k));
+                        }
+
+                        for(int j = 0; j < otherNodes.getLength(); j++){
+                            if(otherNodes.item(j).getNodeType() == 1 &&
+                                    otherNodes.item(j).getNodeName() != XMLConstants.STEP_ID &&
+                                    otherNodes.item(j).getNodeName() != XMLConstants.STEP_LABEL &&
+                                    otherNodes.item(j).getNodeName() != XMLConstants.STEP_TEXT &&
+                                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_ELEMENT &&
+                                    otherNodes.item(j).getNodeName() != XMLConstants.ALTERNATIVE_ELEMENT &&
+                                    otherNodes.item(j).getNodeName() != XMLConstants.REFERENCE_DOC_ELEMENT){
+                                Node importedNode = docUnknownTags.importNode(otherNodes.item(j), true);
+                                docUnknownTags.getFirstChild().appendChild(importedNode);
+                                unknown = true;
+                            }
+                        }
+                        String tags = docToString(docUnknownTags);
+                        tags = tags.replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>","");
+                        tags = tags.replace("<ttg:guide xmlns:ttg=\"http://ns.antel.com.uy/schema/troubleticket/guide\" xmlns:vc=\"http://www.w3.org/2007/XMLSchema-versioning\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd\">","");
+                        tags = tags.replace("</ttg:guide>","");
+                        if (unknown){
+                            step.setTagsDesconocidos(tags);
+                        }
+
+                        List<Operation> operations = importOperation(stepNode, docUnknownTags);
                         step.setOperations(operations);
-                        step.setAlternatives(importAlternatives(stepNode));
+                        step.setAlternatives(importAlternatives(stepNode, docUnknownTags));
                         step.setStepDocuments(importStepDocuments(stepNode));
 
                         steps.add(step);
@@ -121,7 +180,7 @@ public class GuideGeneratorServiceImp {
         return documents;
     }
 
-    private List<Alternative> importAlternatives(Node node) throws ParserConfigurationException {
+    private List<Alternative> importAlternatives(Node node, Document docUnknownTags) throws ParserConfigurationException, IOException, TransformerException {
         List<Alternative> alternatives = new LinkedList<>();
 
         if(node != null){
@@ -155,6 +214,35 @@ public class GuideGeneratorServiceImp {
                             alternative.setLabel(label.getFirstChild().getNodeValue());
                         }
 
+                        Boolean unknown = false;
+                        NodeList otherNodes = alternativeElement.getChildNodes();
+                        NodeList hijos = docUnknownTags.getFirstChild().getChildNodes();
+
+                        for (int k = 0; k < hijos.getLength(); k++){
+                            docUnknownTags.getFirstChild().removeChild(hijos.item(k));
+                        }
+
+                        for(int j = 0; j < otherNodes.getLength(); j++){
+                            if(otherNodes.item(j).getNodeType() == 1 &&
+                                    otherNodes.item(j).getNodeName() != XMLConstants.ALTERNATIVE_STEP_ID &&
+                                    otherNodes.item(j).getNodeName() != XMLConstants.ALTERNATIVE_GUIDE_NAME &&
+                                    otherNodes.item(j).getNodeName() != XMLConstants.ALTERNATIVE_LABEL &&
+                                    otherNodes.item(j).getNodeName() != XMLConstants.CONDITION_ELEMENT){
+                                Node importedNode = docUnknownTags.importNode(otherNodes.item(j), true);
+                                docUnknownTags.getFirstChild().appendChild(importedNode);
+                                unknown = true;
+                            }
+                        }
+                        String tags = docToString(docUnknownTags);
+                        tags = tags.replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>","");
+                        tags = tags.replace("<ttg:guide xmlns:ttg=\"http://ns.antel.com.uy/schema/troubleticket/guide\" xmlns:vc=\"http://www.w3.org/2007/XMLSchema-versioning\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd\">","");
+                        tags = tags.replace("</ttg:guide>","");
+
+                        if (unknown){
+                            alternative.setTagsDesconocidos(tags);
+                        }
+
+
                         alternative.setConditions(importConditions(alternativeNode));
 
                         alternatives.add(alternative);
@@ -165,7 +253,7 @@ public class GuideGeneratorServiceImp {
         return alternatives;
     }
 
-    private List<Operation> importOperation(Node node) throws ParserConfigurationException {
+    private List<Operation> importOperation(Node node, Document docUnknownTags) throws ParserConfigurationException, IOException, TransformerException {
         List<Operation> operations = new LinkedList<>();
 
         if(node != null){
@@ -184,11 +272,11 @@ public class GuideGeneratorServiceImp {
                             switch (operationType.getFirstChild().getNodeValue()) {
 
                                 case "simpleOperation" :
-                                    operation = importSimpleOperation(operationNode);
+                                    operation = importSimpleOperation(operationNode, docUnknownTags);
                                     break;
 
                                 case "taskOperation" :
-                                    operation = importTaskOperation(operationNode);
+                                    operation = importTaskOperation(operationNode, docUnknownTags);
                                     break;
                             }
                         }
@@ -202,15 +290,15 @@ public class GuideGeneratorServiceImp {
         return operations;
     }
 
-    private Operation importSimpleOperation(Node node) throws ParserConfigurationException {
+    private Operation importSimpleOperation(Node node, Document docUnknownTags) throws ParserConfigurationException, IOException, TransformerException {
         SimpleOperation operation = new SimpleOperation();
         operation.setOperationType(OperationType.simpleOperation);
 
         Element operationElement = (Element) node;
 
-        NodeList nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_NAME);
-        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
-            Node name = nodos.item(iterador);
+        NodeList nodosName = operationElement.getElementsByTagName(XMLConstants.OPERATION_NAME);
+        for (int iterador = 0; iterador < nodosName.getLength(); iterador++){
+            Node name = nodosName.item(iterador);
             if (name.getParentNode().equals(node)) {
                 if (name != null && name.getFirstChild() != null) {
                     operation.setName(name.getFirstChild().getNodeValue());
@@ -218,7 +306,7 @@ public class GuideGeneratorServiceImp {
             }
         }
 
-        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_LABEL);
+        NodeList nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_LABEL);
         for (int iterador = 0; iterador < nodos.getLength(); iterador++){
             Node label = nodos.item(iterador);
             if (label.getParentNode().equals(node)) {
@@ -361,6 +449,50 @@ public class GuideGeneratorServiceImp {
             }
         }
 
+        Boolean unknown = false;
+        NodeList otherNodes = operationElement.getChildNodes();
+        NodeList hijos = docUnknownTags.getFirstChild().getChildNodes();
+
+        for (int k = 0; k < hijos.getLength(); k++){
+            docUnknownTags.getFirstChild().removeChild(hijos.item(k));
+        }
+
+        for(int j = 0; j < otherNodes.getLength(); j++){
+            if(otherNodes.item(j).getNodeType() == 1 &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_NAME &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_LABEL &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_VISIBLE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_PRE_EXECUTE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_COMMENT &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_TITLE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_AUTOMATIC &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_PAUSE_EXECUTION &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_OPERATION_ORDER &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_OPERATION_TYPE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_TYPE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_SERVICE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_NOTIFY_ALTERNATIVE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_NOTIFY_OPERATION &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_ALTERNATIVE_IDS &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_OPERATION_NOTIFY_IDS &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_IN_PARAMETERS &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_OUT_PARAMETERS &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.CONDITION_ELEMENT){
+                Node importedNode = docUnknownTags.importNode(otherNodes.item(j), true);
+                docUnknownTags.getFirstChild().appendChild(importedNode);
+                unknown = true;
+            }
+        }
+        String tags = docToString(docUnknownTags);
+        tags = tags.replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>","");
+        tags = tags.replace("<ttg:guide xmlns:ttg=\"http://ns.antel.com.uy/schema/troubleticket/guide\" xmlns:vc=\"http://www.w3.org/2007/XMLSchema-versioning\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd\">","");
+        tags = tags.replace("</ttg:guide>","");
+
+        if (unknown){
+            operation.setTagsDesconocidos(tags);
+        }
+
         operation.setAlternativeIds(importAlternativesIds(node));
         operation.setOperationNotifyIds(importOperationIds(node));
         operation.setInParameters(importParameters(node, XMLConstants.PARAMETER_IN_ELEMENT, false,false,false));
@@ -370,15 +502,15 @@ public class GuideGeneratorServiceImp {
         return operation;
     }
 
-    private Operation importTaskOperation(Node node) throws ParserConfigurationException {
+    private Operation importTaskOperation(Node node, Document docUnknownTags) throws ParserConfigurationException, IOException, TransformerException {
         TaskOperation operation = new TaskOperation();
         operation.setOperationType(OperationType.taskOperation);
 
         Element operationElement = (Element) node;
 
-        NodeList nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_NAME);
-        for (int iterador = 0; iterador < nodos.getLength(); iterador++){
-            Node name = nodos.item(iterador);
+        NodeList nodosName = operationElement.getElementsByTagName(XMLConstants.OPERATION_NAME);
+        for (int iterador = 0; iterador < nodosName.getLength(); iterador++){
+            Node name = nodosName.item(iterador);
             if (name.getParentNode().equals(node)) {
                 if (name != null && name.getFirstChild() != null) {
                     operation.setName(name.getFirstChild().getNodeValue());
@@ -386,7 +518,7 @@ public class GuideGeneratorServiceImp {
             }
         }
 
-        nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_LABEL);
+        NodeList nodos = operationElement.getElementsByTagName(XMLConstants.OPERATION_LABEL);
         for (int iterador = 0; iterador < nodos.getLength(); iterador++){
             Node label = nodos.item(iterador);
             if (label.getParentNode().equals(node)) {
@@ -558,6 +690,54 @@ public class GuideGeneratorServiceImp {
                         break;
                 }
             }
+        }
+
+        Boolean unknown = false;
+        NodeList otherNodes = operationElement.getChildNodes();
+        NodeList hijos = docUnknownTags.getFirstChild().getChildNodes();
+
+        for (int k = 0; k < hijos.getLength(); k++){
+            docUnknownTags.getFirstChild().removeChild(hijos.item(k));
+        }
+
+        for(int j = 0; j < otherNodes.getLength(); j++){
+            if(otherNodes.item(j).getNodeType() == 1 &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_NAME &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_LABEL &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_VISIBLE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_PRE_EXECUTE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_COMMENT &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_TITLE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_AUTOMATIC &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_PAUSE_EXECUTION &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_OPERATION_ORDER &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_OPERATION_TYPE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_TYPE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_TARGET_SYSTEM &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_MAIL_TEMPLATE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_MAIL_TO &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_MAIL_SUBJECT_PREFIX &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_NOTIFY_ALTERNATIVE &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_NOTIFY_OPERATION &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_ALTERNATIVE_IDS &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_OPERATION_NOTIFY_IDS &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_IN_PARAMETERS &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_OUT_PARAMETERS &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_CANDIDATE_GROUPS &&
+                    otherNodes.item(j).getNodeName() != XMLConstants.CONDITION_ELEMENT){
+                Node importedNode = docUnknownTags.importNode(otherNodes.item(j), true);
+                docUnknownTags.getFirstChild().appendChild(importedNode);
+                unknown = true;
+            }
+        }
+        String tags = docToString(docUnknownTags);
+        tags = tags.replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>","");
+        tags = tags.replace("<ttg:guide xmlns:ttg=\"http://ns.antel.com.uy/schema/troubleticket/guide\" xmlns:vc=\"http://www.w3.org/2007/XMLSchema-versioning\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd\">","");
+        tags = tags.replace("</ttg:guide>","");
+
+        if (unknown){
+            operation.setTagsDesconocidos(tags);
         }
 
         operation.setAlternativeIds(importAlternativesIds(node));
@@ -1098,6 +1278,14 @@ public class GuideGeneratorServiceImp {
             }
         }
         return candidates;
+    }
+
+    private String docToString(Document doc) throws IOException, TransformerException {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        StringWriter stringWriter = new StringWriter();
+        transformer.transform(new DOMSource(doc), new StreamResult(stringWriter));
+        return stringWriter.toString();
     }
 
     private Document nodeToDocument(Node node) throws ParserConfigurationException {
