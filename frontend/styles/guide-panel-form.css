@@ -1,0 +1,23 @@
+.delete-button
+{
+    margin-top:3%
+}
+
+.campos-layout
+{
+    margin-left: var(--lumo-space-m);
+}
+
+.error
+{
+    color: red;
+}
+
+
+.element.style {
+    margin-left: var(--lumo-space-m);
+}
+
+.basic-information-layout {
+     margin-left: var(--lumo-space-m);
+}

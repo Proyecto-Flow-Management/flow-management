@@ -1,0 +1,15 @@
+.stepSection{
+    border-style: solid;
+    border-color: rgb(220,220,220);
+    border-radius: 10px;
+}
+
+.campos-layout
+{
+    margin-left: var(--lumo-space-m);
+}
+
+.error
+{
+    color: red;
+}

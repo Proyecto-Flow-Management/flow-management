@@ -1,0 +1,7 @@
+.details-layout {
+     margin-left: var(--lumo-space-m);
+}
+
+.step-layout {
+    width: 98% !important;
+}

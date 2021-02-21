@@ -111,7 +111,8 @@
       "@vaadin/vaadin-material-styles": "1.3.2",
       "@vaadin/vaadin-rich-text-editor": "1.2.2",
       "@vaadin/vaadin-custom-field": "1.1.0",
-      "@vaadin/vaadin-date-time-picker": "1.1.0"
+      "@vaadin/vaadin-date-time-picker": "1.1.0",
+      "@vaadin-component-factory/vcf-autocomplete": "1.2.7"
     },
     "devDependencies": {
       "webpack-babel-multi-target-plugin": "2.3.3",

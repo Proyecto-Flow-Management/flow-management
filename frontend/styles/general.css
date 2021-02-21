@@ -1,0 +1,7 @@
+.gridHorizontalLayout{
+    height: 200px;
+}
+
+.gridHorizontalLayout vaadin-grid{
+    height: 100% !important;
+}

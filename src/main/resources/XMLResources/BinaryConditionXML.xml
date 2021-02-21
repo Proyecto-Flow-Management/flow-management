@@ -1,0 +1,3 @@
+<ttg:condition xsi:type="ttg:BinaryCondition">
+    <ttg:operation>OR</ttg:operation>
+</ttg:condition>

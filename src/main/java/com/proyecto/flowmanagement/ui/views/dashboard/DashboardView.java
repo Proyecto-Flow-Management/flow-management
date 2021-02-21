@@ -1,8 +1,7 @@
 package com.proyecto.flowmanagement.ui.views.dashboard;
 
-import com.proyecto.flowmanagement.backend.service.CompanyService;
-import com.proyecto.flowmanagement.backend.service.ContactService;
-import com.proyecto.flowmanagement.backend.service.RolService;
+import com.proyecto.flowmanagement.backend.service.Impl.RolServiceImpl;
+import com.proyecto.flowmanagement.backend.service.Impl.UserServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.charts.Chart;
@@ -11,7 +10,6 @@ import com.vaadin.flow.component.charts.model.DataSeries;
 import com.vaadin.flow.component.charts.model.DataSeriesItem;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -21,25 +19,25 @@ import java.util.Map;
 @Route(value = "dashboard", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout {
 
-    private final ContactService contactService;
-    private final RolService rolService;
+    private final UserServiceImpl userService;
+    private final RolServiceImpl rolService;
 
-    public DashboardView(ContactService contactService,  RolService rolService) {
-        this.contactService = contactService;
+    public DashboardView(UserServiceImpl userService, RolServiceImpl rolService) {
+        this.userService = userService;
         this.rolService = rolService;
 
         addClassName("dashboard-view");
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
         add(
-                getContactStats(),
+                getUserStats(),
                 getRolesChart()
         );
     }
 
-    private Span getContactStats() {
-        Span stats = new Span(contactService.count() + " contacts.");
-        stats.addClassName("contact-stats");
+    private Span getUserStats() {
+        Span stats = new Span(userService.count() + " users.");
+        stats.addClassName("user-stats");
 
         return stats;
     }
