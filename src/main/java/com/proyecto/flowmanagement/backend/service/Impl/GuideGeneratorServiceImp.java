@@ -2159,14 +2159,21 @@ public class GuideGeneratorServiceImp {
 
     private static Document convertStringToXMLDocument(String xmlString, Document document) throws ParserConfigurationException, IOException, SAXException {
 
-        Node refNode = document.getElementsByTagName(XMLConstants.AUX).item(0);
-        Element node =  DocumentBuilderFactory
-                .newInstance()
-                .newDocumentBuilder()
-                .parse(new ByteArrayInputStream(xmlString.getBytes()))
-                .getDocumentElement();
-        Node esto = document.importNode(node,true);
-        document.getFirstChild().appendChild(esto);
+        try
+        {
+            Node refNode = document.getElementsByTagName(XMLConstants.AUX).item(0);
+            Element node =  DocumentBuilderFactory
+                    .newInstance()
+                    .newDocumentBuilder()
+                    .parse(new ByteArrayInputStream(xmlString.getBytes()))
+                    .getDocumentElement();
+            Node esto = document.importNode(node,true);
+            document.getFirstChild().appendChild(esto);
+        }
+        catch(Exception e)
+        {
+            return document;
+        }
 
         return document;
     }
