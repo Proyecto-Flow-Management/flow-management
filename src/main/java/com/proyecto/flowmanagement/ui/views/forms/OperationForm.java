@@ -18,7 +18,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -44,13 +43,11 @@ public class OperationForm extends VerticalLayout {
     public Boolean editing;
 
     public ConditionsForm conditionForm = new ConditionsForm();
+    TagsDesconocidosForm tagsDesconocidosForm = new TagsDesconocidosForm();
+    HorizontalLayout tagsDesconocidosLayout = new HorizontalLayout();
 
-    VerticalLayout desconocidosLayout = new VerticalLayout();
-    Button validarDesconocido = new Button("Validar");
     Accordion desconocidosAccordion = new Accordion();
     TextArea desconocidosText = new TextArea("Desconocidos");
-    VerticalLayout contenedorDesconocidos = new VerticalLayout();
-    Div mensajesError = new Div();
 
     Accordion conditionFormAccordion = new Accordion();
     VerticalLayout conditionFormLayout = new VerticalLayout();
@@ -121,6 +118,8 @@ public class OperationForm extends VerticalLayout {
 
         setSizeFull();
 
+        configureTagsDesconocidos();
+
         configureAlternatives();
 
         configureOperations();
@@ -132,6 +131,12 @@ public class OperationForm extends VerticalLayout {
         configureConditions();
 
         configureForm();
+    }
+
+    private void configureTagsDesconocidos() {
+        tagsDesconocidosForm.setWidthFull();
+        tagsDesconocidosLayout.setWidthFull();
+        tagsDesconocidosLayout.add(tagsDesconocidosForm);
     }
 
     private void configureOperations() {
@@ -220,17 +225,10 @@ public class OperationForm extends VerticalLayout {
 
         desconocidosAccordion.setWidthFull();
         desconocidosAccordion.close();
-        desconocidosLayout.setWidthFull();
-        mensajesError.setClassName("error");
-        mensajesError.setVisible(false);
-        validarDesconocido.addClickListener(buttonClickEvent -> validarDesconocido());
-        contenedorDesconocidos.setMinWidth("60%");
-        contenedorDesconocidos.setMaxWidth("80%");
-        desconocidosText.setWidthFull();
-        mensajesError.setWidthFull();
-        contenedorDesconocidos.add(validarDesconocido, desconocidosText, mensajesError);
-        desconocidosLayout.add(contenedorDesconocidos);
-        desconocidosAccordion.add("Componentes desconocidos", desconocidosLayout);
+        desconocidosAccordion.add("Componentes desconocidos", desconocidosText);
+        desconocidosText.setMinWidth("60%");
+        desconocidosText.setMaxWidth("80%");
+        desconocidosText.setClassName("campos-layout");
 
         elementsForm.add(name,label,comment,title,notifyOperationDelay,operationOrder,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation,operationType);
         elementsForm.setResponsiveSteps(
@@ -241,18 +239,6 @@ public class OperationForm extends VerticalLayout {
         elements.add(elementsForm);
 
         actionsLayout.add(createButtonsLayout());
-    }
-
-    private void validarDesconocido(){
-        this.mensajesError.setVisible(true);
-    }
-
-    public void setMensajesError(String mensajesError){
-        this.mensajesError.setText(mensajesError);
-    }
-
-    public void setDesconocidosText(String text){
-        this.desconocidosText.setValue(text);
     }
 
     private void addAlternativeIdsForm(Boolean choice){
@@ -330,21 +316,16 @@ public class OperationForm extends VerticalLayout {
         conditionFormAccordion.close();
         conditionFormAccordion.add("Conditions", conditionFormLayout);
 
-        add(accordionBasicInformation,inParameterAccordion,outParameterAccordion,conditionFormAccordion,operationNotifyIdsFormAccordion, groupsAccordion, alternativesIdsAccordion,desconocidosAccordion,actionsLayout);
+        add(accordionBasicInformation,tagsDesconocidosLayout,inParameterAccordion,outParameterAccordion,conditionFormAccordion,operationNotifyIdsFormAccordion, groupsAccordion, alternativesIdsAccordion,desconocidosAccordion,actionsLayout);
     }
 
     public void setOperation(Operation operation) {
         this.operation = operation;
+        this.tagsDesconocidosForm.desconocidosText.setValue(operation.getTagsDesconocidos());
         addElements(this.operationType.getValue());
         this.name.setValue(operation.getName());
         this.label.setValue(operation.getLabel());
-        if (operation.getTagsDesconocidos() != null){
-            setDesconocidosText(operation.getTagsDesconocidos());
-        }
-        else{
-            setDesconocidosText("");
-        }
-        this.desconocidosAccordion.close();
+
         if(operation.getConditions() != null && operation.getConditions().size() >0)
         {
             conditionForm.setVisible(true);
@@ -538,7 +519,7 @@ public class OperationForm extends VerticalLayout {
         }
 
         operation.setConditions(conditionForm.getConditions());
-        operation.setTagsDesconocidos(this.desconocidosText.getValue());
+        operation.setTagsDesconocidos(this.tagsDesconocidosForm.desconocidosText.getValue());
         if (!incompleteValidation.isEmpty()){
             showErrorMessage(incompleteValidation);
         }
@@ -552,6 +533,7 @@ public class OperationForm extends VerticalLayout {
         auxOperation.setOperationType(operationType.getValue());
         auxOperation.setInParameters(inParameterGridForm.getOperationsParameter());
         auxOperation.setOutParameters(outParameterGridForm.getOperationsParameter());
+        auxOperation.setTagsDesconocidos(this.tagsDesconocidosForm.desconocidosText.getValue());
 
         if (!visible.isEmpty()){
             auxOperation.setVisible(Boolean.valueOf(visible.getValue()));
@@ -597,9 +579,6 @@ public class OperationForm extends VerticalLayout {
         name.clear();
         label.clear();
         comment.clear();
-        setMensajesError("");
-        setDesconocidosText("");
-        mensajesError.setVisible(false);
         title.clear();
         visible.clear();
         preExecute.clear();

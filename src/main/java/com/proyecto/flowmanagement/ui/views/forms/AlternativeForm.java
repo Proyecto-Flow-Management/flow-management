@@ -3,22 +3,28 @@ package com.proyecto.flowmanagement.ui.views.forms;
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
+import com.proyecto.flowmanagement.ui.views.grids.ConditionsGridForm;
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.textfield.Autocomplete;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.shared.Registration;
+import com.vaadin.ui.Window;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CssImport("./styles/alternative-form.css")
 public class AlternativeForm extends VerticalLayout {
@@ -28,12 +34,9 @@ public class AlternativeForm extends VerticalLayout {
 
     public ConditionsForm conditionForm;
     Accordion conditionFormAccordion = new Accordion();
-    VerticalLayout desconocidosLayout = new VerticalLayout();
-    Button validarDesconocido = new Button("Validar");
-    Accordion desconocidosAccordion = new Accordion();
-    TextArea desconocidosText = new TextArea("Desconocidos");
-    VerticalLayout contenedorDesconocidos = new VerticalLayout();
-    Div mensajesError = new Div();
+
+    TagsDesconocidosForm tagsDesconocidosForm = new TagsDesconocidosForm();
+    HorizontalLayout tagsDesconocidosLayout = new HorizontalLayout();
 
     public List<Step> stepList = new LinkedList<>();
     public List<Guide> guideList = new LinkedList<>();
@@ -55,8 +58,15 @@ public class AlternativeForm extends VerticalLayout {
     public AlternativeForm(List<Step> stepList) {
         isValid = false;
         setClassName("alternativeSection");
+        configureTagsDesconocidos();
         configureElements();
         editing = false;
+    }
+
+    private void configureTagsDesconocidos() {
+        tagsDesconocidosForm.setWidthFull();
+        tagsDesconocidosLayout.setWidthFull();
+        tagsDesconocidosLayout.add(tagsDesconocidosForm);
     }
 
     public void configureElements() {
@@ -108,22 +118,8 @@ public class AlternativeForm extends VerticalLayout {
 
         conditionForm = new ConditionsForm();
 
-        desconocidosAccordion.setWidthFull();
-        desconocidosAccordion.close();
-        desconocidosLayout.setWidthFull();
-        mensajesError.setClassName("error");
-        mensajesError.setVisible(false);
-        validarDesconocido.addClickListener(buttonClickEvent -> validarDesconocido());
-        contenedorDesconocidos.setMinWidth("60%");
-        contenedorDesconocidos.setMaxWidth("80%");
-        desconocidosText.setWidthFull();
-        mensajesError.setWidthFull();
-        contenedorDesconocidos.add(validarDesconocido, desconocidosText, mensajesError);
-        desconocidosLayout.add(contenedorDesconocidos);
-        desconocidosAccordion.add("Componentes desconocidos", desconocidosLayout);
-
-
         conditionsLayout.add(conditionForm);
+
         conditionFormAccordion.setWidthFull();
         conditionFormAccordion.close();
         conditionFormAccordion.add("Conditions", conditionsLayout);
@@ -131,19 +127,7 @@ public class AlternativeForm extends VerticalLayout {
         form.setClassName("alternative-form");
         form.add(elements);
 
-        add(form,conditionFormAccordion, desconocidosAccordion, actionsLayout);
-    }
-
-    private void validarDesconocido(){
-        this.mensajesError.setVisible(true);
-    }
-
-    public void setMensajesError(String mensajesError){
-        this.mensajesError.setText(mensajesError);
-    }
-
-    public void setDesconocidosText(String text){
-        this.desconocidosText.setValue(text);
+        add(form,tagsDesconocidosLayout, conditionFormAccordion, actionsLayout);
     }
 
     private void configurarOpcion(String valor) {
@@ -186,8 +170,7 @@ public class AlternativeForm extends VerticalLayout {
 
         alternative.setLabel(this.label.getValue());
         alternative.setConditions(this.conditionForm.getConditions());
-        alternative.setTagsDesconocidos(this.desconocidosText.getValue());
-
+        alternative.setTagsDesconocidos(tagsDesconocidosForm.desconocidosText.getValue());
         if(this.option.getValue() == "nextStep Existente")
         {
             this.alternative.setNextStep(this.stepComboBox.getValue().getTextId());
@@ -244,6 +227,7 @@ public class AlternativeForm extends VerticalLayout {
         if (alternative != null)
         {
             this.alternative = alternative;
+            tagsDesconocidosForm.desconocidosText.setValue(alternative.getTagsDesconocidos());
 
             if(alternative.getNextStep() != null)
             {
@@ -303,13 +287,6 @@ public class AlternativeForm extends VerticalLayout {
             }
 
             this.label.setValue(alternative.getLabel());
-            if (alternative.getTagsDesconocidos() != null){
-                setDesconocidosText(alternative.getTagsDesconocidos());
-            }
-            else{
-                setDesconocidosText("");
-            }
-            this.desconocidosAccordion.close();
             editing = true;
             delete.setVisible(true);
             conditionForm.updateForm(alternative);
@@ -329,9 +306,6 @@ public class AlternativeForm extends VerticalLayout {
     public void setAsDefault() {
         this.nextStep.setValue("");
         this.label.setValue("");
-        this.setMensajesError("");
-        this.setDesconocidosText("");
-        this.validarDesconocido.setVisible(false);
         this.conditionForm.setAsDefault();
         this.alternative = new Alternative();
         editing = false;

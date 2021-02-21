@@ -4,21 +4,30 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.persistence.entity.Operation;
 import com.proyecto.flowmanagement.backend.persistence.entity.Step;
-import com.proyecto.flowmanagement.backend.service.Impl.GuideGeneratorServiceImp;
+import com.proyecto.flowmanagement.backend.service.Impl.*;
+import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import com.proyecto.flowmanagement.backend.service.Impl.GuideServiceImpl;
 import com.proyecto.flowmanagement.ui.MainLayout;
 import com.proyecto.flowmanagement.ui.views.grids.OperationGridForm;
 import com.proyecto.flowmanagement.ui.views.panels.*;
+import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
 
 import java.util.LinkedList;
 import java.util.List;
@@ -76,7 +85,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         this.guideGeneratorServiceImp = guideGeneratorServiceImp;
 
         setSizeFull();
-        
+
         configureActualGuidePanel();
 
         configureElements();
@@ -302,6 +311,11 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     {
         guidePanel.label.addValueChangeListener(event -> actualizarLabel());
         guidePanel.mainStep.addValueChangeListener(event -> actualizarStep());
+        guidePanel.tagsDesconocidosForm.desconocidosText.addValueChangeListener(event -> actualizarTagsDesconocidos());
+    }
+
+    private void actualizarTagsDesconocidos() {
+        editado.setTagsDesconocidos(guidePanel.tagsDesconocidosForm.desconocidosText.getValue());
     }
 
     private void actualizarStep()
@@ -385,6 +399,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     private void cargarGuia() {
 
         Guide valor = actualGuidePanel.actualGuide.getValue();
+
         if(valor != null)
         {
             raiz.quitarEdicion();
@@ -420,14 +435,6 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
              this.guidePanel.name.setValue(guide.getName());
         else
             this.guidePanel.name.setValue("");
-        if(guide.getTagsDesconocidos() != null){
-            this.guidePanel.setDesconocidosText(guide.getTagsDesconocidos());
-        }
-        else{
-            this.guidePanel.setDesconocidosText("");
-        }
-        this.guidePanel.setMensajesError("");
-        this.guidePanel.mensajesError.setVisible(false);
     }
 
     private void actualizacionAlternativs()
@@ -540,13 +547,6 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
             editado.setMainStep(guidePanel.mainStep.getValue());
         else
             editado.setMainStep("");
-
-        if(guidePanel.getDesconocidosText() != null){
-            editado.setTagsDesconocidos(guidePanel.getDesconocidosText());
-        }
-        else{
-            editado.setTagsDesconocidos("");
-        }
 
         //Elementos de Steps
         List<Step> stepList = stepPanel.stepGridForm.getSteps();
