@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.commun.ValidationDTO;
+import com.proyecto.flowmanagement.backend.commun.XMLValidaations;
 import com.proyecto.flowmanagement.backend.def.OperationType;
 import com.proyecto.flowmanagement.backend.def.SimpleOperationType;
 import org.hibernate.annotations.Fetch;
@@ -73,6 +74,13 @@ public class SimpleOperation extends Operation  implements Serializable {
         if (this.service.isEmpty())
             validationGuide.addError("El campo service es obligatorio");
 
+        if(getTagsDesconocidos() != null && !getTagsDesconocidos().isEmpty())
+        {
+            XMLValidaations validations = new XMLValidaations();
+            String error = validations.validarXDSMessage(getTagsDesconocidos());
+            if(!error.isEmpty())
+                validationGuide.addError("Error Tags Deconocidos: " + error);
+        }
 
         if(this.getOperationNotifyIds() != null && this.getOperationNotifyIds().size()>0)
         {

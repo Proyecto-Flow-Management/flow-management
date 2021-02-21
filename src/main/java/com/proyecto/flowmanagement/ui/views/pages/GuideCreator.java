@@ -313,7 +313,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
 
         String error = validarXDSMessage(guideGeneratorServiceImp.GuidePrint(guia), guia.getName());
 
-        if(!error.isEmpty())
+        if(error != null && !error.isEmpty())
             errores.add(error);
 
         for(Guide aux : guia.getGuides()){

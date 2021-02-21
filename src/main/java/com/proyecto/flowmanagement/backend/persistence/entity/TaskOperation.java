@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.commun.ValidationDTO;
+import com.proyecto.flowmanagement.backend.commun.XMLValidaations;
 import com.proyecto.flowmanagement.backend.def.SimpleOperationType;
 import com.proyecto.flowmanagement.backend.def.TaskOperationType;
 import org.hibernate.annotations.Fetch;
@@ -132,6 +133,15 @@ public class TaskOperation extends Operation  implements Serializable {
                 validationGuide.addError("Hay un OperationNotify ("+ notifyError +") haciendo referencia a un Operation que no existe");
             }
         }
+
+        if(getTagsDesconocidos() != null && !getTagsDesconocidos().isEmpty())
+        {
+            XMLValidaations validations = new XMLValidaations();
+            String error = validations.validarXDSMessage(getTagsDesconocidos());
+            if(!error.isEmpty())
+                validationGuide.addError("Error Tags Deconocidos: " + error);
+        }
+
 
 
         return validationGuide;

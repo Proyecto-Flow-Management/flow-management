@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.commun.ValidationDTO;
+import com.proyecto.flowmanagement.backend.commun.XMLValidaations;
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -117,6 +118,14 @@ public class Step extends AbstractEntity  implements Serializable {
 				if(validacionAlternative.getError().size()>0 || validacionAlternative.getValidationDTOList().size() > 0)
 					validationGuide.addList(alternative.validarAltarnative());
 			}
+		}
+
+		if(getTagsDesconocidos() != null && !getTagsDesconocidos().isEmpty())
+		{
+			XMLValidaations validations = new XMLValidaations();
+			String error = validations.validarXDSMessage(getTagsDesconocidos());
+			if(!error.isEmpty())
+				validationGuide.addError("Error Tags Deconocidos: " + error);
 		}
 
 		if(this.getOperations() == null || this.getOperations().size() == 0)

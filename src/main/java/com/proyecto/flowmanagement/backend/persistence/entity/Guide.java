@@ -1,6 +1,7 @@
 package com.proyecto.flowmanagement.backend.persistence.entity;
 
 import com.proyecto.flowmanagement.backend.commun.ValidationDTO;
+import com.proyecto.flowmanagement.backend.commun.XMLValidaations;
 import com.proyecto.flowmanagement.backend.persistence.entity.Alternative;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -110,6 +111,14 @@ public class Guide extends AbstractEntity implements Serializable {
 	{
 		ValidationDTO validationGuide = new ValidationDTO();
 		validationGuide.setLabel("Guide-Name: " + this.getName());
+
+		if(getTagsDesconocidos() != null && !getTagsDesconocidos().isEmpty())
+		{
+			XMLValidaations validations = new XMLValidaations();
+			String error = validations.validarXDSMessage(getTagsDesconocidos());
+			if(!error.isEmpty())
+				validationGuide.addError("Error Tags Deconocidos: " + error);
+		}
 
 		if(this.name.trim().isEmpty())
 			validationGuide.addError("El campo Name es obligatorio");

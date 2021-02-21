@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><ttg:guide xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide" xmlns:schemaLocation="http://ns.antel.com.uy/schema/troubleticket/guide file:/D:/generic-app/Guide.xsd" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-            <ttg:mainStepId/>
-            </ttg:guide>
-            <ttg:mainStepId>Step1</ttg:mainStepId>
+            <ttg:mainStepId>COBERTURA</ttg:mainStepId>
             <ttg:step>
-    <ttg:stepId>Step2</ttg:stepId>
-    <ttg:label>Step2</ttg:label>
-    <ttg:text>Step2</ttg:text>
-    </ttg:step><ttg:step>
-    <ttg:stepId>Step1</ttg:stepId>
-    <ttg:label>Step1</ttg:label>
-    <ttg:text>Step1</ttg:text>
-    </ttg:step></ttg:guide>
+    <ttg:stepId>COBERTURA</ttg:stepId>
+    <ttg:label>Cobertura Wifi/Ethernet</ttg:label>
+    <ttg:text>Informar al cliente que para mejorar la cobertura wifi puede hacer uno o más de los siguientes pasos:
+		- Ubicar el router que emite la señal wifi en medio del área a dar cobertura.
+		- Colocarlo en un lugar elevado
+		- Utilizar un router particular con mayor alcance o repetidores inalámbricos.
+		- Si los espacios a cubrir son distantes puede ser adecuado utilizar PLC (Power Line Communication).
+		Para el caso de querer extender la cobertura por red ethernet (cableada), se recomienda contratar un técnico particular.</ttg:text>
+    <ttg:operation xsi:type="ttg:TaskOperation">
+    <ttg:name>Resuelto</ttg:name>
+    <ttg:label>Cerrar</ttg:label>
+    <ttg:title>Cierra reclamo</ttg:title>
+    <ttg:automatic>false</ttg:automatic>
+    <ttg:operationOrder>1</ttg:operationOrder>
+    <ttg:operationType>taskOperation</ttg:operationType>
+    <ttg:type>close</ttg:type>
+    <ttg:inParameters>
+    <ttg:name>completionCode</ttg:name>
+    <ttg:label>Tipo cierre</ttg:label>
+    <ttg:visible>false</ttg:visible>
+    <ttg:type>string</ttg:type>
+    <ttg:value>Cerrado</ttg:value>
+    <ttg:enable>false</ttg:enable>
+    </ttg:inParameters><ttg:inParameters>
+    <ttg:name>completionSubCode</ttg:name>
+    <ttg:label>Código cierre</ttg:label>
+    <ttg:visible>true</ttg:visible>
+    <ttg:type>string</ttg:type>
+    <ttg:value>Cobertura</ttg:value>
+    <ttg:enable>false</ttg:enable>
+    <ttg:required>true</ttg:required>
+    </ttg:inParameters><ttg:inParameters>
+    <ttg:name>completionLabel</ttg:name>
+    <ttg:label>Comentario</ttg:label>
+    <ttg:visible>true</ttg:visible>
+    <ttg:type>string</ttg:type>
+    <ttg:required>true</ttg:required>
+    </ttg:inParameters></ttg:operation></ttg:step></ttg:guide>
