@@ -18,11 +18,13 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
 
@@ -42,6 +44,13 @@ public class OperationForm extends VerticalLayout {
     public Boolean editing;
 
     public ConditionsForm conditionForm = new ConditionsForm();
+
+    VerticalLayout desconocidosLayout = new VerticalLayout();
+    Button validarDesconocido = new Button("Validar");
+    Accordion desconocidosAccordion = new Accordion();
+    TextArea desconocidosText = new TextArea("Desconocidos");
+    VerticalLayout contenedorDesconocidos = new VerticalLayout();
+    Div mensajesError = new Div();
 
     Accordion conditionFormAccordion = new Accordion();
     VerticalLayout conditionFormLayout = new VerticalLayout();
@@ -209,6 +218,20 @@ public class OperationForm extends VerticalLayout {
 
         elements.setWidthFull();
 
+        desconocidosAccordion.setWidthFull();
+        desconocidosAccordion.close();
+        desconocidosLayout.setWidthFull();
+        mensajesError.setClassName("error");
+        mensajesError.setVisible(false);
+        validarDesconocido.addClickListener(buttonClickEvent -> validarDesconocido());
+        contenedorDesconocidos.setMinWidth("60%");
+        contenedorDesconocidos.setMaxWidth("80%");
+        desconocidosText.setWidthFull();
+        mensajesError.setWidthFull();
+        contenedorDesconocidos.add(validarDesconocido, desconocidosText, mensajesError);
+        desconocidosLayout.add(contenedorDesconocidos);
+        desconocidosAccordion.add("Componentes desconocidos", desconocidosLayout);
+
         elementsForm.add(name,label,comment,title,notifyOperationDelay,operationOrder,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation,operationType);
         elementsForm.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1),
@@ -218,6 +241,18 @@ public class OperationForm extends VerticalLayout {
         elements.add(elementsForm);
 
         actionsLayout.add(createButtonsLayout());
+    }
+
+    private void validarDesconocido(){
+        this.mensajesError.setVisible(true);
+    }
+
+    public void setMensajesError(String mensajesError){
+        this.mensajesError.setText(mensajesError);
+    }
+
+    public void setDesconocidosText(String text){
+        this.desconocidosText.setValue(text);
     }
 
     private void addAlternativeIdsForm(Boolean choice){
@@ -295,7 +330,7 @@ public class OperationForm extends VerticalLayout {
         conditionFormAccordion.close();
         conditionFormAccordion.add("Conditions", conditionFormLayout);
 
-        add(accordionBasicInformation,inParameterAccordion,outParameterAccordion,conditionFormAccordion,operationNotifyIdsFormAccordion, groupsAccordion, alternativesIdsAccordion,actionsLayout);
+        add(accordionBasicInformation,inParameterAccordion,outParameterAccordion,conditionFormAccordion,operationNotifyIdsFormAccordion, groupsAccordion, alternativesIdsAccordion,desconocidosAccordion,actionsLayout);
     }
 
     public void setOperation(Operation operation) {
@@ -303,7 +338,13 @@ public class OperationForm extends VerticalLayout {
         addElements(this.operationType.getValue());
         this.name.setValue(operation.getName());
         this.label.setValue(operation.getLabel());
-
+        if (operation.getTagsDesconocidos() != null){
+            setDesconocidosText(operation.getTagsDesconocidos());
+        }
+        else{
+            setDesconocidosText("");
+        }
+        this.desconocidosAccordion.close();
         if(operation.getConditions() != null && operation.getConditions().size() >0)
         {
             conditionForm.setVisible(true);
@@ -497,7 +538,7 @@ public class OperationForm extends VerticalLayout {
         }
 
         operation.setConditions(conditionForm.getConditions());
-
+        operation.setTagsDesconocidos(this.desconocidosText.getValue());
         if (!incompleteValidation.isEmpty()){
             showErrorMessage(incompleteValidation);
         }
@@ -556,6 +597,9 @@ public class OperationForm extends VerticalLayout {
         name.clear();
         label.clear();
         comment.clear();
+        setMensajesError("");
+        setDesconocidosText("");
+        mensajesError.setVisible(false);
         title.clear();
         visible.clear();
         preExecute.clear();

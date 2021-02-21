@@ -7,9 +7,10 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 
 import java.util.LinkedList;
@@ -21,6 +22,12 @@ public class GuidePanel  extends HorizontalLayout {
 
     Accordion accordion = new Accordion();
     HorizontalLayout basicHorizontal = new HorizontalLayout();
+    VerticalLayout desconocidosLayout = new VerticalLayout();
+    Button validarDesconocido = new Button("Validar");
+    Accordion desconocidosAccordion = new Accordion();
+    TextArea desconocidosText = new TextArea("Desconocidos");
+    VerticalLayout contenedorDesconocidos = new VerticalLayout();
+    public Div mensajesError = new Div();
     public Button eliminarGuia = new Button("Eliminar");
 
     public TextField name = new TextField("Name");
@@ -46,11 +53,45 @@ public class GuidePanel  extends HorizontalLayout {
         basicHorizontal.setVerticalComponentAlignment(Alignment.BASELINE, eliminarGuia);
         basicHorizontal.setClassName("campos-layout");
         basicHorizontal.setWidthFull();
+
+        desconocidosAccordion.setWidthFull();
+        desconocidosAccordion.close();
+        desconocidosLayout.setWidthFull();
+        mensajesError.setClassName("error");
+        mensajesError.setVisible(false);
+        validarDesconocido.addClickListener(buttonClickEvent -> validarDesconocidos());
+        contenedorDesconocidos.setMinWidth("60%");
+        contenedorDesconocidos.setMaxWidth("80%");
+        desconocidosText.setWidthFull();
+        mensajesError.setWidthFull();
+        contenedorDesconocidos.add(validarDesconocido, desconocidosText, mensajesError);
+        desconocidosLayout.add(contenedorDesconocidos);
+        desconocidosAccordion.add("Componentes desconocidos", desconocidosLayout);
+
+        VerticalLayout layoutVertical = new VerticalLayout();
+        layoutVertical.setWidthFull();
+        layoutVertical.add(basicHorizontal,desconocidosAccordion);
         name.setMinWidth("25%");
         name.setMaxWidth("40%");
         label.setMinWidth("25%");
         label.setMaxWidth("40%");
-        accordion.add("Informacion Basica", basicHorizontal);
+        accordion.add("Informacion Basica", layoutVertical);
+    }
+
+    private void validarDesconocidos(){
+        this.mensajesError.setVisible(true);
+    }
+
+    public void setMensajesError(String mensajesError){
+        this.mensajesError.setText(mensajesError);
+    }
+
+    public void setDesconocidosText(String text){
+        this.desconocidosText.setValue(text);
+    }
+
+    public String getDesconocidosText(){
+        return this.desconocidosText.getValue();
     }
 
     private void configureForm() {
@@ -71,6 +112,7 @@ public class GuidePanel  extends HorizontalLayout {
             mainStepAux = "";
 
         this.mainStep.setItems(new LinkedList<>());
+        this.mensajesError.setVisible(false);
 
         if(guide.getSteps() != null )
         {

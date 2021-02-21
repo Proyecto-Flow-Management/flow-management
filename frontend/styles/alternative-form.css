@@ -7,3 +7,13 @@
 .alternative-form{
     padding: 0%;
 }
+
+.campos-layout
+{
+    margin-left: var(--lumo-space-m);
+}
+
+.error
+{
+    color: red;
+}
