@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ttg="http://ns.antel.com.uy/schema/troubleticket/guide" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" targetNamespace="http://ns.antel.com.uy/schema/troubleticket/guide" vc:maxVersion="1.1" vc:minVersion="1.0" version="2.0">
+    <xs:element name="guide">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="label" type="xs:string"/>
+                <xs:element name="mainStepId" type="xs:string"/>
+                <xs:element maxOccurs="unbounded" minOccurs="1" name="step" type="ttg:Step"> </xs:element>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="operation" type="ttg:Operation"> </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="Step">
+        <xs:sequence>
+            <xs:element name="stepId" type="xs:string"/>
+            <xs:element name="label" type="xs:string"/>
+            <xs:element name="text" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="operation" type="ttg:Operation"> </xs:element>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="alternative" nillable="false">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:choice>
+                            <xs:element name="guideName" type="xs:string"/>
+                            <xs:element name="stepId" type="xs:string"/>
+                        </xs:choice>
+                        <xs:element name="label" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="condition" type="ttg:Condition"> </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="referenceDoc">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="mimeType" type="xs:string"/>
+                    <xs:element name="url" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType abstract="true" name="Condition">
+        <xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BinaryCondition">
+        <xs:complexContent>
+            <xs:extension base="ttg:Condition">
+                <xs:sequence>
+                    <xs:element name="operation" type="xs:string"/>
+                    <xs:element name="operator1" type="ttg:Condition"/>
+                    <xs:element name="operator2" type="ttg:Condition"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="UnaryCondition">
+        <xs:complexContent>
+            <xs:extension base="ttg:Condition">
+                <xs:sequence>
+                    <xs:element name="operationName" type="xs:string"/>
+                    <xs:element name="stepId" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="conditionsEnableAlternative" type="ttg:ConditionElement"> </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ConditionElement">
+        <xs:sequence>
+            <xs:element name="field" type="xs:string"/>
+            <xs:element name="fieldType" type="xs:string"/>
+            <xs:element name="operator" type="xs:string"/>
+            <xs:element name="value" type="xs:string"/>
+            <xs:element default="false" name="evaluated" type="xs:boolean"/>
+            <xs:element default="false" name="resultEvaluation" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType abstract="true" name="Operation">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="servicio" type="xs:string"/>
+            <xs:element name="label" type="xs:string"/>
+            <xs:element minOccurs="0" name="visible" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="preExecute" type="xs:boolean"/>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="comment" type="xs:string"/>
+            <xs:element name="commentAtEndExecution" type="xs:string"/>
+            <xs:element default="false" name="automatic" type="xs:boolean"/>
+            <xs:element default="false" name="pauseExecution" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="operationOrder" type="xs:positiveInteger"/>
+            <xs:element name="operationType">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="simpleOperation"/>
+                        <xs:enumeration value="taskOperation"/>
+                        <xs:enumeration value="guideOperation"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="1" name="inParameters" type="ttg:InParameter"/>
+                <xs:element maxOccurs="unbounded" minOccurs="1" name="outParameters" type="ttg:OutParameter"/>
+            </xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="condition" type="ttg:Condition"> </xs:element>
+            <xs:element default="false" name="notifyAlternative" type="xs:boolean"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="alternativeIds" type="xs:string"> </xs:element>
+            <xs:element default="false" name="notifyOperation" type="xs:boolean"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="operationNotifyIds" type="xs:string"> </xs:element>
+            <xs:element minOccurs="0" name="notifyOperationDelay" type="xs:positiveInteger"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InParameter">
+        <xs:complexContent>
+            <xs:extension base="ttg:Parameter"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="OutParameter">
+        <xs:complexContent>
+            <xs:extension base="ttg:Parameter"/>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ValidateCrossFieldCondition">
+        <xs:sequence>
+            <xs:element name="fieldName" type="xs:string"/>
+            <xs:element name="condition" type="xs:string"/>
+            <xs:element name="messageError" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Parameter">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element minOccurs="0" name="label" type="xs:string"/>
+            <xs:element minOccurs="0" name="visible" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="visibleWhenInParameterEqualsCondition" type="xs:string"/>
+            <xs:element name="type" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="value" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="format" type="xs:string"/>
+            <xs:element minOccurs="0" name="enable" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="required" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="validateExpression" type="xs:string"/>
+            <xs:element minOccurs="0" name="validateExpressionErrorDescription" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="optionValue" type="xs:string"/>
+            <xs:element minOccurs="0" name="dateFormat" type="xs:string"/>
+            <xs:element minOccurs="0" name="dateFormatRangeEnd" type="xs:string"/>
+            <xs:element minOccurs="0" name="dateFormatFinal" type="xs:string"/>
+            <xs:element minOccurs="0" name="sourceValueEntity" type="ttg:SourceEntity"/>
+            <xs:element minOccurs="0" name="sourceValueEntityProperty" type="xs:string"/>
+            <xs:element minOccurs="0" name="valueWhenInParameterEquals" type="xs:string"/>
+            <xs:element minOccurs="0" name="convert" type="xs:boolean"/>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="convertCondition" type="ttg:Convertion"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="validateCrossFieldCondition" type="ttg:ValidateCrossFieldCondition"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" type="ttg:Parameter"/>
+            </xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Convertion">
+        <xs:sequence>
+            <xs:element name="convertCondition" type="xs:string"/>
+            <xs:element name="sourceUnit" type="xs:string"/>
+            <xs:element name="destinationUnit" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SimpleOperation">
+        <xs:complexContent>
+            <xs:extension base="ttg:Operation">
+                <xs:sequence>
+                    <xs:element name="type" type="ttg:SimpleOperationType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="SourceEntity">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ticket"/>
+            <xs:enumeration value="task"/>
+            <xs:enumeration value="guide"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SimpleOperationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="configuration"/>
+            <xs:enumeration value="diagnostic"/>
+            <xs:enumeration value="query"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="TaskOperation">
+        <xs:complexContent>
+            <xs:extension base="ttg:Operation">
+                <xs:sequence>
+                    <xs:element name="type" type="ttg:TaskOperationType"/>
+                    <xs:element name="targetSystem" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="1" name="candidateGroups" nillable="false">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0" name="groupName" type="xs:string"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="mailTemplate" type="xs:string"/>
+                    <xs:element name="mailTo" type="xs:string"/>
+                    <xs:element name="mailSubjectPrefix" type="xs:string"/>
+                    <xs:element name="mailBody" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="GuideOperation">
+        <xs:complexContent>
+            <xs:extension base="ttg:Operation">
+                <xs:sequence>
+                    <xs:element name="type" type="ttg:GuideOperationType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:simpleType name="TaskOperationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="delegate"/>
+            <xs:enumeration value="close"/>
+            <xs:enumeration value="schedule"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GuideOperationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="exportPdf"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

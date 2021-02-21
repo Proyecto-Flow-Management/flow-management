@@ -5,6 +5,7 @@ import com.proyecto.flowmanagement.backend.service.Impl.GuideGeneratorServiceImp
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -22,6 +23,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ValidacionesOpcionesPanel extends HorizontalLayout {
     public Guide guia;
@@ -34,24 +37,27 @@ public class ValidacionesOpcionesPanel extends HorizontalLayout {
     public Guide actual;
     MemoryBuffer buffer = new MemoryBuffer();
     public Upload upload = new Upload(buffer);
+    public ComboBox<String> opciones = new ComboBox<>();
     public Button validar = new Button("Validar");
     public Button validarXML = new Button("validarXML");
 
     HorizontalLayout validatorSecctionLayout = new HorizontalLayout();
     Accordion accordion = new Accordion();
     FormLayout basicInformation = new FormLayout();
-    public TextArea errores = new TextArea("Errores Validacion XML");
 
     public ValidacionesOpcionesPanel()
     {
+        List<String> opciones = new LinkedList<>();
+        opciones.add("Validacion XSD");
+        opciones.add("Validacion Integridad");
+        this.opciones.setItems(opciones);
 
         configureForm();
     }
 
     private void configureForm() {
-
-        validatorSecctionLayout.add(validar,upload,validarXML,errores);
-        errores.setVisible(false);
+        opciones.addValueChangeListener(value -> cambioOpcion());
+        validatorSecctionLayout.add(opciones,validar,upload,validarXML);
         cancelarImportacion.addThemeVariants(ButtonVariant.LUMO_ERROR);
         cancelarImportacion.addClickListener(buttonClickEvent -> cancelarImportacion());
         upload.addSucceededListener(succeededEvent -> cargaarDocument(succeededEvent));
@@ -61,9 +67,48 @@ public class ValidacionesOpcionesPanel extends HorizontalLayout {
         setWidthFull();
         basicInformation.add(validatorSecctionLayout);
         accordion.close();
-        accordion.add("Errores Guia", basicInformation);
+        accordion.add("Opciones de Validacion", basicInformation);
         add(accordion);
+        setAsDefaault();
     }
+
+    private void cambioOpcion()
+    {
+        if(opciones.getValue() == "Validacion XSD")
+        {
+            mostrarValidacionXSD();
+        }
+        else if(opciones.getValue() == "Validacion Integridad")
+            {
+                mostrarValidacionIntegridad();
+            }
+    }
+
+    public void setAsDefaault()
+    {
+        this.opciones.setVisible(true);
+        this.validar.setVisible(false);
+        this.upload.setVisible(false);
+        this.validarXML.setVisible(false);
+    }
+
+    public void mostrarValidacionIntegridad()
+    {
+        this.opciones.setVisible(true);
+        this.validar.setVisible(true);
+        this.upload.setVisible(false);
+        this.validarXML.setVisible(false);
+    }
+
+    public void mostrarValidacionXSD()
+    {
+        this.opciones.setVisible(true);
+        this.validar.setVisible(false);
+        this.upload.setVisible(true);
+        this.validarXML.setVisible(true);
+    }
+
+
 
     private void cancelarImportacion()
     {
