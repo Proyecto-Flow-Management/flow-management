@@ -2,19 +2,21 @@ package com.proyecto.flowmanagement.ui.views.forms;
 
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
+import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.*;
 import java.io.*;
 
+@CssImport("./styles/validation.css")
 public class TagsDesconocidosForm   extends HorizontalLayout {
 
     VerticalLayout desconocidosLayout = new VerticalLayout();
@@ -27,7 +29,6 @@ public class TagsDesconocidosForm   extends HorizontalLayout {
     public TagsDesconocidosForm()
     {
         desconocidosLayout.setWidthFull();
-        mensajesError.setClassName("error");
         mensajesError.setVisible(false);
         validarDesconocido.addClickListener(buttonClickEvent -> validarDesconocido());
         contenedorDesconocidos.setMinWidth("60%");
@@ -44,18 +45,24 @@ public class TagsDesconocidosForm   extends HorizontalLayout {
     private void validarDesconocido(){
         this.mensajesError.setVisible(true);
         try {
-            SAXParserFactory.newInstance().newSAXParser().getXMLReader().parse(new InputSource(new StringReader(this.desconocidosText.getValue())));
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+            SAXParser sp = spf.newSAXParser();
+            XMLReader xr = sp.getXMLReader();
+            xr.parse(new InputSource(new StringReader(this.desconocidosText.getValue())));
+            setMensajesOK();
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             setMensajesError(ex.getMessage());
         }
     }
 
     public void setMensajesError(String mensajesError){
+        this.mensajesError.setClassName("error-xml");
         this.mensajesError.setText(mensajesError);
         this.mensajesError.setVisible(true);
     }
 
-    public void setMensajesOK(String mensajesError){
+    public void setMensajesOK(){
+        mensajesError.setClassName("success-xml");
         this.mensajesError.setText("El XML esta creado de manera correcta");
         this.mensajesError.setVisible(true);
     }
