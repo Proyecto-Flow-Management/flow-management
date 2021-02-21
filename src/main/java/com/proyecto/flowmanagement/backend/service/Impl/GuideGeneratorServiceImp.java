@@ -1199,9 +1199,6 @@ public class GuideGeneratorServiceImp {
             }
         }
 
-        guide.setTagsDesconocidos("<ttg:pepe>test</ttg:pepe>");
-
-
         if(guide.getTagsDesconocidos() != null && !guide.getTagsDesconocidos().isEmpty())
         {
             doc = convertStringToXMLDocument(guide.getTagsDesconocidos(),doc);
@@ -1261,9 +1258,6 @@ public class GuideGeneratorServiceImp {
                         newStep.insertBefore(docStep.importNode(refDoc,true), refNode);
                     }
                 }
-
-                step.setTagsDesconocidos("<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>");
-
 
                 if(step.getTagsDesconocidos() != null && !step.getTagsDesconocidos().isEmpty())
                 {
@@ -1569,6 +1563,11 @@ public class GuideGeneratorServiceImp {
             Node node = docOperation.getElementsByTagName(XMLConstants.OPERATION_NOTIFY_OPERATION_DELAY).item(0);
             docOp.removeChild(node.getNextSibling());
             docOp.removeChild(node);
+        }
+
+        if(operation.getTagsDesconocidos() != null && !operation.getTagsDesconocidos().isEmpty())
+        {
+            docOperation = convertStringToXMLDocument(operation.getTagsDesconocidos(), docOperation);
         }
 
         Node newOperation = docOperation.getElementsByTagName(XMLConstants.OPERATION_ELEMENT).item(0);
@@ -2166,7 +2165,7 @@ public class GuideGeneratorServiceImp {
                 .parse(new ByteArrayInputStream(xmlString.getBytes()))
                 .getDocumentElement();
         Node esto = document.importNode(node,true);
-        document.insertBefore(esto, refNode);
+        document.getFirstChild().appendChild(esto);
 
         return document;
     }
