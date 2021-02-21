@@ -5,6 +5,7 @@ import com.proyecto.flowmanagement.backend.persistence.entity.*;
 import com.vaadin.flow.internal.Pair;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.*;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,9 +15,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -1200,6 +1199,14 @@ public class GuideGeneratorServiceImp {
             }
         }
 
+        guide.setTagsDesconocidos("<ttg:pepe>test</ttg:pepe>");
+
+
+        if(guide.getTagsDesconocidos() != null && !guide.getTagsDesconocidos().isEmpty())
+        {
+            doc = convertStringToXMLDocument(guide.getTagsDesconocidos(),doc);
+        }
+
         Node docOp = doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT).item(0);
         Node node = doc.getElementsByTagName(XMLConstants.AUX).item(0);
         docOp.removeChild(node.getNextSibling());
@@ -1253,6 +1260,14 @@ public class GuideGeneratorServiceImp {
                         Node refDoc = configureReferenceDocsXML(doc, referenceDoc);
                         newStep.insertBefore(docStep.importNode(refDoc,true), refNode);
                     }
+                }
+
+                step.setTagsDesconocidos("<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>");
+
+
+                if(step.getTagsDesconocidos() != null && !step.getTagsDesconocidos().isEmpty())
+                {
+                    doc = convertStringToXMLDocument(step.getTagsDesconocidos(), doc);
                 }
 
                 Node docOp = docStep.getElementsByTagName(XMLConstants.STEP_ELEMENT).item(0);
@@ -2140,5 +2155,19 @@ public class GuideGeneratorServiceImp {
         Node newCondPar = docConditionParameter.getElementsByTagName(XMLConstants.CONDITION_ENABLE_ALTERNATIVE).item(0);
 
         return newCondPar;
+    }
+
+    private static Document convertStringToXMLDocument(String xmlString, Document document) throws ParserConfigurationException, IOException, SAXException {
+
+        Node refNode = document.getElementsByTagName(XMLConstants.AUX).item(0);
+        Element node =  DocumentBuilderFactory
+                .newInstance()
+                .newDocumentBuilder()
+                .parse(new ByteArrayInputStream(xmlString.getBytes()))
+                .getDocumentElement();
+        Node esto = document.importNode(node,true);
+        document.insertBefore(esto, refNode);
+
+        return document;
     }
 }
