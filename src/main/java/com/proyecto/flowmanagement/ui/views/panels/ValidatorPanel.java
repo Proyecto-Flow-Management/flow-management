@@ -6,12 +6,14 @@ import com.proyecto.flowmanagement.backend.persistence.entity.Guide;
 import com.proyecto.flowmanagement.backend.service.Impl.ValidationServiceImpl;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
@@ -19,11 +21,13 @@ import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import java.util.LinkedList;
 import java.util.List;
 
+@CssImport("./styles/errores-styles.css")
 public class ValidatorPanel extends HorizontalLayout {
     HorizontalLayout validatorSecctionLayout = new HorizontalLayout();
-    Accordion accordion = new Accordion();
+    public Accordion accordion = new Accordion();
     FormLayout basicInformation = new FormLayout();
     Grid<String> erroresValidacion = new Grid<>();
+    Grid<String> erroresValidacionesXML = new Grid<>();
 
     TreeGrid<ValidationDTO> arbol = new TreeGrid<ValidationDTO>(ValidationDTO.class);
     TreeDataProvider<ValidationDTO> dataProvider = (TreeDataProvider<ValidationDTO>) arbol.getDataProvider();
@@ -43,14 +47,21 @@ public class ValidatorPanel extends HorizontalLayout {
         validatorSecctionLayout.setWidthFull();
         validatorSecctionLayout.setId("step-Layout");
         setWidthFull();
-        basicInformation.add(validatorSecctionLayout);
+        VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout.setWidthFull();
+        verticalLayout.add(validatorSecctionLayout,erroresValidacionesXML);
+        basicInformation.add(verticalLayout);
         accordion.close();
         accordion.add("Errores Guia", basicInformation);
         add(accordion);
     }
 
     private void configureGrid() {
+        erroresValidacionesXML.addColumn(nombre -> nombre).setHeader("Errores");
+        erroresValidacionesXML.setVisible(false);
+        erroresValidacionesXML.getColumns().forEach(col -> col.setAutoWidth(true));
         validatorSecctionLayout = new HorizontalLayout();
+        validatorSecctionLayout.setWidthFull();
         validatorSecctionLayout.add(arbol);
         arbol.removeAllColumns();
         arbol.addColumn("label");
@@ -60,6 +71,7 @@ public class ValidatorPanel extends HorizontalLayout {
 
     public void actualizarGrilla(Guide guide)
     {
+        this.arbol.setVisible(true);
         ValidationServiceImpl validationService = new ValidationServiceImpl();
 
         ValidationDTO validacion =validationService.validarGuia(guide);
@@ -272,5 +284,12 @@ public class ValidatorPanel extends HorizontalLayout {
         Div div = new Div();
         div.setText(s.getLabel());
         return div;
+    }
+
+    public void mostrarErroresXSD(List<String> errores)
+    {
+        this.erroresValidacionesXML.setItems(errores);
+        this.erroresValidacionesXML.setVisible(true);
+        this.arbol.setVisible(false);
     }
 }

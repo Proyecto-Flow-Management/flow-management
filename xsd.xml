@@ -2,13 +2,3 @@
 
             <ttg:mainStepId/>
             </ttg:guide>
-            <ttg:mainStepId>Step1</ttg:mainStepId>
-            <ttg:step>
-    <ttg:stepId>Step2</ttg:stepId>
-    <ttg:label>Step2</ttg:label>
-    <ttg:text>Step2</ttg:text>
-    </ttg:step><ttg:step>
-    <ttg:stepId>Step1</ttg:stepId>
-    <ttg:label>Step1</ttg:label>
-    <ttg:text>Step1</ttg:text>
-    </ttg:step></ttg:guide>

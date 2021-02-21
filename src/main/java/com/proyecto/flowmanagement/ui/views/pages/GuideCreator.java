@@ -25,10 +25,24 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamResource;
+import io.swagger.v3.oas.models.media.XML;
 import org.apache.commons.lang3.SerializationUtils;
+import org.hibernate.internal.util.xml.XmlDocument;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.olli.FileDownloadWrapper;
 
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,6 +75,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     HorizontalLayout guidePanelLayout;
     HorizontalLayout importExportLayout;
     HorizontalLayout actionsLayout;
+    HorizontalLayout axsPanelLayout;
 
     ActualGuidePanel actualGuidePanel;
     OperationGridForm operationGridForm;
@@ -69,12 +84,12 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     ValidatorPanel validatorPanel;
     GuidePanel guidePanel;
     ImportExportPanel importExportPanel;
+    ValidacionesOpcionesPanel validacionesOpcionesPanel;
 
     List<Guide> guideList = new LinkedList<>();
     List<Guide> systemGuideList = new LinkedList<>();
 
     public Button save = new Button("Guardar");
-    public Button validar = new Button("Validar");
 
     Guide raiz;
     Guide editado;
@@ -102,11 +117,21 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
 
         configureValidatorPanel();
 
+        configureImportXSD();
+
         configureActions();
 
         configureInteractivitie();
 
         configureForm();
+    }
+
+    private void configureImportXSD()
+    {
+        axsPanelLayout = new HorizontalLayout();
+        axsPanelLayout.setWidthFull();
+        validacionesOpcionesPanel = new ValidacionesOpcionesPanel();
+        axsPanelLayout.add(validacionesOpcionesPanel);
     }
 
     private void configureEditing(long id) {
@@ -136,12 +161,12 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
 
     private void configureActions() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        validar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        validacionesOpcionesPanel.validar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(buttonClickEvent -> guardarGuias());
-        validar.addClickListener(buttonClickEvent -> validarGuia());
+        validacionesOpcionesPanel.validar.addClickListener(buttonClickEvent -> validarGuia());
         guidePanel.eliminarGuia.addClickListener(buttonClickEvent -> deleteGuide());
         actionsLayout = new HorizontalLayout();
-        actionsLayout.add(save,validar);
+        actionsLayout.add(save);
     }
 
     private void deleteGuide()
@@ -253,9 +278,65 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         actualizacionOperations();
         cambioLabelYempezarEn();
         importacionGuia();
+        configurarValidacionXSD();
         //Actualizar Steps
         // Alternativs
         //Actuaalizar resumen
+    }
+
+    private void configurarValidacionXSD()
+    {
+        validacionesOpcionesPanel.validarXML.addClickListener(buttonClickEvent -> generarValidacion());
+    }
+
+    private void generarValidacion()
+    {
+        List<String> errorsList = new LinkedList<>();
+
+        String error = validarXDSMessage(guideGeneratorServiceImp.GuidePrint(raiz));
+
+        if(!error.isEmpty())
+            errorsList.add(error);
+
+        for(Guide aux : raiz.getGuides()){
+            error = validarXDSMessage(guideGeneratorServiceImp.GuidePrint(aux));
+            if(!error.isEmpty())
+                errorsList.add(error);
+        }
+
+        if(errorsList.size() > 0)
+        {
+            this.validatorPanel.mostrarErroresXSD(errorsList);
+            this.validatorPanel.accordion.setVisible(true);
+        }
+
+    }
+
+    public String validarXDSMessage( byte[] byteArray)
+    {
+        byte[]  validacionXSD = validacionesOpcionesPanel.actual.getFileXSD();
+
+        try {
+            File xsd = new File("xsd.xsd");
+            File xml = new File("xsd.xml");
+
+            FileOutputStream fos = null;
+
+            fos = new FileOutputStream(xsd);
+            fos.write(validacionXSD);
+
+            fos = new FileOutputStream(xml);
+            fos.write(byteArray);
+
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = factory.newSchema(xsd);
+            Validator validator = schema.newValidator();
+            validator.validate(new StreamSource(xml));
+            return "";
+
+        } catch (Exception e) {
+            return "Error Guia " + raiz.getName() + ": " + e.getMessage() ;
+        }
     }
 
     private void importacionGuia()
@@ -528,6 +609,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
                 stepPanelLayout,
                 operationPanelLayout,
                 importExportLayout,
+                axsPanelLayout,
                 validatorPanelLayout,
                 actionsLayout);
     }
