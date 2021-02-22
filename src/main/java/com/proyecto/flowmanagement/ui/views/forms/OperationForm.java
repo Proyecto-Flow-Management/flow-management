@@ -46,9 +46,6 @@ public class OperationForm extends VerticalLayout {
     TagsDesconocidosForm tagsDesconocidosForm = new TagsDesconocidosForm();
     HorizontalLayout tagsDesconocidosLayout = new HorizontalLayout();
 
-    Accordion desconocidosAccordion = new Accordion();
-    TextArea desconocidosText = new TextArea("Desconocidos");
-
     Accordion conditionFormAccordion = new Accordion();
     VerticalLayout conditionFormLayout = new VerticalLayout();
 
@@ -223,13 +220,6 @@ public class OperationForm extends VerticalLayout {
 
         elements.setWidthFull();
 
-        desconocidosAccordion.setWidthFull();
-        desconocidosAccordion.close();
-        desconocidosAccordion.add("Componentes desconocidos", desconocidosText);
-        desconocidosText.setMinWidth("60%");
-        desconocidosText.setMaxWidth("80%");
-        desconocidosText.setClassName("campos-layout");
-
         elementsForm.add(name,label,comment,title,notifyOperationDelay,operationOrder,visible,preExecute,automatic,pauseExecution,notifyAlternative,notifyOperation,operationType);
         elementsForm.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1),
@@ -316,7 +306,7 @@ public class OperationForm extends VerticalLayout {
         conditionFormAccordion.close();
         conditionFormAccordion.add("Conditions", conditionFormLayout);
 
-        add(accordionBasicInformation,tagsDesconocidosLayout,inParameterAccordion,outParameterAccordion,conditionFormAccordion,operationNotifyIdsFormAccordion, groupsAccordion, alternativesIdsAccordion,desconocidosAccordion,actionsLayout);
+        add(accordionBasicInformation,tagsDesconocidosLayout,inParameterAccordion,outParameterAccordion,conditionFormAccordion,operationNotifyIdsFormAccordion, groupsAccordion, alternativesIdsAccordion,actionsLayout);
     }
 
     public void setOperation(Operation operation) {
