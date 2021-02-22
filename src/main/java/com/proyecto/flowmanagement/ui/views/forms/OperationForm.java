@@ -321,7 +321,9 @@ public class OperationForm extends VerticalLayout {
 
     public void setOperation(Operation operation) {
         this.operation = operation;
-        this.tagsDesconocidosForm.desconocidosText.setValue(operation.getTagsDesconocidos());
+
+        if(operation.getTagsDesconocidos() != null)
+            this.tagsDesconocidosForm.desconocidosText.setValue(operation.getTagsDesconocidos());
         addElements(this.operationType.getValue());
         this.name.setValue(operation.getName());
         this.label.setValue(operation.getLabel());

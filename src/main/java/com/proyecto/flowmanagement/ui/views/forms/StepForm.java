@@ -195,7 +195,8 @@ public class StepForm extends HorizontalLayout {
         this.label.setValue(step.getLabel());
         this.textId.setValue(step.getTextId());
         this.text.setValue(step.getText());
-        this.tagsDesconocidosForm.desconocidosText.setValue(step.getTagsDesconocidos());
+        if(step.getTagsDesconocidos() != null)
+            this.tagsDesconocidosForm.desconocidosText.setValue(step.getTagsDesconocidos());
         this.alternativeGridForm.loadAlternative(step.getAlternatives());
         this.operationGridForm.loadOperations(step.getOperations());
         this.documentsGridForm.loadStepDocuments(step.getStepDocuments());

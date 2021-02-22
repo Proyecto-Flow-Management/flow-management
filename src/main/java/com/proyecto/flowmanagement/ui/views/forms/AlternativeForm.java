@@ -227,7 +227,9 @@ public class AlternativeForm extends VerticalLayout {
         if (alternative != null)
         {
             this.alternative = alternative;
-            tagsDesconocidosForm.desconocidosText.setValue(alternative.getTagsDesconocidos());
+
+            if(alternative.getTagsDesconocidos() != null)
+                tagsDesconocidosForm.desconocidosText.setValue(alternative.getTagsDesconocidos());
 
             if(alternative.getNextStep() != null)
             {
