@@ -284,7 +284,8 @@ public class Guide extends AbstractEntity implements Serializable {
 	private List<String> validarMainStep(List<String> erroresEncontrados)
 	{
 		for (Step step:this.steps) {
-			if(step.getTextId()==this.mainStep)
+
+			if(step.getTextId().equals(this.mainStep))
 			{
 				return erroresEncontrados;
 			}
