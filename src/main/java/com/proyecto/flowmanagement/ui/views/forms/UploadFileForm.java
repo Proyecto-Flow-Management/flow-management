@@ -74,7 +74,7 @@ public class UploadFileForm extends HorizontalLayout {
             cancelarImportacion();
             actual = guide;
         } catch (Exception e) {
-
+            String prueba = e.getMessage();
         }
     }
 

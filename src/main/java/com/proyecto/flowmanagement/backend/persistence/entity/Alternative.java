@@ -130,7 +130,7 @@ public class Alternative  extends AbstractEntity   implements Serializable {
 		if(this.label.trim().isEmpty())
 			validationGuide.addError("El campo Label es obligatorio");
 
-		if(this.getNextStep().trim().isEmpty() && this.nextStep.trim().isEmpty())
+		if(this.guideName == null ||  (this.getNextStep()!= null && this.getNextStep().trim().isEmpty() && this.nextStep.trim().isEmpty()))
 			validationGuide.addError("Debe seleccionar una guia o un step para el Alternative");
 
 		if(getTagsDesconocidos() != null && !getTagsDesconocidos().isEmpty())

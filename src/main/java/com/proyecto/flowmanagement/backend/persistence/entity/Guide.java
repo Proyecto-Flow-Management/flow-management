@@ -149,7 +149,7 @@ public class Guide extends AbstractEntity implements Serializable {
 
 			for (Operation operation : this.operations)
 			{
-				if(this.operations instanceof TaskOperation)
+				if(operation instanceof TaskOperation)
 				{
 					ValidationDTO validarOperation = ((TaskOperation )operation).validateOperation(operationsActuales);
 					if(validarOperation.getValidationDTOList().size() > 0 && validarOperation.getError().size() >0)

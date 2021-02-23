@@ -202,7 +202,7 @@ public class ValidatorPanel extends HorizontalLayout {
             operation.setLabel("Operations");
             data.addItem(val,operation);
 
-            for (ValidationDTO opAux : val.getValidationDTOList())
+            for (ValidationDTO opAux : val.getValidationDTOListSecond())
             {
                 ValidationDTO operationAux = new ValidationDTO();
                 operationAux.setLabel(opAux.getLabel());
@@ -214,12 +214,26 @@ public class ValidatorPanel extends HorizontalLayout {
         if(val.getValidationDTOList().size()>0)
         {
             ValidationDTO alternative = new ValidationDTO();
-            steps.setLabel("Alternative");
-            data.addItem(steps,alternative);
+            alternative.setLabel("Alternative");
+            boolean flag = false;
 
             for (ValidationDTO alt : val.getValidationDTOList())
             {
-                agregarAlternativsPuntuales(alternative, alt);
+                if((alt.getValidationDTOListSecond() != null && alt.getValidationDTOListSecond().size()>0) ||
+                        (alt.getValidationDTOList() != null && alt.getValidationDTOList().size()>0 ) ||
+                       (alt.getError() != null && alt.getError().size()>0 ))
+                {
+                    if(!flag)
+                    {
+                        data.addItem(steps,alternative);
+                        flag = true;
+                    }
+                    ValidationDTO alternativeAux = new ValidationDTO();
+                    alternativeAux.setLabel(alt.getLabel());
+                    data.addItem(alternative,alternativeAux);
+                    agregarAlternativsPuntuales(alternative, alt);
+
+                }
             }
         }
     }

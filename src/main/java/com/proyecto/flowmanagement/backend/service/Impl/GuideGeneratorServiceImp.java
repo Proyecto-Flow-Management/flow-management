@@ -1197,8 +1197,15 @@ public Guide importGuide (Document doc) throws IOException, SAXException, Parser
                         condition.setOperation(binaryOperator.getFirstChild().getNodeValue());
                     }
                     NodeList operators = conditionElement.getChildNodes();
-                    Node operator1 = operators.item(3);
-                    Node operator2 = operators.item(5);
+                    Node operator1 = null;
+                    Node operator2 = null;
+                    for (int i = 0; i < operators.getLength(); i++){
+                        if (operators.item(i).getNodeName() == "ttg:operator1"){
+                            operator1 = operators.item(i);
+                        }else if (operators.item(i).getNodeName() == "ttg:operator2"){
+                            operator2 = operators.item(i);
+                        }
+                    }
                     Document docOperator1 = nodeToDocument(operator1);
                     Document docOperator2 = nodeToDocument(operator2);
                     condition.setHijoIzquierdo(importCondition(docOperator1, "operator1"));
