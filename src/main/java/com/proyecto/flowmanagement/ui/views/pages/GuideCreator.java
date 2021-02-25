@@ -31,6 +31,9 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.hibernate.internal.util.xml.XmlDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.olli.FileDownloadWrapper;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 
 import javax.xml.XMLConstants;
@@ -311,10 +314,7 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
     {
         List<String> errores = new LinkedList<>();
 
-        String error = validarXDSMessage(guideGeneratorServiceImp.GuidePrint(guia), guia.getName());
-
-        if(error != null && !error.isEmpty())
-            errores.add(error);
+        errores.addAll(validarXDSMessage(guideGeneratorServiceImp.GuidePrint(guia), guia.getName()));
 
         for(Guide aux : guia.getGuides()){
             errores.addAll(iterar(aux));
@@ -323,8 +323,10 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
         return errores;
     }
 
-    public String validarXDSMessage( byte[] byteArray, String nombreGuia)
+    public List<String> validarXDSMessage( byte[] byteArray, String nombreGuia)
     {
+        List<String> retorno = new LinkedList<>();
+
         byte[]  validacionXSD = validacionesOpcionesPanel.actual.getFileXSD();
 
         try {
@@ -342,11 +344,38 @@ public class GuideCreator extends VerticalLayout implements HasUrlParameter<Stri
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = factory.newSchema(xsd);
             Validator validator = schema.newValidator();
+            final List<SAXParseException> exceptions = new LinkedList<SAXParseException>();
+            validator.setErrorHandler(new ErrorHandler()
+            {
+                @Override
+                public void warning(SAXParseException exception) throws SAXException
+                {
+                    exceptions.add(exception);
+                }
+
+                @Override
+                public void fatalError(SAXParseException exception) throws SAXException
+                {
+                    exceptions.add(exception);
+                }
+
+                @Override
+                public void error(SAXParseException exception) throws SAXException
+                {
+                    exceptions.add(exception);
+                }
+            });
             validator.validate(new StreamSource(xml));
-            return "";
+            if(exceptions.size()>0)
+            {
+                retorno = exceptions.stream().map(e -> e.getMessage()).collect(Collectors.toList());
+
+                retorno.replaceAll(e -> "Guia " + nombreGuia + ":      " + e);
+            }
+            return retorno;
 
         } catch (Exception e) {
-            return "Error Guia " + nombreGuia + ": " + e.getMessage() ;
+            return retorno;
         }
     }
 

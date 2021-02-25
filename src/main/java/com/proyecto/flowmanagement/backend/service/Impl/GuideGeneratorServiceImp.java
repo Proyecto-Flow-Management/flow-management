@@ -1318,7 +1318,7 @@ public Guide importGuide (Document doc) throws IOException, SAXException, Parser
             }
         }
         return files;
-    }
+}
 
     public byte[] GuidePrint(Guide guide) {
         try {
