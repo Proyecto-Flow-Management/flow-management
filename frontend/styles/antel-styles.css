@@ -1,0 +1,20 @@
+.header-custom{
+  background-color: RGB(24,39,90)
+}
+.header-custom a{
+  color: white
+}
+
+.text-custom
+{
+    color: white;
+}
+
+vaadin-app-layout #drawer {
+  background-color: RGB(24,39,90) !important;
+    color: white !important;
+}
+
+vaadin-drawer-toggle #button{
+color: #f3ae01
+}
