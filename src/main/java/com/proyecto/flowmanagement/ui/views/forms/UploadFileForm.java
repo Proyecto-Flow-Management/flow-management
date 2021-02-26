@@ -70,7 +70,8 @@ public class UploadFileForm extends HorizontalLayout {
             ret = builder.parse(buffer.getInputStream());
             Guide guide = (Guide) guideGeneratorService.importGuide(ret);
             guide.setName(event.getFileName().split("\\.")[0]);
-            guide.setLabel(event.getFileName().split("\\.")[0]);
+            if(guide.getLabel() == null ||  guide.getLabel().isEmpty())
+                  guide.setLabel(event.getFileName().split("\\.")[0]);
             cancelarImportacion();
             actual = guide;
         } catch (Exception e) {

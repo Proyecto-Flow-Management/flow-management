@@ -1,0 +1,5 @@
+<ttg:validateCrossFieldCondition>
+    <ttg:fieldName></ttg:fieldName>
+    <ttg:condition></ttg:condition>
+    <ttg:messageError></ttg:messageError>
+</ttg:validateCrossFieldCondition>
