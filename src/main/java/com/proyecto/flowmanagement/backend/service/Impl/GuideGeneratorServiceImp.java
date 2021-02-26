@@ -35,15 +35,22 @@ public Guide importGuide (Document doc) throws IOException, SAXException, Parser
                     Node guideNode = guideNodeList.item(i);
                     Element guideElement = (Element) guideNode;
 
-                    Node mainStep = guideElement.getElementsByTagName(XMLConstants.MAIN_STEP_ID).item(0);
-                    if (mainStep != null && mainStep.getFirstChild() != null) {
-                        guide.setMainStep(mainStep.getFirstChild().getNodeValue());
+                    for (int j = 0; j < guideElement.getChildNodes().getLength(); j++){
+                        if (guideElement.getChildNodes().item(j).getNodeName().equals(XMLConstants.MAIN_STEP_ID)) {
+                            Node mainStep = guideElement.getChildNodes().item(j);
+                            if (mainStep != null && mainStep.getFirstChild() != null) {
+                                guide.setMainStep(mainStep.getFirstChild().getNodeValue());
+                            }
+                        }
+
+                        if (guideElement.getChildNodes().item(j).getNodeName().equals(XMLConstants.GUIDE_LABEL)) {
+                            Node label = guideElement.getElementsByTagName(XMLConstants.GUIDE_LABEL).item(0);
+                            if (label != null && label.getFirstChild() != null) {
+                                guide.setLabel(label.getFirstChild().getNodeValue());
+                            }
+                        }
                     }
 
-                    Node label = guideElement.getElementsByTagName(XMLConstants.GUIDE_LABEL).item(0);
-                    if (label != null && label.getFirstChild() != null) {
-                        guide.setLabel(label.getFirstChild().getNodeValue());
-                    }
 
                     Boolean unknown = false;
                     NodeList otherNodes = guideElement.getChildNodes();
