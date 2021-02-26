@@ -37,6 +37,7 @@ import java.util.jar.JarFile;
 
 
 @CssImport("./styles/shared-styles.css")
+@CssImport("./styles/antel-styles.css")
 public class MainLayout extends AppLayout {
 
     public MainLayout() throws IOException {
@@ -48,6 +49,8 @@ public class MainLayout extends AppLayout {
         H1 logo = new H1("Flow Management");
         logo.addClassName("logo");
 
+        logo.addClassName("text-custom");
+
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String username;
@@ -58,10 +61,12 @@ public class MainLayout extends AppLayout {
         }
 
         H1 loggedUsername = new H1(username);
+        loggedUsername.addClassName("text-custom");
         loggedUsername.addClassName("username");
 
 //        Anchor logout = new Anchor("login", "Log out");
         Button logout = new Button("Log out");
+        logout.addClassName("text-custom");
         logout.addClickListener(event -> UI.getCurrent().getPage().setLocation("/logout"));
 
         // Local comentado, deploy descomentado: mvn clean package -Pproduction -DskipTests
@@ -91,10 +96,10 @@ public class MainLayout extends AppLayout {
 //        H1 archivos = new H1(listFiles);
 //        archivos.addClassName("logo");
 
-
 //        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo,archivos, loggedUsername, logout);
         HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, loggedUsername, logout);
         header.addClassName("header");
+        header.addClassName("header-custom");
         header.setWidth("100%");
         header.expand(logo);
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
@@ -108,13 +113,14 @@ public class MainLayout extends AppLayout {
         RouterLink guideDelete = new RouterLink("Papelera", GuideListEliminados.class);
         RouterLink errores = new RouterLink("Errores", ErrorList.class);
         listLink.setHighlightCondition(HighlightConditions.sameLocation());
-
-        addToDrawer(new VerticalLayout(
-                listLink,
+        VerticalLayout layout = new VerticalLayout();
+        layout.setHeightFull();
+        layout.setClassName("header-custom");
+        layout.add(listLink,
                 guideLink,
                 guideDelete,
-                errores
-        ));
+                errores);
+        addToDrawer(layout);
     }
 
     public static void unzipJar(String destinationDir, String jarPath) throws IOException {
