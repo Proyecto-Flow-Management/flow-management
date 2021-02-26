@@ -66,7 +66,7 @@ public class MainLayout extends AppLayout {
 
 //        Anchor logout = new Anchor("login", "Log out");
         Button logout = new Button("Log out");
-        logout.addClassName("text-custom");
+        logout.addClassName("clase-icono");
         logout.addClickListener(event -> UI.getCurrent().getPage().setLocation("/logout"));
 
         // Local comentado, deploy descomentado: mvn clean package -Pproduction -DskipTests
@@ -97,7 +97,9 @@ public class MainLayout extends AppLayout {
 //        archivos.addClassName("logo");
 
 //        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo,archivos, loggedUsername, logout);
-        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, loggedUsername, logout);
+        DrawerToggle icono = new DrawerToggle();
+        icono.addClassName("clase-icono");
+        HorizontalLayout header = new HorizontalLayout(icono, logo, loggedUsername, logout);
         header.addClassName("header");
         header.addClassName("header-custom");
         header.setWidth("100%");
@@ -112,6 +114,12 @@ public class MainLayout extends AppLayout {
         RouterLink guideLink = new RouterLink("Guides", GuideList.class);
         RouterLink guideDelete = new RouterLink("Papelera", GuideListEliminados.class);
         RouterLink errores = new RouterLink("Errores", ErrorList.class);
+ 
+        listLink.addClassName("custom-link");
+        guideLink.addClassName("custom-link");
+        guideDelete.addClassName("custom-link");
+        errores.addClassName("custom-link");
+
         listLink.setHighlightCondition(HighlightConditions.sameLocation());
         VerticalLayout layout = new VerticalLayout();
         layout.setHeightFull();

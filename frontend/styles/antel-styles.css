@@ -15,6 +15,10 @@ vaadin-app-layout #drawer {
     color: white !important;
 }
 
-vaadin-drawer-toggle #button{
+.clase-icono{
 color: #f3ae01
+}
+
+.custom-link a :highlight {
+    color: #f3ae01 !important
 }
