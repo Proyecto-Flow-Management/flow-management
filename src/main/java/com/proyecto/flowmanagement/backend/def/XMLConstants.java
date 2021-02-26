@@ -29,6 +29,7 @@ public final class XMLConstants {
     //GUIDE ATTRIBUTES
     public static final String GUIDE_ELEMENT = "ttg:guide";
     public static final String MAIN_STEP_ID = "ttg:mainStepId";
+    public static final String GUIDE_LABEL = "ttg:label";
 
     public static final String XMLNS_VC = "http://www.w3.org/2007/XMLSchema-versioning";
     public static final String XMLNS_TTG = "http://ns.antel.com.uy/schema/troubleticket/guide";

@@ -40,6 +40,11 @@ public Guide importGuide (Document doc) throws IOException, SAXException, Parser
                         guide.setMainStep(mainStep.getFirstChild().getNodeValue());
                     }
 
+                    Node label = guideElement.getElementsByTagName(XMLConstants.GUIDE_LABEL).item(0);
+                    if (label != null && label.getFirstChild() != null) {
+                        guide.setLabel(label.getFirstChild().getNodeValue());
+                    }
+
                     Boolean unknown = false;
                     NodeList otherNodes = guideElement.getChildNodes();
                     DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -52,6 +57,7 @@ public Guide importGuide (Document doc) throws IOException, SAXException, Parser
                     for(int j = 0; j < otherNodes.getLength(); j++){
                         if(otherNodes.item(j).getNodeType() == 1 &&
                                 otherNodes.item(j).getNodeName() != XMLConstants.MAIN_STEP_ID &&
+                                otherNodes.item(j).getNodeName() != XMLConstants.GUIDE_LABEL &&
                                 otherNodes.item(j).getNodeName() != XMLConstants.STEP_ELEMENT &&
                                 otherNodes.item(j).getNodeName() != XMLConstants.OPERATION_ELEMENT){
                             Node importedNode = docUnknownTags.importNode(otherNodes.item(j), true);
@@ -1372,6 +1378,16 @@ public Guide importGuide (Document doc) throws IOException, SAXException, Parser
 
         Node mainStepID = doc.getElementsByTagName(XMLConstants.MAIN_STEP_ID).item(0);
         mainStepID.setTextContent(guide.getMainStep());
+
+        if (guide.getLabel() != null){
+            Node guideLabel = doc.getElementsByTagName(XMLConstants.GUIDE_LABEL).item(0);
+            guideLabel.setTextContent(guide.getLabel());
+        }else{
+            Node docGuide = doc.getElementsByTagName(XMLConstants.GUIDE_ELEMENT).item(0);
+            Node node = doc.getElementsByTagName(XMLConstants.GUIDE_LABEL).item(0);
+            docGuide.removeChild(node.getNextSibling());
+            docGuide.removeChild(node);
+        }
 
         NamedNodeMap guideHeaderAttributes = guideHeader.getAttributes();
 
