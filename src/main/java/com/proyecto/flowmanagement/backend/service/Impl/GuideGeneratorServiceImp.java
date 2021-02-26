@@ -440,6 +440,10 @@ public Guide importGuide (Document doc) throws IOException, SAXException, Parser
                         case "query":
                             operation.setType(SimpleOperationType.query);
                             break;
+
+                        case "run":
+                            operation.setType(SimpleOperationType.run);
+                            break;
                     }
                 }
             }
